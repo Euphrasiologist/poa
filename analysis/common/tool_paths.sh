@@ -41,8 +41,6 @@ PYTHON3="${PYTHON3:-python3}"
 # oatkDB's own gene-family databases, decoupled from oatk's assembler) plus
 # tRNA/rRNA calling.
 NHMMSCAN="${NHMMSCAN:-$(command -v nhmmscan || echo /software/team301/hmmer-3.4/src/nhmmscan)}"
-HMM_TO_GFF="${HMM_TO_GFF:-$(command -v hmm_to_gff || echo "${HOME}/.cargo/bin/hmm_to_gff")}"
-FILTER_TBLOUT="${FILTER_TBLOUT:-$(command -v filter_tblout || echo "${HOME}/.cargo/bin/filter_tblout")}"
 TRNASCAN="${TRNASCAN:-$(command -v tRNAscan-SE || echo /software/team301/tRNAscan-SE/tRNAscan-SE)}"
 BARRNAP="${BARRNAP:-$(command -v barrnap || echo /software/team301/barrnap/bin/barrnap)}"
 OATKDB_MITO_FAM="${OATKDB_MITO_FAM:-/software/team301/OatkDB/viridiplantae_mito_v20250217.fam}"
@@ -70,7 +68,7 @@ export QT_QPA_PLATFORM="${QT_QPA_PLATFORM:-offscreen}"
 # directly for external installs.
 GRAPHALIGNER="${GRAPHALIGNER:-$(command -v GraphAligner || echo /software/treeoflife/shpc/0.1.26/wrapper/quay.io/biocontainers/graphaligner/1.0.19--hdcf5f25_1/bin/GraphAligner)}"
 
-for tool_var in GFATK ORFEDIT TRANSSPLICE MINIMAP2 SAMTOOLS SEQKIT BLASTN MAKEBLASTDB CDHIT_EST MAFFT IQTREE2 GFATOOLS BANDAGE GRAPHALIGNER NHMMSCAN HMM_TO_GFF FILTER_TBLOUT TRNASCAN BARRNAP; do
+for tool_var in GFATK ORFEDIT TRANSSPLICE MINIMAP2 SAMTOOLS SEQKIT BLASTN MAKEBLASTDB CDHIT_EST MAFFT IQTREE2 GFATOOLS BANDAGE GRAPHALIGNER NHMMSCAN TRNASCAN BARRNAP; do
   tool_path="${!tool_var}"
   if [[ ! -x "${tool_path}" ]]; then
     echo "[warn] tool_paths.sh: ${tool_var}=${tool_path} is not executable/found" >&2

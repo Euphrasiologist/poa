@@ -23,14 +23,10 @@ fi
 echo "[info] installing this project's own Rust tools via cargo..."
 
 # Pinned to the versions this pipeline was validated against (tags in each
-# tool's repo). gfatk, orfedit and transsplice come from crates.io;
-# hmm_to_gff and filter_tblout aren't published there, so they're built
-# from their GitHub release tags.
+# tool's repo), from crates.io.
 cargo install --locked gfatk@0.4.0
 cargo install --locked orfedit@0.1.0
 cargo install --locked transsplice@0.2.1
-cargo install --locked --git https://github.com/ARU-life-sciences/hmm_to_gff --tag 0.1.1 hmm_to_gff
-cargo install --locked --git https://github.com/ARU-life-sciences/filter_tblout --tag 0.1.1 filter_tblout
 
 echo "[info] done. Verifying tool_paths.sh resolves everything cleanly:"
 bash -c 'source analysis/common/tool_paths.sh'

@@ -80,14 +80,15 @@ genes `trans_splicing` cares about:
 1. **`00_run_nhmmscan.py`** - `nhmmscan --tblout` against
    `/software/team301/OatkDB/viridiplantae_mito_v20250217.fam` (mito;
    already built and `hmmpress`ed) or the plastid equivalent (**not yet
-   built** - see caveat below), then `filter_tblout <tblout> 1e-5` (same
+   built** - see caveat below), then an E-value filter at `1e-5` (same
    E-value floor as this repo's existing Pfam-scan precedent in
-   `orf_scan`), then `hmm_to_gff <filtered> nhmmscan` to GFF3. `1e-5` isn't
+   `orf_scan`), then conversion to GFF3 (`src/nhmmscan_gff.py`, a Python
+   port of the `filter_tblout`/`hmm_to_gff` tools used originally). `1e-5` isn't
    arbitrary here either: the unfiltered tblout for `Acer_campestre`
    included a real `E=0.47` `nad2` hit that plainly shouldn't be trusted -
    `1e-5` clears it out, real hits cluster many orders of magnitude below
    that floor (E=0 to ~1e-20 for anything used in the comparison above).
-   `hmm_to_gff` already classifies hits as `gene`/`tRNA`/`rRNA` by gene
+   The conversion already classifies hits as `gene`/`tRNA`/`rRNA` by gene
    name and keeps `target_name` in the native oatkDB naming convention
    (e.g. `rrn26`, `trnP-UGG`) - no renaming needed for this source.
 2. **`01_run_trnascan.py`** / **`02_run_barrnap.py`** - exact

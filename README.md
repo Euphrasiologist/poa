@@ -28,8 +28,7 @@ See `environment.yml` for exactly what's pinned (minimap2, samtools,
 seqkit, blast, cd-hit, mafft, iqtree, gfatools, hmmer, tRNAscan-SE,
 barrnap, Bandage, GraphAligner, AMAS, rust) and `install.sh` for this
 project's own Rust tools, pinned to the versions validated here: `gfatk`
-0.4.0, `orfedit` 0.1.0, `transsplice` 0.2.1 (crates.io), `hmm_to_gff` 0.1.1
-and `filter_tblout` 0.1.1 (GitHub tags).
+0.4.0, `orfedit` 0.1.0 and `transsplice` 0.2.1.
 
 ## Reference data
 

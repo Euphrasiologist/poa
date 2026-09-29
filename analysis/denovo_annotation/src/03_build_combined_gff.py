@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Combine the three independent annotation sources - `nhmmscan` (protein-
-coding, converted to GFF via `hmm_to_gff`), `tRNAscan-SE`, and `barrnap` -
+coding, converted to GFF by `nhmmscan_gff.py`), `tRNAscan-SE`, and `barrnap` -
 into ONE per-species GFF3, sorted by contig then start. Same append/strip-
 header/sort pattern as `mito_structural_variation/annotation/src/5_get_rna_genes.bash`
 and `6_get_rrna_genes.bash` use to build up one combined GFF per species.

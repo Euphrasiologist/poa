@@ -43,9 +43,10 @@ sys.path.insert(0, str(CODE_DIR / "common"))
 
 import species_discovery as sd  # noqa: E402
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from nhmmscan_gff import filter_and_convert  # noqa: E402
+
 NHMMSCAN = shutil.which("nhmmscan") or "/software/team301/hmmer-3.4/src/nhmmscan"
-FILTER_TBLOUT = shutil.which("filter_tblout") or str(Path.home() / ".cargo" / "bin" / "filter_tblout")
-HMM_TO_GFF = shutil.which("hmm_to_gff") or str(Path.home() / ".cargo" / "bin" / "hmm_to_gff")
 
 FAM_PATHS = {
     "mito": os.environ.get("OATKDB_MITO_FAM", "/software/team301/OatkDB/viridiplantae_mito_v20250217.fam"),
@@ -89,17 +90,13 @@ def scan_one(species: str, organelle: str, ctg_fasta: str, fam: str, evalue: str
         print(f"[warn] nhmmscan failed for {species} ({organelle}): {proc.stderr.strip()[:300]}", file=sys.stderr)
         return "failed"
 
-    filt = subprocess.run([FILTER_TBLOUT, str(tblout), evalue], capture_output=True, text=True, timeout=120)
-    if filt.returncode != 0:
-        print(f"[warn] filter_tblout failed for {species} ({organelle}): {filt.stderr.strip()[:300]}", file=sys.stderr)
+    try:
+        filtered_text, gff_text = filter_and_convert(tblout, Path(fam), evalue)
+    except (ValueError, KeyError, IndexError) as e:
+        print(f"[warn] tblout -> GFF failed for {species} ({organelle}): {e!r}", file=sys.stderr)
         return "failed"
-    filtered.write_text(filt.stdout)
-
-    togff = subprocess.run([HMM_TO_GFF, str(filtered), "nhmmscan", organelle], capture_output=True, text=True, timeout=120)
-    if togff.returncode != 0:
-        print(f"[warn] hmm_to_gff failed for {species} ({organelle}): {togff.stderr.strip()[:300]}", file=sys.stderr)
-        return "failed"
-    gff.write_text(togff.stdout)
+    filtered.write_text(filtered_text)
+    gff.write_text(gff_text)
     return "scanned"
 
 
