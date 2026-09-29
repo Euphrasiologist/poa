@@ -41,7 +41,7 @@ from Bio import Align, SeqIO
 from Bio.Align import substitution_matrices
 from Bio.Seq import Seq
 
-CODE_DIR = Path(__file__).resolve().parents[2] / "analysis"
+CODE_DIR = Path(__file__).resolve().parents[2] / "src" / "poa" / "pipeline"
 REFSEQ_GB = CODE_DIR / "trans_splicing" / "reference" / "genbank" / "NC_037304.1.gb"
 
 # Thresholds sit just under the dataset repo's results at 9d627214, so

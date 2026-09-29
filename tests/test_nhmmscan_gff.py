@@ -6,22 +6,18 @@ tools made from them (fixtures/nhmmscan/*.rust.gff).
 """
 from __future__ import annotations
 
-import os
 import sys
 import unittest
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
 FIXTURES = REPO / "tests" / "fixtures" / "nhmmscan"
-sys.path.insert(0, str(REPO / "analysis" / "denovo_annotation" / "src"))
+sys.path.insert(0, str(REPO / "src" / "poa" / "pipeline" / "denovo_annotation" / "src"))
+sys.path.insert(0, str(REPO / "src" / "poa" / "pipeline" / "common"))
+import oatkdb  # noqa: E402
 from nhmmscan_gff import filter_and_convert, rust_exp2, rust_f32  # noqa: E402
 
 import numpy as np  # noqa: E402
-
-FAM = {
-    "mito": os.environ.get("OATKDB_MITO_FAM", "/software/team301/OatkDB/viridiplantae_mito_v20250217.fam"),
-    "pltd": os.environ.get("OATKDB_PLTD_FAM", "/software/team301/OatkDB/viridiplantae_pltd_v20260928.fam"),
-}
 
 
 class RustFormatting(unittest.TestCase):
@@ -38,9 +34,10 @@ class RustFormatting(unittest.TestCase):
 
 class MatchesRustTools(unittest.TestCase):
     def check(self, organelle: str):
-        fam = Path(FAM[organelle])
-        if not fam.exists():
-            self.skipTest(f"no {organelle} .fam at {fam} (set OATKDB_{organelle.upper()}_FAM)")
+        try:
+            fam = oatkdb.fam_path(organelle)  # the bundled database (needs hmmpress once)
+        except FileNotFoundError as e:
+            self.skipTest(str(e))
         tblout = FIXTURES / f"Arabidopsis_thaliana.{organelle}.tblout"
         filtered, gff = filter_and_convert(tblout, fam, "1e-5")
         self.assertEqual(gff, (FIXTURES / f"Arabidopsis_thaliana.{organelle}.rust.gff").read_text())

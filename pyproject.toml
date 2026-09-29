@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "poa"
+version = "0.1.0.dev0"
+description = "Plant organelle annotator: gene calling, RNA-editing-aware ORFs, spliced-gene reconstruction and contig/unitig GFF3 for plant mitochondrial and plastid genomes"
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [{ name = "Max Brown" }]
+dependencies = ["pandas", "numpy", "biopython"]
+
+[project.urls]
+Homepage = "https://github.com/Euphrasiologist/poa"
+
+[project.scripts]
+poa = "poa.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+# the pipeline stages are scripts run by path, not imported modules, so ship
+# the whole tree: scripts, shell helpers, READMEs and bundled reference data
+[tool.setuptools.package-data]
+"*" = ["**/*"]
+
+[tool.setuptools.exclude-package-data]
+"*" = ["**/__pycache__/*", "**/*.pyc"]

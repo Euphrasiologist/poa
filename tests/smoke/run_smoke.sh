@@ -9,9 +9,9 @@
 #   DATA_ROOT  where to build the test data root (default: a new temp dir);
 #              must not already contain data/
 #   THREADS    default 4
-# Needs the tools from environment.yml + install.sh on PATH (or this
-# cluster's fallbacks in analysis/common/tool_paths.sh), and oatkDB's
-# .fam databases via OATKDB_MITO_FAM / OATKDB_PLTD_FAM - see README.md.
+# Runs the *installed* poa (pip install .), so it also checks that the
+# package ships everything. Needs the tools from environment.yml +
+# install.sh on PATH (`poa check`).
 set -euo pipefail
 
 REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
@@ -33,9 +33,9 @@ for organelle in mito plastid; do
 done
 export PLANT_ORGANELLE_DATA_ROOT="${DATA_ROOT}"
 cd "${DATA_ROOT}"
-A="${REPO}/analysis"
+A="$(python3 -c 'import poa; print(poa.PIPELINE_DIR)')"
 GENE_CALLS="${DATA_ROOT}/analysis/denovo_annotation/results/gene_calls.tsv"
-log "data root: ${DATA_ROOT}"
+log "data root: ${DATA_ROOT}; pipeline: ${A}"
 
 log "=== qc_basic_stats ==="
 for s in 01_gfa_stats 02_contig_stats 03_gene_matrix 04_core_gene_list 05_qc_summary; do

@@ -1,53 +1,43 @@
-# Conda/mamba environment covering every third-party bioinformatics tool
-# this pipeline depends on. Create with:
+# Conda/mamba environment for poa: every third-party tool it runs, plus the
+# rust toolchain install.sh uses for gfatk/orfedit/transsplice until those
+# are on bioconda. Then:
 #
 #   mamba env create -f environment.yml
-#   conda activate plant_organelle_annotator
-#
-# This does NOT cover this project's own Rust tools (gfatk, orfedit,
-# transsplice) or the reference databases oatkDB
-# builds - see install.sh, which handles both after activating this env.
+#   conda activate poa
+#   ./install.sh        # the Rust tools
+#   pip install .       # poa itself
 #
 # Versions pinned to what this pipeline was built and validated against
-# (checked directly via `<tool> --version` on the reference install, not
-# copied from any install doc). Newer patch/minor versions will likely
-# work but haven't been verified.
-name: plant_organelle_annotator
+# (checked via `<tool> --version` on the reference install). Newer
+# patch/minor versions will likely work but haven't been verified.
+name: poa
 channels:
-  - bioconda
   - conda-forge
+  - bioconda
 dependencies:
   - python=3.11
   - pandas
   - numpy
   - biopython
-  - matplotlib
 
-  # assembly graph / alignment / general sequence tools
-  - minimap2=2.28
-  - samtools=1.21
-  - seqkit=2.10.0
-  - blast=2.16.0
-  - cd-hit=4.8.1
-  - mafft=7.525
-  - gfatools=0.5
-
-  # phylogenetics
-  - iqtree=2.4.0
-
-  # organelle gene-family / RNA / rRNA calling (denovo_annotation/)
+  # gene calling (denovo_annotation) - hmmer also prepares the bundled oatkDB
   - hmmer=3.4
   - trnascan-se=2.0.12
   - barrnap=0.9
 
-  # assembly graph visualisation (linearize/'s gfatk-resolve fallback tier)
-  - bandage=0.9.0
+  # reference-profile building (editing, trans_splicing)
+  - mafft=7.525
+
+  # assembly graph / sequence tools (qc_basic_stats, linearize)
+  - minimap2=2.28
+  - samtools=1.21
+  - seqkit=2.10.0
+  - gfatools=0.5
+
+  # linearize: read-evidence resolution (gfatk resolve)
   - graphaligner=1.0.19
 
-  # rust toolchain, to build/install this project's own tools (see install.sh)
+  # rust toolchain, for install.sh
   - rust
 
   - pip
-  - pip:
-      # not packaged on conda - source: https://github.com/marekborowiec/AMAS
-      - amas

@@ -1,0 +1,34 @@
+oatkDB gene-family HMM databases
+================================
+
+viridiplantae_mito_v20250217.fam.gz and viridiplantae_pltd_v20260928.fam.gz
+were built with the `oatkdb` script from OatkDB (https://github.com/c-zhou/OatkDB)
+from NCBI GenBank Viridiplantae (taxid 33090) organelle genomes:
+
+  oatkdb ... -o viridiplantae_mito_v20250217 33090 mitochondrion
+  oatkdb -j 5 -t 10 -c 11 -o viridiplantae_pltd_v20260928 33090 chloroplast
+
+poa decompresses and hmmpress-es them into its cache on first use
+(poa.pipeline.common.oatkdb). OatkDB is distributed under the following licence:
+
+MIT License
+
+Copyright (c) 2023 c-zhou
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
