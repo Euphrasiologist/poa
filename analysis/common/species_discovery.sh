@@ -5,13 +5,13 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ROOT_DIR="$(cd "${SCRIPT_DIR}/../.." && pwd)"
+ROOT_DIR="${PLANT_ORGANELLE_DATA_ROOT:-$(cd "${SCRIPT_DIR}/../.." && pwd)}"
 
 ORGANELLE="${1:?usage: species_discovery.sh <mito|pltd> [species_list_file]}"
 SPECIES_LIST="${2:-}"
 
 DATA_ROOT="${ROOT_DIR}/data/$([[ "${ORGANELLE}" == mito ]] && echo mito || echo plastid)"
-CACHE_DIR="${SCRIPT_DIR}/.cache"
+CACHE_DIR="${ROOT_DIR}/analysis/.cache"
 mkdir -p "${CACHE_DIR}"
 CACHE_FILE="${CACHE_DIR}/species_${ORGANELLE}.tsv"
 

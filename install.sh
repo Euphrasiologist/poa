@@ -5,32 +5,32 @@
 #
 # Usage:
 #   mamba env create -f environment.yml
-#   conda activate plant_organellar_database
+#   conda activate plant_organelle_annotator
 #   ./install.sh
 #
-# Reference databases (oatkDB's mito/plastid gene-family HMMs, and the
-# editing/trans_splicing reference profiles) are NOT handled here yet -
-# see README.md's "Reference data" section for the current status.
+# Reference data: trans_splicing's exon templates and editing's profiles
+# are bundled in this repo. oatkDB's gene-family .fam databases are not -
+# see README.md's "Reference data" section.
 set -euo pipefail
 
 if ! command -v cargo >/dev/null 2>&1; then
   echo "[err] cargo not found on PATH." >&2
-  echo "      Run 'mamba env create -f environment.yml && conda activate plant_organellar_database' first" >&2
+  echo "      Run 'mamba env create -f environment.yml && conda activate plant_organelle_annotator' first" >&2
   echo "      (that env includes the rust/cargo toolchain)." >&2
   exit 1
 fi
 
 echo "[info] installing this project's own Rust tools via cargo..."
 
-# Pinned to the versions this pipeline was built and validated against.
-# gfatk, hmm_to_gff, filter_tblout are already on crates.io; orfedit and
-# transsplice will be once first published (see each repo's README in the
-# meantime - ARU-life-sciences/orfedit, ARU-life-sciences/transsplice).
+# Pinned to the versions this pipeline was validated against (tags in each
+# tool's repo). gfatk, orfedit and transsplice come from crates.io;
+# hmm_to_gff and filter_tblout aren't published there, so they're built
+# from their GitHub release tags.
 cargo install --locked gfatk@0.4.0
-cargo install --locked hmm_to_gff@0.1.1
-cargo install --locked filter_tblout@0.1.1
 cargo install --locked orfedit@0.1.0
-cargo install --locked transsplice@0.1.0
+cargo install --locked transsplice@0.2.1
+cargo install --locked --git https://github.com/ARU-life-sciences/hmm_to_gff --tag 0.1.1 hmm_to_gff
+cargo install --locked --git https://github.com/ARU-life-sciences/filter_tblout --tag 0.1.1 filter_tblout
 
 echo "[info] done. Verifying tool_paths.sh resolves everything cleanly:"
 bash -c 'source analysis/common/tool_paths.sh'

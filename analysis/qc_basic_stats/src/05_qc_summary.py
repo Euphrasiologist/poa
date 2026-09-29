@@ -67,8 +67,15 @@ etc., known for repeat-rich/complex mitogenomes that trip up graph
 heuristics - plus a scatter of others e.g. Phacelia_tanacetifolia with
 353 singleton contigs) have contig_source=="ctg_fasta" but EVERY contig
 is nv=1, with 5+ such contigs (the >=5 floor matches the fragmentation
-threshold's precedent: real multipartite plant mitogenomes are 2-4
-subgenomic circles, so 5+ never-joined pieces isn't plausible biology).
+threshold's precedent).
+
+Only *linear* nv=1 contigs count as unjoined (fixed 2026-09-28). A
+single unitig that closes on itself is a complete circular chromosome,
+and multichromosomal plant mitogenomes are real and can have many
+(Silene conica: >100; in this dataset Bistorta_vivipara 7, the orchids
+Ophrys/Orchis/Gymnadenia/Dactylorhiza 14-17, Impatiens 16) - counting
+those as unjoined had excluded 15 complete mitogenomes from QC-pass and
+from every downstream annotation step.
 has_ctg_fasta is corrected to treat this case as NOT resolved - it's
 functionally identical to Pathfinder producing nothing, just disguised
 by a non-empty file - which automatically folds these species into the
@@ -81,12 +88,25 @@ needed there.
 Note on fragmentation: n_subgraphs distribution (mito, full dataset) shows a
 clean natural break - 1154/1250 species have 1-4 subgraphs (consistent with
 real single-chromosome or modest multipartite biology, matches the literature),
-then a long tail of 46 species with 5-20. Real multipartite plant
-mitogenomes are essentially always described as 2-4 sub-genomic circles;
-5+ disconnected pieces is fragmentation, not biology (e.g. Clematis_viticella
-at 10 subgraphs visually confirmed as "lots of small linear segments" via
-the topology_plots module - clearly a failed assembly, not previously
-caught since nothing checked n_subgraphs directly before this).
+then a long tail of 46 species with 5-20. 5+ disconnected pieces of
+*broken* graph is fragmentation, not biology (e.g. Clematis_viticella at 10
+subgraphs visually confirmed as "lots of small linear segments" via the
+topology_plots module - clearly a failed assembly).
+
+Closed circular subgraphs are exempt (fixed 2026-09-28): the original note
+here said real multipartite mitogenomes are "2-4 sub-genomic circles",
+which is wrong for multichromosomal genomes (Silene noctiflora: 59-63
+autonomous chromosomes; Wu et al. 2015, PNAS 112:10185). In this dataset
+the orchids Ophrys/Orchis/Gymnadenia/Dactylorhiza have 14-17 closed
+single-unitig circles each, at 0.6-1.95x of each other's depth, genes
+spread 1-3 per circle with the same gene linkages in all four species;
+Dactylorhiza_fuchsii's 14 match the published DToL assembly (OZ487954-62)
+base-for-base for 9 circles, and the other 5 carry ccmC/ccmFc/nad4/nad7,
+which the published 9 lack. So a subgraph counts toward fragmentation
+unless it is circular AND within CHROMOSOME_DEPTH_BAND of the species'
+length-weighted median subgraph depth - a circle far outside that band
+(e.g. a plastid genome in a mito graph, at plastid depth) still counts.
+`n_fragment_subgraphs` is what the thresholds apply to.
 
 Output: analysis/qc_basic_stats/results/qc_summary.tsv
 Columns: species organelle has_gfa has_ctg_fasta n_subgraphs any_circular
@@ -95,20 +115,21 @@ Columns: species organelle has_gfa has_ctg_fasta n_subgraphs any_circular
 """
 from __future__ import annotations
 
-import argparse
 import os
+import argparse
 import sys
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
 
-# Defaults to the old same-tree layout (code and data siblings under one
-# repo root); set PLANT_ORGANELLE_DATA_ROOT to point at a separate data
-# checkout instead (e.g. when this code is installed from its own repo).
-ROOT_DIR = Path(os.environ.get("PLANT_ORGANELLE_DATA_ROOT", str(Path(__file__).resolve().parents[3])))
+# CODE_DIR is this checkout's analysis/ (shared modules, bundled reference
+# data); data/ and every module's results/ and work/ live under the data
+# root - PLANT_ORGANELLE_DATA_ROOT, or this checkout if unset.
+CODE_DIR = Path(__file__).resolve().parents[2]
+ROOT_DIR = Path(os.environ.get("PLANT_ORGANELLE_DATA_ROOT", str(CODE_DIR.parent)))
 ANALYSIS_DIR = ROOT_DIR / "analysis"
-sys.path.insert(0, str(ANALYSIS_DIR / "common"))
+sys.path.insert(0, str(CODE_DIR / "common"))
 
 import minimap_utils  # noqa: E402
 import species_discovery as sd  # noqa: E402
@@ -116,7 +137,8 @@ import species_discovery as sd  # noqa: E402
 RESULTS_DIR = ANALYSIS_DIR / "qc_basic_stats" / "results"
 COLUMNS = ["species", "organelle", "has_gfa", "has_ctg_fasta", "n_subgraphs", "any_circular",
            "dead_end_nodes", "total_length", "size_mad_z", "core_gene_pct", "n_contigs",
-           "pct_unjoined_contigs", "cross_organelle_aligned_frac", "status", "status_reasons"]
+           "pct_unjoined_contigs", "cross_organelle_aligned_frac", "status", "status_reasons",
+           "n_fragment_subgraphs"]
 
 CROSS_ORG_FLAG_THRESHOLD = 0.15
 CROSS_ORG_FAIL_THRESHOLD = 0.35
@@ -125,6 +147,9 @@ DEAD_END_FLAG_THRESHOLD = 0
 DEAD_END_FAIL_THRESHOLD = 2
 FRAGMENTATION_FLAG_THRESHOLD = 5
 FRAGMENTATION_FAIL_THRESHOLD = 10
+# a circular subgraph within this factor of the species' median depth is a
+# chromosome, not a fragment (real chromosome abundance varies ~2-fold)
+CHROMOSOME_DEPTH_BAND = 3.0
 CORE_GENE_FLAG_THRESHOLD = 0.80
 CORE_GENE_FAIL_THRESHOLD = 0.50
 QC_CORE_GENE_PRESENCE_THRESHOLD = 0.90
@@ -138,15 +163,23 @@ UNJOINED_PCT_THRESHOLD = 1.0
 
 def aggregate_gfa_stats(gfa_stats: pd.DataFrame, organelle: str) -> pd.DataFrame:
     sub = gfa_stats[gfa_stats["organelle"] == organelle].copy()
-    for col in ("n_subgraphs", "dead_end_nodes", "total_length"):
+    for col in ("n_subgraphs", "dead_end_nodes", "total_length", "avg_coverage"):
         sub[col] = pd.to_numeric(sub[col], errors="coerce")
 
     def agg(group):
         parse_status = group["parse_status"].iloc[0]
         has_gfa = parse_status != "missing_gfa"
+        n_fragments = np.nan
         if parse_status == "ok":
             total_length = group["total_length"].sum()
             dead_end_nodes = group["dead_end_nodes"].max()
+            g = group.dropna(subset=["avg_coverage", "total_length"]).sort_values("avg_coverage")
+            if not g.empty:
+                cum = g["total_length"].cumsum()
+                ref = g["avg_coverage"][cum >= cum.iloc[-1] / 2].iloc[0]  # length-weighted median
+                chromosome = (group["circular"].astype(str).str.lower() == "true") & \
+                             group["avg_coverage"].between(ref / CHROMOSOME_DEPTH_BAND, ref * CHROMOSOME_DEPTH_BAND)
+                n_fragments = int(len(group) - chromosome.sum())
         else:
             total_length = np.nan
             dead_end_nodes = np.nan
@@ -154,6 +187,7 @@ def aggregate_gfa_stats(gfa_stats: pd.DataFrame, organelle: str) -> pd.DataFrame
             "has_gfa": has_gfa,
             "parse_status": parse_status,
             "n_subgraphs": group["n_subgraphs"].iloc[0],
+            "n_fragment_subgraphs": n_fragments,
             "dead_end_nodes": dead_end_nodes,
             "total_length": total_length,
         })
@@ -176,16 +210,28 @@ def aggregate_contig_stats(contig_stats: pd.DataFrame, organelle: str) -> pd.Dat
         resolved = group[group["contig_source"] == "ctg_fasta"]
         any_circular = (resolved["circular"] == "true").any() if not resolved.empty else np.nan
         n_contigs = len(resolved) if not resolved.empty else np.nan
-        pct_unjoined = (resolved["nv"] == 1).mean() if not resolved.empty else np.nan
+        # a single-unitig contig that closes on itself is a complete circle
+        # (multichromosomal mitogenome), not an unjoined graph segment
+        unjoined = (resolved["nv"] == 1) & (resolved["circular"] != "true")
+        pct_unjoined = unjoined.mean() if not resolved.empty else np.nan
+        resolved_length = pd.to_numeric(resolved["length"], errors="coerce").sum() if not resolved.empty else np.nan
         return pd.Series({"contig_source": contig_source, "any_circular": any_circular,
-                           "n_contigs": n_contigs, "pct_unjoined_contigs": pct_unjoined})
+                           "n_contigs": n_contigs, "pct_unjoined_contigs": pct_unjoined,
+                           "resolved_length": resolved_length})
 
     return sub.groupby("species").apply(agg, include_groups=False).reset_index()
 
 
 def size_mad_z(df: pd.DataFrame) -> pd.Series:
-    """MAD-based z-score of total_length, genus-relative (>=3 congeners) else dataset-wide."""
+    """MAD-based z-score of genome size, genus-relative (>=3 congeners) else
+    dataset-wide. Size is the resolved contigs' total length where there is
+    a resolved assembly, else the GFA's: a graph can hold sequence the
+    assembly rightly leaves out (Carduus/Cratoneuron/Isopterygiella/
+    Malus_domestica plastid graphs carry a second organism's plastid at
+    8-40x lower coverage, which doubled their graph size)."""
     df = df.copy()
+    df["total_length"] = np.where(df["has_ctg_fasta"].fillna(False).astype(bool) & df["resolved_length"].notna(),
+                                  df["resolved_length"], df["total_length"])
     df["genus"] = df["species"].str.split("_").str[0]
     valid = df["total_length"].notna()
 
@@ -249,12 +295,14 @@ def build_status(row: pd.Series) -> tuple[str, str]:
                 reasons_fail.append("dead_end_nodes>2")
             elif den > DEAD_END_FLAG_THRESHOLD:
                 reasons_flag.append("dead_end_nodes>0")
-        n_sub = row.get("n_subgraphs")
+        n_sub = row.get("n_fragment_subgraphs")
+        if pd.isna(n_sub):
+            n_sub = row.get("n_subgraphs")
         if pd.notna(n_sub):
             if n_sub >= FRAGMENTATION_FAIL_THRESHOLD:
-                reasons_fail.append(f"fragmented(n_subgraphs>={FRAGMENTATION_FAIL_THRESHOLD})")
+                reasons_fail.append(f"fragmented(n_fragment_subgraphs>={FRAGMENTATION_FAIL_THRESHOLD})")
             elif n_sub >= FRAGMENTATION_FLAG_THRESHOLD:
-                reasons_flag.append(f"fragmented(n_subgraphs>={FRAGMENTATION_FLAG_THRESHOLD})")
+                reasons_flag.append(f"fragmented(n_fragment_subgraphs>={FRAGMENTATION_FLAG_THRESHOLD})")
         circ = row.get("any_circular")
         if pd.notna(circ) and not bool(circ):
             reasons_flag.append("non_circular")
@@ -280,7 +328,16 @@ def build_status(row: pd.Series) -> tuple[str, str]:
             else:
                 reasons_flag.append("no_resolved_ctg_fasta")
         cof = row.get("cross_organelle_aligned_frac")
-        if pd.notna(cof):
+        # A complete plastid (circular, core genes present) that turns up in
+        # the mito assembly isn't the plastid's fault - plastid sequence in a
+        # mito assembly is either real plastid-derived DNA or the mito graph
+        # having picked the plastid up; the mito's own plastid-like share
+        # (its row's cross_organelle_aligned_frac) is what flags the latter.
+        complete_plastid = (row.get("organelle") == "pltd" and pd.notna(row.get("any_circular"))
+                            and bool(row.get("any_circular"))
+                            and pd.notna(row.get("core_gene_pct"))
+                            and row.get("core_gene_pct") >= QC_CORE_GENE_PRESENCE_THRESHOLD)
+        if pd.notna(cof) and not complete_plastid:
             if cof > CROSS_ORG_FAIL_THRESHOLD:
                 reasons_fail.append("high_cross_organelle_alignment(>35%)")
             elif cof > CROSS_ORG_FLAG_THRESHOLD:
@@ -349,6 +406,12 @@ def main():
                 mito_frac[species] = mito_aligned / mito_len
             if pltd_len:
                 pltd_frac[species] = pltd_aligned / pltd_len
+        # mito is judged on its OWN share that is plastid-like, not on how
+        # much of the plastid it contains: the latter runs high for ordinary
+        # plastid-derived inserts (small pieces drawn from all over the
+        # plastid, inverted-repeat hits counted twice). Tested 2026-09-28:
+        # judging mito on max(both) demoted 193 mitos whose own plastid-like
+        # share was only 0-15% (median 5.6%) - normal MTPT content.
         per_organelle["mito"]["cross_organelle_aligned_frac"] = per_organelle["mito"]["species"].map(mito_frac)
         per_organelle["pltd"]["cross_organelle_aligned_frac"] = per_organelle["pltd"]["species"].map(pltd_frac)
     else:

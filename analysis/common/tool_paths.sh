@@ -3,7 +3,7 @@
 # Source this from any bash script: `source "$(dirname "${BASH_SOURCE[0]}")/../../common/tool_paths.sh"`
 #
 # Every tool resolves PATH first (so `mamba env create -f environment.yml
-# && conda activate plant_organellar_database` - or any other install that
+# && conda activate plant_organelle_annotator` - or any other install that
 # puts these on PATH - just works), falling back to this cluster's known
 # absolute install location only if PATH lookup fails. The Sanger-specific
 # fallback paths are harmless to keep for external installs: `command -v`

@@ -25,24 +25,25 @@ Output: analysis/editing/results/profiles/<gene>.pssm
 """
 from __future__ import annotations
 
+import os
 import argparse
 import shutil
 import subprocess
-import os
 import sys
 from pathlib import Path
 
-# Defaults to the old same-tree layout (code and data siblings under one
-# repo root); set PLANT_ORGANELLE_DATA_ROOT to point at a separate data
-# checkout instead (e.g. when this code is installed from its own repo).
-ROOT_DIR = Path(os.environ.get("PLANT_ORGANELLE_DATA_ROOT", str(Path(__file__).resolve().parents[3])))
+# CODE_DIR is this checkout's analysis/ (shared modules, bundled reference
+# data); data/ and every module's results/ and work/ live under the data
+# root - PLANT_ORGANELLE_DATA_ROOT, or this checkout if unset.
+CODE_DIR = Path(__file__).resolve().parents[2]
+ROOT_DIR = Path(os.environ.get("PLANT_ORGANELLE_DATA_ROOT", str(CODE_DIR.parent)))
 ANALYSIS_DIR = ROOT_DIR / "analysis"
-sys.path.insert(0, str(ANALYSIS_DIR / "common"))
+sys.path.insert(0, str(CODE_DIR / "common"))
 
 import species_discovery as sd  # noqa: E402
 
 MAFFT = shutil.which("mafft") or "/software/team301/mafft-7.525-with-extensions/core/mafft"
-MAFFT_BINARIES_DIR = "/software/team301/mafft-7.525-with-extensions/core"
+MAFFT_BINARIES_DIR = os.environ.get("MAFFT_BINARIES", "/software/team301/mafft-7.525-with-extensions/core")
 
 AA_ORDER = "ARNDCQEGHILKMFPSTWYV"
 MIN_SEQUENCES = 5  # below this, not enough signal for a meaningful profile
@@ -120,7 +121,8 @@ def clean_proteins(nuc_seqs: dict[str, str]) -> dict[str, str]:
 
 
 def run_mafft(protein_fasta: Path, out_fasta: Path) -> bool:
-    env = {"MAFFT_BINARIES": MAFFT_BINARIES_DIR, "PATH": "/usr/bin:/bin"}
+    env = ({"MAFFT_BINARIES": MAFFT_BINARIES_DIR, "PATH": "/usr/bin:/bin"}
+           if Path(MAFFT_BINARIES_DIR).is_dir() else dict(os.environ))
     proc = subprocess.run(
         [MAFFT, "--auto", "--quiet", str(protein_fasta)],
         capture_output=True, text=True, timeout=600, env=env,

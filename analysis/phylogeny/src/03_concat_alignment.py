@@ -14,17 +14,18 @@ Output: analysis/phylogeny/results/concat/{mito,pltd}_concat.fasta
 """
 from __future__ import annotations
 
+import os
 import argparse
 import shutil
 import subprocess
-import os
 import sys
 from pathlib import Path
 
-# Defaults to the old same-tree layout (code and data siblings under one
-# repo root); set PLANT_ORGANELLE_DATA_ROOT to point at a separate data
-# checkout instead (e.g. when this code is installed from its own repo).
-ROOT_DIR = Path(os.environ.get("PLANT_ORGANELLE_DATA_ROOT", str(Path(__file__).resolve().parents[3])))
+# CODE_DIR is this checkout's analysis/ (shared modules, bundled reference
+# data); data/ and every module's results/ and work/ live under the data
+# root - PLANT_ORGANELLE_DATA_ROOT, or this checkout if unset.
+CODE_DIR = Path(__file__).resolve().parents[2]
+ROOT_DIR = Path(os.environ.get("PLANT_ORGANELLE_DATA_ROOT", str(CODE_DIR.parent)))
 ANALYSIS_DIR = ROOT_DIR / "analysis"
 AMAS = shutil.which("AMAS.py") or "/software/team301/AMAS/amas/AMAS.py"
 PYTHON3 = shutil.which("python3") or "python3"

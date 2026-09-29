@@ -2,7 +2,7 @@
 # this pipeline depends on. Create with:
 #
 #   mamba env create -f environment.yml
-#   conda activate plant_organellar_database
+#   conda activate plant_organelle_annotator
 #
 # This does NOT cover this project's own Rust tools (gfatk, orfedit,
 # transsplice, hmm_to_gff, filter_tblout) or the reference databases oatkDB
@@ -12,7 +12,7 @@
 # (checked directly via `<tool> --version` on the reference install, not
 # copied from any install doc). Newer patch/minor versions will likely
 # work but haven't been verified.
-name: plant_organellar_database
+name: plant_organelle_annotator
 channels:
   - bioconda
   - conda-forge
@@ -20,6 +20,7 @@ dependencies:
   - python=3.11
   - pandas
   - numpy
+  - biopython
   - matplotlib
 
   # assembly graph / alignment / general sequence tools

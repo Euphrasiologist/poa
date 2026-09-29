@@ -1,3 +1,10 @@
 __pycache__/
 *.pyc
 .venv/
+
+# per-dataset output when this checkout is also the data root
+/data/
+analysis/*/results/
+analysis/*/work/
+analysis/*/logs/
+analysis/.cache/

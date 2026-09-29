@@ -1,0 +1,259 @@
+accession	gene	locus_tag	exon_num	n_exons	start	end	strand	junction_to_next	gap_bp	notes
+NC_037304.1	nad5	DA397_mgp37	1	5	234352	234581	+	cis	832	naive vs RefSeq differ only at expected C-to-U RNA-editing sites (same length, no unexplained stops). ordinary proximal intron, same strand
+NC_037304.1	nad5	DA397_mgp37	2	5	235413	236628	+	trans	123479	naive vs RefSeq differ only at expected C-to-U RNA-editing sites (same length, no unexplained stops). soft/inferred (large same-strand gap, consistent with separate transcription unit but not proof by itself)
+NC_037304.1	nad5	DA397_mgp37	3	5	360107	360128	+	trans	332896	naive vs RefSeq differ only at expected C-to-U RNA-editing sites (same length, no unexplained stops). soft/inferred (large same-strand gap, consistent with separate transcription unit but not proof by itself)
+NC_037304.1	nad5	DA397_mgp37	4	5	26817	27211	+	cis	979	naive vs RefSeq differ only at expected C-to-U RNA-editing sites (same length, no unexplained stops). ordinary proximal intron, same strand
+NC_037304.1	nad5	DA397_mgp37	5	5	28190	28336	+	none		naive vs RefSeq differ only at expected C-to-U RNA-editing sites (same length, no unexplained stops).
+NC_037304.1	rps3	DA397_mgp40	1	2	20165	20238	+	cis	1584	naive vs RefSeq differ only at expected C-to-U RNA-editing sites (same length, no unexplained stops). ordinary proximal intron, same strand
+NC_037304.1	rps3	DA397_mgp40	2	2	21822	23418	+	none		naive vs RefSeq differ only at expected C-to-U RNA-editing sites (same length, no unexplained stops).
+NC_037304.1	nad1	DA397_mgp34	1	5	82937	83321	-	trans		naive vs RefSeq differ only at expected C-to-U RNA-editing sites (same length, no unexplained stops). GenBank /trans_splicing qualifier present on this feature. hard-confirmed (strand switch: physically impossible within one continuous transcript)
+NC_037304.1	nad1	DA397_mgp34	2	5	58315	58397	+	cis	893	naive vs RefSeq differ only at expected C-to-U RNA-editing sites (same length, no unexplained stops). GenBank /trans_splicing qualifier present on this feature. ordinary proximal intron, same strand
+NC_037304.1	nad1	DA397_mgp34	3	5	59290	59481	+	trans	170823	naive vs RefSeq differ only at expected C-to-U RNA-editing sites (same length, no unexplained stops). GenBank /trans_splicing qualifier present on this feature. soft/inferred (large same-strand gap, consistent with separate transcription unit but not proof by itself)
+NC_037304.1	nad1	DA397_mgp34	4	5	230304	230362	+	cis	3512	naive vs RefSeq differ only at expected C-to-U RNA-editing sites (same length, no unexplained stops). GenBank /trans_splicing qualifier present on this feature. ordinary proximal intron, same strand
+NC_037304.1	nad1	DA397_mgp34	5	5	233874	234132	+	none		naive vs RefSeq differ only at expected C-to-U RNA-editing sites (same length, no unexplained stops). GenBank /trans_splicing qualifier present on this feature.
+NC_037304.1	nad2	DA397_mgp31	1	5	161832	161984	+	cis	982	naive vs RefSeq differ only at expected C-to-U RNA-editing sites (same length, no unexplained stops). GenBank /trans_splicing qualifier present on this feature. ordinary proximal intron, same strand
+NC_037304.1	nad2	DA397_mgp31	2	5	162966	163357	+	trans		naive vs RefSeq differ only at expected C-to-U RNA-editing sites (same length, no unexplained stops). GenBank /trans_splicing qualifier present on this feature. hard-confirmed (strand switch: physically impossible within one continuous transcript)
+NC_037304.1	nad2	DA397_mgp31	3	5	97882	98042	-	cis	2644	naive vs RefSeq differ only at expected C-to-U RNA-editing sites (same length, no unexplained stops). GenBank /trans_splicing qualifier present on this feature. ordinary proximal intron, same strand
+NC_037304.1	nad2	DA397_mgp31	4	5	94666	95238	-	cis	1660	naive vs RefSeq differ only at expected C-to-U RNA-editing sites (same length, no unexplained stops). GenBank /trans_splicing qualifier present on this feature. ordinary proximal intron, same strand
+NC_037304.1	nad2	DA397_mgp31	5	5	92819	93006	-	none		naive vs RefSeq differ only at expected C-to-U RNA-editing sites (same length, no unexplained stops). GenBank /trans_splicing qualifier present on this feature.
+NC_002511.2	nad2	LK397_mgp113	1	5	240473	240625	+	cis	1004	naive vs RefSeq differ only at expected C-to-U RNA-editing sites (same length, no unexplained stops). GenBank /trans_splicing qualifier present on this feature. ordinary proximal intron, same strand
+NC_002511.2	nad2	LK397_mgp113	2	5	241629	242020	+	trans		naive vs RefSeq differ only at expected C-to-U RNA-editing sites (same length, no unexplained stops). GenBank /trans_splicing qualifier present on this feature. hard-confirmed (strand switch: physically impossible within one continuous transcript)
+NC_002511.2	nad2	LK397_mgp113	3	5	79431	79591	-	cis	2080	naive vs RefSeq differ only at expected C-to-U RNA-editing sites (same length, no unexplained stops). GenBank /trans_splicing qualifier present on this feature. ordinary proximal intron, same strand
+NC_002511.2	nad2	LK397_mgp113	4	5	76779	77351	-	cis	1488	naive vs RefSeq differ only at expected C-to-U RNA-editing sites (same length, no unexplained stops). GenBank /trans_splicing qualifier present on this feature. ordinary proximal intron, same strand
+NC_002511.2	nad2	LK397_mgp113	5	5	75104	75291	-	none		naive vs RefSeq differ only at expected C-to-U RNA-editing sites (same length, no unexplained stops). GenBank /trans_splicing qualifier present on this feature.
+NC_002511.2	nad1	LK397_mgp104	1	5	102264	102649	-	cis	3991	naive vs RefSeq differ only at expected C-to-U RNA-editing sites (same length, no unexplained stops). GenBank /trans_splicing qualifier present on this feature. ordinary proximal intron, same strand
+NC_002511.2	nad1	LK397_mgp104	2	5	106640	106721	-	cis	1421	naive vs RefSeq differ only at expected C-to-U RNA-editing sites (same length, no unexplained stops). GenBank /trans_splicing qualifier present on this feature. ordinary proximal intron, same strand
+NC_002511.2	nad1	LK397_mgp104	3	5	105028	105219	-	trans		naive vs RefSeq differ only at expected C-to-U RNA-editing sites (same length, no unexplained stops). GenBank /trans_splicing qualifier present on this feature. hard-confirmed (strand switch: physically impossible within one continuous transcript)
+NC_002511.2	nad1	LK397_mgp104	4	5	243211	243269	+	trans		naive vs RefSeq differ only at expected C-to-U RNA-editing sites (same length, no unexplained stops). GenBank /trans_splicing qualifier present on this feature. hard-confirmed (strand switch: physically impossible within one continuous transcript)
+NC_002511.2	nad1	LK397_mgp104	5	5	152426	152684	-	none		naive vs RefSeq differ only at expected C-to-U RNA-editing sites (same length, no unexplained stops). GenBank /trans_splicing qualifier present on this feature.
+NC_002511.2	nad5	LK397_mgp090	1	5	171883	172112	+	cis	839	naive vs RefSeq differ only at expected C-to-U RNA-editing sites (same length, no unexplained stops). GenBank /trans_splicing qualifier present on this feature. ordinary proximal intron, same strand
+NC_002511.2	nad5	LK397_mgp090	2	5	172951	174166	+	trans	31739	naive vs RefSeq differ only at expected C-to-U RNA-editing sites (same length, no unexplained stops). GenBank /trans_splicing qualifier present on this feature. soft/inferred (large same-strand gap, consistent with separate transcription unit but not proof by itself)
+NC_002511.2	nad5	LK397_mgp090	3	5	141191	141212	+	trans		naive vs RefSeq differ only at expected C-to-U RNA-editing sites (same length, no unexplained stops). GenBank /trans_splicing qualifier present on this feature. hard-confirmed (strand switch: physically impossible within one continuous transcript)
+NC_002511.2	nad5	LK397_mgp090	4	5	320806	321200	-	cis	983	naive vs RefSeq differ only at expected C-to-U RNA-editing sites (same length, no unexplained stops). GenBank /trans_splicing qualifier present on this feature. ordinary proximal intron, same strand
+NC_002511.2	nad5	LK397_mgp090	5	5	319674	319823	-	none		naive vs RefSeq differ only at expected C-to-U RNA-editing sites (same length, no unexplained stops). GenBank /trans_splicing qualifier present on this feature.
+NC_002511.2	rps3	LK397_mgp038	1	1	271008	272663	+	none		naive vs RefSeq differ only at expected C-to-U RNA-editing sites (same length, no unexplained stops). INTRON-LESS locus (no splicing at all, single exon = whole CDS).
+NC_007982.1	rps3	ZeamMp001	1	2	63968	64041	-	trans	97099	GenBank /trans_splicing qualifier present on this feature. Multiple annotated loci for rps3 in this genome (paralog/duplicate copy); this is locus ZeamMp001. soft/inferred (large same-strand gap, consistent with separate transcription unit but not proof by itself)
+NC_007982.1	rps3	ZeamMp001	2	2	161140	162745	-	none		GenBank /trans_splicing qualifier present on this feature. Multiple annotated loci for rps3 in this genome (paralog/duplicate copy); this is locus ZeamMp001.
+NC_007982.1	nad1	ZeamMp186	1	5	50490	50874	+	trans	270054	naive vs RefSeq differ only at expected C-to-U RNA-editing sites (same length, no unexplained stops). GenBank /trans_splicing qualifier present on this feature. Multiple annotated loci for nad1 in this genome (paralog/duplicate copy); this is locus ZeamMp186. soft/inferred (large same-strand gap, consistent with separate transcription unit but not proof by itself)
+NC_007982.1	nad1	ZeamMp186	2	5	320928	321010	+	cis	1394	naive vs RefSeq differ only at expected C-to-U RNA-editing sites (same length, no unexplained stops). GenBank /trans_splicing qualifier present on this feature. Multiple annotated loci for nad1 in this genome (paralog/duplicate copy); this is locus ZeamMp186. ordinary proximal intron, same strand
+NC_007982.1	nad1	ZeamMp186	3	5	322404	322595	+	trans	226119	naive vs RefSeq differ only at expected C-to-U RNA-editing sites (same length, no unexplained stops). GenBank /trans_splicing qualifier present on this feature. Multiple annotated loci for nad1 in this genome (paralog/duplicate copy); this is locus ZeamMp186. soft/inferred (large same-strand gap, consistent with separate transcription unit but not proof by itself)
+NC_007982.1	nad1	ZeamMp186	4	5	548714	548772	+	trans		naive vs RefSeq differ only at expected C-to-U RNA-editing sites (same length, no unexplained stops). GenBank /trans_splicing qualifier present on this feature. Multiple annotated loci for nad1 in this genome (paralog/duplicate copy); this is locus ZeamMp186. hard-confirmed (strand switch: physically impossible within one continuous transcript)
+NC_007982.1	nad1	ZeamMp186	5	5	266974	267232	-	none		naive vs RefSeq differ only at expected C-to-U RNA-editing sites (same length, no unexplained stops). GenBank /trans_splicing qualifier present on this feature. Multiple annotated loci for nad1 in this genome (paralog/duplicate copy); this is locus ZeamMp186.
+NC_007982.1	nad2	ZeamMp019	1	5	511232	511384	-	cis	823	GenBank /trans_splicing qualifier present on this feature. Multiple annotated loci for nad2 in this genome (paralog/duplicate copy); this is locus ZeamMp019. ordinary proximal intron, same strand
+NC_007982.1	nad2	ZeamMp019	2	5	510018	510409	-	trans		GenBank /trans_splicing qualifier present on this feature. Multiple annotated loci for nad2 in this genome (paralog/duplicate copy); this is locus ZeamMp019. hard-confirmed (strand switch: physically impossible within one continuous transcript)
+NC_007982.1	nad2	ZeamMp019	3	5	111614	111774	+	trans		GenBank /trans_splicing qualifier present on this feature. Multiple annotated loci for nad2 in this genome (paralog/duplicate copy); this is locus ZeamMp019. hard-confirmed (strand switch: physically impossible within one continuous transcript)
+NC_007982.1	nad2	ZeamMp019	4	5	58768	59340	-	cis	1387	GenBank /trans_splicing qualifier present on this feature. Multiple annotated loci for nad2 in this genome (paralog/duplicate copy); this is locus ZeamMp019. ordinary proximal intron, same strand
+NC_007982.1	nad2	ZeamMp019	5	5	57194	57381	-	none		GenBank /trans_splicing qualifier present on this feature. Multiple annotated loci for nad2 in this genome (paralog/duplicate copy); this is locus ZeamMp019.
+NC_007982.1	nad2	ZeamMp016	1	5	511232	511384	-	cis	823	GenBank /trans_splicing qualifier present on this feature. Multiple annotated loci for nad2 in this genome (paralog/duplicate copy); this is locus ZeamMp016. ordinary proximal intron, same strand
+NC_007982.1	nad2	ZeamMp016	2	5	510018	510409	-	trans		GenBank /trans_splicing qualifier present on this feature. Multiple annotated loci for nad2 in this genome (paralog/duplicate copy); this is locus ZeamMp016. hard-confirmed (strand switch: physically impossible within one continuous transcript)
+NC_007982.1	nad2	ZeamMp016	3	5	111614	111774	+	cis	1906	GenBank /trans_splicing qualifier present on this feature. Multiple annotated loci for nad2 in this genome (paralog/duplicate copy); this is locus ZeamMp016. ordinary proximal intron, same strand
+NC_007982.1	nad2	ZeamMp016	4	5	113680	114252	+	cis	1387	GenBank /trans_splicing qualifier present on this feature. Multiple annotated loci for nad2 in this genome (paralog/duplicate copy); this is locus ZeamMp016. ordinary proximal intron, same strand
+NC_007982.1	nad2	ZeamMp016	5	5	115639	115826	+	none		GenBank /trans_splicing qualifier present on this feature. Multiple annotated loci for nad2 in this genome (paralog/duplicate copy); this is locus ZeamMp016.
+NC_007982.1	nad1	ZeamMp017	1	5	122146	122530	-	trans		naive vs RefSeq differ only at expected C-to-U RNA-editing sites (same length, no unexplained stops). GenBank /trans_splicing qualifier present on this feature. Multiple annotated loci for nad1 in this genome (paralog/duplicate copy); this is locus ZeamMp017. hard-confirmed (strand switch: physically impossible within one continuous transcript)
+NC_007982.1	nad1	ZeamMp017	2	5	320928	321010	+	cis	1394	naive vs RefSeq differ only at expected C-to-U RNA-editing sites (same length, no unexplained stops). GenBank /trans_splicing qualifier present on this feature. Multiple annotated loci for nad1 in this genome (paralog/duplicate copy); this is locus ZeamMp017. ordinary proximal intron, same strand
+NC_007982.1	nad1	ZeamMp017	3	5	322404	322595	+	trans	226119	naive vs RefSeq differ only at expected C-to-U RNA-editing sites (same length, no unexplained stops). GenBank /trans_splicing qualifier present on this feature. Multiple annotated loci for nad1 in this genome (paralog/duplicate copy); this is locus ZeamMp017. soft/inferred (large same-strand gap, consistent with separate transcription unit but not proof by itself)
+NC_007982.1	nad1	ZeamMp017	4	5	548714	548772	+	trans		naive vs RefSeq differ only at expected C-to-U RNA-editing sites (same length, no unexplained stops). GenBank /trans_splicing qualifier present on this feature. Multiple annotated loci for nad1 in this genome (paralog/duplicate copy); this is locus ZeamMp017. hard-confirmed (strand switch: physically impossible within one continuous transcript)
+NC_007982.1	nad1	ZeamMp017	5	5	266974	267232	-	none		naive vs RefSeq differ only at expected C-to-U RNA-editing sites (same length, no unexplained stops). GenBank /trans_splicing qualifier present on this feature. Multiple annotated loci for nad1 in this genome (paralog/duplicate copy); this is locus ZeamMp017.
+NC_007982.1	rps3	ZeamMp024	1	2	164588	164661	-	cis	1843	Multiple annotated loci for rps3 in this genome (paralog/duplicate copy); this is locus ZeamMp024. ordinary proximal intron, same strand
+NC_007982.1	rps3	ZeamMp024	2	2	161140	162745	-	none		Multiple annotated loci for rps3 in this genome (paralog/duplicate copy); this is locus ZeamMp024.
+NC_007982.1	nad5	ZeamMp071	1	5	204632	204862	+	cis	871	GenBank /trans_splicing qualifier present on this feature. ordinary proximal intron, same strand
+NC_007982.1	nad5	ZeamMp071	2	5	205733	206947	+	trans		GenBank /trans_splicing qualifier present on this feature. hard-confirmed (strand switch: physically impossible within one continuous transcript)
+NC_007982.1	nad5	ZeamMp071	3	5	266594	266615	-	trans	5652	GenBank /trans_splicing qualifier present on this feature. soft/inferred (large same-strand gap, consistent with separate transcription unit but not proof by itself)
+NC_007982.1	nad5	ZeamMp071	4	5	260548	260942	-	cis	952	GenBank /trans_splicing qualifier present on this feature. ordinary proximal intron, same strand
+NC_007982.1	nad5	ZeamMp071	5	5	259447	259596	-	none		GenBank /trans_splicing qualifier present on this feature.
+NC_011033.1	nad1	OrsajM_p01	1	5	11024	11409	+	trans		naive vs RefSeq differ only at expected C-to-U RNA-editing sites (same length, no unexplained stops). GenBank /trans_splicing qualifier present on this feature. hard-confirmed (strand switch: physically impossible within one continuous transcript)
+NC_011033.1	nad1	OrsajM_p01	2	5	241499	241580	-	cis	1418	naive vs RefSeq differ only at expected C-to-U RNA-editing sites (same length, no unexplained stops). GenBank /trans_splicing qualifier present on this feature. ordinary proximal intron, same strand
+NC_011033.1	nad1	OrsajM_p01	3	5	239890	240081	-	trans	11273	naive vs RefSeq differ only at expected C-to-U RNA-editing sites (same length, no unexplained stops). GenBank /trans_splicing qualifier present on this feature. soft/inferred (large same-strand gap, consistent with separate transcription unit but not proof by itself)
+NC_011033.1	nad1	OrsajM_p01	4	5	251354	251412	-	trans	63624	naive vs RefSeq differ only at expected C-to-U RNA-editing sites (same length, no unexplained stops). GenBank /trans_splicing qualifier present on this feature. soft/inferred (large same-strand gap, consistent with separate transcription unit but not proof by itself)
+NC_011033.1	nad1	OrsajM_p01	5	5	315036	315294	-	none		naive vs RefSeq differ only at expected C-to-U RNA-editing sites (same length, no unexplained stops). GenBank /trans_splicing qualifier present on this feature.
+NC_011033.1	nad5	OrsajM_p05	1	5	20464	20694	+	cis	854	naive vs RefSeq differ only at expected C-to-U RNA-editing sites (same length, no unexplained stops). GenBank /trans_splicing qualifier present on this feature. ordinary proximal intron, same strand
+NC_011033.1	nad5	OrsajM_p05	2	5	21548	22763	+	trans		naive vs RefSeq differ only at expected C-to-U RNA-editing sites (same length, no unexplained stops). GenBank /trans_splicing qualifier present on this feature. hard-confirmed (strand switch: physically impossible within one continuous transcript)
+NC_011033.1	nad5	OrsajM_p05	3	5	314652	314672	-	trans	81662	naive vs RefSeq differ only at expected C-to-U RNA-editing sites (same length, no unexplained stops). GenBank /trans_splicing qualifier present on this feature. soft/inferred (large same-strand gap, consistent with separate transcription unit but not proof by itself)
+NC_011033.1	nad5	OrsajM_p05	4	5	232596	232990	-	cis	927	naive vs RefSeq differ only at expected C-to-U RNA-editing sites (same length, no unexplained stops). GenBank /trans_splicing qualifier present on this feature. ordinary proximal intron, same strand
+NC_011033.1	nad5	OrsajM_p05	5	5	231520	231669	-	none		naive vs RefSeq differ only at expected C-to-U RNA-editing sites (same length, no unexplained stops). GenBank /trans_splicing qualifier present on this feature.
+NC_011033.1	rps3	OrsajM_p18	1	2	170836	170909	+	cis	1848	UNRESOLVED: naive genomic translation diverges sharply from RefSeq annotation (identity 16%, 38 internal stops) beyond what simple C-to-U RNA editing explains; possible indel/assembly artifact in this RefSeq record. Coordinates taken verbatim from GenBank; do not trust reading frame beyond divergence point. ordinary proximal intron, same strand
+NC_011033.1	rps3	OrsajM_p18	2	2	172757	174298	+	none		UNRESOLVED: naive genomic translation diverges sharply from RefSeq annotation (identity 16%, 38 internal stops) beyond what simple C-to-U RNA editing explains; possible indel/assembly artifact in this RefSeq record. Coordinates taken verbatim from GenBank; do not trust reading frame beyond divergence point.
+NC_011033.1	nad2	OrsajM_p52	1	5	405389	405541	-	cis	1211	EXON ORDER CORRECTED: literal GenBank join() listing did not reproduce the RefSeq-annotated protein (naive identity 6%); rotated segment order by 3 position(s), validated against RefSeq annotation + cross-genome homology (identity now 100%). GenBank /trans_splicing qualifier present on this feature. ordinary proximal intron, same strand
+NC_011033.1	nad2	OrsajM_p52	2	5	403787	404178	-	trans		EXON ORDER CORRECTED: literal GenBank join() listing did not reproduce the RefSeq-annotated protein (naive identity 6%); rotated segment order by 3 position(s), validated against RefSeq annotation + cross-genome homology (identity now 100%). GenBank /trans_splicing qualifier present on this feature. hard-confirmed (strand switch: physically impossible within one continuous transcript)
+NC_011033.1	nad2	OrsajM_p52	3	5	363830	363990	+	cis	2398	EXON ORDER CORRECTED: literal GenBank join() listing did not reproduce the RefSeq-annotated protein (naive identity 6%); rotated segment order by 3 position(s), validated against RefSeq annotation + cross-genome homology (identity now 100%). GenBank /trans_splicing qualifier present on this feature. ordinary proximal intron, same strand
+NC_011033.1	nad2	OrsajM_p52	4	5	366388	366959	+	cis	1403	EXON ORDER CORRECTED: literal GenBank join() listing did not reproduce the RefSeq-annotated protein (naive identity 6%); rotated segment order by 3 position(s), validated against RefSeq annotation + cross-genome homology (identity now 100%). GenBank /trans_splicing qualifier present on this feature. ordinary proximal intron, same strand
+NC_011033.1	nad2	OrsajM_p52	5	5	368362	368550	+	none		EXON ORDER CORRECTED: literal GenBank join() listing did not reproduce the RefSeq-annotated protein (naive identity 6%); rotated segment order by 3 position(s), validated against RefSeq annotation + cross-genome homology (identity now 100%). GenBank /trans_splicing qualifier present on this feature.
+NC_012119.1	nad5	ViviM_p038	1	5	191582	191811	-	cis	850	GenBank /trans_splicing qualifier present on this feature. ordinary proximal intron, same strand
+NC_012119.1	nad5	ViviM_p038	2	5	189517	190732	-	trans	582372	GenBank /trans_splicing qualifier present on this feature. soft/inferred (large same-strand gap, consistent with separate transcription unit but not proof by itself)
+NC_012119.1	nad5	ViviM_p038	3	5	773104	773125	-	trans	455359	GenBank /trans_splicing qualifier present on this feature. soft/inferred (large same-strand gap, consistent with separate transcription unit but not proof by itself)
+NC_012119.1	nad5	ViviM_p038	4	5	317351	317745	-	cis	1179	GenBank /trans_splicing qualifier present on this feature. ordinary proximal intron, same strand
+NC_012119.1	nad5	ViviM_p038	5	5	316023	316172	-	none		GenBank /trans_splicing qualifier present on this feature.
+NC_012119.1	nad1	ViviM_p002	1	5	610468	610858	+	trans	157863	GenBank /trans_splicing qualifier present on this feature. soft/inferred (large same-strand gap, consistent with separate transcription unit but not proof by itself)
+NC_012119.1	nad1	ViviM_p002	2	5	452523	452605	+	cis	1454	GenBank /trans_splicing qualifier present on this feature. ordinary proximal intron, same strand
+NC_012119.1	nad1	ViviM_p002	3	5	454059	454250	+	trans		GenBank /trans_splicing qualifier present on this feature. hard-confirmed (strand switch: physically impossible within one continuous transcript)
+NC_012119.1	nad1	ViviM_p002	4	5	25462	25520	-	cis	3700	GenBank /trans_splicing qualifier present on this feature. ordinary proximal intron, same strand
+NC_012119.1	nad1	ViviM_p002	5	5	21504	21762	-	none		GenBank /trans_splicing qualifier present on this feature.
+NC_012119.1	nad2	ViviM_p024	1	5	107141	107293	+	cis	1225	GenBank /trans_splicing qualifier present on this feature. ordinary proximal intron, same strand
+NC_012119.1	nad2	ViviM_p024	2	5	108518	108909	+	trans	431758	GenBank /trans_splicing qualifier present on this feature. soft/inferred (large same-strand gap, consistent with separate transcription unit but not proof by itself)
+NC_012119.1	nad2	ViviM_p024	3	5	540667	540827	+	cis	1706	GenBank /trans_splicing qualifier present on this feature. ordinary proximal intron, same strand
+NC_012119.1	nad2	ViviM_p024	4	5	542533	543105	+	cis	1497	GenBank /trans_splicing qualifier present on this feature. ordinary proximal intron, same strand
+NC_012119.1	nad2	ViviM_p024	5	5	544602	544789	+	none		GenBank /trans_splicing qualifier present on this feature.
+NC_012119.1	rps3	ViviM_p061	1	2	426098	426171	+	cis	2013	ordinary proximal intron, same strand
+NC_012119.1	rps3	ViviM_p061	2	2	428184	429801	+	none		
+NC_037304.1	cox2	DA397_mgp01	1	2	6264	6963	+	cis	1343	Arabidopsis thaliana: naive vs RefSeq differ only at 11 C-to-U editing-consistent site(s)
+NC_037304.1	cox2	DA397_mgp01	2	2	8307	8389	+	none		Arabidopsis thaliana: naive vs RefSeq differ only at 11 C-to-U editing-consistent site(s)
+NC_037304.1	ccmFc	DA397_mgp24	1	2	189483	190261	+	cis	959	Arabidopsis thaliana: naive vs RefSeq differ only at 12 C-to-U editing-consistent site(s)
+NC_037304.1	ccmFc	DA397_mgp24	2	2	191221	191770	+	none		Arabidopsis thaliana: naive vs RefSeq differ only at 12 C-to-U editing-consistent site(s)
+NC_037304.1	nad4	DA397_mgp23	1	4	215102	215562	-	cis	1472	Arabidopsis thaliana: naive vs RefSeq differ only at 30 C-to-U editing-consistent site(s)
+NC_037304.1	nad4	DA397_mgp23	2	4	213115	213629	-	cis	3081	Arabidopsis thaliana: naive vs RefSeq differ only at 30 C-to-U editing-consistent site(s)
+NC_037304.1	nad4	DA397_mgp23	3	4	209611	210033	-	cis	1942	Arabidopsis thaliana: naive vs RefSeq differ only at 30 C-to-U editing-consistent site(s)
+NC_037304.1	nad4	DA397_mgp23	4	4	207580	207668	-	none		Arabidopsis thaliana: naive vs RefSeq differ only at 30 C-to-U editing-consistent site(s)
+NC_037304.1	rpl2	DA397_mgp21	1	2	221694	222610	-	cis	1651	Arabidopsis thaliana: naive vs RefSeq differ only at 1 C-to-U editing-consistent site(s)
+NC_037304.1	rpl2	DA397_mgp21	2	2	219910	220042	-	none		Arabidopsis thaliana: naive vs RefSeq differ only at 1 C-to-U editing-consistent site(s)
+NC_037304.1	nad7	DA397_mgp19	1	5	245188	245330	-	cis	964	Arabidopsis thaliana: naive vs RefSeq differ only at 23 C-to-U editing-consistent site(s)
+NC_037304.1	nad7	DA397_mgp19	2	5	244155	244223	-	cis	1063	Arabidopsis thaliana: naive vs RefSeq differ only at 23 C-to-U editing-consistent site(s)
+NC_037304.1	nad7	DA397_mgp19	3	5	242625	243091	-	cis	1053	Arabidopsis thaliana: naive vs RefSeq differ only at 23 C-to-U editing-consistent site(s)
+NC_037304.1	nad7	DA397_mgp19	4	5	241328	241571	-	cis	1816	Arabidopsis thaliana: naive vs RefSeq differ only at 23 C-to-U editing-consistent site(s)
+NC_037304.1	nad7	DA397_mgp19	5	5	239250	239511	-	none		Arabidopsis thaliana: naive vs RefSeq differ only at 23 C-to-U editing-consistent site(s)
+NC_002511.2	nad7	LK397_mgp060	1	5	216312	216445	+	cis	889	Beta vulgaris: naive vs RefSeq differ only at 20 C-to-U editing-consistent site(s)
+NC_002511.2	nad7	LK397_mgp060	2	5	217335	217403	+	cis	927	Beta vulgaris: naive vs RefSeq differ only at 20 C-to-U editing-consistent site(s)
+NC_002511.2	nad7	LK397_mgp060	3	5	218331	218797	+	cis	1051	Beta vulgaris: naive vs RefSeq differ only at 20 C-to-U editing-consistent site(s)
+NC_002511.2	nad7	LK397_mgp060	4	5	219849	220092	+	cis	1751	Beta vulgaris: naive vs RefSeq differ only at 20 C-to-U editing-consistent site(s)
+NC_002511.2	nad7	LK397_mgp060	5	5	221844	222105	+	none		Beta vulgaris: naive vs RefSeq differ only at 20 C-to-U editing-consistent site(s)
+NC_002511.2	cox2	LK397_mgp054	1	2	234911	235292	+	cis	1463	Beta vulgaris: naive vs RefSeq differ only at 8 C-to-U editing-consistent site(s)
+NC_002511.2	cox2	LK397_mgp054	2	2	236756	237156	+	none		Beta vulgaris: naive vs RefSeq differ only at 8 C-to-U editing-consistent site(s)
+NC_002511.2	nad4	LK397_mgp036	1	3	285016	285476	-	cis	1440	Beta vulgaris: naive vs RefSeq differ only at 17 C-to-U editing-consistent site(s)
+NC_002511.2	nad4	LK397_mgp036	2	3	282638	283575	-	cis	2465	Beta vulgaris: naive vs RefSeq differ only at 17 C-to-U editing-consistent site(s)
+NC_002511.2	nad4	LK397_mgp036	3	3	280084	280172	-	none		Beta vulgaris: naive vs RefSeq differ only at 17 C-to-U editing-consistent site(s)
+NC_007982.1	nad4	ZeamMp032	1	4	84516	84976	-	cis	1241	Zea mays: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_007982.1	nad4	ZeamMp032	2	4	82760	83274	-	cis	3425	Zea mays: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_007982.1	nad4	ZeamMp032	3	4	78912	79334	-	cis	2691	Zea mays: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_007982.1	nad4	ZeamMp032	4	4	76132	76220	-	none		Zea mays: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_007982.1	ccmFc	ZeamMp033	1	2	95774	96528	+	cis	998	Zea mays: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_007982.1	ccmFc	ZeamMp033	2	2	97527	98073	+	none		Zea mays: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_007982.1	nad7	ZeamMp086	1	5	243432	243574	-	cis	837	Zea mays: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_007982.1	nad7	ZeamMp086	2	5	242526	242594	-	cis	1297	Zea mays: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_007982.1	nad7	ZeamMp086	3	5	240762	241228	-	cis	988	Zea mays: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_007982.1	nad7	ZeamMp086	4	5	239530	239773	-	cis	1691	Zea mays: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_007982.1	nad7	ZeamMp086	5	5	237577	237838	-	none		Zea mays: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_007982.1	cox2	ZeamMp179	1	2	541960	542347	+	cis	794	Zea mays: naive vs RefSeq differ only at 17 C-to-U editing-consistent site(s)
+NC_007982.1	cox2	ZeamMp179	2	2	543142	543536	+	none		Zea mays: naive vs RefSeq differ only at 17 C-to-U editing-consistent site(s)
+NC_011033.1	nad7	OrsajM_p15	1	5	90731	90873	-	cis	811	Oryza sativa: UNRESOLVED length naive 395 vs RefSeq 394
+NC_011033.1	nad7	OrsajM_p15	2	5	89849	89919	-	cis	1310	Oryza sativa: UNRESOLVED length naive 395 vs RefSeq 394
+NC_011033.1	nad7	OrsajM_p15	3	5	88072	88538	-	cis	996	Oryza sativa: UNRESOLVED length naive 395 vs RefSeq 394
+NC_011033.1	nad7	OrsajM_p15	4	5	86832	87075	-	cis	1684	Oryza sativa: UNRESOLVED length naive 395 vs RefSeq 394
+NC_011033.1	nad7	OrsajM_p15	5	5	84886	85147	-	none		Oryza sativa: UNRESOLVED length naive 395 vs RefSeq 394
+NC_011033.1	nad4	OrsajM_p24	1	4	198385	198845	+	cis	1254	Oryza sativa: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_011033.1	nad4	OrsajM_p24	2	4	200100	200614	+	cis	3438	Oryza sativa: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_011033.1	nad4	OrsajM_p24	3	4	204053	204475	+	cis	2933	Oryza sativa: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_011033.1	nad4	OrsajM_p24	4	4	207409	207497	+	none		Oryza sativa: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_011033.1	cox2	OrsajM_p25	1	2	212413	212800	+	cis	1275	Oryza sativa: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_011033.1	cox2	OrsajM_p25	2	2	214076	214470	+	none		Oryza sativa: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_011033.1	rpl2	OrsajM_p36	1	2	294692	295531	+	cis	1441	Oryza sativa: UNRESOLVED length naive 516 vs RefSeq 502
+NC_011033.1	rpl2	OrsajM_p36	2	2	296973	297681	+	none		Oryza sativa: UNRESOLVED length naive 516 vs RefSeq 502
+NC_011033.1	ccmFc	OrsajM_p44	1	2	330597	331345	+	cis	1004	Oryza sativa: naive vs RefSeq differ only at 18 C-to-U editing-consistent site(s)
+NC_011033.1	ccmFc	OrsajM_p44	2	2	332350	332908	+	none		Oryza sativa: naive vs RefSeq differ only at 18 C-to-U editing-consistent site(s)
+NC_012119.1	nad7	ViviM_p020	1	5	79078	79220	-	cis	886	Vitis vinifera: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_012119.1	nad7	ViviM_p020	2	5	78123	78191	-	cis	1844	Vitis vinifera: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_012119.1	nad7	ViviM_p020	3	5	75812	76278	-	cis	1043	Vitis vinifera: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_012119.1	nad7	ViviM_p020	4	5	74525	74768	-	cis	1827	Vitis vinifera: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_012119.1	nad7	ViviM_p020	5	5	72436	72697	-	none		Vitis vinifera: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_012119.1	ccmFc	ViviM_p026	1	2	121066	121835	+	cis	955	Vitis vinifera: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_012119.1	ccmFc	ViviM_p026	2	2	122791	123538	+	none		Vitis vinifera: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_012119.1	rpl2	ViviM_p059	1	2	422356	423242	+	cis	1883	Vitis vinifera: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_012119.1	rpl2	ViviM_p059	2	2	425126	425243	+	none		Vitis vinifera: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_012119.1	rps10	ViviM_p074	1	2	488758	489007	+	cis	1052	Vitis vinifera: naive vs RefSeq differ only at 1 C-to-U editing-consistent site(s)
+NC_012119.1	rps10	ViviM_p074	2	2	490060	490172	+	none		Vitis vinifera: naive vs RefSeq differ only at 1 C-to-U editing-consistent site(s)
+NC_012119.1	cox2	ViviM_p123	1	3	698661	699042	-	cis	1975	Vitis vinifera: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_012119.1	cox2	ViviM_p123	2	3	696374	696685	-	cis	1633	Vitis vinifera: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_012119.1	cox2	ViviM_p123	3	3	694649	694740	-	none		Vitis vinifera: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_012119.1	nad4	ViviM_p126	1	4	755164	755624	+	cis	1434	Vitis vinifera: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_012119.1	nad4	ViviM_p126	2	4	757059	757573	+	cis	4421	Vitis vinifera: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_012119.1	nad4	ViviM_p126	3	4	761995	762417	+	cis	2044	Vitis vinifera: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_012119.1	nad4	ViviM_p126	4	4	764462	764550	+	none		Vitis vinifera: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_006581.1	rps10	NitaMp050	1	2	131338	131587	-	cis	774	Nicotiana tabacum: naive vs RefSeq differ only at 1 C-to-U editing-consistent site(s)
+NC_006581.1	rps10	NitaMp050	2	2	130451	130563	-	none		Nicotiana tabacum: naive vs RefSeq differ only at 1 C-to-U editing-consistent site(s)
+NC_006581.1	cox2	NitaMp068	1	2	156352	156733	+	cis	1360	Nicotiana tabacum: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_006581.1	cox2	NitaMp068	2	2	158094	158494	+	none		Nicotiana tabacum: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_006581.1	nad4	NitaMp074	1	4	182370	182830	+	cis	1418	Nicotiana tabacum: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_006581.1	nad4	NitaMp074	2	4	184249	184763	+	cis	3138	Nicotiana tabacum: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_006581.1	nad4	NitaMp074	3	4	187902	188324	+	cis	2439	Nicotiana tabacum: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_006581.1	nad4	NitaMp074	4	4	190764	190852	+	none		Nicotiana tabacum: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_006581.1	ccmFc	NitaMp133	1	2	307057	307823	+	cis	954	Nicotiana tabacum: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_006581.1	ccmFc	NitaMp133	2	2	308778	309327	+	none		Nicotiana tabacum: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_006581.1	rpl2	NitaMp148	1	2	363071	363948	-	cis	1902	Nicotiana tabacum: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_006581.1	rpl2	NitaMp148	2	2	361051	361168	-	none		Nicotiana tabacum: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_006581.1	nad7	NitaMp151	1	4	380473	380615	-	cis	915	Nicotiana tabacum: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_006581.1	nad7	NitaMp151	2	4	379489	379557	-	cis	1455	Nicotiana tabacum: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_006581.1	nad7	NitaMp151	3	4	377323	378033	-	cis	1736	Nicotiana tabacum: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_006581.1	nad7	NitaMp151	4	4	375325	375586	-	none		Nicotiana tabacum: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_020455.1	rps10	I638_mgp073	1	2	47253	47502	+	cis	2829	Glycine max: naive vs RefSeq differ only at 1 C-to-U editing-consistent site(s)
+NC_020455.1	rps10	I638_mgp073	2	2	50332	50444	+	none		Glycine max: naive vs RefSeq differ only at 1 C-to-U editing-consistent site(s)
+NC_020455.1	ccmFc	I638_mgp070	1	2	57359	58137	+	cis	4100	Glycine max: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_020455.1	ccmFc	I638_mgp070	2	2	62238	62787	+	none		Glycine max: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_020455.1	nad4	I638_mgp063	1	4	102333	102793	-	cis	1408	Glycine max: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_020455.1	nad4	I638_mgp063	2	4	100410	100924	-	cis	3290	Glycine max: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_020455.1	nad4	I638_mgp063	3	4	96697	97119	-	cis	2569	Glycine max: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_020455.1	nad4	I638_mgp063	4	4	94039	94127	-	none		Glycine max: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_020455.1	nad7	I638_mgp053	1	5	170007	170149	+	cis	900	Glycine max: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_020455.1	nad7	I638_mgp053	2	5	171050	171118	+	cis	1331	Glycine max: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_020455.1	nad7	I638_mgp053	3	5	172450	172916	+	cis	1055	Glycine max: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_020455.1	nad7	I638_mgp053	4	5	173972	174215	+	cis	2033	Glycine max: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_020455.1	nad7	I638_mgp053	5	5	176249	176510	+	none		Glycine max: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_020455.1	cox2	I638_mgp015	1	1	352394	353176	-	none		Glycine max: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_017855.1	rpl2	DacassM_p014	1	2	46282	46671	+	cis	651	Daucus carota: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_017855.1	rpl2	DacassM_p014	2	2	47323	47739	+	none		Daucus carota: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_017855.1	nad4	DacassM_p017	1	4	61125	61585	-	cis	1417	Daucus carota: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_017855.1	nad4	DacassM_p017	2	4	59192	59707	-	cis	3170	Daucus carota: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_017855.1	nad4	DacassM_p017	3	4	55601	56021	-	cis	2765	Daucus carota: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_017855.1	nad4	DacassM_p017	4	4	52746	52835	-	none		Daucus carota: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_017855.1	ccmFc	DacassM_p020	1	2	67591	68357	+	cis	777	Daucus carota: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_017855.1	ccmFc	DacassM_p020	2	2	69135	69720	+	none		Daucus carota: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_017855.1	nad7	DacassM_p042	1	5	136880	137022	-	cis	901	Daucus carota: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_017855.1	nad7	DacassM_p042	2	5	135910	135978	-	cis	1335	Daucus carota: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_017855.1	nad7	DacassM_p042	3	5	134109	134574	-	cis	978	Daucus carota: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_017855.1	nad7	DacassM_p042	4	5	132885	133130	-	cis	1801	Daucus carota: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_017855.1	nad7	DacassM_p042	5	5	130823	131083	-	none		Daucus carota: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_017855.1	cox2	DacassM_p052	1	3	153791	154177	+	cis	1353	Daucus carota: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_017855.1	cox2	DacassM_p052	2	3	155531	155839	+	cis	1080	Daucus carota: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_017855.1	cox2	DacassM_p052	3	3	156920	157003	+	none		Daucus carota: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_021152.1	rps10	L090_p01	1	2	1315	1561	+	cis	838	Liriodendron tulipifera: naive vs RefSeq differ only at 1 C-to-U editing-consistent site(s)
+NC_021152.1	rps10	L090_p01	2	2	2400	2512	+	none		Liriodendron tulipifera: naive vs RefSeq differ only at 1 C-to-U editing-consistent site(s)
+NC_021152.1	nad4	L090_p44	1	4	43008	43468	-	cis	1404	Liriodendron tulipifera: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_021152.1	nad4	L090_p44	2	4	41089	41603	-	cis	4413	Liriodendron tulipifera: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_021152.1	nad4	L090_p44	3	4	36253	36675	-	cis	2899	Liriodendron tulipifera: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_021152.1	nad4	L090_p44	4	4	33265	33353	-	none		Liriodendron tulipifera: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_021152.1	cox2	L090_p33	1	3	247123	247504	+	cis	2752	Liriodendron tulipifera: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_021152.1	cox2	L090_p33	2	3	250257	250568	+	cis	2220	Liriodendron tulipifera: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_021152.1	cox2	L090_p33	3	3	252789	252853	+	none		Liriodendron tulipifera: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_021152.1	nad7	L090_p31	1	5	265005	265147	+	cis	875	Liriodendron tulipifera: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_021152.1	nad7	L090_p31	2	5	266023	266091	+	cis	1754	Liriodendron tulipifera: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_021152.1	nad7	L090_p31	3	5	267846	268312	+	cis	1013	Liriodendron tulipifera: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_021152.1	nad7	L090_p31	4	5	269326	269569	+	cis	1904	Liriodendron tulipifera: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_021152.1	nad7	L090_p31	5	5	271474	271735	+	none		Liriodendron tulipifera: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_021152.1	ccmFc	L090_p24	1	2	397876	398645	-	cis	1042	Liriodendron tulipifera: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_021152.1	ccmFc	L090_p24	2	2	396245	396833	-	none		Liriodendron tulipifera: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_021152.1	rpl2	L090_p13	1	2	518193	519187	-	cis	1471	Liriodendron tulipifera: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_021152.1	rpl2	L090_p13	2	2	516052	516721	-	none		Liriodendron tulipifera: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_016740.1	nad7	KEH32_p40	1	5	146513	146656	-	cis	856	Phoenix dactylifera: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_016740.1	nad7	KEH32_p40	2	5	145588	145656	-	cis	1766	Phoenix dactylifera: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_016740.1	nad7	KEH32_p40	3	5	143357	143821	-	cis	999	Phoenix dactylifera: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_016740.1	nad7	KEH32_p40	4	5	142112	142357	-	cis	1802	Phoenix dactylifera: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_016740.1	nad7	KEH32_p40	5	5	140049	140309	-	none		Phoenix dactylifera: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_016740.1	rpl2	KEH32_p35	1	2	230777	231778	+	cis	1622	Phoenix dactylifera: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_016740.1	rpl2	KEH32_p35	2	2	233401	234075	+	none		Phoenix dactylifera: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_016740.1	ccmFc	KEH32_p29	1	2	270346	271104	-	cis	949	Phoenix dactylifera: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_016740.1	ccmFc	KEH32_p29	2	2	268788	269396	-	none		Phoenix dactylifera: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_016740.1	nad4	KEH32_p25	1	4	356409	356870	+	cis	1370	Phoenix dactylifera: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_016740.1	nad4	KEH32_p25	2	4	358241	358753	+	cis	3767	Phoenix dactylifera: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_016740.1	nad4	KEH32_p25	3	4	362521	362943	+	cis	2807	Phoenix dactylifera: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_016740.1	nad4	KEH32_p25	4	4	365751	365840	+	none		Phoenix dactylifera: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_016740.1	cox2	KEH32_p18	1	3	448195	448584	-	cis	1289	Phoenix dactylifera: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_016740.1	cox2	KEH32_p18	2	3	446591	446905	-	cis	1596	Phoenix dactylifera: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_016740.1	cox2	KEH32_p18	3	3	444920	444994	-	none		Phoenix dactylifera: naive vs RefSeq differ only at 0 C-to-U editing-consistent site(s)
+NC_014487.1	nad4	SilaM_p19	1	3	88908	89368	+	cis	1512	Silene latifolia: naive vs RefSeq differ only at 16 C-to-U editing-consistent site(s)
+NC_014487.1	nad4	SilaM_p19	2	3	90881	91818	+	cis	2481	Silene latifolia: naive vs RefSeq differ only at 16 C-to-U editing-consistent site(s)
+NC_014487.1	nad4	SilaM_p19	3	3	94300	94388	+	none		Silene latifolia: naive vs RefSeq differ only at 16 C-to-U editing-consistent site(s)
+NC_014487.1	cox2	SilaM_p25	1	1	128273	129052	-	none		Silene latifolia: naive vs RefSeq differ only at 3 C-to-U editing-consistent site(s)
+NC_014487.1	ccmFc	SilaM_p26	1	2	149279	150051	-	cis	958	Silene latifolia: naive vs RefSeq differ only at 11 C-to-U editing-consistent site(s)
+NC_014487.1	ccmFc	SilaM_p26	2	2	147771	148320	-	none		Silene latifolia: naive vs RefSeq differ only at 11 C-to-U editing-consistent site(s)
+NC_014487.1	nad7	SilaM_p28	1	5	193809	193951	+	cis	940	Silene latifolia: naive vs RefSeq differ only at 17 C-to-U editing-consistent site(s)
+NC_014487.1	nad7	SilaM_p28	2	5	194892	194960	+	cis	981	Silene latifolia: naive vs RefSeq differ only at 17 C-to-U editing-consistent site(s)
+NC_014487.1	nad7	SilaM_p28	3	5	195942	196408	+	cis	1116	Silene latifolia: naive vs RefSeq differ only at 17 C-to-U editing-consistent site(s)
+NC_014487.1	nad7	SilaM_p28	4	5	197525	197768	+	cis	1716	Silene latifolia: naive vs RefSeq differ only at 17 C-to-U editing-consistent site(s)
+NC_014487.1	nad7	SilaM_p28	5	5	199485	199746	+	none		Silene latifolia: naive vs RefSeq differ only at 17 C-to-U editing-consistent site(s)

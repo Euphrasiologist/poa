@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
-"""Run `transsplice` over every species' `nad1`/`nad2`/`nad5`/`rps3` gene
-calls, reconstructing full-length genes from their scattered per-exon
+"""Run `transsplice` over every species' calls for the genes in
+reference_genes.GENES - trans-spliced (nad1/nad2/nad5/rps3) and, since
+2026-09-29, cis-spliced ones too (transsplice classifies each junction
+cis/trans per species) - reconstructing full-length genes from their per-exon
 `.ctg.bed` hits.
 
 Unlike `editing/01_scan_editing.py` (best-scoring hit only per gene), every
@@ -14,26 +16,28 @@ Output: analysis/trans_splicing/results/reconstructed_genes.tsv
 """
 from __future__ import annotations
 
+import os
 import argparse
 import shutil
 import subprocess
-import os
 import sys
 from pathlib import Path
 
 import pandas as pd
 
-# Defaults to the old same-tree layout (code and data siblings under one
-# repo root); set PLANT_ORGANELLE_DATA_ROOT to point at a separate data
-# checkout instead (e.g. when this code is installed from its own repo).
-ROOT_DIR = Path(os.environ.get("PLANT_ORGANELLE_DATA_ROOT", str(Path(__file__).resolve().parents[3])))
+# CODE_DIR is this checkout's analysis/ (shared modules, bundled reference
+# data); data/ and every module's results/ and work/ live under the data
+# root - PLANT_ORGANELLE_DATA_ROOT, or this checkout if unset.
+CODE_DIR = Path(__file__).resolve().parents[2]
+ROOT_DIR = Path(os.environ.get("PLANT_ORGANELLE_DATA_ROOT", str(CODE_DIR.parent)))
 ANALYSIS_DIR = ROOT_DIR / "analysis"
-sys.path.insert(0, str(ANALYSIS_DIR / "common"))
+sys.path.insert(0, str(CODE_DIR / "common"))
 
 import species_discovery as sd  # noqa: E402
 
 TRANSSPLICE = shutil.which("transsplice") or str(Path.home() / ".cargo" / "bin" / "transsplice")
-GENES = ["nad1", "nad2", "nad5", "rps3"]
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from reference_genes import GENES  # noqa: E402  (shared with 00a/01/gff_export)
 
 
 def build_manifest(gene_calls: pd.DataFrame, species_filter: set | None, profiles_dir: Path) -> list[dict]:
@@ -101,7 +105,7 @@ def main():
     gene_calls = pd.read_csv(gene_calls_path, sep="\t")
 
     species_filter = sd.load_species_list(Path(args.species_list)) if args.species_list else None
-    profiles_dir = ANALYSIS_DIR / "trans_splicing" / "reference" / "profiles"
+    profiles_dir = CODE_DIR / "trans_splicing" / "reference" / "profiles"
 
     rows = build_manifest(gene_calls, species_filter, profiles_dir)
     if not rows:

@@ -25,20 +25,21 @@ Output: analysis/denovo_annotation/work/nhmmscan/<species>.<organelle>.tblout
 """
 from __future__ import annotations
 
+import os
 import argparse
 import shutil
 import subprocess
-import os
 import sys
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
-# Defaults to the old same-tree layout (code and data siblings under one
-# repo root); set PLANT_ORGANELLE_DATA_ROOT to point at a separate data
-# checkout instead (e.g. when this code is installed from its own repo).
-ROOT_DIR = Path(os.environ.get("PLANT_ORGANELLE_DATA_ROOT", str(Path(__file__).resolve().parents[3])))
+# CODE_DIR is this checkout's analysis/ (shared modules, bundled reference
+# data); data/ and every module's results/ and work/ live under the data
+# root - PLANT_ORGANELLE_DATA_ROOT, or this checkout if unset.
+CODE_DIR = Path(__file__).resolve().parents[2]
+ROOT_DIR = Path(os.environ.get("PLANT_ORGANELLE_DATA_ROOT", str(CODE_DIR.parent)))
 ANALYSIS_DIR = ROOT_DIR / "analysis"
-sys.path.insert(0, str(ANALYSIS_DIR / "common"))
+sys.path.insert(0, str(CODE_DIR / "common"))
 
 import species_discovery as sd  # noqa: E402
 
@@ -47,8 +48,8 @@ FILTER_TBLOUT = shutil.which("filter_tblout") or str(Path.home() / ".cargo" / "b
 HMM_TO_GFF = shutil.which("hmm_to_gff") or str(Path.home() / ".cargo" / "bin" / "hmm_to_gff")
 
 FAM_PATHS = {
-    "mito": "/software/team301/OatkDB/viridiplantae_mito_v20250217.fam",
-    "pltd": "/software/team301/OatkDB/viridiplantae_pltd_v20260928.fam",
+    "mito": os.environ.get("OATKDB_MITO_FAM", "/software/team301/OatkDB/viridiplantae_mito_v20250217.fam"),
+    "pltd": os.environ.get("OATKDB_PLTD_FAM", "/software/team301/OatkDB/viridiplantae_pltd_v20260928.fam"),
 }
 
 DEFAULT_EVALUE = "1e-5"

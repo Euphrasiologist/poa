@@ -252,3 +252,44 @@ Feed successfully reconstructed (`complete=True`, decent `whole_gene_score`)
 genes back into `phylogeny`'s marker-gene set - that module currently
 excludes these genes entirely rather than mishandle them; this is what
 closes that gap. Not done in this phase.
+
+## Cis-spliced genes (stage 2a, 2026-09-29)
+
+`transsplice` never assumed a junction is trans - it classifies each one
+per species after assignment - so cis-spliced mito genes are just more
+templates. `src/reference_genes.py` is the single gene list for the
+fetch, template and reconstruction scripts and `gff_export`: nad1/nad2/
+nad5/rps3 plus nad4, nad7, ccmFc, cox2, rpl2, rps10.
+
+References: `src/00a_fetch_references.py` fetches 11 angiosperm RefSeq
+mitogenomes (the original 5 plus Nicotiana, Glycine, Daucus,
+Liriodendron, Phoenix, Silene latifolia; GenBank cached in
+`reference/genbank/`) and writes each cis gene's exons in the existing
+`reference/raw/` format. Each locus is verified: the genomic translation
+must equal RefSeq's curated protein except at C-to-U-editable residues
+(an edit-created stop counts). 52/54 verify; rice nad7 and rice rpl2 are
+UNRESOLVED and excluded. Build only these genes' templates with
+`00_build_exon_profiles.py --genes ...` - rebuilding a trans gene resets
+the whole_gene.pssm 02_bootstrap_refine.py refined from this dataset.
+
+Exon count varies between references for some genes (cox2: 1/2/3 exons;
+nad4 3 in Beta and Silene, 4 elsewhere; nad7 4 in Nicotiana); templates
+use the modal count, so a species with an extra intron is under-segmented
+by its template - gff_export then keeps the raw chain (more exons).
+
+Arabidopsis vs RefSeq with transsplice 0.2.1, end to end in the GFF:
+nad4 4/4 and nad7 5/5 exons base-exact (94% protein identity = its
+editing sites), nad2 5/5, rps3 2/2; cox2 falls back to the raw chain
+(its 83 bp exon 2 is below what a profile places reliably) and rpl2 is
+rejected by gff_export's consistency guard (Brassicaceae rpl2 is
+truncated; a full-length template aligned 573 bp past its end).
+
+Full dataset (job 709710, transsplice 0.2.1), complete reconstructions:
+nad1 76%, nad2 75%, nad4 66%, nad5 55%, nad7 68%, ccmFc 69%, cox2 57%,
+rpl2 59%, rps10 81%, rps3 71% of species with the gene. gff_export
+rejected 868 cis reconstructions as inconsistent with the HMM hits:
+mostly slots placed de novo where no hit exists (rpl2, rps10 - often
+lost or nuclear-transferred) and cox2 exon 1 running ~340 bp 5' of the
+hit in ~220 mosses (Sphagnum, Orthotrichaceae, Hypnales), whose cox2
+diverges from the angiosperm template - stage 2b's lineage templates
+would be needed there. In every case the raw chain is kept.

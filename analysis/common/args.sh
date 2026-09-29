@@ -47,7 +47,8 @@ parse_common_args() {
 resolve_analysis_root() {
   local script_dir
   script_dir="$(cd "$(dirname "${BASH_SOURCE[1]}")" && pwd)"
-  ANALYSIS_DIR="$(cd "${script_dir}/../.." && pwd)"
-  ROOT_DIR="$(cd "${ANALYSIS_DIR}/.." && pwd)"
-  export ANALYSIS_DIR ROOT_DIR
+  CODE_DIR="$(cd "${script_dir}/../.." && pwd)"
+  ROOT_DIR="${PLANT_ORGANELLE_DATA_ROOT:-$(cd "${CODE_DIR}/.." && pwd)}"
+  ANALYSIS_DIR="${ROOT_DIR}/analysis"
+  export CODE_DIR ANALYSIS_DIR ROOT_DIR
 }

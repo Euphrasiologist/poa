@@ -27,6 +27,7 @@ qc_basic_stats' job, using the paths this module resolves.
 """
 from __future__ import annotations
 
+import os
 import argparse
 import csv
 import sys
@@ -148,12 +149,12 @@ def repo_data_root(root_dir: Path, organelle: str) -> Path:
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--organelle", required=True, choices=["mito", "pltd"])
-    ap.add_argument("--root-dir", default=None, help="repo root (default: 3 levels up from this file)")
+    ap.add_argument("--root-dir", default=None, help="data root (default: $PLANT_ORGANELLE_DATA_ROOT, else this checkout)")
     ap.add_argument("--species-list", default=None)
     ap.add_argument("--print-table", action="store_true", help="emit TSV to stdout")
     args = ap.parse_args()
 
-    root_dir = Path(args.root_dir) if args.root_dir else Path(__file__).resolve().parents[2]
+    root_dir = Path(args.root_dir or os.environ.get("PLANT_ORGANELLE_DATA_ROOT") or Path(__file__).resolve().parents[2])
     data_root = repo_data_root(root_dir, args.organelle)
     species_filter = load_species_list(Path(args.species_list)) if args.species_list else None
 

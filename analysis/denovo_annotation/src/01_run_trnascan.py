@@ -10,25 +10,26 @@ Output: analysis/denovo_annotation/work/trnascan/<species>.<organelle>.gff
 """
 from __future__ import annotations
 
+import os
 import argparse
 import shutil
 import subprocess
-import os
 import sys
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
-# Defaults to the old same-tree layout (code and data siblings under one
-# repo root); set PLANT_ORGANELLE_DATA_ROOT to point at a separate data
-# checkout instead (e.g. when this code is installed from its own repo).
-ROOT_DIR = Path(os.environ.get("PLANT_ORGANELLE_DATA_ROOT", str(Path(__file__).resolve().parents[3])))
+# CODE_DIR is this checkout's analysis/ (shared modules, bundled reference
+# data); data/ and every module's results/ and work/ live under the data
+# root - PLANT_ORGANELLE_DATA_ROOT, or this checkout if unset.
+CODE_DIR = Path(__file__).resolve().parents[2]
+ROOT_DIR = Path(os.environ.get("PLANT_ORGANELLE_DATA_ROOT", str(CODE_DIR.parent)))
 ANALYSIS_DIR = ROOT_DIR / "analysis"
-sys.path.insert(0, str(ANALYSIS_DIR / "common"))
+sys.path.insert(0, str(CODE_DIR / "common"))
 
 import species_discovery as sd  # noqa: E402
 
 TRNASCAN = shutil.which("tRNAscan-SE") or "/software/team301/tRNAscan-SE/tRNAscan-SE"
-TRNASCAN_CONF = "/software/team301/tRNAscan-SE/tRNAscan-SE.conf"
+TRNASCAN_CONF = os.environ.get("TRNASCAN_CONF", "/software/team301/tRNAscan-SE/tRNAscan-SE.conf")
 
 
 def qc_eligible_species(qc_status: list[str]) -> set[tuple[str, str]] | None:
@@ -60,7 +61,7 @@ def scan_one(species: str, organelle: str, ctg_fasta: str, threads: str, work_di
         # and drove the job over its memory limit). Always pass -Q; this
         # script's own `force`/skip-if-exists check above is what actually
         # controls re-scanning, not tRNAscan-SE's own overwrite prompt.
-        [TRNASCAN, "-c", TRNASCAN_CONF, "-O", "-I", "-Q", "--thread", threads, ctg_fasta, "-j", str(out_gff)],
+        [TRNASCAN, *(["-c", TRNASCAN_CONF] if Path(TRNASCAN_CONF).exists() else []), "-O", "-I", "-Q", "--thread", threads, ctg_fasta, "-j", str(out_gff)],
         capture_output=True, text=True, timeout=1800,
     )
     if proc.returncode != 0 or not out_gff.exists():
