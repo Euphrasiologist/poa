@@ -36,8 +36,12 @@ CODE_DIR = Path(__file__).resolve().parents[2]
 ROOT_DIR = Path(os.environ.get("PLANT_ORGANELLE_DATA_ROOT") or os.getcwd())
 ANALYSIS_DIR = ROOT_DIR / "analysis"
 
-CIRCUIT_RE = re.compile(r"^.+_circuit(?P<circuit>\d+):n_segments=(?P<n_segments>\d+):bp=(?P<bp>\d+)$")
+# gfatk >= 0.6 appends :circular=true:path=<walk> (oatk-style); older releases end at :bp=
+CIRCUIT_RE = re.compile(r"^.+_circuit(?P<circuit>\d+):n_segments=(?P<n_segments>\d+):bp=(?P<bp>\d+)"
+                        r"(?::circular=\S+?)?(?::path=\S+)?$")
 BUBBLE_ARM_RE = re.compile(r"^bubble_arm:")
+# gfatk >= 0.6 also writes segments it could not place: reported, never promoted
+UNRESOLVED_RE = re.compile(r"^unresolved_segment:")
 
 COLUMNS = ["species", "organelle", "n_circuits", "n_bubble_arms", "circuit_id", "n_segments", "length_bp"]
 
@@ -54,6 +58,8 @@ def parse_resolve_fasta(path: Path) -> tuple[list[dict], int]:
             header = line[1:].strip()
             if BUBBLE_ARM_RE.match(header):
                 n_bubble_arms += 1
+                continue
+            if UNRESOLVED_RE.match(header):
                 continue
             m = CIRCUIT_RE.match(header)
             if not m:

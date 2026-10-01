@@ -24,6 +24,17 @@ if [[ -e "${DATA_ROOT}/data" ]]; then
   exit 1
 fi
 log() { echo "[$(date '+%H:%M:%S')] $*" >&2; }
+# a stage that reports failures (e.g. "scanned=0 ... failed=1") fails the
+# smoke test, rather than letting later stages run on missing input
+stage() {
+  local err; err="$(mktemp)"
+  "$@" 2>"${err}" || { cat "${err}" >&2; echo "[err] stage exited non-zero: $*" >&2; exit 1; }
+  cat "${err}" >&2
+  if grep -qE 'failed=[1-9]|\[err\]| failed for ' "${err}"; then
+    echo "[err] stage reported failures: $*" >&2; exit 1
+  fi
+  rm -f "${err}"
+}
 
 for organelle in mito plastid; do
   mkdir -p "${DATA_ROOT}/data/${organelle}/${SP}"
@@ -39,29 +50,29 @@ log "data root: ${DATA_ROOT}; pipeline: ${A}"
 
 log "=== qc_basic_stats ==="
 for s in 01_gfa_stats 02_contig_stats 03_gene_matrix 04_core_gene_list 05_qc_summary; do
-  python3 "${A}/qc_basic_stats/src/${s}.py" --organelle both
+  stage python3 "${A}/qc_basic_stats/src/${s}.py" --organelle both
 done
 
 log "=== denovo_annotation ==="
-python3 "${A}/denovo_annotation/src/00_run_nhmmscan.py" --organelle both --jobs 2 --cpu "$(( (THREADS + 1) / 2 ))"
-python3 "${A}/denovo_annotation/src/01_run_trnascan.py" --organelle both --jobs 2 --thread 1
-python3 "${A}/denovo_annotation/src/02_run_barrnap.py" --organelle both --jobs 2 --threads 1
-python3 "${A}/denovo_annotation/src/03_build_combined_gff.py" --organelle both
-python3 "${A}/denovo_annotation/src/04_build_gene_calls.py" --organelle both
+stage python3 "${A}/denovo_annotation/src/00_run_nhmmscan.py" --organelle both --jobs 2 --cpu "$(( (THREADS + 1) / 2 ))"
+stage python3 "${A}/denovo_annotation/src/01_run_trnascan.py" --organelle both --jobs 2 --thread 1
+stage python3 "${A}/denovo_annotation/src/02_run_barrnap.py" --organelle both --jobs 2 --threads 1
+stage python3 "${A}/denovo_annotation/src/03_build_combined_gff.py" --organelle both
+stage python3 "${A}/denovo_annotation/src/04_build_gene_calls.py" --organelle both
 
 log "=== editing (bundled profiles) ==="
-python3 "${A}/editing/src/01_scan_editing.py" --organelle both --threads "${THREADS}" --gene-calls "${GENE_CALLS}"
+stage python3 "${A}/editing/src/01_scan_editing.py" --organelle both --threads "${THREADS}" --gene-calls "${GENE_CALLS}"
 
 log "=== trans_splicing ==="
-python3 "${A}/trans_splicing/src/01_reconstruct.py" --threads "${THREADS}" --gene-calls "${GENE_CALLS}"
+stage python3 "${A}/trans_splicing/src/01_reconstruct.py" --threads "${THREADS}" --gene-calls "${GENE_CALLS}"
 
 log "=== unitig_coords ==="
-python3 "${A}/unitig_coords/src/00_build_unitig_map.py" --organelle both --jobs 2
-python3 "${A}/unitig_coords/src/01_linearization_qc.py" --organelle both
-python3 "${A}/qc_basic_stats/src/06_low_depth_paths.py"
+stage python3 "${A}/unitig_coords/src/00_build_unitig_map.py" --organelle both --jobs 2
+stage python3 "${A}/unitig_coords/src/01_linearization_qc.py" --organelle both
+stage python3 "${A}/qc_basic_stats/src/06_low_depth_paths.py"
 
 log "=== gff_export ==="
-python3 "${A}/gff_export/src/01_build_gff.py" --organelle both --gene-calls "${GENE_CALLS}"
+stage python3 "${A}/gff_export/src/01_build_gff.py" --organelle both --gene-calls "${GENE_CALLS}"
 
 OUT="${DATA_ROOT}/analysis/gff_export/results"
 for o in mito pltd; do

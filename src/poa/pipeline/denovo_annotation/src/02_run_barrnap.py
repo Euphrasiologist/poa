@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
-"""Run `barrnap` (plant kingdom model) on oatk's assembled contigs - the
-rRNA half of a de novo, oatk-independent annotation pass. Same tool/flags
-already proven in `mito_structural_variation/annotation/src/6_get_rrna_genes.bash`.
+"""rRNA calling on the assembled contigs - the rRNA half of the de novo
+annotation pass. Originally `barrnap --kingdom plant` (a database added to
+one cluster's barrnap); now `rrna_nhmmer.py`, a byte-identical Python port
+that needs only nhmmer and poa's bundled plant.hmm.
 
 Same `--jobs`/`--threads` pattern as `00_run_nhmmscan.py`/
 `orf_scan/src/02_scan_pfam.py` - see that script's docstring for why (this
@@ -15,7 +16,6 @@ from __future__ import annotations
 
 import os
 import argparse
-import shutil
 import subprocess
 import sys
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -31,7 +31,9 @@ sys.path.insert(0, str(CODE_DIR / "common"))
 
 import species_discovery as sd  # noqa: E402
 
-BARRNAP = shutil.which("barrnap") or "/software/team301/barrnap/bin/barrnap"
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from rrna_nhmmer import call_rrna  # noqa: E402
+
 
 
 def qc_eligible_species(qc_status: list[str]) -> set[tuple[str, str]] | None:
@@ -54,14 +56,13 @@ def scan_one(species: str, organelle: str, ctg_fasta: str, evalue: str, threads:
     out_gff = work_dir / f"{species}.{organelle}.gff"
     if not force and out_gff.exists() and out_gff.stat().st_size > 0:
         return "skipped"
-    proc = subprocess.run(
-        [BARRNAP, "--evalue", evalue, "--kingdom", "plant", "--threads", threads, ctg_fasta],
-        capture_output=True, text=True, timeout=600,
-    )
-    if proc.returncode != 0:
-        print(f"[warn] barrnap failed for {species} ({organelle}): {proc.stderr.strip()[:300]}", file=sys.stderr)
+    try:
+        gff = call_rrna(ctg_fasta, evalue, threads)
+    except (OSError, ValueError, subprocess.SubprocessError) as e:
+        err = getattr(e, "stderr", None) or str(e)
+        print(f"[warn] rRNA calling failed for {species} ({organelle}): {err.strip()[:300]}", file=sys.stderr)
         return "failed"
-    out_gff.write_text(proc.stdout)
+    out_gff.write_text(gff)
     return "scanned"
 
 

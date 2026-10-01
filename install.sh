@@ -1,33 +1,20 @@
 #!/usr/bin/env bash
-# Installs this project's own Rust command-line tools into an already
-# -activated conda/mamba environment (see environment.yml, which covers
-# every third-party bioinformatics tool this pipeline needs).
+# Fallback for platforms bioconda has no build for yet: installs this
+# project's own Rust tools (normally in environment.yml) with cargo, at the
+# versions environment.yml pins. Needs a Rust toolchain (rustup or
+# `mamba install rust`).
 #
-# Usage:
-#   mamba env create -f environment.yml
-#   conda activate poa
 #   ./install.sh
-#
-# Reference data: trans_splicing's exon templates and editing's profiles
-# are bundled in this repo. oatkDB's gene-family .fam databases are not -
-# see README.md's "Reference data" section.
 set -euo pipefail
 
 if ! command -v cargo >/dev/null 2>&1; then
-  echo "[err] cargo not found on PATH." >&2
-  echo "      Run 'mamba env create -f environment.yml && conda activate poa' first" >&2
-  echo "      (that env includes the rust/cargo toolchain)." >&2
+  echo "[err] cargo not found on PATH - install Rust (https://rustup.rs) or 'mamba install rust'." >&2
   exit 1
 fi
 
-echo "[info] installing this project's own Rust tools via cargo..."
-
-# Pinned to the versions this pipeline was validated against (tags in each
-# tool's repo), from crates.io.
-cargo install --locked gfatk@0.4.0
+echo "[info] installing gfatk, orfedit, transsplice via cargo..."
+cargo install --locked gfatk@0.6.1
 cargo install --locked orfedit@0.1.0
-cargo install --locked transsplice@0.2.1
+cargo install --locked --git https://github.com/ARU-life-sciences/transsplice --tag 0.2.1 transsplice
 
-echo "[info] done. Verifying tool_paths.sh resolves everything cleanly:"
-bash -c 'source src/poa/pipeline/common/tool_paths.sh'
-echo "[info] if no [warn] lines appeared above, every tool this pipeline needs is on PATH."
+echo "[info] done. 'poa check' (after 'pip install .') confirms every tool is found."

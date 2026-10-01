@@ -150,7 +150,10 @@ def read_ctg_fasta(fasta_path: Path) -> tuple[list[tuple[str, str | None, bool]]
             if line.startswith(">"):
                 header = line[1:]
                 name = header.split()[0]
-                m = PATH_RE.search(header)
+                # gfatk >= 0.6 resolve circuits carry a path= too, but walk_path's
+                # circular-origin rule is oatk Pathfinder's (verified), not
+                # gfatk's (unverified) - keep those on seqmatch
+                m = None if "resolver=gfatk_resolve" in header else PATH_RE.search(header)
                 cm = CIRCULAR_RE.search(header)
                 headers.append((name, m.group("path") if m else None,
                                 cm is not None and cm.group("circular") == "true"))

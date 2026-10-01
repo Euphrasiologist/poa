@@ -1,0 +1,4 @@
+##gff-version 3
+ctg000001c	barrnap:0.9	rRNA	317460	317904	3.5e-92	-	.	Name=16S_rRNA;product=16S ribosomal RNA (partial);note=aligned only 28 percent of the 16S ribosomal RNA
+ctg000001c	barrnap:0.9	rRNA	318274	319384	6.6e-227	-	.	Name=16S_rRNA;product=16S ribosomal RNA (partial);note=aligned only 70 percent of the 16S ribosomal RNA
+ctg000001c	barrnap:0.9	rRNA	331977	335124	0	-	.	Name=23S_rRNA;product=23S ribosomal RNA

@@ -1,11 +1,12 @@
-# Conda/mamba environment for poa: every third-party tool it runs, plus the
-# rust toolchain install.sh uses for gfatk/orfedit/transsplice until those
-# are on bioconda. Then:
+# Conda/mamba environment for poa: every external tool it runs. Then:
 #
 #   mamba env create -f environment.yml
 #   conda activate poa
-#   ./install.sh        # the Rust tools
 #   pip install .       # poa itself
+#
+# gfatk, orfedit and transsplice are this project's own Rust tools; if
+# bioconda has no build for your platform yet, drop them here and run
+# ./install.sh (cargo) instead.
 #
 # Versions pinned to what this pipeline was built and validated against
 # (checked via `<tool> --version` on the reference install). Newer
@@ -14,16 +15,17 @@ name: poa
 channels:
   - conda-forge
   - bioconda
+  - nodefaults
 dependencies:
   - python=3.11
-  - pandas
+  - pandas>=2,<3  # validated on 2.2; pandas 3 changes string/copy semantics
   - numpy
   - biopython
 
-  # gene calling (denovo_annotation) - hmmer also prepares the bundled oatkDB
+  # gene calling (denovo_annotation): hmmer runs the bundled oatkDB and rRNA
+  # models (and prepares them), tRNAscan-SE the tRNAs
   - hmmer=3.4
   - trnascan-se=2.0.12
-  - barrnap=0.9
 
   # reference-profile building (editing, trans_splicing)
   - mafft=7.525
@@ -35,9 +37,11 @@ dependencies:
   - gfatools=0.5
 
   # linearize: read-evidence resolution (gfatk resolve)
-  - graphaligner=1.0.19
+  - graphaligner=1.0.20
 
-  # rust toolchain, for install.sh
-  - rust
+  # this project's own tools
+  - gfatk=0.6.1
+  - orfedit=0.1.0
+  - transsplice=0.2.1
 
   - pip

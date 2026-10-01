@@ -1,0 +1,17 @@
+Plant rRNA HMMs (plant.hmm)
+===========================
+
+Used by poa's rRNA calling (pipeline/denovo_annotation/src/rrna_nhmmer.py,
+a port of barrnap 0.9's `--kingdom plant` mode). Four nhmmer models:
+
+  16S_rRNA, 23S_rRNA, 5S_rRNA   identical to db/bac.hmm of barrnap 0.9
+                                (Torsten Seemann, https://github.com/tseemann/barrnap,
+                                GPL-3.0); 16S is Rfam RF00177, 5S Rfam RF00001
+  5S_rRNA_all_life              Rfam RF00001 (5S ribosomal RNA), all-life
+                                model, https://rfam.org/family/RF00001 -
+                                added because barrnap's bacterial 5S misses
+                                plant organellar 5S (barrnap issue #2)
+
+Plant organellar rRNAs are bacterial-like, so the bacterial models find the
+mitochondrial rrn18/rrn26 and plastid rrn16/rrn23 genes; denovo_annotation
+renames the hits per organelle.

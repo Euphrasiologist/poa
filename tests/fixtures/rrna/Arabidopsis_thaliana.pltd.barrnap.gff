@@ -1,0 +1,7 @@
+##gff-version 3
+ctg000001c	barrnap:0.9	rRNA	101087	102573	0	+	.	Name=16S_rRNA;product=16S ribosomal RNA
+ctg000001c	barrnap:0.9	rRNA	104763	107773	0	+	.	Name=23S_rRNA;product=23S ribosomal RNA
+ctg000001c	barrnap:0.9	rRNA	108027	108137	6.3e-09	+	.	Name=5S_rRNA_all_life;product=5S ribosomal RNA_all_life
+ctg000001c	barrnap:0.9	rRNA	130655	130765	6.3e-09	-	.	Name=5S_rRNA_all_life;product=5S ribosomal RNA_all_life
+ctg000001c	barrnap:0.9	rRNA	131019	134029	0	-	.	Name=23S_rRNA;product=23S ribosomal RNA
+ctg000001c	barrnap:0.9	rRNA	136219	137705	0	-	.	Name=16S_rRNA;product=16S ribosomal RNA

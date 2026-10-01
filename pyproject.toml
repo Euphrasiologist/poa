@@ -9,7 +9,7 @@ description = "Plant organelle annotator: gene calling, RNA-editing-aware ORFs, 
 readme = "README.md"
 requires-python = ">=3.10"
 authors = [{ name = "Max Brown" }]
-dependencies = ["pandas", "numpy", "biopython"]
+dependencies = ["pandas>=2,<3", "numpy", "biopython"]
 
 [project.urls]
 Homepage = "https://github.com/Euphrasiologist/poa"

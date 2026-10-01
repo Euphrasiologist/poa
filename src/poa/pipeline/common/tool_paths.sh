@@ -37,7 +37,6 @@ PYTHON3="${PYTHON3:-python3}"
 # tRNA/rRNA calling.
 NHMMSCAN="${NHMMSCAN:-$(command -v nhmmscan || echo /software/team301/hmmer-3.4/src/nhmmscan)}"
 TRNASCAN="${TRNASCAN:-$(command -v tRNAscan-SE || echo /software/team301/tRNAscan-SE/tRNAscan-SE)}"
-BARRNAP="${BARRNAP:-$(command -v barrnap || echo /software/team301/barrnap/bin/barrnap)}"
 
 # GraphAligner (only used by linearize/'s gfatk-resolve fallback tier). On
 # this cluster, resolved to a stable shpc-wrapper absolute path (equivalent
@@ -47,7 +46,7 @@ BARRNAP="${BARRNAP:-$(command -v barrnap || echo /software/team301/barrnap/bin/b
 # directly for external installs.
 GRAPHALIGNER="${GRAPHALIGNER:-$(command -v GraphAligner || echo /software/treeoflife/shpc/0.1.26/wrapper/quay.io/biocontainers/graphaligner/1.0.19--hdcf5f25_1/bin/GraphAligner)}"
 
-for tool_var in GFATK ORFEDIT TRANSSPLICE MINIMAP2 SAMTOOLS SEQKIT MAFFT GFATOOLS GRAPHALIGNER NHMMSCAN TRNASCAN BARRNAP; do
+for tool_var in GFATK ORFEDIT TRANSSPLICE MINIMAP2 SAMTOOLS SEQKIT MAFFT GFATOOLS GRAPHALIGNER NHMMSCAN TRNASCAN; do
   tool_path="${!tool_var}"
   if [[ ! -x "${tool_path}" ]]; then
     echo "[warn] tool_paths.sh: ${tool_var}=${tool_path} is not executable/found" >&2

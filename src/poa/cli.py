@@ -14,9 +14,9 @@ from . import PIPELINE_DIR, __version__
 # (command, version flag, what needs it); the version flag is only for display
 TOOLS = [
     ("nhmmscan", "-h", "gene calling"),
+    ("nhmmer", "-h", "rRNA calling"),
     ("hmmpress", "-h", "preparing the bundled oatkDB"),
     ("tRNAscan-SE", None, "tRNA calling"),
-    ("barrnap", "--version", "rRNA calling"),
     ("orfedit", "--version", "RNA-editing-aware ORF correction"),
     ("transsplice", "--version", "spliced-gene reconstruction"),
     ("mafft", "--version", "reference-profile building"),

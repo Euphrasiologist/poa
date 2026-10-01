@@ -16,16 +16,16 @@ which now uses poa rather than the other way round.
 ```bash
 mamba env create -f environment.yml
 conda activate poa
-./install.sh        # gfatk, orfedit, transsplice (Rust) via cargo
 pip install .
 poa check           # every tool found, oatkDB databases ready
 ```
 
-`environment.yml` pins the third-party tools (hmmer, tRNAscan-SE, barrnap,
-mafft, minimap2, samtools, seqkit, gfatools, GraphAligner); `install.sh`
-pins this project's own Rust tools to the versions validated here: `gfatk`
-0.4.0, `orfedit` 0.1.0 and `transsplice` 0.2.1. A bioconda package (and
-with it Docker/Singularity images) is in progress.
+`environment.yml` pins every external tool from bioconda/conda-forge,
+including this project's own `gfatk` 0.6.1, `orfedit` 0.1.0 and
+`transsplice` 0.2.1. Where bioconda has no build of those three for your
+platform, remove them from `environment.yml` and run `./install.sh`
+(cargo) instead. A bioconda package for poa itself (and with it
+Docker/Singularity images) is next.
 
 ## Reference data
 
@@ -38,6 +38,11 @@ All bundled - nothing to download, no oatk install needed:
   there). Decompressed and `hmmpress`'d into `~/.cache/poa` (or
   `$POA_CACHE`) on first use. To use your own build instead, set
   `OATKDB_MITO_FAM` / `OATKDB_PLTD_FAM` to a pressed `.fam`.
+- `src/poa/data/rrna/plant.hmm` - the rRNA models (barrnap's bacterial
+  16S/23S/5S plus Rfam's RF00001 5S; see `NOTICE` there), run with
+  `nhmmer` by `denovo_annotation/src/rrna_nhmmer.py`, a port of the
+  `barrnap --kingdom plant` set-up this pipeline was validated with.
+  barrnap itself isn't needed.
 - `src/poa/pipeline/trans_splicing/reference/` - the 11 angiosperm RefSeq
   mitogenomes (`genbank/`), their verified exon sets (`raw/`, with
   `junctions.tsv`) and the exon/whole-gene templates `transsplice` runs
