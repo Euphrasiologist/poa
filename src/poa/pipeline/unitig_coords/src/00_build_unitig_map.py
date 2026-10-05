@@ -316,7 +316,7 @@ def main():
     for organelle in organelles:
         data_root = sd.repo_data_root(ROOT_DIR, organelle)
         resolved = sd.discover_all(data_root, organelle, species_filter=species_filter)
-        tasks = [r for r in resolved if r.status == "ok"
+        tasks = [r for r in resolved if r.status == "ok" and r.gfa
                  and (qc_eligible is None or (r.species, organelle) in qc_eligible)]
 
         counts: dict[str, int] = {}

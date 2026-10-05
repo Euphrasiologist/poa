@@ -21,6 +21,12 @@ Handles two confirmed real-world quirks of data/{mito,plastid}/<Species>/:
    remaining ties by larger ctg.fasta size, then newest mtime. Every
    multi-candidate species is logged so the choice is auditable.
 
+3. Not every assembly comes with a graph: poa run accepts a contig FASTA
+   on its own (from any assembler). A run is therefore found from its
+   .gfa or its .ctg.fasta, and status "ok" means "has contigs to
+   annotate" - gfa is None for a FASTA-only run, and the graph-level
+   stages (gfa_stats, unitig_coords, low_depth_paths) skip it.
+
 This module is intentionally only about *file resolution* - it does not
 judge assembly quality (empty graphs, dead-ends, etc.); that's
 qc_basic_stats' job, using the paths this module resolves.
@@ -56,7 +62,7 @@ class SpeciesFiles:
     annot: Optional[str] = None
     run_prefix: Optional[str] = None
     n_candidates: int = 0
-    status: str = "missing_gfa"  # missing_gfa | no_ctg_fasta | ok
+    status: str = "missing_gfa"  # missing_gfa (nothing usable) | no_ctg_fasta | ok (gfa optional)
 
     def as_row(self) -> dict:
         return {f.name: getattr(self, f.name) for f in fields(self)}
@@ -66,12 +72,12 @@ def _nonempty(path: Optional[Path]) -> bool:
     return path is not None and path.exists() and path.stat().st_size > 0
 
 
-def _candidate_prefixes(species_dir: Path, gfa_suffix: str) -> list[str]:
-    """All run prefixes present, i.e. every '<prefix>' for '<prefix><gfa_suffix>'."""
-    prefixes = []
-    for p in species_dir.glob(f"*{gfa_suffix}"):
-        prefix = p.name[: -len(gfa_suffix)]
-        prefixes.append(prefix)
+def _candidate_prefixes(species_dir: Path, suffixes: dict) -> list[str]:
+    """All run prefixes present, i.e. every '<prefix>' for a '<prefix>.gfa' or '<prefix>.ctg.fasta'."""
+    prefixes = set()
+    for key in ("gfa", "ctg_fasta"):
+        for p in species_dir.glob(f"*{suffixes[key]}"):
+            prefixes.add(p.name[: -len(suffixes[key])])
     return sorted(prefixes)
 
 
@@ -88,7 +94,7 @@ def _completeness_score(species_dir: Path, prefix: str, suffixes: dict) -> tuple
 def resolve_species(species_dir: Path, organelle: str, logger=None) -> SpeciesFiles:
     species = species_dir.name
     suffixes = ORGANELLE_SUFFIX[organelle]
-    prefixes = _candidate_prefixes(species_dir, suffixes["gfa"])
+    prefixes = _candidate_prefixes(species_dir, suffixes)
 
     if not prefixes:
         return SpeciesFiles(species=species, organelle=organelle, status="missing_gfa", n_candidates=0)
@@ -104,12 +110,12 @@ def resolve_species(species_dir: Path, organelle: str, logger=None) -> SpeciesFi
     paths = {key: species_dir / f"{best_prefix}{suf}" for key, suf in suffixes.items()}
     resolved = {k: (str(v) if _nonempty(v) else None) for k, v in paths.items()}
 
-    if resolved["gfa"] is None:
-        status = "missing_gfa"
-    elif resolved["ctg_fasta"] is None:
+    if resolved["ctg_fasta"] is not None:
+        status = "ok"
+    elif resolved["gfa"] is not None:
         status = "no_ctg_fasta"
     else:
-        status = "ok"
+        status = "missing_gfa"
 
     return SpeciesFiles(
         species=species,

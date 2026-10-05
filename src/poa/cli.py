@@ -1,6 +1,7 @@
 """poa command line.
 
     poa check      are the external tools and the oatkDB databases usable?
+    poa run        annotate one sample's mito and/or plastid assembly
 """
 from __future__ import annotations
 
@@ -9,7 +10,7 @@ import shutil
 import subprocess
 import sys
 
-from . import PIPELINE_DIR, __version__
+from . import PIPELINE_DIR, __version__, run
 
 # (command, version flag, what needs it); the version flag is only for display
 TOOLS = [
@@ -70,6 +71,10 @@ def main(argv: list[str] | None = None) -> int:
     sub = ap.add_subparsers(dest="command", required=True)
     p = sub.add_parser("check", help="check external tools and the oatkDB databases")
     p.set_defaults(func=check)
+    p = sub.add_parser("run", help="annotate one sample's mito and/or plastid assembly",
+                       description=run.__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    run.add_arguments(p)
+    p.set_defaults(func=run.run)
     args = ap.parse_args(argv)
     return args.func(args)
 

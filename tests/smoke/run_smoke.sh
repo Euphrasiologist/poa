@@ -3,7 +3,8 @@
 # through QC -> denovo_annotation -> editing -> trans_splicing ->
 # unitig_coords -> gff_export, in a fresh data root separate from this
 # checkout, then the mito GFF checked against RefSeq NC_037304.1
-# (check_arabidopsis.py). Exits non-zero if any stage or the check fails.
+# (check_arabidopsis.py), then the same inputs through `poa run`, whose GFFs
+# must be identical. Exits non-zero if any stage or check fails.
 #
 # Usage: tests/smoke/run_smoke.sh [DATA_ROOT] [THREADS]
 #   DATA_ROOT  where to build the test data root (default: a new temp dir);
@@ -85,3 +86,15 @@ python3 "${REPO}/tests/smoke/check_arabidopsis.py" \
   --gff "${OUT}/${SP}.mito.gff" \
   --fasta "${DATA_ROOT}/data/mito/${SP}/${SP}.mito.ctg.fasta" \
   --out "${DATA_ROOT}/check_arabidopsis.tsv"
+
+log "=== poa run (same inputs) ==="
+M="${DATA_ROOT}/data/mito/${SP}/${SP}.mito"
+P="${DATA_ROOT}/data/plastid/${SP}/${SP}.k1001.s31.c100.pltd"
+poa run --mito "${M}.ctg.fasta" --mito-gfa "${M}.gfa" --pltd "${P}.ctg.fasta" --pltd-gfa "${P}.gfa" \
+  -n "${SP}" -o "${DATA_ROOT}/poa_run" -t "${THREADS}"
+for f in "${SP}.mito.gff" "${SP}.pltd.gff" "unitig/${SP}.mito.unitig.gff" "unitig/${SP}.pltd.unitig.gff"; do
+  cmp "${OUT}/${f}" "${DATA_ROOT}/poa_run/$(basename "${f}")" \
+    || { echo "[err] poa run's $(basename "${f}") differs from the stage-by-stage run" >&2; exit 1; }
+done
+log "poa run: GFFs identical to the stage-by-stage run"
+echo PASS

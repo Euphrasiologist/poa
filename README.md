@@ -61,17 +61,47 @@ they don't exist, so a conda install needs none of them.
 
 ## Running it
 
-A single `poa run` command (FASTA and/or GFA in, GFF3 out) is being built.
-Until then the stages run as scripts from the installed package
-(`python3 -c 'import poa; print(poa.PIPELINE_DIR)'`) against a **data
-root**: a directory containing `data/mito/<species>/` and
-`data/plastid/<species>/` with each species' e.g. oatk-assembled
-`*.ctg.fasta` + `.gfa`. Results and work files go under the data root's
-`analysis/`. Point at it with `PLANT_ORGANELLE_DATA_ROOT`, or run from
-inside it.
+```bash
+poa run --mito sample.mito.ctg.fasta --mito-gfa sample.mito.gfa \
+        --pltd sample.pltd.ctg.fasta --pltd-gfa sample.pltd.gfa \
+        -o out/ -t 8
+```
 
-The annotation pipeline, in order (`tests/smoke/run_smoke.sh` has the exact
-commands):
+Give the contig FASTA for one or both organelles, from oatk or any other
+assembler (`.gz` is fine). The assembly graph is optional: with it you
+also get unitig-level coordinates (`unitig_loc=`/`unitig_span=`
+attributes and a `.unitig.gff`). Without it, the contig GFF is the same
+apart from those attributes. A graph alone isn't enough, because poa
+annotates contigs and doesn't choose a path through the graph.
+
+Output in `out/`:
+
+- `<name>.<mito|pltd>.gff` - contig-level GFF3
+- `<name>.<mito|pltd>.unitig.gff` - unitig-level GFF3 (with a GFA)
+- `tables/` - gene calls, predicted RNA edits, reconstructed spliced
+  genes, linearisation QC
+- `logs/` - one log per stage; `work/` - intermediate files
+
+`<name>` defaults to the first input's file name up to its first `.`
+(`-n` to set it). About 5 minutes for Arabidopsis mito + plastid on 4
+cores, most of it tRNAscan-SE.
+
+`poa run` runs the stages below on one sample and doesn't apply
+`qc_basic_stats`' dataset-level `pass`/`flag`/`fail` gate, which compares
+an assembly against the rest of a dataset. One gap: `qc_basic_stats 06`
+(low-depth side paths in a mito graph) needs oatk's `.annot_mito.txt`
+next to the GFA, so under `poa run` it currently reports
+`no_gene_bearing_unitigs` rather than checking.
+
+### Stage by stage, on a whole dataset
+
+The stages are scripts in the installed package
+(`python3 -c 'import poa; print(poa.PIPELINE_DIR)'`) that run against a
+**data root**: a directory containing `data/mito/<species>/` and
+`data/plastid/<species>/` with each species' `*.ctg.fasta` (and,
+optionally, `.gfa`). Results and work files go under the data root's
+`analysis/`. Point at it with `PLANT_ORGANELLE_DATA_ROOT`, or run from
+inside it. In order (`tests/smoke/run_smoke.sh` has the exact commands):
 
 ```
 qc_basic_stats 01-05 -> denovo_annotation 00-04 -> editing 01 ->
@@ -90,7 +120,8 @@ thaliana mito and plastid oatk assemblies, DToL ddAraThal4), runs the
 pipeline above on it, and checks the mito GFF against RefSeq NC_037304.1
 with `tests/smoke/check_arabidopsis.py`: gene content, exon structure and
 editing-aware protein identity, with thresholds set just below the
-dataset repo's own results so regressions fail. About 7 minutes on 8 cores.
+dataset repo's own results so regressions fail. It then runs `poa run` on
+the same inputs and requires identical GFFs. About 12 minutes on 8 cores.
 
 ## Modules
 
