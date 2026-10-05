@@ -14,7 +14,10 @@ and their abundance tracks gene-bearing ones within ~2-fold (Wu et al.
 difference between chromosomes with and without genes). So the signal
 is depth and topology, never gene content:
   genome depth  = length-weighted median depth of unitigs carrying
-                  mitochondrial protein genes (oatk's own nhmmscan hits)
+                  mitochondrial protein genes (oatk's own nhmmscan hits on
+                  the unitigs, .annot_mito.txt; without it - poa run, or
+                  any non-oatk assembly - poa's own gene calls carried onto
+                  unitigs through unitig_coords' map: gene_source column)
   low depth     = below LOW_DEPTH_RATIO of genome depth (well outside the
                   ~2-fold chromosome abundance range)
   embedded      = a connected piece of low-depth unitigs (at most
@@ -55,6 +58,9 @@ FLAG_MIN_BP = 20_000
 FLAG_MIN_FRAC = 0.10
 MIN_GENE_SCORE = 300.0
 MAP_DIR = ANALYSIS_DIR / "unitig_coords" / "results" / "unitig_map"
+GENE_CALLS = ANALYSIS_DIR / "denovo_annotation" / "results" / "gene_calls.tsv"
+# a unitig carries a gene call if its placement covers at least this much of it
+MIN_CALL_OVERLAP = 0.5
 
 
 def read_graph(gfa: Path):
@@ -92,6 +98,62 @@ def gene_unitigs(annot: Path) -> set[str]:
     return out
 
 
+def load_gene_calls(path: Path) -> dict[str, list[tuple[str, int, int]]]:
+    """species -> [(contig, start, end)] of confident mito protein-gene calls,
+    the same filter gene_unitigs() applies to oatk's hits."""
+    calls = defaultdict(list)
+    if not path.exists():
+        return calls
+    with open(path) as fh:
+        for r in csv.DictReader(fh, delimiter="\t"):
+            if r["organelle"] != "mito" or r["gene"].startswith(("trn", "rrn")):
+                continue
+            try:
+                if float(r["score"]) < MIN_GENE_SCORE:
+                    continue
+            except ValueError:
+                continue
+            calls[r["species"]].append((r["contig_id"], int(r["start"]), int(r["end"])))
+    return calls
+
+
+def fasta_lengths(path: Path) -> dict[str, int]:
+    lengths, name = {}, None
+    with open(path) as fh:
+        for line in fh:
+            if line.startswith(">"):
+                name = line[1:].split()[0]
+                lengths[name] = 0
+            elif name is not None:
+                lengths[name] += len(line.strip())
+    return lengths
+
+
+def gene_unitigs_from_calls(calls: list[tuple[str, int, int]], map_path: Path,
+                            ctg_lengths: dict[str, int]) -> set[str]:
+    """Unitigs whose placement on the contigs covers >= MIN_CALL_OVERLAP of a
+    gene call. A placement across a circular contig's origin runs past the
+    contig's end (unitig_coords' convention) - the usual shape of a
+    single-unitig circular mitogenome - so calls are also tested shifted by
+    the contig length."""
+    if not calls or not map_path.exists():
+        return set()
+    by_ctg = defaultdict(list)
+    for ctg, start, end in calls:
+        by_ctg[ctg].append((min(start, end), max(start, end)))
+    out = set()
+    with open(map_path) as fh:
+        for r in csv.DictReader(fh, delimiter="\t"):
+            trim = int(r.get("match_trim") or 0)
+            u_start, u_end = int(r["ctg_start"]) + trim, int(r["ctg_end"]) - trim
+            clen = ctg_lengths.get(r["ctg_seqid"], 0)
+            shifts = (0, clen) if clen and u_end > clen else (0,)
+            if any(min(end + k, u_end) - max(start + k, u_start) >= MIN_CALL_OVERLAP * (end - start)
+                   for start, end in by_ctg.get(r["ctg_seqid"], ()) for k in shifts):
+                out.add(r["unitig"])
+    return out
+
+
 def weighted_median(pairs):
     pairs = sorted(pairs)
     half, acc = sum(w for _, w in pairs) / 2, 0
@@ -102,7 +164,7 @@ def weighted_median(pairs):
     return None
 
 
-def scan_one(species: str, gfa: Path) -> dict | None:
+def scan_one(species: str, gfa: Path, calls: list[tuple[str, int, int]], ctg: Path | None) -> dict | None:
     d = gfa.parent
     prefix = gfa.name[: -len(".mito.gfa")]
     annot = next((p for p in (d / f"{prefix}.annot_mito.txt", d / "superseded" / f"{prefix}.annot_mito.txt")
@@ -110,9 +172,14 @@ def scan_one(species: str, gfa: Path) -> dict | None:
     depth, length, adj = read_graph(gfa)
     if not depth or any(v is None for v in depth.values()):
         return {"species": species, "status": "no_depth_tags"}
-    genes = gene_unitigs(annot) & depth.keys() if annot else set()
+    map_path = MAP_DIR / f"{species}.mito.tsv"
+    if annot:
+        gene_source, genes = "oatk_annot", gene_unitigs(annot) & depth.keys()
+    else:
+        ctg_lengths = fasta_lengths(ctg) if ctg and ctg.exists() else {}
+        gene_source, genes = "gene_calls", gene_unitigs_from_calls(calls, map_path, ctg_lengths) & depth.keys()
     if not genes:
-        return {"species": species, "status": "no_gene_bearing_unitigs"}
+        return {"species": species, "status": "no_gene_bearing_unitigs", "gene_source": gene_source}
     genome_depth = weighted_median([(depth[u], length[u]) for u in genes])
     low = {u for u in depth if depth[u] < LOW_DEPTH_RATIO * genome_depth}
 
@@ -137,14 +204,13 @@ def scan_one(species: str, gfa: Path) -> dict | None:
             self_bp += bp
 
     total_bp = sum(length.values())
-    row = {"species": species, "status": "ok", "run_prefix": prefix,
+    row = {"species": species, "status": "ok", "gene_source": gene_source, "run_prefix": prefix,
            "graph_bp": total_bp, "n_unitigs": len(depth), "genome_depth": round(genome_depth, 1),
            "low_depth_bp": sum(length[u] for u in low), "embedded_low_bp": embedded_bp,
            "n_embedded_pieces": n_embedded, "self_contained_low_bp": self_bp,
            "embedded_low_frac": round(embedded_bp / total_bp, 3) if total_bp else 0.0}
     row["flagged"] = embedded_bp >= FLAG_MIN_BP or row["embedded_low_frac"] >= FLAG_MIN_FRAC
 
-    map_path = MAP_DIR / f"{species}.mito.tsv"
     if map_path.exists():
         rows = list(csv.DictReader(open(map_path), delimiter="\t"))
         placed = sum(int(r["ctg_end"]) - int(r["ctg_start"]) for r in rows)
@@ -160,23 +226,24 @@ def main():
     args = ap.parse_args()
     species_filter = sd.load_species_list(Path(args.species_list)) if args.species_list else None
 
+    calls = load_gene_calls(GENE_CALLS)
     rows = []
     for r in sd.discover_all(sd.repo_data_root(ROOT_DIR, "mito"), "mito", species_filter=species_filter):
         if not r.gfa:
             continue
         gfa = Path(r.gfa) if os.path.isabs(r.gfa) else ROOT_DIR / r.gfa
-        row = scan_one(r.species, gfa)
+        ctg = Path(r.ctg_fasta) if r.ctg_fasta else None
+        if ctg and not ctg.is_absolute():
+            ctg = ROOT_DIR / ctg
+        row = scan_one(r.species, gfa, calls.get(r.species, []), ctg)
         if row:
-            ctg = Path(r.ctg_fasta) if r.ctg_fasta else None
-            if ctg and not ctg.is_absolute():
-                ctg = ROOT_DIR / ctg
             row["resolver"] = ("gfatk_resolve" if ctg and ctg.exists() and ctg.stat().st_size
                                and "resolver=gfatk_resolve" in open(ctg).readline() else "oatk_pathfinder")
             rows.append(row)
 
     cols = ["species", "status", "resolver", "run_prefix", "graph_bp", "n_unitigs", "genome_depth", "low_depth_bp",
             "embedded_low_bp", "n_embedded_pieces", "self_contained_low_bp", "embedded_low_frac",
-            "assembly_bp_via_low", "assembly_frac_via_low", "flagged"]
+            "assembly_bp_via_low", "assembly_frac_via_low", "flagged", "gene_source"]
     out = ANALYSIS_DIR / "qc_basic_stats" / "results" / "low_depth_paths.tsv"
     with open(out, "w") as fh:
         fh.write("\t".join(cols) + "\n")

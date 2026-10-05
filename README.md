@@ -88,10 +88,10 @@ cores, most of it tRNAscan-SE.
 
 `poa run` runs the stages below on one sample and doesn't apply
 `qc_basic_stats`' dataset-level `pass`/`flag`/`fail` gate, which compares
-an assembly against the rest of a dataset. One gap: `qc_basic_stats 06`
-(low-depth side paths in a mito graph) needs oatk's `.annot_mito.txt`
-next to the GFA, so under `poa run` it currently reports
-`no_gene_bearing_unitigs` rather than checking.
+an assembly against the rest of a dataset. With a mito GFA it does run
+the low-depth side-path check (`qc_basic_stats 06`, in
+`tables/low_depth_paths.tsv`). A flagged graph gets a "linearisation
+uncertain" note in the contig GFF.
 
 ### Stage by stage, on a whole dataset
 
