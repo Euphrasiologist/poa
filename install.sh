@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
-# Fallback for platforms bioconda has no build for yet: installs this
-# project's own Rust tools (normally in environment.yml) with cargo, at the
-# versions environment.yml pins. Needs a Rust toolchain (rustup or
-# `mamba install rust`).
+# Optional: builds this project's own Rust tools from source with cargo
+# instead of bioconda, at the versions environment.yml pins. Needs a Rust
+# toolchain (rustup or `mamba install rust`).
 #
 #   ./install.sh
 set -euo pipefail

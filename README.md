@@ -22,10 +22,10 @@ poa check           # every tool found, oatkDB databases ready
 
 `environment.yml` pins every external tool from bioconda/conda-forge,
 including this project's own `gfatk` 0.6.1, `orfedit` 0.1.0 and
-`transsplice` 0.2.1. Where bioconda has no build of those three for your
-platform, remove them from `environment.yml` and run `./install.sh`
-(cargo) instead. A bioconda package for poa itself (and with it
-Docker/Singularity images) is next.
+`transsplice` 0.2.1, built for linux-64, linux-aarch64 and macOS (Intel and
+Apple silicon). To build those three from source instead, remove them from
+`environment.yml` and run `./install.sh` (cargo). A bioconda package for
+poa itself (and with it Docker/Singularity images) is next.
 
 ## Reference data
 
