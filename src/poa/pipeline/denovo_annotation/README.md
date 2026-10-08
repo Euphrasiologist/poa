@@ -6,8 +6,9 @@ graph/contigs), and if so, is that just a decoupling exercise or does it
 actually call genes better? This module runs the same targeted gene search
 oatk does internally, but directly and independently of oatk's assembler,
 using `oatkdb` (oatk's own database-builder) + `nhmmscan` for
-protein-coding genes, `tRNAscan-SE` for tRNAs, and `barrnap` for rRNAs -
-exactly the pipeline already built and proven in the sibling
+protein-coding genes, `tRNAscan-SE` for tRNAs, and `nhmmer` (a Python port
+of `barrnap --kingdom plant`, see `rrna_nhmmer.py`) for rRNAs - the same
+pipeline already built and proven in the sibling
 `mito_structural_variation/annotation/` repo, run here directly against
 this dataset's own oatk-assembled contigs.
 
@@ -29,7 +30,7 @@ derived convenience for those two consumers, not a second source of truth.
 |---|---|---|
 | `00_run_nhmmscan.py` | `work/nhmmscan/<species>.<organelle>.{filtered.tblout,gff}` | `nhmmscan` against oatkDB's own gene-family `.fam` database, E-value filtered, converted to GFF via `hmm_to_gff` |
 | `01_run_trnascan.py` | `work/trnascan/<species>.<organelle>.gff` | `tRNAscan-SE -O` |
-| `02_run_barrnap.py` | `work/barrnap/<species>.<organelle>.gff` | `barrnap --kingdom plant` |
+| `02_run_barrnap.py` | `work/barrnap/<species>.<organelle>.gff` | `nhmmer` against poa's bundled `plant.hmm` (byte-identical port of `barrnap --kingdom plant`) |
 | `03_build_combined_gff.py` | `results/gff/<species>.<organelle>.gff` | **the primary output** - all three sources combined into one sorted GFF3, tagged by source, not deduplicated |
 | `04_build_gene_calls.py` | `results/gene_calls.tsv` | reshapes the combined GFF into one `annotation/results/gene_calls.tsv`-shaped table |
 
@@ -77,13 +78,16 @@ genes `trans_splicing` cares about:
 
 ## Method
 
-1. **`00_run_nhmmscan.py`** - `nhmmscan --tblout` against
-   `/software/team301/OatkDB/viridiplantae_mito_v20250217.fam` (mito;
-   already built and `hmmpress`ed) or the plastid equivalent (**not yet
-   built** - see caveat below), then an E-value filter at `1e-5` (same
-   E-value floor as this repo's existing Pfam-scan precedent in
-   `orf_scan`), then conversion to GFF3 (`src/nhmmscan_gff.py`, a Python
-   port of the `filter_tblout`/`hmm_to_gff` tools used originally). `1e-5` isn't
+1. **`00_run_nhmmscan.py`** - `nhmmscan --tblout` against poa's bundled
+   oatkDB `.fam` database for the organelle in question
+   (`viridiplantae_mito_v20250217` or `viridiplantae_pltd_v20260928` - both
+   built, `hmmpress`'d into `$POA_CACHE` on first use; see
+   `common/oatkdb.py` and the top-level README's "Reference data" section;
+   `OATKDB_MITO_FAM`/`OATKDB_PLTD_FAM` to override), then an E-value filter
+   at `1e-5` (same E-value floor as this repo's existing Pfam-scan
+   precedent in `orf_scan`), then conversion to GFF3
+   (`src/nhmmscan_gff.py`, a Python port of the `filter_tblout`/
+   `hmm_to_gff` tools used originally). `1e-5` isn't
    arbitrary here either: the unfiltered tblout for `Acer_campestre`
    included a real `E=0.47` `nad2` hit that plainly shouldn't be trusted -
    `1e-5` clears it out, real hits cluster many orders of magnitude below
@@ -121,27 +125,24 @@ genes `trans_splicing` cares about:
    than force-normalised into one scale that would misrepresent the
    underlying tools.
 
-## Known gap: no plastid database yet
+## Resolved: plastid database
 
-`oatkdb` supports building one directly (`oatkdb ... <taxid> chloroplast`
-- confirmed via `--help`, same tool as the existing mito database), but
-the NCBI/edirect fetch this needs fails with **persistent SSL errors**
-when run from normal LSF compute nodes (`long`/`normal` queues) - confirmed
-directly: works cleanly from `farm22-head2` (the login node) and from the
-**`transfer` queue** specifically, fails 100% of retries from a `long`-queue
-compute node (`node-14-14`, tested). The fix is straightforward (submit
-the `oatkdb` build via `bsub -q transfer`, not `long`/`normal`) but wasn't
-completed this session - `--organelle pltd` is fully wired in every script
-here and will work as soon as
-`/software/team301/OatkDB/viridiplantae_pltd_v20260927.fam` exists (or
-update `OATKDB_PLTD_FAM` in `tool_paths.sh` to whatever name it's actually
-built with).
+`oatkdb` builds one directly (`oatkdb ... <taxid> chloroplast`, same tool
+as the mito database); the only wrinkle was that the NCBI/edirect fetch it
+needs gets **persistent SSL errors** from normal LSF compute nodes
+(`long`/`normal` queues) - confirmed directly: works cleanly from
+`farm22-head2` (the login node) and from the **`transfer` queue**
+specifically, fails 100% of retries from a `long`-queue compute node
+(`node-14-14`, tested). Fix: submit the `oatkdb` build via `bsub -q
+transfer`, not `long`/`normal`. `viridiplantae_pltd_v20260928` is built,
+bundled with poa, and `hmmpress`'d into `$POA_CACHE` on first use, same as
+the mito database - `--organelle pltd` is fully wired in every script
+here and just works.
 
 ## Scaling to the full dataset: three real things this surfaced
 
-Preparing for a full ~1250-species run (still mito-only - see the plastid
-gap above) surfaced three real, fixed issues, not just a "should be fine"
-assumption:
+Preparing for a full ~1250-species run surfaced three real, fixed issues,
+not just a "should be fine" assumption:
 
 1. **No parallelism, at all, until now.** `00_run_nhmmscan.py`/
    `01_run_trnascan.py`/`02_run_barrnap.py` looped over species
@@ -199,9 +200,8 @@ compute belongs on the farm, not the head node, full stop.
 
 New, unvalidated at scale beyond an 11-species smoke test above (four of
 the original 15 excluded by the QC gate just added) - same opt-in
-precedent as `orf_scan`/`editing`/`trans_splicing`. Mito can be run at
-full scale immediately; plastid needs the database gap above closed
-first.
+precedent as `orf_scan`/`editing`/`trans_splicing`. Both organelles can be
+run at full scale.
 
 ## Not yet done: cutting over the default
 
