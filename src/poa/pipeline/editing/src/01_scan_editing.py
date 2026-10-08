@@ -35,6 +35,7 @@ ANALYSIS_DIR = ROOT_DIR / "analysis"
 sys.path.insert(0, str(CODE_DIR / "common"))
 
 import species_discovery as sd  # noqa: E402
+import io_utils  # noqa: E402
 
 ORFEDIT = shutil.which("orfedit") or str(Path.home() / ".cargo" / "bin" / "orfedit")
 
@@ -138,11 +139,18 @@ def main():
 
     results_dir = ANALYSIS_DIR / "editing" / "results"
     results_dir.mkdir(parents=True, exist_ok=True)
+    # orfedit writes these paths itself (truncating), so a --species-list-scoped
+    # run must not point it straight at results_dir - it'd truncate the shared
+    # table down to just the scoped species. Write to work_dir instead, then
+    # merge_species_scoped_tsv decides how that relates to what's already in
+    # results_dir (see its docstring).
+    work_gene_calls_out = work_dir / "edited_gene_calls.new.tsv"
+    work_edits_out = work_dir / "predicted_edits.new.tsv"
     cmd = [
         ORFEDIT, "scan-batch",
         "--manifest", str(manifest_path),
-        "--gene-calls-out", str(results_dir / "edited_gene_calls.tsv"),
-        "--edits-out", str(results_dir / "predicted_edits.tsv"),
+        "--gene-calls-out", str(work_gene_calls_out),
+        "--edits-out", str(work_edits_out),
         "--threads", str(args.threads),
         "--flank", str(args.flank),
         "--edit-penalty", str(args.edit_penalty),
@@ -151,6 +159,11 @@ def main():
     if proc.returncode != 0:
         print(f"[err] orfedit scan-batch failed (exit {proc.returncode})", file=sys.stderr)
         sys.exit(1)
+
+    io_utils.merge_species_scoped_tsv(results_dir / "edited_gene_calls.tsv", work_gene_calls_out, species_filter)
+    io_utils.merge_species_scoped_tsv(results_dir / "predicted_edits.tsv", work_edits_out, species_filter)
+    print(f"[info] scan_editing: merged into {results_dir} "
+          f"({'species-scoped' if species_filter else 'full rewrite'})", file=sys.stderr)
 
 
 if __name__ == "__main__":

@@ -34,6 +34,7 @@ ANALYSIS_DIR = ROOT_DIR / "analysis"
 sys.path.insert(0, str(CODE_DIR / "common"))
 
 import species_discovery as sd  # noqa: E402
+import io_utils  # noqa: E402
 
 TRANSSPLICE = shutil.which("transsplice") or str(Path.home() / ".cargo" / "bin" / "transsplice")
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -119,13 +120,21 @@ def main():
 
     results_dir = ANALYSIS_DIR / "trans_splicing" / "results"
     results_dir.mkdir(parents=True, exist_ok=True)
+    # transsplice writes these paths itself (truncating), so a --species-list
+    # -scoped run must not point it straight at results_dir - it'd truncate
+    # the shared tables down to just the scoped species. Write to work_dir
+    # instead, then merge_species_scoped_tsv decides how that relates to
+    # what's already in results_dir (see its docstring).
+    out_names = ["reconstructed_genes.tsv", "reconstructed_exons.tsv",
+                 "reconstructed_junctions.tsv", "reconstructed_edits.tsv"]
+    work_outs = {name: work_dir / name.replace(".tsv", ".new.tsv") for name in out_names}
     cmd = [
         TRANSSPLICE, "scan-batch",
         "--manifest", str(manifest_path),
-        "--genes-out", str(results_dir / "reconstructed_genes.tsv"),
-        "--exons-out", str(results_dir / "reconstructed_exons.tsv"),
-        "--junctions-out", str(results_dir / "reconstructed_junctions.tsv"),
-        "--edits-out", str(results_dir / "reconstructed_edits.tsv"),
+        "--genes-out", str(work_outs["reconstructed_genes.tsv"]),
+        "--exons-out", str(work_outs["reconstructed_exons.tsv"]),
+        "--junctions-out", str(work_outs["reconstructed_junctions.tsv"]),
+        "--edits-out", str(work_outs["reconstructed_edits.tsv"]),
         "--threads", str(args.threads),
         "--merge-distance", str(args.merge_distance),
         "--junction-distance-threshold", str(args.junction_distance_threshold),
@@ -135,6 +144,11 @@ def main():
     if proc.returncode != 0:
         print(f"[err] transsplice scan-batch failed (exit {proc.returncode})", file=sys.stderr)
         sys.exit(1)
+
+    for name in out_names:
+        io_utils.merge_species_scoped_tsv(results_dir / name, work_outs[name], species_filter)
+    print(f"[info] reconstruct: merged into {results_dir} "
+          f"({'species-scoped' if species_filter else 'full rewrite'})", file=sys.stderr)
 
 
 if __name__ == "__main__":

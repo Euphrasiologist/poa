@@ -41,6 +41,7 @@ ANALYSIS_DIR = ROOT_DIR / "analysis"
 sys.path.insert(0, str(CODE_DIR / "common"))
 
 import species_discovery as sd  # noqa: E402
+import io_utils  # noqa: E402
 
 COLUMNS = ["species", "organelle", "contig_id", "start", "end", "gene", "score", "strand",
            "source", "hmm_from", "hmm_to", "model_len"]
@@ -168,12 +169,19 @@ def main():
         print(f"[info] build_gene_calls: {organelle}: {n_species} species with >=1 call", file=sys.stderr)
 
     out_path = ANALYSIS_DIR / "denovo_annotation" / "results" / "gene_calls.tsv"
-    out_path.parent.mkdir(parents=True, exist_ok=True)
-    with open(out_path, "w") as fh:
+    # Always write what this run actually computed to its own path first;
+    # merge_species_scoped_tsv then decides how that relates to what's
+    # already in out_path (replace entirely if unscoped, species-scoped
+    # merge otherwise - see its docstring for why that distinction matters).
+    new_path = WORK_DIR / "gene_calls.new.tsv"
+    new_path.parent.mkdir(parents=True, exist_ok=True)
+    with open(new_path, "w") as fh:
         fh.write("\t".join(COLUMNS) + "\n")
         for row in all_rows:
             fh.write("\t".join(str(row[c]) for c in COLUMNS) + "\n")
-    print(f"[info] build_gene_calls: {len(all_rows)} rows -> {out_path}", file=sys.stderr)
+    io_utils.merge_species_scoped_tsv(out_path, new_path, species_filter)
+    print(f"[info] build_gene_calls: {len(all_rows)} rows "
+          f"({'species-scoped merge' if species_filter else 'full rewrite'}) -> {out_path}", file=sys.stderr)
 
 
 if __name__ == "__main__":

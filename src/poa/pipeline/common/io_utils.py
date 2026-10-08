@@ -83,3 +83,39 @@ def merge_rows(existing_df: pd.DataFrame, new_rows: list[dict], key_cols: list[s
     existing_df = existing_df.drop(index=new_df_idx.index, errors="ignore")
     merged = pd.concat([existing_df, new_df_idx]).reset_index()
     return merged[columns]
+
+
+def merge_species_scoped_tsv(path: Path, new_path: Path, species_filter: set | None) -> None:
+    """Merge a (possibly --species-list-scoped) freshly-computed result table
+    at `new_path` into the existing one at `path`, atomically.
+
+    Found the hard way: a script whose output covers every species that
+    belongs in the table (gene_calls.tsv and friends) used to just write
+    `new_path`'s rows straight to `path` unconditionally. That's correct for
+    an unscoped run (`species_filter` is None - `new_path` already covers
+    everyone), but a `--species-list`-scoped run only ever computes `new_path`
+    for the listed species, so writing it straight to `path` silently
+    discarded every OTHER species already in the table - confirmed directly
+    against a real ~1250-species dataset (a 2-species-scoped run collapsed a
+    418216-row table to 811 rows).
+
+    So: rows in `path` for a species NOT in `species_filter` are kept
+    untouched; rows for a species IN `species_filter` are dropped and
+    replaced by whatever `new_path` has for it - including replaced with
+    nothing, if that species genuinely no longer produces any row this run.
+    """
+    path = Path(path)
+    new_path = Path(new_path)
+    new_df = pd.read_csv(new_path, sep="\t", dtype=str) if new_path.exists() else pd.DataFrame()
+
+    if species_filter is None or not path.exists():
+        merged = new_df
+    else:
+        existing = pd.read_csv(path, sep="\t", dtype=str)
+        kept = existing[~existing["species"].isin(species_filter)] if "species" in existing.columns else existing
+        merged = pd.concat([kept, new_df], ignore_index=True) if not new_df.empty else kept
+
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp_path = path.with_suffix(path.suffix + ".tmp")
+    merged.to_csv(tmp_path, sep="\t", index=False)
+    os.replace(tmp_path, path)
