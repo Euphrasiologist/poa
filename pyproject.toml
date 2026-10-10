@@ -1,12 +1,14 @@
 [build-system]
-requires = ["setuptools>=64"]
+requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "poa"
-version = "0.1.0.dev0"
+version = "0.1.0"
 description = "Plant organelle annotator: gene calling, RNA-editing-aware ORFs, spliced-gene reconstruction and contig/unitig GFF3 for plant mitochondrial and plastid genomes"
 readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE", "src/poa/data/*/NOTICE"]
 requires-python = ">=3.10"
 authors = [{ name = "Max Brown" }]
 dependencies = ["pandas>=2,<3", "numpy", "biopython"]
