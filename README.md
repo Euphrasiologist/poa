@@ -54,6 +54,9 @@ All bundled - nothing to download, no oatk install needed:
 - `src/poa/pipeline/editing/reference/profiles/` - `orfedit` profiles built
   on the same dataset. `editing/src/01_scan_editing.py` uses them whenever
   the data root has none of its own.
+- Moss references, under `lineages/moss/` in both of the above: exon
+  templates and editing profiles built from 20 moss RefSeq mitogenomes
+  (cached in the same `genbank/`). See "Reference lineage" below.
 
 Cluster-specific paths (tRNAscan-SE config, mafft's `MAFFT_BINARIES`) are
 env-var overridable (`TRNASCAN_CONF`, `MAFFT_BINARIES`) and ignored when
@@ -92,6 +95,28 @@ an assembly against the rest of a dataset. With a mito GFA it does run
 the low-depth side-path check (`qc_basic_stats 06`, in
 `tables/low_depth_paths.tsv`). A flagged graph gets a "linearisation
 uncertain" note in the contig GFF.
+
+### Reference lineage
+
+Moss mitochondria have their own intron set (nad1 has 3 exons, not 5;
+nad2 2; nad4 2) and barely edit, so on the angiosperm references only 12%
+of moss spliced genes came out complete and 98% of moss mito calls were
+"corrected" towards the angiosperm protein. poa therefore picks a
+reference lineage per species (`--lineage auto`, the default): the editing
+stage aligns five single-exon mito genes (atp4 ccmB ccmC mttB rps14)
+against both the angiosperm and the moss profiles, and a species goes to
+moss only when at least 4 of them are scored and moss wins by 50 or more
+per gene. The call is written to `tables/lineage.tsv`
+(`analysis/editing/results/lineage.tsv` stage by stage), and the editing
+and trans_splicing stages use it. `--lineage angiosperm|moss` forces a
+lineage.
+
+On the 956-species dataset, all 174 mosses were called moss and no other
+species was. Moss spliced genes went from 12% to 99% complete, and the
+share of moss calls changed by editing fell from 98% to 44%. Output for
+every other species is unchanged. Liverworts, hornworts, ferns and
+lycophytes still use the angiosperm references. See
+`trans_splicing/README.md` and `editing/README.md`.
 
 ### Stage by stage, on a whole dataset
 

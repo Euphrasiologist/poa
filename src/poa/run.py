@@ -45,6 +45,7 @@ TABLES = [
     "denovo_annotation/results/gene_calls.tsv",
     "editing/results/edited_gene_calls.tsv",
     "editing/results/predicted_edits.tsv",
+    "editing/results/lineage.tsv",
     "trans_splicing/results/reconstructed_genes.tsv",
     "trans_splicing/results/reconstructed_exons.tsv",
     "trans_splicing/results/reconstructed_junctions.tsv",
@@ -66,6 +67,9 @@ def add_arguments(p: argparse.ArgumentParser) -> None:
     p.add_argument("-o", "--outdir", required=True, help="output directory")
     p.add_argument("-n", "--name", help="sample name used in output file names "
                    "(default: the first input's file name up to its first '.')")
+    p.add_argument("--lineage", choices=["auto", "angiosperm", "moss"], default="auto",
+                   help="reference lineage for mito editing profiles and spliced-gene templates: "
+                        "auto (default) picks the one the sample's genes fit best")
     p.add_argument("-t", "--threads", type=int, default=4, help="default 4")
     p.add_argument("--force", action="store_true", help="replace an existing OUTDIR/work")
 
@@ -160,11 +164,11 @@ def run(args: argparse.Namespace) -> int:
         ("combined_gff", "denovo_annotation/src/03_build_combined_gff.py", ["--organelle", organelle]),
         ("gene_calls", "denovo_annotation/src/04_build_gene_calls.py", ["--organelle", organelle]),
         ("editing", "editing/src/01_scan_editing.py",
-         ["--organelle", organelle, "--threads", threads, *gene_calls]),
+         ["--organelle", organelle, "--threads", threads, "--lineage", args.lineage, *gene_calls]),
     ]
     if "mito" in orgs:
         stages.append(("trans_splicing", "trans_splicing/src/01_reconstruct.py",
-                       ["--threads", threads, *gene_calls]))
+                       ["--threads", threads, "--lineage", args.lineage, *gene_calls]))
     if gfas:
         stages += [
             ("unitig_map", "unitig_coords/src/00_build_unitig_map.py",

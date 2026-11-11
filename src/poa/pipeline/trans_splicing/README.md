@@ -291,5 +291,47 @@ rejected 868 cis reconstructions as inconsistent with the HMM hits:
 mostly slots placed de novo where no hit exists (rpl2, rps10 - often
 lost or nuclear-transferred) and cox2 exon 1 running ~340 bp 5' of the
 hit in ~220 mosses (Sphagnum, Orthotrichaceae, Hypnales), whose cox2
-diverges from the angiosperm template - stage 2b's lineage templates
-would be needed there. In every case the raw chain is kept.
+diverges from the angiosperm template (fixed for mosses by the moss
+templates below). In every case the raw chain is kept.
+
+## Moss templates
+
+Mosses share an intron set across the phylum that differs from the
+angiosperm set, so the angiosperm templates fill moss genes in fixed,
+wrong patterns: nad1 3 of 5 slots, nad2 3/5, nad4 3/4, ccmFc/rpl2/rps3
+1/2. Only 12% of moss reconstructions were complete (0.1% of the
+trans-spliced genes), against 85% for dicots.
+
+`reference/lineages/moss/` holds templates built from 20 moss RefSeq
+mitogenomes (`reference_genes.MOSS_MITOGENOMES`, GenBank in the shared
+`reference/genbank/`): `00a_fetch_references.py --lineage moss`, then
+`00_build_exon_profiles.py --lineage moss`. All 174 loci verify against
+their RefSeq proteins. Modal exon counts: nad1 3, nad2 2, nad4 2, nad5 4,
+nad7 3, cox2 4, ccmFc 2, rpl2 1, rps3 1. rps10 is absent from moss
+mitogenomes and gets no template.
+
+`01_reconstruct.py --lineage auto` (the default) reads the per-species
+lineage call that `editing` writes (`analysis/editing/results/lineage.tsv`,
+see `../editing/README.md`). It takes each species' templates from its
+lineage and skips genes that lineage has no template for. If the table is
+missing, it warns and uses angiosperm. `02_bootstrap_refine.py` trains on
+angiosperm-lineage species only, so moss reconstructions never feed into
+the angiosperm whole-gene profiles.
+
+956-species dataset, mosses (174), auto vs `--lineage angiosperm`:
+
+| | angiosperm templates | moss templates |
+|---|---|---|
+| complete | 11.9% | 98.6% |
+| median whole-gene score | 325 | 1523 |
+
+Per gene, moss completeness is 99-100% except nad7 (90%; 18 species fill
+2 of its 3 slots). Every non-moss reconstruction is unchanged at the gene
+level. A few exon rows switch between identical-scoring repeat copies,
+which happens between any two runs (forced-angiosperm mode differs from
+the dataset's own earlier run in the same way).
+
+Not covered: liverworts (21% complete), hornworts, ferns and lycophytes
+still use angiosperm templates. The extra moss intron genes (cox1, cob,
+atp9, nad9, ...) have no templates; gff_export's raw chains handle them,
+as before.

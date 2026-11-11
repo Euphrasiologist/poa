@@ -50,6 +50,8 @@ REFERENCE_DIR = CODE_DIR / "trans_splicing" / "reference"
 PROFILES_DIR = REFERENCE_DIR / "profiles"
 WORK_DIR = ANALYSIS_DIR / "trans_splicing" / "work"
 RESULTS_DIR = ANALYSIS_DIR / "trans_splicing" / "results"
+sys.path.insert(0, str(CODE_DIR / "common"))
+import lineage as lin  # noqa: E402
 
 MAFFT = shutil.which("mafft") or "/software/team301/mafft-7.525-with-extensions/core/mafft"
 MAFFT_BINARIES_DIR = os.environ.get("MAFFT_BINARIES", "/software/team301/mafft-7.525-with-extensions/core")
@@ -136,6 +138,10 @@ def main():
         print(f"[err] missing {genes_path} - run 01_reconstruct.py first", file=sys.stderr)
         sys.exit(1)
     df = pd.read_csv(genes_path, sep="\t")
+    # these are the angiosperm templates: a moss reconstruction (built on the
+    # moss ones, common/lineage.py) must not leak into them
+    lineage_of = lin.load(ANALYSIS_DIR) or {}
+    df = df[df["species"].map(lineage_of).fillna(lin.DEFAULT_LINEAGE) == lin.DEFAULT_LINEAGE]
 
     for gene, sub in df.groupby("gene"):
         good = sub[(sub["complete"]) & (sub["whole_gene_score"] > args.min_score)]

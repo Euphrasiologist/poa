@@ -12,8 +12,16 @@ parallel; `orfedit` is (via rayon), so one process using `--threads` is the
 right shape here, and it sidesteps the LSF-array-of-many-small-jobs
 scaling pain `orf_scan/README.md` already documents for its own heavy step.
 
+Mito genes are also scanned against each other lineage's bundled profiles
+(00b_build_lineage_profiles.py - moss), and each species keeps the run of
+the lineage its genes fit best (common/lineage.py; --lineage to force
+one). A species' genes with no profile in its lineage (moss nad5/nad9,
+multi-exon there) are left uncorrected. The call is recorded in
+lineage.tsv, which trans_splicing reads to pick its exon templates.
+
 Output: analysis/editing/results/edited_gene_calls.tsv
         analysis/editing/results/predicted_edits.tsv
+        analysis/editing/results/lineage.tsv
 """
 from __future__ import annotations
 
@@ -36,6 +44,7 @@ sys.path.insert(0, str(CODE_DIR / "common"))
 
 import species_discovery as sd  # noqa: E402
 import io_utils  # noqa: E402
+import lineage as lin  # noqa: E402
 
 ORFEDIT = shutil.which("orfedit") or str(Path.home() / ".cargo" / "bin" / "orfedit")
 
@@ -91,6 +100,54 @@ def write_manifest(rows: list[dict], path: Path) -> None:
             fh.write("\t".join(str(r[c]) for c in cols) + "\n")
 
 
+def run_orfedit(rows: list[dict], tag: str, work_dir: Path, args) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """One orfedit scan-batch over `rows`; (gene calls, edits) as all-string frames."""
+    manifest_path = work_dir / f"manifest.{tag}.tsv"
+    write_manifest(rows, manifest_path)
+    print(f"[info] scan_editing: {tag} manifest has {len(rows)} rows -> {manifest_path}", file=sys.stderr)
+    calls_out, edits_out = work_dir / f"edited_gene_calls.{tag}.tsv", work_dir / f"predicted_edits.{tag}.tsv"
+    cmd = [
+        ORFEDIT, "scan-batch",
+        "--manifest", str(manifest_path),
+        "--gene-calls-out", str(calls_out),
+        "--edits-out", str(edits_out),
+        "--threads", str(args.threads),
+        "--flank", str(args.flank),
+        "--edit-penalty", str(args.edit_penalty),
+    ]
+    proc = subprocess.run(cmd)
+    if proc.returncode != 0:
+        print(f"[err] orfedit scan-batch failed (exit {proc.returncode})", file=sys.stderr)
+        sys.exit(1)
+    return pd.read_csv(calls_out, sep="\t", dtype=str), pd.read_csv(edits_out, sep="\t", dtype=str)
+
+
+def assign_lineages(runs: dict[str, pd.DataFrame], forced: str | None) -> pd.DataFrame:
+    """One row per species with mito calls: the lineage it takes and why."""
+    scores: dict[str, dict[str, dict[str, float]]] = {}
+    for name, calls in runs.items():
+        mito = calls[calls["organelle"] == "mito"]
+        for row in mito.itertuples():
+            scores.setdefault(row.species, {}).setdefault(name, {})[row.gene] = float(row.score)
+    out = []
+    for species in sorted(scores):
+        chosen, n, totals = lin.choose(scores[species])
+        out.append({"species": species, "lineage": forced or chosen, "decided_by": "forced" if forced else "auto",
+                    "n_genes": n, **{f"{x}_score": f"{totals[x]:.3f}" if x in totals else "" for x in lin.LINEAGES}})
+    return pd.DataFrame(out, columns=lin.COLUMNS)
+
+
+def keep_lineage(df: pd.DataFrame, lineages: dict[str, str], name: str) -> pd.DataFrame:
+    """Rows of lineage `name`'s run that belong in the output: its own mito
+    species, plus (for the default run) everything that isn't mito."""
+    if df.empty:
+        return df
+    takes = df["species"].map(lineages).fillna(lin.DEFAULT_LINEAGE) == name
+    if name == lin.DEFAULT_LINEAGE:
+        return df[(df["organelle"] != "mito") | takes]
+    return df[(df["organelle"] == "mito") & takes]
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--organelle", default="both", choices=["mito", "pltd", "both"])
@@ -98,6 +155,8 @@ def main():
     ap.add_argument("--threads", type=int, default=4)
     ap.add_argument("--flank", type=int, default=300)
     ap.add_argument("--edit-penalty", type=float, default=2.5)
+    ap.add_argument("--lineage", default="auto", choices=lin.CHOICES,
+                    help="mito reference lineage: auto picks per species (default), or force one for all")
     ap.add_argument("--gene-calls", default=None, help="path to a gene_calls.tsv-shaped table to anchor "
                      "on (default: annotation/results/gene_calls.tsv, oatk's own calls) - e.g. point this "
                      "at denovo_annotation/results/gene_calls.tsv to use the oatk-independent "
@@ -133,35 +192,37 @@ def main():
         sys.exit(1)
 
     work_dir = ANALYSIS_DIR / "editing" / "work"
-    manifest_path = work_dir / "manifest.tsv"
-    write_manifest(rows, manifest_path)
-    print(f"[info] scan_editing: manifest has {len(rows)} rows -> {manifest_path}", file=sys.stderr)
-
+    work_dir.mkdir(parents=True, exist_ok=True)
     results_dir = ANALYSIS_DIR / "editing" / "results"
     results_dir.mkdir(parents=True, exist_ok=True)
-    # orfedit writes these paths itself (truncating), so a --species-list-scoped
-    # run must not point it straight at results_dir - it'd truncate the shared
-    # table down to just the scoped species. Write to work_dir instead, then
-    # merge_species_scoped_tsv decides how that relates to what's already in
-    # results_dir (see its docstring).
+    # orfedit writes its output paths itself (truncating), so a
+    # --species-list-scoped run must not point it straight at results_dir -
+    # it'd truncate the shared table down to just the scoped species. It
+    # writes to work_dir instead, then merge_species_scoped_tsv decides how
+    # that relates to what's already in results_dir (see its docstring).
+    runs = {lin.DEFAULT_LINEAGE: run_orfedit(rows, lin.DEFAULT_LINEAGE, work_dir, args)}
+    if "mito" in organelles and args.lineage != lin.DEFAULT_LINEAGE:
+        for name in lin.LINEAGES[1:]:
+            lrows = build_manifest(gene_calls, ["mito"], species_filter, lin.editing_profiles(CODE_DIR, name))
+            if lrows:
+                runs[name] = run_orfedit(lrows, name, work_dir, args)
+
+    forced = None if args.lineage == "auto" else args.lineage
+    lineage_table = assign_lineages({k: calls for k, (calls, _) in runs.items()}, forced)
+    lineages = dict(zip(lineage_table["species"], lineage_table["lineage"]))
+    for name, n in lineage_table["lineage"].value_counts().items():
+        print(f"[info] scan_editing: {n} species use {name} mito profiles", file=sys.stderr)
     work_gene_calls_out = work_dir / "edited_gene_calls.new.tsv"
     work_edits_out = work_dir / "predicted_edits.new.tsv"
-    cmd = [
-        ORFEDIT, "scan-batch",
-        "--manifest", str(manifest_path),
-        "--gene-calls-out", str(work_gene_calls_out),
-        "--edits-out", str(work_edits_out),
-        "--threads", str(args.threads),
-        "--flank", str(args.flank),
-        "--edit-penalty", str(args.edit_penalty),
-    ]
-    proc = subprocess.run(cmd)
-    if proc.returncode != 0:
-        print(f"[err] orfedit scan-batch failed (exit {proc.returncode})", file=sys.stderr)
-        sys.exit(1)
+    for i, out in enumerate((work_gene_calls_out, work_edits_out)):
+        parts = [keep_lineage(run[i], lineages, name) for name, run in runs.items()]
+        pd.concat(parts, ignore_index=True).to_csv(out, sep="\t", index=False)
+    work_lineage_out = work_dir / "lineage.new.tsv"
+    lineage_table.to_csv(work_lineage_out, sep="\t", index=False)
 
     io_utils.merge_species_scoped_tsv(results_dir / "edited_gene_calls.tsv", work_gene_calls_out, species_filter)
     io_utils.merge_species_scoped_tsv(results_dir / "predicted_edits.tsv", work_edits_out, species_filter)
+    io_utils.merge_species_scoped_tsv(lin.table_path(ANALYSIS_DIR), work_lineage_out, species_filter)
     print(f"[info] scan_editing: merged into {results_dir} "
           f"({'species-scoped' if species_filter else 'full rewrite'})", file=sys.stderr)
 

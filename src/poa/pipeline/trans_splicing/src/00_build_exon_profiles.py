@@ -33,6 +33,13 @@ Two kinds of profile per gene, both written under `../reference/profiles/
   included locus's curated RefSeq protein (regardless of its own exon
   count - Beta vulgaris' intron-less `rps3` protein is still a real,
   correct full-length `rps3`, just not useful for the per-exon slots).
+
+`--lineage moss` (or any other non-angiosperm lineage in
+reference_genes.LINEAGE_MITOGENOMES) reads reference/lineages/<lineage>/raw/
+and writes reference/lineages/<lineage>/profiles/ instead - the same
+build, on that lineage's RefSeq loci (00a_fetch_references.py --lineage).
+A gene the lineage has lost (moss rps10) gets no profile, and a gene with
+no intron there (moss rps3, rpl2) gets a one-slot template.
 """
 from __future__ import annotations
 
@@ -51,7 +58,11 @@ from pathlib import Path
 CODE_DIR = Path(__file__).resolve().parents[2]
 ROOT_DIR = Path(os.environ.get("PLANT_ORGANELLE_DATA_ROOT") or os.getcwd())
 ANALYSIS_DIR = ROOT_DIR / "analysis"
-REFERENCE_DIR = CODE_DIR / "trans_splicing" / "reference"
+sys.path.insert(0, str(CODE_DIR / "common"))
+import lineage as lin  # noqa: E402
+
+# set for the --lineage being built, in main()
+REFERENCE_DIR = lin.trans_splicing_reference(CODE_DIR, lin.DEFAULT_LINEAGE)
 RAW_DIR = REFERENCE_DIR / "raw"
 PROFILES_DIR = REFERENCE_DIR / "profiles"
 WORK_DIR = ANALYSIS_DIR / "trans_splicing" / "work"
@@ -124,7 +135,7 @@ def load_all_raw_data() -> dict[tuple[str, str, str], dict]:
 def load_junctions() -> dict[tuple[str, str, str], dict]:
     """{(accession, gene, locus_tag): {"n_exons": int, "excluded": bool, "reason": str}}"""
     out: dict[tuple[str, str, str], dict] = {}
-    with open(REFERENCE_DIR / "raw" / "junctions.tsv") as fh:
+    with open(RAW_DIR / "junctions.tsv") as fh:
         for row in csv.DictReader(fh, delimiter="\t"):
             key = (row["accession"], row["gene"], row["locus_tag"])
             if key in out:
@@ -248,7 +259,15 @@ def main() -> None:
     ap.add_argument("--genes", nargs="+", default=GENES,
                     help="build only these (default: all). Rebuilding a gene overwrites its whole_gene.pssm, "
                          "including one 02_bootstrap_refine.py refined from this dataset")
+    ap.add_argument("--lineage", default=lin.DEFAULT_LINEAGE, choices=lin.LINEAGES,
+                    help="which lineage's references to build from (default: %(default)s)")
     args = ap.parse_args()
+    global REFERENCE_DIR, RAW_DIR, PROFILES_DIR, WORK_DIR
+    REFERENCE_DIR = lin.trans_splicing_reference(CODE_DIR, args.lineage)
+    RAW_DIR = REFERENCE_DIR / "raw"
+    PROFILES_DIR = REFERENCE_DIR / "profiles"
+    if args.lineage != lin.DEFAULT_LINEAGE:
+        WORK_DIR = WORK_DIR / args.lineage
     WORK_DIR.mkdir(parents=True, exist_ok=True)
     PROFILES_DIR.mkdir(parents=True, exist_ok=True)
 

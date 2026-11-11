@@ -120,17 +120,47 @@ is about 2x that, plausible for an uncalibrated MVP on real predictions
 rather than literature-verified sites, not the 10-100x-off signature of a
 real bug).
 
-One clear open issue, not yet fixed: bryophyte species (moss) in the test
-set showed much larger, lower-score corrections on several mito genes than
-angiosperm species did. The reference profiles pool *all* land plant
-lineages into one PSSM per gene, and the dataset (like the training
-sequences behind it) skews heavily angiosperm - a bryophyte sequence
-aligning against an angiosperm-dominated consensus is exactly the kind of
-divergence a single pooled profile handles worst. Low `score` and a low
-`n_columns_aligned`/`n_columns_total` ratio are the visible symptoms;
-treat corrections with either as lower-confidence, and treat this as a
-known limitation to revisit (e.g. lineage-stratified profiles) rather than
-a surprise if it recurs at full-dataset scale.
+### Moss profiles and the lineage call
+
+The dataset-built profiles are angiosperm profiles in practice, because
+the dataset is mostly angiosperms. Aligned against them, mosses were
+"corrected" towards the angiosperm protein: 98% of moss mito calls
+changed (dicots 37%), at a median score of 391 (dicots 555), with 15% of
+calls aligning under 80% of the profile (dicots 0.9%).
+
+`src/00b_build_lineage_profiles.py --lineage moss` builds bundled moss
+profiles (`reference/lineages/moss/mito/`) from RefSeq's curated proteins
+in 20 moss mitogenomes (`trans_splicing/src/reference_genes.py`'s
+`MOSS_MITOGENOMES`). It builds one for each bundled mito profile whose
+gene is single-exon in mosses: atp4, ccmB, ccmC, mttB and rps14. nad5 and
+nad9 are multi-exon in mosses and get none.
+
+`01_scan_editing.py --lineage auto` (the default) runs orfedit on the
+angiosperm profiles and then, for mito, on the moss ones, and calls each
+species' lineage with `common/lineage.py`: moss when at least 4 of the 5
+genes are scored and moss wins by 50 or more per gene on average. The call
+goes to `results/lineage.tsv`. A moss-called species keeps its moss mito
+calls only, so its nad5/nad9 are left uncorrected rather than corrected
+against an angiosperm profile. Its plastid calls are unchanged.
+
+Calibration, 956-species mito dataset with ToL-ID clades as the truth:
+mosses win by 88-150 per gene, while dicots and monocots lose by 57-430
+and liverworts by -25 to +6. Ferns and lycophytes have lost ccmB/ccmC,
+and 16 of them preferred moss by 55-93 on the 3 genes left, which is why
+the call needs 4 genes. With that rule, 174/174 mosses are called moss
+and nothing else is. Moss results (auto vs `--lineage angiosperm`):
+
+| | angiosperm profiles | moss profiles |
+|---|---|---|
+| calls changed | 98% | 44% |
+| edits per call | 2.4 | 0.7 |
+| median score | 391 | 592 |
+| aligned < 80% | 15% | 0.5% |
+
+Every non-moss row is byte-identical between the two runs. Liverworts
+(87% changed), ferns and lycophytes still align against angiosperm
+profiles and have the same low-score symptoms. Treat their corrections
+as lower-confidence.
 
 ## Not yet run at full-dataset scale / not in `run_all.sh`
 

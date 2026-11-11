@@ -10,6 +10,13 @@ raw `.ctg.bed` row for these genes is a candidate exon fragment here - all
 of them go into the manifest, and `transsplice` itself does the
 merging/assignment (see its README).
 
+Each species uses the exon templates of its lineage (common/lineage.py), as
+recorded by editing/src/01_scan_editing.py in editing/results/lineage.tsv:
+mosses get reference/lineages/moss/profiles/, whose exon counts are the
+moss ones (nad1 3 exons, not 5). A gene with no template in the species'
+lineage (moss rps10, lost from moss mitogenomes) isn't reconstructed.
+Without lineage.tsv, or with --lineage, one lineage is used for all.
+
 Output: analysis/trans_splicing/results/reconstructed_genes.tsv
         analysis/trans_splicing/results/reconstructed_exons.tsv
         analysis/trans_splicing/results/reconstructed_junctions.tsv
@@ -35,24 +42,32 @@ sys.path.insert(0, str(CODE_DIR / "common"))
 
 import species_discovery as sd  # noqa: E402
 import io_utils  # noqa: E402
+import lineage as lin  # noqa: E402
 
 TRANSSPLICE = shutil.which("transsplice") or str(Path.home() / ".cargo" / "bin" / "transsplice")
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from reference_genes import GENES  # noqa: E402  (shared with 00a/01/gff_export)
 
 
-def build_manifest(gene_calls: pd.DataFrame, species_filter: set | None, profiles_dir: Path) -> list[dict]:
+def build_manifest(gene_calls: pd.DataFrame, species_filter: set | None,
+                   lineage_of: dict[str, str], default_lineage: str) -> list[dict]:
     rows = []
-    available_genes = [g for g in GENES if (profiles_dir / g / "whole_gene.pssm").exists()]
-    missing = set(GENES) - set(available_genes)
+    templates = {}
+    for name in lin.LINEAGES:
+        profiles_dir = lin.trans_splicing_reference(CODE_DIR, name) / "profiles"
+        templates[name] = {g: profiles_dir / g for g in GENES if (profiles_dir / g / "whole_gene.pssm").exists()}
+    missing = set(GENES) - set(templates[lin.DEFAULT_LINEAGE])
     if missing:
         print(f"[warn] no template for {sorted(missing)} - run 00_build_exon_profiles.py first", file=sys.stderr)
 
-    sub = gene_calls[(gene_calls["organelle"] == "mito") & (gene_calls["gene"].isin(available_genes))]
+    sub = gene_calls[(gene_calls["organelle"] == "mito") & (gene_calls["gene"].isin(GENES))]
     data_root = sd.repo_data_root(ROOT_DIR, "mito")
     fasta_cache: dict[str, str | None] = {}
     for row in sub.itertuples():
         if species_filter is not None and row.species not in species_filter:
+            continue
+        template = templates[lineage_of.get(row.species, default_lineage)].get(row.gene)
+        if template is None:
             continue
         if row.species not in fasta_cache:
             r = sd.resolve_species(data_root / row.species, "mito")
@@ -62,7 +77,7 @@ def build_manifest(gene_calls: pd.DataFrame, species_filter: set | None, profile
             continue
         rows.append({
             "species": row.species, "organelle": "mito", "gene": row.gene,
-            "fasta": fasta_path, "template_dir": str(profiles_dir / row.gene),
+            "fasta": fasta_path, "template_dir": str(template),
             "contig": row.contig_id, "start": int(row.start), "end": int(row.end),
             "strand": row.strand,
         })
@@ -89,6 +104,9 @@ def main():
                      "on (default: annotation/results/gene_calls.tsv, oatk's own calls) - e.g. point this "
                      "at denovo_annotation/results/gene_calls.tsv to compare/use the oatk-independent "
                      "nhmmscan-based calls instead")
+    ap.add_argument("--lineage", default="auto", choices=lin.CHOICES,
+                    help="exon-template lineage: auto (default) takes each species' from editing's lineage.tsv; "
+                         "or force one for all")
     ap.add_argument("--force", action="store_true", help="accepted for CLI consistency; transsplice "
                      "always does a full recompute over the manifest (no incremental skip yet)")
     args = ap.parse_args()
@@ -106,9 +124,14 @@ def main():
     gene_calls = pd.read_csv(gene_calls_path, sep="\t")
 
     species_filter = sd.load_species_list(Path(args.species_list)) if args.species_list else None
-    profiles_dir = CODE_DIR / "trans_splicing" / "reference" / "profiles"
+    lineage_of = lin.load(ANALYSIS_DIR) if args.lineage == "auto" else {}
+    if lineage_of is None:
+        print(f"[warn] no {lin.table_path(ANALYSIS_DIR)} (run editing/src/01_scan_editing.py first) - "
+              f"using {lin.DEFAULT_LINEAGE} templates for every species", file=sys.stderr)
+        lineage_of = {}
+    default_lineage = lin.DEFAULT_LINEAGE if args.lineage == "auto" else args.lineage
 
-    rows = build_manifest(gene_calls, species_filter, profiles_dir)
+    rows = build_manifest(gene_calls, species_filter, lineage_of, default_lineage)
     if not rows:
         print("[err] empty manifest - nothing to reconstruct", file=sys.stderr)
         sys.exit(1)

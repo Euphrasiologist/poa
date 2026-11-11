@@ -123,6 +123,8 @@ def clean_proteins(nuc_seqs: dict[str, str]) -> dict[str, str]:
 def run_mafft(protein_fasta: Path, out_fasta: Path) -> bool:
     env = ({"MAFFT_BINARIES": MAFFT_BINARIES_DIR, "PATH": "/usr/bin:/bin"}
            if Path(MAFFT_BINARIES_DIR).is_dir() else dict(os.environ))
+    if os.environ.get("TMPDIR"):  # mafft's mktemp otherwise needs a writable /tmp
+        env["TMPDIR"] = os.environ["TMPDIR"]
     proc = subprocess.run(
         [MAFFT, "--auto", "--quiet", str(protein_fasta)],
         capture_output=True, text=True, timeout=600, env=env,
