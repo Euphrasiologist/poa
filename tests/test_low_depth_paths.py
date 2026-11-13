@@ -18,11 +18,18 @@ spec = importlib.util.spec_from_file_location(
 ldp = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(ldp)
 
+_TMP = tempfile.TemporaryDirectory()
+
+
+def tearDownModule():
+    _TMP.cleanup()
+
+
 HEADER = "unitig\tunitig_length\tctg_seqid\tctg_start\tctg_end\tstrand\tsource\tmatch_trim\n"
 
 
 def write_map(rows: list[str]) -> Path:
-    path = Path(tempfile.mkdtemp()) / "sp.mito.tsv"
+    path = Path(tempfile.mkdtemp(dir=_TMP.name)) / "sp.mito.tsv"
     path.write_text(HEADER + "".join(r + "\n" for r in rows))
     return path
 

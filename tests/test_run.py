@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import argparse
 import gzip
+import shutil
 import sys
 import tempfile
 import unittest
@@ -39,6 +40,7 @@ class DefaultName(unittest.TestCase):
 class Refusals(unittest.TestCase):
     def setUp(self):
         self.tmp = Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, self.tmp)
         self.fa = self.tmp / "s.fasta"
         self.fa.write_bytes(FASTA)
 
@@ -77,6 +79,7 @@ class Refusals(unittest.TestCase):
 class StageInput(unittest.TestCase):
     def test_gz_is_decompressed(self):
         tmp = Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, tmp)
         with gzip.open(tmp / "s.fasta.gz", "wb") as fh:
             fh.write(FASTA)
         run.stage_input(str(tmp / "s.fasta.gz"), tmp / "out.fasta")

@@ -6,6 +6,7 @@ editing/01_scan_editing.py splits its orfedit runs by it.
 from __future__ import annotations
 
 import importlib.util
+import shutil
 import sys
 import tempfile
 import unittest
@@ -87,6 +88,7 @@ class SplitRuns(unittest.TestCase):
 class Load(unittest.TestCase):
     def test_missing_and_present(self):
         root = Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, root)
         self.assertIsNone(lin.load(root))
         lin.table_path(root).parent.mkdir(parents=True)
         lin.table_path(root).write_text("species\tlineage\nA\tmoss\n")
