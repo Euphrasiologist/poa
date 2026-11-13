@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 import gzip
 import shutil
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -86,6 +87,43 @@ class StageInput(unittest.TestCase):
             fh.write(FASTA)
         run.stage_input(str(tmp / "s.fasta.gz"), tmp / "out.fasta")
         self.assertEqual((tmp / "out.fasta").read_bytes(), FASTA)
+
+
+
+class InProcessStage(unittest.TestCase):
+    """A library stage's output - its own and its child processes' - goes to
+    its log, and a failure becomes StageFailed, like a script stage's."""
+
+    def setUp(self):
+        self.logs = Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, self.logs)
+
+    def log(self, label):
+        return (self.logs / f"{label}.log").read_text()
+
+    def test_output_captured(self):
+        def stage():
+            print("from python", file=sys.stderr)
+            subprocess.run(["echo", "from a child"], check=True)
+
+        run.run_stage("ok", stage, [], self.logs, self.logs)
+        self.assertEqual(self.log("ok").split("\n")[:2], ["from python", "from a child"])
+
+    def test_stage_error(self):
+        def stage():
+            raise run.StageError("orfedit scan-batch failed (exit 2)")
+
+        with self.assertRaises(run.StageFailed) as cm:
+            run.run_stage("bad", stage, [], self.logs, self.logs)
+        self.assertIn("[err] orfedit scan-batch failed", str(cm.exception))
+
+    def test_bug_gives_traceback(self):
+        def stage():
+            return {}["missing"]
+
+        with self.assertRaises(run.StageFailed):
+            run.run_stage("bug", stage, [], self.logs, self.logs)
+        self.assertIn("KeyError: 'missing'", self.log("bug"))
 
 
 if __name__ == "__main__":

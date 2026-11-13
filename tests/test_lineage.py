@@ -6,7 +6,6 @@ editing/01_scan_editing.py splits its orfedit runs by it.
 
 from __future__ import annotations
 
-import importlib.util
 import shutil
 import sys
 import tempfile
@@ -17,12 +16,9 @@ import pandas as pd
 
 REPO = Path(__file__).resolve().parents[1]
 PIPELINE = REPO / "src" / "poa" / "pipeline"
-sys.path.insert(0, str(PIPELINE / "common"))
-import lineage as lin  # noqa: E402
-
-_spec = importlib.util.spec_from_file_location("scan_editing", PIPELINE / "editing" / "src" / "01_scan_editing.py")
-scan_editing = importlib.util.module_from_spec(_spec)
-_spec.loader.exec_module(scan_editing)
+sys.path.insert(0, str(REPO / "src"))
+from poa.pipeline.common import lineage as lin  # noqa: E402
+from poa.pipeline.editing import scan as scan_editing  # noqa: E402
 
 GENES = ["atp4", "ccmB", "ccmC", "mttB", "rps14"]
 

@@ -7,9 +7,12 @@ annotation pipeline on it:
   denovo_annotation 00-04 -> editing 01 -> trans_splicing 01 (mito)
   -> unitig_coords 00-01 + qc_basic_stats 06 (with a GFA) -> gff_export 01
 
-The stages are the scripts under poa/pipeline/, run against a data root
+The stages run against a data root
 built in OUTDIR/work (data/{mito,plastid}/<name>/<name>.{mito,pltd}.ctg.fasta
-and .gfa). qc_basic_stats 01-05 are not run: they judge an assembly against
+and .gfa): a stage that is a library function (editing so far) is
+called in-process, the rest still run as their command-line scripts under
+poa/pipeline/. Either way its output goes to OUTDIR/logs/<stage>.log.
+qc_basic_stats 01-05 are not run: they judge an assembly against
 the rest of a dataset (genus-level size, a dataset-derived core-gene set,
 oatk's own gene calls), so with no qc_summary.tsv every stage annotates
 whatever it is given.
@@ -32,9 +35,14 @@ import shutil
 import subprocess
 import sys
 import time
+import traceback
+from contextlib import contextmanager
 from pathlib import Path
+from typing import Callable, Iterator
 
 from . import PIPELINE_DIR
+from .pipeline.common.errors import StageError
+from .pipeline.editing import scan as editing_scan
 
 ORGANELLES = {"mito": "mito", "pltd": "plastid"}  # suffix -> data/ subdirectory
 # a stage that reports failures this way failed, even with exit status 0
@@ -104,20 +112,58 @@ def stage_input(src: str, dst: Path) -> None:
         raise SystemExit(f"[err] empty input: {src}")
 
 
-def run_stage(label: str, script: str, args: list[str], work: Path, logs: Path) -> None:
+@contextmanager
+def fds_to(log) -> Iterator[None]:
+    """Send this process's stdout and stderr (fds 1 and 2, so the tools a
+    stage runs too) to `log` for the duration."""
+    sys.stdout.flush()
+    sys.stderr.flush()
+    saved = os.dup(1), os.dup(2)
+    try:
+        os.dup2(log.fileno(), 1)
+        os.dup2(log.fileno(), 2)
+        yield
+    finally:
+        sys.stdout.flush()
+        sys.stderr.flush()
+        os.dup2(saved[0], 1)
+        os.dup2(saved[1], 2)
+        for fd in saved:
+            os.close(fd)
+
+
+def run_stage(label: str, stage: str | Callable[[], object], args: list[str], work: Path, logs: Path) -> None:
+    """stage: a pipeline script (path under PIPELINE_DIR, run with `args`
+    against data root `work`), or a library call, run in this process."""
     log_path = logs / f"{label}.log"
     t0 = time.time()
     print(f"[poa] {label} ...", end="", file=sys.stderr, flush=True)
-    env = dict(os.environ, PLANT_ORGANELLE_DATA_ROOT=str(work))
     with open(log_path, "w") as log:
-        proc = subprocess.run(
-            [sys.executable, str(PIPELINE_DIR / script), *args], cwd=work, env=env, stdout=log, stderr=subprocess.STDOUT
-        )
+        if callable(stage):
+            returncode = 0
+            try:
+                with fds_to(log):
+                    stage()
+            except StageError as e:
+                returncode = 1
+                print(f"[err] {e}", file=log)
+            except Exception:
+                returncode = 1
+                traceback.print_exc(file=log)
+        else:
+            env = dict(os.environ, PLANT_ORGANELLE_DATA_ROOT=str(work))
+            returncode = subprocess.run(
+                [sys.executable, str(PIPELINE_DIR / stage), *args],
+                cwd=work,
+                env=env,
+                stdout=log,
+                stderr=subprocess.STDOUT,
+            ).returncode
     text = log_path.read_text()
-    if proc.returncode != 0 or FAILURE_RE.search(text):
+    if returncode != 0 or FAILURE_RE.search(text):
         print(" FAILED", file=sys.stderr)
         tail = "\n".join(text.splitlines()[-20:])
-        raise StageFailed(f"{label} failed (exit {proc.returncode}); last lines of {log_path}:\n{tail}")
+        raise StageFailed(f"{label} failed (exit {returncode}); last lines of {log_path}:\n{tail}")
     print(f" done ({time.time() - t0:.0f}s)", file=sys.stderr)
 
 
@@ -185,8 +231,14 @@ def run(args: argparse.Namespace) -> int:
         ("gene_calls", "denovo_annotation/src/04_build_gene_calls.py", ["--organelle", organelle]),
         (
             "editing",
-            "editing/src/01_scan_editing.py",
-            ["--organelle", organelle, "--threads", threads, "--lineage", args.lineage, *gene_calls],
+            lambda: editing_scan.scan(
+                work,
+                orgs,
+                gene_calls=work / "analysis/denovo_annotation/results/gene_calls.tsv",
+                threads=int(threads),
+                lineage=args.lineage,
+            ),
+            [],
         ),
     ]
     if "mito" in orgs:

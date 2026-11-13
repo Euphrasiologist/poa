@@ -24,7 +24,22 @@ it corrects the boundaries of ones oatk already found.
 | script | output | what |
 |---|---|---|
 | `00_build_reference_profiles.py` | `results/profiles/<gene>.pssm` | per-gene amino acid profile (PSSM), built from this dataset's own already-annotated orthologs |
-| `01_scan_editing.py` | `results/edited_gene_calls.tsv`, `results/predicted_edits.tsv` | runs `orfedit scan-batch` over every (species, gene) anchor that has a profile |
+| `01_scan_editing.py` | `results/edited_gene_calls.tsv`, `results/predicted_edits.tsv`, `results/lineage.tsv` | runs `orfedit scan-batch` over every (species, gene) anchor that has a profile |
+| `00b_build_lineage_profiles.py` | `reference/lineages/<lineage>/mito/<gene>.pssm` | bundled profiles for a non-angiosperm lineage, from RefSeq (see "Moss profiles" below) |
+
+The scripts in `src/` are command-line wrappers. The code is in importable
+modules - `poa.pipeline.editing.scan`, `.profiles` and `.lineage_profiles` -
+whose functions take the data root and every option as arguments and raise
+`StageError` (`poa.pipeline.common.errors`) on failure:
+
+```python
+from poa.pipeline.editing.scan import scan
+
+result = scan(root, ["mito"], threads=8)  # -> ScanResult (output paths, species -> lineage)
+```
+
+`poa run` calls `scan()` in-process; the other stages still run as scripts
+until they are converted the same way.
 
 ## Method
 

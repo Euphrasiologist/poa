@@ -1,0 +1,128 @@
+"""Build the bundled editing profiles for a non-angiosperm lineage
+(common/lineage.py), from that lineage's RefSeq mitogenomes rather than
+from a dataset.
+
+profiles.py (src/00_build_reference_profiles.py) builds profiles from a dataset's own gene
+calls, so on a mostly-angiosperm dataset they are angiosperm profiles. A
+moss aligned against them gets "corrected" towards the angiosperm protein:
+98% of moss mito calls changed, against 37% for dicots, although mosses
+edit very little (Physcomitrella has ~11 mito sites). These profiles are
+built from RefSeq's curated proteins instead, for the genes the bundled
+mito profiles cover, so a moss is compared against mosses.
+
+Per gene: every single-exon CDS in the lineage's mitogenomes
+(trans_splicing/src/reference_genes.LINEAGE_MITOGENOMES; GenBank cached in
+trans_splicing/reference/genbank/) whose genomic translation verifies
+against RefSeq's protein (common/refseq_mito.verify). A gene that is
+multi-exon in most of the lineage (moss nad5, nad9) gets no profile: a
+single-locus correction is the wrong model for it, and scan.py
+leaves it uncorrected for that lineage rather than borrow the angiosperm
+one.
+
+Output: editing/reference/lineages/<lineage>/mito/<gene>.pssm (bundled)
+
+src/00b_build_lineage_profiles.py is the command-line wrapper (main() here).
+"""
+
+from __future__ import annotations
+
+import argparse
+import os
+import sys
+from collections import Counter
+from pathlib import Path
+
+from Bio import SeqIO
+
+from poa import PIPELINE_DIR
+from poa.pipeline.common import lineage as lin
+from poa.pipeline.common.errors import StageError
+from poa.pipeline.common.refseq_mito import cds_exons, fetch, verify
+from poa.pipeline.editing import profiles
+
+GB_DIR = lin.trans_splicing_reference(PIPELINE_DIR, lin.DEFAULT_LINEAGE) / "genbank"
+BUNDLED_MITO = PIPELINE_DIR / "editing" / "reference" / "profiles" / "mito"
+NON_DEFAULT = [x for x in lin.LINEAGES if x != lin.DEFAULT_LINEAGE]
+
+
+def reference_genes():
+    """trans_splicing's reference_genes (not a package yet, so by path)."""
+    sys.path.insert(0, str(PIPELINE_DIR / "trans_splicing" / "src"))
+    try:
+        import reference_genes
+    finally:
+        sys.path.pop(0)
+    return reference_genes
+
+
+def build_lineage_profiles(lineage: str, work_root: Path) -> Path:
+    """(Re)build `lineage`'s bundled mito profiles in the installed package;
+    alignments go under work_root/analysis/editing/work/<lineage>. Returns
+    the profiles directory."""
+    if lineage not in NON_DEFAULT:
+        raise ValueError(f"lineage must be one of {NON_DEFAULT}, not {lineage!r}")
+    rg = reference_genes()
+    synonyms = {**rg.GENE_SYNONYMS, "tatc": "mttB", "mttb": "mttB"}
+    genes = sorted(p.stem for p in BUNDLED_MITO.glob("*.pssm"))
+    wanted = {g.lower(): g for g in genes}
+    proteins: dict[str, dict[str, str]] = {g: {} for g in genes}
+    n_exons: dict[str, Counter] = {g: Counter() for g in genes}
+    for acc, organism in rg.LINEAGE_MITOGENOMES[lineage].items():
+        rec = SeqIO.read(fetch(acc, GB_DIR), "genbank")
+        for f in rec.features:
+            if f.type != "CDS" or "gene" not in f.qualifiers or "translation" not in f.qualifiers:
+                continue
+            name = f.qualifiers["gene"][0].lower()
+            gene = wanted.get(name) or wanted.get(synonyms.get(name, "").lower())
+            if gene is None or acc in proteins[gene]:
+                continue
+            parts, exons = cds_exons(rec, f)
+            n_exons[gene][len(parts)] += 1
+            if len(parts) != 1:
+                continue
+            ok, note = verify(exons[0], f.qualifiers["translation"][0])
+            if not ok:
+                print(f"[warn] {acc} {organism} {gene}: {note} - not used", file=sys.stderr)
+                continue
+            proteins[gene][acc] = f.qualifiers["translation"][0]
+
+    work_dir = Path(work_root) / "analysis" / "editing" / "work" / lineage
+    work_dir.mkdir(parents=True, exist_ok=True)
+    out_dir = lin.editing_profiles(PIPELINE_DIR, lineage) / "mito"
+    for gene in genes:
+        modal = n_exons[gene].most_common(1)[0][0] if n_exons[gene] else None
+        stale = out_dir / f"{gene}.pssm"
+        if modal != 1 or len(proteins[gene]) < profiles.MIN_SEQUENCES:
+            print(
+                f"[info] {gene}: no {lineage} profile (exon counts {dict(n_exons[gene])}, "
+                f"{len(proteins[gene])} single-exon verified loci)",
+                file=sys.stderr,
+            )
+            stale.unlink(missing_ok=True)
+            continue
+        protein_fasta = work_dir / f"{gene}.protein.fasta"
+        protein_fasta.write_text("".join(f">{acc}\n{seq}\n" for acc, seq in proteins[gene].items()))
+        aligned = work_dir / f"{gene}.aligned.fasta"
+        if not profiles.run_mafft(protein_fasta, aligned):
+            raise StageError(f"mafft failed on {protein_fasta}")
+        columns = profiles.build_profile(profiles.read_fasta(aligned))
+        profiles.write_profile(columns, out_dir / f"{gene}.pssm")
+        print(
+            f"[info] {gene}: {lineage} profile from {len(proteins[gene])} RefSeq proteins, "
+            f"{len(columns)} columns -> {out_dir / gene}.pssm",
+            file=sys.stderr,
+        )
+
+    return out_dir
+
+
+def main(argv: list[str] | None = None) -> int:
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--lineage", required=True, choices=NON_DEFAULT)
+    args = ap.parse_args(argv)
+    try:
+        build_lineage_profiles(args.lineage, Path(os.environ.get("PLANT_ORGANELLE_DATA_ROOT") or os.getcwd()))
+    except StageError as e:
+        print(f"[err] {e}", file=sys.stderr)
+        return 1
+    return 0
