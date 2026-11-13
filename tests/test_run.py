@@ -4,6 +4,7 @@ tests/smoke/run_smoke.sh.
 
     python3 -m unittest tests.test_run
 """
+
 from __future__ import annotations
 
 import argparse
@@ -30,8 +31,9 @@ def parse(*argv: str) -> argparse.Namespace:
 class DefaultName(unittest.TestCase):
     def test_oatk_names(self):
         self.assertEqual(run.default_name("x/Arabidopsis_thaliana.mito.ctg.fasta"), "Arabidopsis_thaliana")
-        self.assertEqual(run.default_name("Arabidopsis_thaliana.k1001.s31.c100.pltd.ctg.fasta.gz"),
-                         "Arabidopsis_thaliana")
+        self.assertEqual(
+            run.default_name("Arabidopsis_thaliana.k1001.s31.c100.pltd.ctg.fasta.gz"), "Arabidopsis_thaliana"
+        )
 
     def test_unsafe_characters(self):
         self.assertEqual(run.default_name("my sample+1.fa"), "my_sample_1")

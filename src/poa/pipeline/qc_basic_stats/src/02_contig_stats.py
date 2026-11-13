@@ -18,6 +18,7 @@ treated as equivalent to a real resolved contig.
 Output: analysis/qc_basic_stats/results/contig_stats.tsv
 Columns: species organelle contig_id length nv circular gc_pct contig_source
 """
+
 from __future__ import annotations
 
 import os
@@ -69,8 +70,9 @@ def parse_fasta_headers(fasta_path: Path) -> dict:
 
 def seqkit_gc(fasta_path: Path) -> dict:
     """contig_id -> gc_pct via seqkit fx2tab."""
-    proc = subprocess.run([SEQKIT, "fx2tab", "-n", "-i", "-l", "-g", str(fasta_path)],
-                           capture_output=True, text=True, timeout=120)
+    proc = subprocess.run(
+        [SEQKIT, "fx2tab", "-n", "-i", "-l", "-g", str(fasta_path)], capture_output=True, text=True, timeout=120
+    )
     out = {}
     if proc.returncode != 0:
         return out
@@ -86,8 +88,9 @@ def gfa_fallback_fasta(gfa_path: Path, species: str, organelle: str) -> Path | N
     out_path = WORK_DIR / f"{species}.{organelle}.gfa_fallback.fasta"
     try:
         with open(out_path, "w") as fh:
-            proc = subprocess.run([GFATOOLS, "gfa2fa", str(gfa_path)], stdout=fh, stderr=subprocess.PIPE,
-                                   text=True, timeout=120)
+            proc = subprocess.run(
+                [GFATOOLS, "gfa2fa", str(gfa_path)], stdout=fh, stderr=subprocess.PIPE, text=True, timeout=120
+            )
         if proc.returncode != 0 or out_path.stat().st_size == 0:
             return None
         return out_path
@@ -108,19 +111,46 @@ def rows_for_species(species: str, organelle: str, ctg_fasta: str | None, gfa: s
         contig_source = "gfa_fallback" if fasta_path else "no_assembly"
 
     if fasta_path is None:
-        return [{**base, "contig_id": None, "length": None, "nv": None, "circular": None,
-                 "gc_pct": None, "contig_source": "no_assembly"}]
+        return [
+            {
+                **base,
+                "contig_id": None,
+                "length": None,
+                "nv": None,
+                "circular": None,
+                "gc_pct": None,
+                "contig_source": "no_assembly",
+            }
+        ]
 
     headers = parse_fasta_headers(fasta_path)
     gc = seqkit_gc(fasta_path)
     if not headers:
-        return [{**base, "contig_id": None, "length": None, "nv": None, "circular": None,
-                 "gc_pct": None, "contig_source": "no_assembly"}]
+        return [
+            {
+                **base,
+                "contig_id": None,
+                "length": None,
+                "nv": None,
+                "circular": None,
+                "gc_pct": None,
+                "contig_source": "no_assembly",
+            }
+        ]
 
     rows = []
     for cid, attrs in headers.items():
-        rows.append({**base, "contig_id": cid, "length": attrs["length"], "nv": attrs["nv"],
-                     "circular": attrs["circular"], "gc_pct": gc.get(cid), "contig_source": contig_source})
+        rows.append(
+            {
+                **base,
+                "contig_id": cid,
+                "length": attrs["length"],
+                "nv": attrs["nv"],
+                "circular": attrs["circular"],
+                "gc_pct": gc.get(cid),
+                "contig_source": contig_source,
+            }
+        )
     return rows
 
 
@@ -153,8 +183,10 @@ def main():
 
     merged = io_utils.merge_rows(existing_df, new_rows, KEY_COLS, COLUMNS)
     io_utils.atomic_write_tsv(out_path, merged.to_dict("records"), COLUMNS)
-    print(f"[info] contig_stats: computed={n_computed} skipped={n_skipped} total_rows={len(merged)} -> {out_path}",
-          file=sys.stderr)
+    print(
+        f"[info] contig_stats: computed={n_computed} skipped={n_skipped} total_rows={len(merged)} -> {out_path}",
+        file=sys.stderr,
+    )
 
 
 if __name__ == "__main__":

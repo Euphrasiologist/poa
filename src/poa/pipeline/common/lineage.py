@@ -16,6 +16,7 @@ fewer than MIN_SHARED_GENES genes scored both ways, stays angiosperm - the
 references everything else in poa was validated on. The result is
 analysis/editing/results/lineage.tsv, which trans_splicing reads.
 """
+
 from __future__ import annotations
 
 import csv

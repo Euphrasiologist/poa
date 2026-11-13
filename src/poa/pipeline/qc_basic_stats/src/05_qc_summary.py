@@ -113,6 +113,7 @@ Columns: species organelle has_gfa has_ctg_fasta n_subgraphs any_circular
          dead_end_nodes total_length size_mad_z core_gene_pct
          cross_organelle_aligned_frac status status_reasons
 """
+
 from __future__ import annotations
 
 import os
@@ -135,10 +136,24 @@ import minimap_utils  # noqa: E402
 import species_discovery as sd  # noqa: E402
 
 RESULTS_DIR = ANALYSIS_DIR / "qc_basic_stats" / "results"
-COLUMNS = ["species", "organelle", "has_gfa", "has_ctg_fasta", "n_subgraphs", "any_circular",
-           "dead_end_nodes", "total_length", "size_mad_z", "core_gene_pct", "n_contigs",
-           "pct_unjoined_contigs", "cross_organelle_aligned_frac", "status", "status_reasons",
-           "n_fragment_subgraphs"]
+COLUMNS = [
+    "species",
+    "organelle",
+    "has_gfa",
+    "has_ctg_fasta",
+    "n_subgraphs",
+    "any_circular",
+    "dead_end_nodes",
+    "total_length",
+    "size_mad_z",
+    "core_gene_pct",
+    "n_contigs",
+    "pct_unjoined_contigs",
+    "cross_organelle_aligned_frac",
+    "status",
+    "status_reasons",
+    "n_fragment_subgraphs",
+]
 
 CROSS_ORG_FLAG_THRESHOLD = 0.15
 CROSS_ORG_FAIL_THRESHOLD = 0.35
@@ -177,20 +192,23 @@ def aggregate_gfa_stats(gfa_stats: pd.DataFrame, organelle: str) -> pd.DataFrame
             if not g.empty:
                 cum = g["total_length"].cumsum()
                 ref = g["avg_coverage"][cum >= cum.iloc[-1] / 2].iloc[0]  # length-weighted median
-                chromosome = (group["circular"].astype(str).str.lower() == "true") & \
-                             group["avg_coverage"].between(ref / CHROMOSOME_DEPTH_BAND, ref * CHROMOSOME_DEPTH_BAND)
+                chromosome = (group["circular"].astype(str).str.lower() == "true") & group["avg_coverage"].between(
+                    ref / CHROMOSOME_DEPTH_BAND, ref * CHROMOSOME_DEPTH_BAND
+                )
                 n_fragments = int(len(group) - chromosome.sum())
         else:
             total_length = np.nan
             dead_end_nodes = np.nan
-        return pd.Series({
-            "has_gfa": has_gfa,
-            "parse_status": parse_status,
-            "n_subgraphs": group["n_subgraphs"].iloc[0],
-            "n_fragment_subgraphs": n_fragments,
-            "dead_end_nodes": dead_end_nodes,
-            "total_length": total_length,
-        })
+        return pd.Series(
+            {
+                "has_gfa": has_gfa,
+                "parse_status": parse_status,
+                "n_subgraphs": group["n_subgraphs"].iloc[0],
+                "n_fragment_subgraphs": n_fragments,
+                "dead_end_nodes": dead_end_nodes,
+                "total_length": total_length,
+            }
+        )
 
     return sub.groupby("species").apply(agg, include_groups=False).reset_index()
 
@@ -215,9 +233,15 @@ def aggregate_contig_stats(contig_stats: pd.DataFrame, organelle: str) -> pd.Dat
         unjoined = (resolved["nv"] == 1) & (resolved["circular"] != "true")
         pct_unjoined = unjoined.mean() if not resolved.empty else np.nan
         resolved_length = pd.to_numeric(resolved["length"], errors="coerce").sum() if not resolved.empty else np.nan
-        return pd.Series({"contig_source": contig_source, "any_circular": any_circular,
-                           "n_contigs": n_contigs, "pct_unjoined_contigs": pct_unjoined,
-                           "resolved_length": resolved_length})
+        return pd.Series(
+            {
+                "contig_source": contig_source,
+                "any_circular": any_circular,
+                "n_contigs": n_contigs,
+                "pct_unjoined_contigs": pct_unjoined,
+                "resolved_length": resolved_length,
+            }
+        )
 
     return sub.groupby("species").apply(agg, include_groups=False).reset_index()
 
@@ -230,8 +254,11 @@ def size_mad_z(df: pd.DataFrame) -> pd.Series:
     Malus_domestica plastid graphs carry a second organism's plastid at
     8-40x lower coverage, which doubled their graph size)."""
     df = df.copy()
-    df["total_length"] = np.where(df["has_ctg_fasta"].fillna(False).astype(bool) & df["resolved_length"].notna(),
-                                  df["resolved_length"], df["total_length"])
+    df["total_length"] = np.where(
+        df["has_ctg_fasta"].fillna(False).astype(bool) & df["resolved_length"].notna(),
+        df["resolved_length"],
+        df["total_length"],
+    )
     df["genus"] = df["species"].str.split("_").str[0]
     valid = df["total_length"].notna()
 
@@ -333,10 +360,13 @@ def build_status(row: pd.Series) -> tuple[str, str]:
         # mito assembly is either real plastid-derived DNA or the mito graph
         # having picked the plastid up; the mito's own plastid-like share
         # (its row's cross_organelle_aligned_frac) is what flags the latter.
-        complete_plastid = (row.get("organelle") == "pltd" and pd.notna(row.get("any_circular"))
-                            and bool(row.get("any_circular"))
-                            and pd.notna(row.get("core_gene_pct"))
-                            and row.get("core_gene_pct") >= QC_CORE_GENE_PRESENCE_THRESHOLD)
+        complete_plastid = (
+            row.get("organelle") == "pltd"
+            and pd.notna(row.get("any_circular"))
+            and bool(row.get("any_circular"))
+            and pd.notna(row.get("core_gene_pct"))
+            and row.get("core_gene_pct") >= QC_CORE_GENE_PRESENCE_THRESHOLD
+        )
         if pd.notna(cof) and not complete_plastid:
             if cof > CROSS_ORG_FAIL_THRESHOLD:
                 reasons_fail.append("high_cross_organelle_alignment(>35%)")
@@ -371,8 +401,9 @@ def main():
         cgp = core_gene_completeness(gene_matrix, core_genes)
 
         df = gfa_agg.merge(contig_agg, on="species", how="left")
-        unjoined_failure = (df["n_contigs"] >= UNJOINED_MIN_CONTIGS) & \
-                            (df["pct_unjoined_contigs"] >= UNJOINED_PCT_THRESHOLD)
+        unjoined_failure = (df["n_contigs"] >= UNJOINED_MIN_CONTIGS) & (
+            df["pct_unjoined_contigs"] >= UNJOINED_PCT_THRESHOLD
+        )
         df["has_ctg_fasta"] = (df["contig_source"] == "ctg_fasta") & ~unjoined_failure.fillna(False)
         df = df.merge(cgp, on="species", how="left")
         df["size_mad_z"] = size_mad_z(df)
@@ -384,8 +415,9 @@ def main():
         common_species = sorted(set(per_organelle["mito"]["species"]) & set(per_organelle["pltd"]["species"]))
         mito_by_sp = per_organelle["mito"].set_index("species")
         pltd_by_sp = per_organelle["pltd"].set_index("species")
-        eligible = [s for s in common_species
-                    if mito_by_sp.loc[s, "has_ctg_fasta"] and pltd_by_sp.loc[s, "has_ctg_fasta"]]
+        eligible = [
+            s for s in common_species if mito_by_sp.loc[s, "has_ctg_fasta"] and pltd_by_sp.loc[s, "has_ctg_fasta"]
+        ]
         mito_root = sd.repo_data_root(ROOT_DIR, "mito")
         pltd_root = sd.repo_data_root(ROOT_DIR, "pltd")
         mito_frac, pltd_frac = {}, {}

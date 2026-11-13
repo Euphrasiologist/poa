@@ -27,6 +27,7 @@ Output: overwrites `../reference/profiles/<gene>/whole_gene.pssm` in place
 they encode are structural ground truth, not something to re-derive from
 this tool's own output). Re-run `01_reconstruct.py` afterwards to benefit.
 """
+
 from __future__ import annotations
 
 import os
@@ -63,11 +64,17 @@ MIN_TRAINING_SEQS = 5
 
 
 def run_mafft(protein_fasta: Path, out_fasta: Path) -> bool:
-    env = ({"MAFFT_BINARIES": MAFFT_BINARIES_DIR, "PATH": "/usr/bin:/bin"}
-           if Path(MAFFT_BINARIES_DIR).is_dir() else dict(os.environ))
+    env = (
+        {"MAFFT_BINARIES": MAFFT_BINARIES_DIR, "PATH": "/usr/bin:/bin"}
+        if Path(MAFFT_BINARIES_DIR).is_dir()
+        else dict(os.environ)
+    )
     proc = subprocess.run(
         [MAFFT, "--auto", "--quiet", str(protein_fasta)],
-        capture_output=True, text=True, timeout=600, env=env,
+        capture_output=True,
+        text=True,
+        timeout=600,
+        env=env,
     )
     if proc.returncode != 0 or not proc.stdout.strip():
         print(f"[warn] mafft failed for {protein_fasta.name}: {proc.stderr.strip()[:300]}", file=sys.stderr)
@@ -129,8 +136,9 @@ def write_profile(columns: list[dict[str, float]], out_path: Path) -> None:
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--min-score", type=float, default=0.0,
-                     help="whole_gene_score floor for inclusion in the refined training set")
+    ap.add_argument(
+        "--min-score", type=float, default=0.0, help="whole_gene_score floor for inclusion in the refined training set"
+    )
     args = ap.parse_args()
 
     genes_path = RESULTS_DIR / "reconstructed_genes.tsv"
@@ -146,8 +154,11 @@ def main():
     for gene, sub in df.groupby("gene"):
         good = sub[(sub["complete"]) & (sub["whole_gene_score"] > args.min_score)]
         if len(good) < MIN_TRAINING_SEQS:
-            print(f"[warn] {gene}: only {len(good)} complete, score>{args.min_score} reconstructions "
-                  f"(need >= {MIN_TRAINING_SEQS}) - keeping existing whole_gene.pssm", file=sys.stderr)
+            print(
+                f"[warn] {gene}: only {len(good)} complete, score>{args.min_score} reconstructions "
+                f"(need >= {MIN_TRAINING_SEQS}) - keeping existing whole_gene.pssm",
+                file=sys.stderr,
+            )
             continue
 
         protein_seqs = {row.species: row.protein.replace("-", "") for row in good.itertuples()}
@@ -164,8 +175,11 @@ def main():
             continue
         out_path = PROFILES_DIR / gene / "whole_gene.pssm"
         write_profile(columns, out_path)
-        print(f"[info] {gene}: whole_gene.pssm refined from {len(protein_seqs)} dataset-derived sequences "
-              f"(was: 5-7 GenBank references) -> {out_path}", file=sys.stderr)
+        print(
+            f"[info] {gene}: whole_gene.pssm refined from {len(protein_seqs)} dataset-derived sequences "
+            f"(was: 5-7 GenBank references) -> {out_path}",
+            file=sys.stderr,
+        )
 
     print("[info] bootstrap_refine: done - re-run 01_reconstruct.py to use the refined profiles", file=sys.stderr)
 

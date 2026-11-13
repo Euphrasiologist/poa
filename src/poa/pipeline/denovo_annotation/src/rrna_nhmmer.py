@@ -18,6 +18,7 @@ barrnap's logic, as used here:
     choice, kept);
   - sorted by seqid then start, source `barrnap:0.9`.
 """
+
 from __future__ import annotations
 
 import shutil
@@ -26,8 +27,16 @@ import tempfile
 from pathlib import Path
 
 PLANT_HMM = Path(__file__).resolve().parents[3] / "data" / "rrna" / "plant.hmm"
-LENG = {"5S_rRNA": 119, "5S_rRNA_all_life": 120, "16S_rRNA": 1585, "23S_rRNA": 3232,
-        "5_8S_rRNA": 156, "18S_rRNA": 1869, "28S_rRNA": 2912, "12S_rRNA": 954}
+LENG = {
+    "5S_rRNA": 119,
+    "5S_rRNA_all_life": 120,
+    "16S_rRNA": 1585,
+    "23S_rRNA": 3232,
+    "5_8S_rRNA": 156,
+    "18S_rRNA": 1869,
+    "28S_rRNA": 2912,
+    "12S_rRNA": 954,
+}
 MAXLEN = int(1.2 * max(LENG.values()))
 LENCUTOFF, REJECT = 0.8, 0.25
 SOURCE = "barrnap:0.9"
@@ -70,7 +79,20 @@ def tblout_to_gff(tblout_text: str) -> str:
 def call_rrna(fasta: str | Path, evalue: str = "1e-6", threads: str | int = 1, timeout: int = 600) -> str:
     """GFF3 text of the rRNA genes in `fasta`."""
     with tempfile.NamedTemporaryFile(suffix=".tblout") as tbl:
-        cmd = [nhmmer_exe(), "--cpu", str(threads), "-E", str(evalue), "--w_length", str(MAXLEN),
-               "-o", "/dev/null", "--tblout", tbl.name, str(PLANT_HMM), str(fasta)]
+        cmd = [
+            nhmmer_exe(),
+            "--cpu",
+            str(threads),
+            "-E",
+            str(evalue),
+            "--w_length",
+            str(MAXLEN),
+            "-o",
+            "/dev/null",
+            "--tblout",
+            tbl.name,
+            str(PLANT_HMM),
+            str(fasta),
+        ]
         subprocess.run(cmd, check=True, capture_output=True, text=True, timeout=timeout)
         return tblout_to_gff(Path(tbl.name).read_text())

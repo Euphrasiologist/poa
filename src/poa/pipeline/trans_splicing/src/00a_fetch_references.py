@@ -18,6 +18,7 @@ junctions.tsv, which 00_build_exon_profiles.py excludes from training.
 
 GenBank records are cached in reference/genbank/.
 """
+
 from __future__ import annotations
 
 import argparse
@@ -36,8 +37,19 @@ from refseq_mito import cds_exons, fetch, verify  # noqa: E402
 
 GB_DIR = lin.trans_splicing_reference(PIPELINE_DIR, lin.DEFAULT_LINEAGE) / "genbank"
 CIS_MAX_GAP = 10_000
-JUNCTION_COLS = ["accession", "gene", "locus_tag", "exon_num", "n_exons", "start", "end", "strand",
-                 "junction_to_next", "gap_bp", "notes"]
+JUNCTION_COLS = [
+    "accession",
+    "gene",
+    "locus_tag",
+    "exon_num",
+    "n_exons",
+    "start",
+    "end",
+    "strand",
+    "junction_to_next",
+    "gap_bp",
+    "notes",
+]
 
 
 def main() -> None:
@@ -76,27 +88,48 @@ def main() -> None:
             n_bad += not ok
 
             k = len(parts)
-            suffix = f"_{locus}" if seen[gene] > 1 or sum(
-                1 for g in rec.features if g.type == "CDS" and g.qualifiers.get("gene", [""])[0].lower() == name) > 1 else ""
+            suffix = (
+                f"_{locus}"
+                if seen[gene] > 1
+                or sum(1 for g in rec.features if g.type == "CDS" and g.qualifiers.get("gene", [""])[0].lower() == name)
+                > 1
+                else ""
+            )
             lines = []
             for n, (p, seq) in enumerate(zip(parts, exons), start=1):
                 strand = "-" if p.strand == -1 else "+"
                 lines.append(f">{acc}|{gene}|{locus}|exon{n}of{k}|{int(p.start) + 1}-{int(p.end)}|{strand}\n{seq}\n")
                 if n < k:
                     q = parts[n]
-                    same = (q.strand == p.strand)
+                    same = q.strand == p.strand
                     gap = (int(q.start) - int(p.end)) if p.strand != -1 else (int(p.start) - int(q.end))
                     kind = "cis" if same and 0 < gap <= CIS_MAX_GAP else "trans"
                 else:
                     gap, kind = "", "none"
-                new_rows.append({"accession": acc, "gene": gene, "locus_tag": locus, "exon_num": n, "n_exons": k,
-                                 "start": int(p.start) + 1, "end": int(p.end), "strand": strand,
-                                 "junction_to_next": kind, "gap_bp": gap, "notes": f"{organism}: {note}"})
-            lines.append(f">{acc}|{gene}|{locus}|translation_REFSEQ_ANNOTATED|len={len(f.qualifiers['translation'][0])}\n"
-                         f"{f.qualifiers['translation'][0]}\n")
+                new_rows.append(
+                    {
+                        "accession": acc,
+                        "gene": gene,
+                        "locus_tag": locus,
+                        "exon_num": n,
+                        "n_exons": k,
+                        "start": int(p.start) + 1,
+                        "end": int(p.end),
+                        "strand": strand,
+                        "junction_to_next": kind,
+                        "gap_bp": gap,
+                        "notes": f"{organism}: {note}",
+                    }
+                )
+            lines.append(
+                f">{acc}|{gene}|{locus}|translation_REFSEQ_ANNOTATED|len={len(f.qualifiers['translation'][0])}\n"
+                f"{f.qualifiers['translation'][0]}\n"
+            )
             (raw_dir / f"{acc}_{gene}{suffix}.fasta").write_text("".join(lines))
-            print(f"[{'ok' if ok else 'UNRESOLVED'}] {acc} {organism}: {gene} ({locus}) {k} exon(s) - {note}",
-                  file=sys.stderr)
+            print(
+                f"[{'ok' if ok else 'UNRESOLVED'}] {acc} {organism}: {gene} ({locus}) {k} exon(s) - {note}",
+                file=sys.stderr,
+            )
 
     if args.force:
         refreshed = {(r["accession"], r["gene"]) for r in new_rows}

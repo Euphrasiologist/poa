@@ -23,6 +23,7 @@ Output: analysis/editing/results/profiles/<gene>.pssm
         (TSV: header = 20 amino acid one-letter codes, one row per
         alignment column of log-odds scores)
 """
+
 from __future__ import annotations
 
 import os
@@ -121,13 +122,19 @@ def clean_proteins(nuc_seqs: dict[str, str]) -> dict[str, str]:
 
 
 def run_mafft(protein_fasta: Path, out_fasta: Path) -> bool:
-    env = ({"MAFFT_BINARIES": MAFFT_BINARIES_DIR, "PATH": "/usr/bin:/bin"}
-           if Path(MAFFT_BINARIES_DIR).is_dir() else dict(os.environ))
+    env = (
+        {"MAFFT_BINARIES": MAFFT_BINARIES_DIR, "PATH": "/usr/bin:/bin"}
+        if Path(MAFFT_BINARIES_DIR).is_dir()
+        else dict(os.environ)
+    )
     if os.environ.get("TMPDIR"):  # mafft's mktemp otherwise needs a writable /tmp
         env["TMPDIR"] = os.environ["TMPDIR"]
     proc = subprocess.run(
         [MAFFT, "--auto", "--quiet", str(protein_fasta)],
-        capture_output=True, text=True, timeout=600, env=env,
+        capture_output=True,
+        text=True,
+        timeout=600,
+        env=env,
     )
     if proc.returncode != 0 or not proc.stdout.strip():
         print(f"[warn] mafft failed for {protein_fasta.name}: {proc.stderr.strip()[:300]}", file=sys.stderr)
@@ -144,6 +151,7 @@ def build_profile(alignment: dict[str, str]) -> list[dict[str, float]] | None:
 
     # Background = overall amino acid frequency across all non-gap residues.
     from collections import Counter
+
     bg_counts = Counter()
     for seq in alignment.values():
         bg_counts.update(c for c in seq if c in AA_ORDER)
@@ -190,8 +198,12 @@ def genes_for_organelle(organelle: str) -> list[str]:
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--organelle", default="both", choices=["mito", "pltd", "both"])
-    ap.add_argument("--force", action="store_true", help="accepted for CLI consistency; this script "
-                     "always does a full recompute (cheap - a couple dozen short genes)")
+    ap.add_argument(
+        "--force",
+        action="store_true",
+        help="accepted for CLI consistency; this script "
+        "always does a full recompute (cheap - a couple dozen short genes)",
+    )
     args = ap.parse_args()
 
     organelles = ["mito", "pltd"] if args.organelle == "both" else [args.organelle]
@@ -207,8 +219,11 @@ def main():
             nuc_seqs = read_fasta(gene_fasta)
             proteins = clean_proteins(nuc_seqs)
             if len(proteins) < MIN_SEQUENCES:
-                print(f"[warn] {organelle}/{gene}: only {len(proteins)} clean sequences (need >= "
-                      f"{MIN_SEQUENCES}) - skipping", file=sys.stderr)
+                print(
+                    f"[warn] {organelle}/{gene}: only {len(proteins)} clean sequences (need >= "
+                    f"{MIN_SEQUENCES}) - skipping",
+                    file=sys.stderr,
+                )
                 continue
 
             protein_fasta = work_dir / f"{organelle}.{gene}.protein.fasta"
@@ -225,8 +240,11 @@ def main():
 
             write_profile(columns, profiles_dir / organelle / f"{gene}.pssm")
             n_built += 1
-            print(f"[info] {organelle}/{gene}: profile from {len(proteins)} sequences, "
-                  f"{len(columns)} columns -> profiles/{organelle}/{gene}.pssm", file=sys.stderr)
+            print(
+                f"[info] {organelle}/{gene}: profile from {len(proteins)} sequences, "
+                f"{len(columns)} columns -> profiles/{organelle}/{gene}.pssm",
+                file=sys.stderr,
+            )
 
     print(f"[info] build_reference_profiles: {n_built} profiles -> {profiles_dir}", file=sys.stderr)
 

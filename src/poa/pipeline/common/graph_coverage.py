@@ -7,6 +7,7 @@ replace anything. Placement uses `unitig_coords`' sequence matching, so a
 number here means the same thing as `pct_unitig_content_placed` in
 `unitig_coords/results/linearization_qc.tsv`.
 """
+
 from __future__ import annotations
 
 import importlib.util
@@ -34,7 +35,10 @@ def unitig_content_placed(gfa: Path, ctg_fasta: Path) -> float:
     for useq in segs.values():
         max_trim = min(_um.MAX_TRIM_BP, len(useq) // 4)
         rc = _um.revcomp(useq)
-        if any(_um.find_all_with_tolerance(doubled[cid], len(c), needle, max_trim)[0]
-               for cid, c in ctgs.items() for needle in (useq, rc)):
+        if any(
+            _um.find_all_with_tolerance(doubled[cid], len(c), needle, max_trim)[0]
+            for cid, c in ctgs.items()
+            for needle in (useq, rc)
+        ):
             placed += len(useq)
     return placed / total

@@ -9,6 +9,7 @@ RefSeq's /translation, and every differing residue must be explainable by
 C->U RNA editing of the genomic codon (the RefSeq protein is the edited
 one).
 """
+
 from __future__ import annotations
 
 import itertools
@@ -46,7 +47,7 @@ def editing_explains(genomic_codon: str, edited_aa: str) -> bool:
 
 def verify(dna: str, refseq_protein: str) -> tuple[bool, str]:
     dna = dna.upper()
-    codons = [dna[i:i + 3] for i in range(0, len(dna) - len(dna) % 3, 3)]
+    codons = [dna[i : i + 3] for i in range(0, len(dna) - len(dna) % 3, 3)]
     naive = str(Seq("".join(codons)).translate())
     naive_core = naive[:-1] if naive.endswith("*") else naive
     if len(naive_core) == len(refseq_protein) + 1 and editing_explains(codons[len(refseq_protein)], "*"):

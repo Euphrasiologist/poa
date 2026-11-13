@@ -27,6 +27,7 @@ comparable; gene content, exon structure and protein sequence are.
 
 Writes a per-gene TSV (--out) and exits 1 if any EXPECT threshold fails.
 """
+
 from __future__ import annotations
 
 import argparse
@@ -97,8 +98,7 @@ def refseq_genes(gb: Path) -> tuple[set[str], dict[str, dict]]:
             parts = list(f.location.parts)
             if "".join(str(p.extract(rec.seq)) for p in parts) != str(f.extract(rec.seq)):
                 parts = parts[::-1]  # transcript order
-            proteins[name] = {"exon_lengths": [len(p) for p in parts],
-                              "protein": f.qualifiers["translation"][0]}
+            proteins[name] = {"exon_lengths": [len(p) for p in parts], "protein": f.qualifiers["translation"][0]}
     return names, proteins
 
 
@@ -137,8 +137,12 @@ def main() -> None:
     ref_names, ref_prot = refseq_genes(args.genbank)
     gff_names, models = gff_models(args.gff)
 
-    aligner = Align.PairwiseAligner(mode="global", substitution_matrix=substitution_matrices.load("BLOSUM62"),
-                                    open_gap_score=-10, extend_gap_score=-0.5)
+    aligner = Align.PairwiseAligner(
+        mode="global",
+        substitution_matrix=substitution_matrices.load("BLOSUM62"),
+        open_gap_score=-10,
+        extend_gap_score=-0.5,
+    )
 
     def identity(cds: str, ref: str) -> tuple[float, float]:
         """(editing-aware, raw) identity of cds's translation vs ref."""
@@ -154,7 +158,7 @@ def main() -> None:
                 if x == y:
                     raw += 1
                     edited += 1
-                elif y != "-" and editing_explains(cds[3 * qi:3 * qi + 3], y):
+                elif y != "-" and editing_explains(cds[3 * qi : 3 * qi + 3], y):
                     edited += 1
                 qi += 1
         n = max(len(protein), len(ref))
@@ -166,7 +170,7 @@ def main() -> None:
         for tier, model in models.get(gene, []):
             seq = Seq("")
             for _, seqid, start, end, strand in model:
-                piece = genome[seqid][start - 1:end]
+                piece = genome[seqid][start - 1 : end]
                 seq += piece.reverse_complement() if strand == "-" else piece
             frames = [0] if tier != "raw" else [0, 1, 2]
             ident, raw_ident = max(identity(str(seq[f:]), ref["protein"]) for f in frames)
@@ -174,22 +178,43 @@ def main() -> None:
             ref_lengths = list(ref["exon_lengths"])
             ref_lengths[-1] -= 3  # RefSeq CDS includes the stop codon; compare without it
             # the last exon may or may not carry the stop codon
-            offsets = [abs(x - y) if i < len(lengths) - 1 else min(abs(x - y), abs(x - y - 3))
-                       for i, (x, y) in enumerate(zip(lengths, ref_lengths))]
+            offsets = [
+                abs(x - y) if i < len(lengths) - 1 else min(abs(x - y), abs(x - y - 3))
+                for i, (x, y) in enumerate(zip(lengths, ref_lengths))
+            ]
             same_count = len(lengths) == len(ref_lengths)
             exact = same_count and max(offsets) == 0
-            cand = {"gene": gene, "tier": tier, "n_models": len(models[gene]), "gff_n_exons": len(lengths),
-                    "refseq_n_exons": len(ref_lengths), "gff_exon_lengths": ",".join(map(str, lengths)),
-                    "refseq_exon_lengths": ",".join(map(str, ref["exon_lengths"])),
-                    "exact_exons": exact, "max_exon_offset": max(offsets) if same_count else "",
-                    "protein_identity": round(ident, 4), "raw_identity": round(raw_ident, 4)}
+            cand = {
+                "gene": gene,
+                "tier": tier,
+                "n_models": len(models[gene]),
+                "gff_n_exons": len(lengths),
+                "refseq_n_exons": len(ref_lengths),
+                "gff_exon_lengths": ",".join(map(str, lengths)),
+                "refseq_exon_lengths": ",".join(map(str, ref["exon_lengths"])),
+                "exact_exons": exact,
+                "max_exon_offset": max(offsets) if same_count else "",
+                "protein_identity": round(ident, 4),
+                "raw_identity": round(raw_ident, 4),
+            }
             if best is None or (cand["exact_exons"], ident) > (best["exact_exons"], best["protein_identity"]):
                 best = cand
-        rows.append(best or {"gene": gene, "tier": "missing", "n_models": 0, "gff_n_exons": 0,
-                             "refseq_n_exons": len(ref["exon_lengths"]), "gff_exon_lengths": "",
-                             "refseq_exon_lengths": ",".join(map(str, ref["exon_lengths"])),
-                             "exact_exons": False, "max_exon_offset": "", "protein_identity": 0.0,
-                             "raw_identity": 0.0})
+        rows.append(
+            best
+            or {
+                "gene": gene,
+                "tier": "missing",
+                "n_models": 0,
+                "gff_n_exons": 0,
+                "refseq_n_exons": len(ref["exon_lengths"]),
+                "gff_exon_lengths": "",
+                "refseq_exon_lengths": ",".join(map(str, ref["exon_lengths"])),
+                "exact_exons": False,
+                "max_exon_offset": "",
+                "protein_identity": 0.0,
+                "raw_identity": 0.0,
+            }
+        )
 
     missing = sorted(ref_names - gff_names)
     found = len(ref_names) - len(missing)
@@ -219,12 +244,17 @@ def main() -> None:
             w.writeheader()
             w.writerows(rows)
 
-    print(f"gene content: {found}/{len(ref_names)} RefSeq genes found" + (f"; missing: {', '.join(missing)}" if missing else ""))
+    print(
+        f"gene content: {found}/{len(ref_names)} RefSeq genes found"
+        + (f"; missing: {', '.join(missing)}" if missing else "")
+    )
     print(f"edited-tier single-exon genes: median identity {median_edited:.3f} over {len(edited)}")
     print(f"{'gene':8} {'tier':>13} {'exons gff/ref':>13} {'offset':>6} {'identity':>9} {'raw':>6}")
     for r in rows:
-        print(f"{r['gene']:8} {r['tier']:>13} {r['gff_n_exons']:>6}/{r['refseq_n_exons']:<6} "
-              f"{str(r['max_exon_offset']):>6} {r['protein_identity']:>9.3f} {r['raw_identity']:>6.3f}")
+        print(
+            f"{r['gene']:8} {r['tier']:>13} {r['gff_n_exons']:>6}/{r['refseq_n_exons']:<6} "
+            f"{str(r['max_exon_offset']):>6} {r['protein_identity']:>9.3f} {r['raw_identity']:>6.3f}"
+        )
     if failures:
         print("FAIL\n  " + "\n  ".join(failures))
         sys.exit(1)

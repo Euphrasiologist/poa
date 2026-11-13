@@ -50,6 +50,7 @@ superseded/ copy stays too) since nothing about the raw unitig-level
 hits changed and species_discovery's completeness scoring expects it
 there.
 """
+
 from __future__ import annotations
 
 import os
@@ -175,11 +176,21 @@ def transform_circuit(path_segs, seg_len, overlaps, raw_hits) -> list[dict] | No
             elif align_from < 0 or align_to < 0:
                 skipped_straddling += 1
                 continue
-            rows.append({"align_from": align_from, "align_to": align_to,
-                         "gene": gene, "score": round(min(score, 1000)), "strand": eff_strand})
+            rows.append(
+                {
+                    "align_from": align_from,
+                    "align_to": align_to,
+                    "gene": gene,
+                    "score": round(min(score, 1000)),
+                    "strand": eff_strand,
+                }
+            )
     if skipped_straddling:
-        print(f"[warn] {skipped_straddling} hit(s) straddling the circular origin skipped "
-              f"(can't be expressed as one bed interval)", file=sys.stderr)
+        print(
+            f"[warn] {skipped_straddling} hit(s) straddling the circular origin skipped "
+            f"(can't be expressed as one bed interval)",
+            file=sys.stderr,
+        )
     return rows
 
 
@@ -211,15 +222,16 @@ def main():
         annot = annot_candidates[0] if annot_candidates else None
         if annot is None:
             n_no_annot += 1
-            print(f"[warn] {species} ({organelle}): no archived annot_*.txt (genuinely never annotated), skipped",
-                  file=sys.stderr)
+            print(
+                f"[warn] {species} ({organelle}): no archived annot_*.txt (genuinely never annotated), skipped",
+                file=sys.stderr,
+            )
             continue
 
         log_path = work_dir / f"{species}.{organelle}.resolve.log"
         if not log_path.exists():
             n_no_log += 1
-            print(f"[warn] {species} ({organelle}): no resolve.log (path info unrecoverable), skipped",
-                  file=sys.stderr)
+            print(f"[warn] {species} ({organelle}): no resolve.log (path info unrecoverable), skipped", file=sys.stderr)
             continue
         circuit_paths = {}
         for line in open(log_path):
@@ -243,29 +255,38 @@ def main():
 
         if unmodeled:
             n_unmodeled += 1
-            print(f"[warn] {species} ({organelle}): unmodeled junction (non-M CIGAR or missing link), skipped",
-                  file=sys.stderr)
+            print(
+                f"[warn] {species} ({organelle}): unmodeled junction (non-M CIGAR or missing link), skipped",
+                file=sys.stderr,
+            )
             continue
 
         out_path = data_dir / f"{prefix}{CTG_BED_SUFFIX[organelle]}"
         if not args.dry_run:
             with open(out_path, "w") as fh:
-                fh.write("# reannotated by analysis/linearize/src/06_reannotate_promoted.py, not oatk itself.\n"
-                         "# Coordinate transform validated at 99.0% row-fidelity against the existing dataset,\n"
-                         "# but NO inclusion filter applied (unlike oatk's own ctg.bed) - see this script's\n"
-                         "# docstring. Every row is a real nhmmscan hit at a correctly-transformed position;\n"
-                         "# some would not have made oatk's own (undocumented) cut.\n"
-                         "#seq_name\talign_from\talign_to\tgene_name\tscore_capped_at_1000\tstrand\n")
+                fh.write(
+                    "# reannotated by analysis/linearize/src/06_reannotate_promoted.py, not oatk itself.\n"
+                    "# Coordinate transform validated at 99.0% row-fidelity against the existing dataset,\n"
+                    "# but NO inclusion filter applied (unlike oatk's own ctg.bed) - see this script's\n"
+                    "# docstring. Every row is a real nhmmscan hit at a correctly-transformed position;\n"
+                    "# some would not have made oatk's own (undocumented) cut.\n"
+                    "#seq_name\talign_from\talign_to\tgene_name\tscore_capped_at_1000\tstrand\n"
+                )
                 for r in sorted(all_rows, key=lambda r: (r["seq_name"], r["align_from"])):
-                    fh.write(f"{r['seq_name']}\t{r['align_from']}\t{r['align_to']}\t{r['gene']}\t"
-                             f"{r['score']}\t{r['strand']}\n")
+                    fh.write(
+                        f"{r['seq_name']}\t{r['align_from']}\t{r['align_to']}\t{r['gene']}\t"
+                        f"{r['score']}\t{r['strand']}\n"
+                    )
             restored_annot = data_dir / annot.name
             if not restored_annot.exists():
                 shutil.copy2(annot, restored_annot)
         n_ok += 1
 
-    print(f"[info] reannotate_promoted: ok={n_ok} no_annot={n_no_annot} no_log={n_no_log} "
-          f"unmodeled={n_unmodeled} / {len(promoted)} promoted rows", file=sys.stderr)
+    print(
+        f"[info] reannotate_promoted: ok={n_ok} no_annot={n_no_annot} no_log={n_no_log} "
+        f"unmodeled={n_unmodeled} / {len(promoted)} promoted rows",
+        file=sys.stderr,
+    )
 
 
 if __name__ == "__main__":

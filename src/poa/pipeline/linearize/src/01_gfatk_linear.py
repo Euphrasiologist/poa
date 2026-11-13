@@ -32,6 +32,7 @@ Output:
   results/linear/<organelle>/<species>.linear.fasta   - one record per subgraph
   results/linear_summary.tsv                          - one row per species x organelle x subgraph
 """
+
 from __future__ import annotations
 
 import os
@@ -62,8 +63,19 @@ HEADER_RE = re.compile(
     r"(?:\s+subgraph-(?P<subgraph>\d+):is_circular-(?P<circular>true|false))?$"
 )
 
-COLUMNS = ["species", "organelle", "subgraph_id", "path", "n_segments", "coverage",
-           "is_circular", "length_bp", "n_orphan_nodes", "orphan_bp", "pct_subgraph_explained"]
+COLUMNS = [
+    "species",
+    "organelle",
+    "subgraph_id",
+    "path",
+    "n_segments",
+    "coverage",
+    "is_circular",
+    "length_bp",
+    "n_orphan_nodes",
+    "orphan_bp",
+    "pct_subgraph_explained",
+]
 
 
 def run_gfatk_linear(gfa: str, node_threshold: int, timeout: int) -> tuple[list[dict], str]:
@@ -94,8 +106,7 @@ def summarize_species(species: str, organelle: str, records: list[dict]) -> tupl
     for rec in records:
         m = HEADER_RE.match(rec["header"])
         if not m:
-            print(f"[warn] {species} ({organelle}): unparsed gfatk linear header: {rec['header']!r}",
-                  file=sys.stderr)
+            print(f"[warn] {species} ({organelle}): unparsed gfatk linear header: {rec['header']!r}", file=sys.stderr)
             continue
         # gfatk linear short-circuits for a GFA with only a single segment overall
         # ("Only a single segment detected. Printing sequence and exiting.") and
@@ -122,8 +133,11 @@ def summarize_species(species: str, organelle: str, records: list[dict]) -> tupl
             coverage = None
             orphans = []
         else:
-            print(f"[warn] {species} ({organelle}) subgraph {sub_id}: no resolved path among "
-                  f"{len(entries)} records, skipping", file=sys.stderr)
+            print(
+                f"[warn] {species} ({organelle}) subgraph {sub_id}: no resolved path among "
+                f"{len(entries)} records, skipping",
+                file=sys.stderr,
+            )
             continue
 
         length_bp = len(rec["seq"])
@@ -131,16 +145,27 @@ def summarize_species(species: str, organelle: str, records: list[dict]) -> tupl
         pct_explained = length_bp / (length_bp + orphan_bp) if (length_bp + orphan_bp) else None
         circular = m.group("circular")  # None only for the single-segment-overall special case
 
-        fasta_header = (f"{species}.{organelle}.subgraph{sub_id} path={path} "
-                         f"coverage={coverage if coverage is not None else 'NA'} "
-                         f"circular={circular if circular is not None else 'unknown'} length={length_bp}")
+        fasta_header = (
+            f"{species}.{organelle}.subgraph{sub_id} path={path} "
+            f"coverage={coverage if coverage is not None else 'NA'} "
+            f"circular={circular if circular is not None else 'unknown'} length={length_bp}"
+        )
         fasta_out.append({"header": fasta_header, "seq": rec["seq"]})
-        rows.append({
-            "species": species, "organelle": organelle, "subgraph_id": sub_id, "path": path,
-            "n_segments": n_segments, "coverage": coverage, "is_circular": circular,
-            "length_bp": length_bp, "n_orphan_nodes": len(orphans), "orphan_bp": orphan_bp,
-            "pct_subgraph_explained": round(pct_explained, 4) if pct_explained is not None else None,
-        })
+        rows.append(
+            {
+                "species": species,
+                "organelle": organelle,
+                "subgraph_id": sub_id,
+                "path": path,
+                "n_segments": n_segments,
+                "coverage": coverage,
+                "is_circular": circular,
+                "length_bp": length_bp,
+                "n_orphan_nodes": len(orphans),
+                "orphan_bp": orphan_bp,
+                "pct_subgraph_explained": round(pct_explained, 4) if pct_explained is not None else None,
+            }
+        )
     return fasta_out, rows
 
 
@@ -152,7 +177,7 @@ def write_fasta(path: Path, records: list[dict]) -> None:
             fh.write(f">{rec['header']}\n")
             seq = rec["seq"]
             for i in range(0, len(seq), 70):
-                fh.write(seq[i:i + 70] + "\n")
+                fh.write(seq[i : i + 70] + "\n")
     tmp.replace(path)
 
 
@@ -160,8 +185,9 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--organelle", default="both", choices=["mito", "pltd", "both"])
     ap.add_argument("--species-list", default=None)
-    ap.add_argument("--node-threshold", type=int, default=20000,
-                     help="skip (sub)graphs with more nodes than this (default 20000)")
+    ap.add_argument(
+        "--node-threshold", type=int, default=20000, help="skip (sub)graphs with more nodes than this (default 20000)"
+    )
     ap.add_argument("--timeout", type=int, default=120)
     ap.add_argument("--force", action="store_true")
     args = ap.parse_args()
@@ -200,8 +226,11 @@ def main():
             recomputed_keys.add(key)
             if not records:
                 n_error += 1
-                print(f"[warn] {r.species} ({organelle}): gfatk linear produced nothing"
-                      + (f" ({err[:200]})" if err else ""), file=sys.stderr)
+                print(
+                    f"[warn] {r.species} ({organelle}): gfatk linear produced nothing"
+                    + (f" ({err[:200]})" if err else ""),
+                    file=sys.stderr,
+                )
                 continue
 
             fasta_out, rows = summarize_species(r.species, organelle, records)
@@ -225,8 +254,11 @@ def main():
         final_rows = keep.to_dict("records") + new_rows
     iou.atomic_write_tsv(summary_path, final_rows, COLUMNS)
 
-    print(f"[info] gfatk_linear: ok={n_ok} skipped={n_skipped} no_gfa={n_no_gfa} error={n_error} "
-          f"-> {linear_dir}, {summary_path}", file=sys.stderr)
+    print(
+        f"[info] gfatk_linear: ok={n_ok} skipped={n_skipped} no_gfa={n_no_gfa} error={n_error} "
+        f"-> {linear_dir}, {summary_path}",
+        file=sys.stderr,
+    )
 
 
 if __name__ == "__main__":

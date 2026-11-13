@@ -8,6 +8,7 @@ is set. Writes are atomic (write to .tmp, then os.replace) so a job killed
 mid-write never corrupts a shared table other scripts/students may be
 reading concurrently.
 """
+
 from __future__ import annotations
 
 import os
@@ -71,7 +72,9 @@ def atomic_write_tsv(path: Path, rows: Iterable[dict], columns: list[str]) -> No
     os.replace(tmp_path, path)
 
 
-def merge_rows(existing_df: pd.DataFrame, new_rows: list[dict], key_cols: list[str], columns: list[str]) -> pd.DataFrame:
+def merge_rows(
+    existing_df: pd.DataFrame, new_rows: list[dict], key_cols: list[str], columns: list[str]
+) -> pd.DataFrame:
     """Replace/append new_rows into existing_df keyed on key_cols, return the merged frame."""
     new_df = pd.DataFrame(new_rows, columns=columns) if new_rows else pd.DataFrame(columns=columns)
     if existing_df.empty:

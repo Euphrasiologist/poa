@@ -12,6 +12,7 @@ reference/{raw,profiles}/ as it always has, any other lineage in
 reference/lineages/<name>/{raw,profiles}/. Which lineage a species uses is
 decided once, by editing/src/01_scan_editing.py (common/lineage.py).
 """
+
 TRANS_SPLICED_MITO = ["nad1", "nad2", "nad5", "rps3"]
 # angiosperm mito cis-spliced genes (stage 2a)
 CIS_SPLICED_MITO = ["nad4", "nad7", "ccmFc", "cox2", "rpl2", "rps10"]

@@ -18,6 +18,7 @@ status, since this script's own output feeds into computing QC status.
 Output: analysis/qc_basic_stats/results/core_genes_{mito,pltd}.tsv
 Columns: gene pct_present pct_single_copy n_species_present n_species_single_copy n_eligible_species
 """
+
 from __future__ import annotations
 
 import os
@@ -50,10 +51,14 @@ def compute_core_genes(gene_matrix: pd.DataFrame, eligible: set) -> pd.DataFrame
     sub = sub.copy()
     sub["is_single_copy"] = (sub["n_hits"] == 1) & (sub["n_contigs"] == 1)
 
-    grouped = sub.groupby("gene").agg(
-        n_species_present=("species", "nunique"),
-        n_species_single_copy=("is_single_copy", "sum"),
-    ).reset_index()
+    grouped = (
+        sub.groupby("gene")
+        .agg(
+            n_species_present=("species", "nunique"),
+            n_species_single_copy=("is_single_copy", "sum"),
+        )
+        .reset_index()
+    )
     grouped["n_eligible_species"] = n_eligible
     grouped["pct_present"] = grouped["n_species_present"] / n_eligible
     grouped["pct_single_copy"] = grouped["n_species_single_copy"] / n_eligible
@@ -87,9 +92,12 @@ def main():
 
         n_qc_core = (core["pct_present"] >= 0.90).sum()
         n_marker = ((core["pct_present"] >= 0.90) & (core["pct_single_copy"] >= 0.90)).sum()
-        print(f"[info] core_genes_{organelle}: n_eligible_species={len(eligible)} "
-              f"qc_core_genes(>=90% present)={n_qc_core} phylogeny_marker_genes(>=90% present & single-copy)={n_marker} "
-              f"-> {out_path}", file=sys.stderr)
+        print(
+            f"[info] core_genes_{organelle}: n_eligible_species={len(eligible)} "
+            f"qc_core_genes(>=90% present)={n_qc_core} phylogeny_marker_genes(>=90% present & single-copy)={n_marker} "
+            f"-> {out_path}",
+            file=sys.stderr,
+        )
 
 
 if __name__ == "__main__":

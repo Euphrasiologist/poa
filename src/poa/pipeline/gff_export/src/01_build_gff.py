@@ -67,6 +67,7 @@ Output:
   analysis/gff_export/results/<species>.<organelle>.gff (ctg-level, primary)
   analysis/gff_export/results/unitig/<species>.<organelle>.unitig.gff
 """
+
 from __future__ import annotations
 
 import os
@@ -93,6 +94,7 @@ import species_discovery as sd  # noqa: E402
 
 sys.path.insert(0, str(CODE_DIR / "trans_splicing" / "src"))
 from reference_genes import CIS_SPLICED_MITO, GENES as RECONSTRUCTED_GENES  # noqa: E402
+
 # a cis-spliced gene's reconstruction must agree with the HMM evidence: every
 # exon overlaps a raw hit for the gene and extends no further than this past it
 # (a full-length template on a lineage-truncated gene - Brassicaceae rpl2 -
@@ -108,6 +110,7 @@ FLIP_STRAND = {"+": "-", "-": "+", ".": "."}
 class Segment:
     """One linear stretch of a unitig placement on a ctg (a placement that
     wraps a circular ctg's origin is two segments)."""
+
     unitig: str
     unitig_length: int
     strand: str
@@ -122,7 +125,7 @@ class SeqContext:
     resolver: dict[str, str] = field(default_factory=dict)
     circular: dict[str, bool] = field(default_factory=dict)
     segments: dict[str, list[Segment]] = field(default_factory=dict)  # by ctg, sorted
-    tiles: dict[str, list[Segment]] = field(default_factory=dict)     # disjoint partition
+    tiles: dict[str, list[Segment]] = field(default_factory=dict)  # disjoint partition
     unitig_lengths: dict[str, int] = field(default_factory=dict)
     unitig_copies: dict[str, int] = field(default_factory=dict)
 
@@ -174,8 +177,7 @@ def load_seq_context(ctg_fasta: Path, map_path: Path) -> SeqContext:
         for s in segs:
             lo = max(s.ctg_lo, covered_to)
             if lo < s.ctg_hi:
-                tiles.append(Segment(s.unitig, s.unitig_length, s.strand, lo, s.ctg_hi,
-                                     s.unitig_off + (lo - s.ctg_lo)))
+                tiles.append(Segment(s.unitig, s.unitig_length, s.strand, lo, s.ctg_hi, s.unitig_off + (lo - s.ctg_lo)))
                 covered_to = s.ctg_hi
         ctx.tiles[ctg] = tiles
     return ctx
@@ -198,8 +200,10 @@ def locate(ctx: SeqContext, ctg: str, s: int, e: int) -> tuple[Segment | None, l
     segs = ctx.segments.get(ctg, [])
     containing = [g for g in segs if g.ctg_lo <= s and e <= g.ctg_hi]
     if containing:
+
         def in_core(g):
             return not any(o is not g and o.ctg_lo < e and s < o.ctg_hi for o in segs)
+
         return next((g for g in containing if in_core(g)), containing[0]), []
     return None, [t for t in ctx.tiles.get(ctg, []) if t.ctg_lo < e and s < t.ctg_hi]
 
@@ -228,8 +232,21 @@ def add_unitig_layer(lines: list[str], ctx: SeqContext) -> tuple[list[str], list
                     # bases of this CDS upstream of the piece, in transcript direction
                     k = (ps - s if strand != "-" else e - pe) - int(phase)
                     phase = str((3 - k % 3) % 3)
-                unitig_out.append("\t".join([t.unitig, f[1], f[2], str(us + 1), str(ue), f[5], ustrand, phase,
-                                             f[8] + f";unitig_split={ctg}:{ps + 1}-{pe}"]))
+                unitig_out.append(
+                    "\t".join(
+                        [
+                            t.unitig,
+                            f[1],
+                            f[2],
+                            str(us + 1),
+                            str(ue),
+                            f[5],
+                            ustrand,
+                            phase,
+                            f[8] + f";unitig_split={ctg}:{ps + 1}-{pe}",
+                        ]
+                    )
+                )
         ctg_out.append("\t".join(f))
     return ctg_out, unitig_out
 
@@ -247,36 +264,82 @@ def load_linearisation_notes() -> dict[str, float]:
     if not LOW_DEPTH_PATHS.exists():
         return {}
     with open(LOW_DEPTH_PATHS) as fh:
-        return {r["species"]: float(r["embedded_low_frac"]) for r in csv.DictReader(fh, delimiter="\t")
-                if r.get("flagged") == "True"}
+        return {
+            r["species"]: float(r["embedded_low_frac"])
+            for r in csv.DictReader(fh, delimiter="\t")
+            if r.get("flagged") == "True"
+        }
 
 
 def linearisation_comment(frac: float) -> str:
-    return (f"# linearisation uncertain: {frac:.0%} of the mito assembly graph is low-depth side paths "
-            f"(analysis/qc_basic_stats/results/low_depth_paths.tsv) - the contig sequence is one possible "
-            f"reading of the graph; prefer the unitig-level annotation (results/unitig/)")
+    return (
+        f"# linearisation uncertain: {frac:.0%} of the mito assembly graph is low-depth side paths "
+        f"(analysis/qc_basic_stats/results/low_depth_paths.tsv) - the contig sequence is one possible "
+        f"reading of the graph; prefer the unitig-level annotation (results/unitig/)"
+    )
 
 
 def ctg_header(ctx: SeqContext, seqids: list[str], low_depth_frac: float | None = None) -> tuple[list[str], list[str]]:
     pragmas = [f"##sequence-region {c} 1 {ctx.lengths[c]}" for c in seqids]
     if low_depth_frac is not None:
         pragmas.append(linearisation_comment(low_depth_frac))
-    note = {"linearisation": "uncertain", "linearisation_reason": "low_depth_side_paths",
-            "graph_low_depth_frac": f"{low_depth_frac:.3f}"} if low_depth_frac is not None else {}
-    regions = ["\t".join([c, "gff_export", "region", "1", str(ctx.lengths[c]), ".", "+", ".",
-                          gff_attrs({"ID": f"region-{c}", "resolver": ctx.resolver[c],
-                                     "Is_circular": "true" if ctx.circular[c] else None, **note})])
-               for c in seqids]
+    note = (
+        {
+            "linearisation": "uncertain",
+            "linearisation_reason": "low_depth_side_paths",
+            "graph_low_depth_frac": f"{low_depth_frac:.3f}",
+        }
+        if low_depth_frac is not None
+        else {}
+    )
+    regions = [
+        "\t".join(
+            [
+                c,
+                "gff_export",
+                "region",
+                "1",
+                str(ctx.lengths[c]),
+                ".",
+                "+",
+                ".",
+                gff_attrs(
+                    {
+                        "ID": f"region-{c}",
+                        "resolver": ctx.resolver[c],
+                        "Is_circular": "true" if ctx.circular[c] else None,
+                        **note,
+                    }
+                ),
+            ]
+        )
+        for c in seqids
+    ]
     return pragmas, regions
 
 
-def unitig_header(ctx: SeqContext, unitigs: list[str], low_depth_frac: float | None = None) -> tuple[list[str], list[str]]:
+def unitig_header(
+    ctx: SeqContext, unitigs: list[str], low_depth_frac: float | None = None
+) -> tuple[list[str], list[str]]:
     pragmas = [f"##sequence-region {u} 1 {ctx.unitig_lengths[u]}" for u in unitigs]
     if low_depth_frac is not None:
         pragmas.append(linearisation_comment(low_depth_frac))
-    regions = ["\t".join([u, "gff_export", "region", "1", str(ctx.unitig_lengths[u]), ".", "+", ".",
-                          gff_attrs({"ID": f"region-{u}", "n_ctg_copies": ctx.unitig_copies[u]})])
-               for u in unitigs]
+    regions = [
+        "\t".join(
+            [
+                u,
+                "gff_export",
+                "region",
+                "1",
+                str(ctx.unitig_lengths[u]),
+                ".",
+                "+",
+                ".",
+                gff_attrs({"ID": f"region-{u}", "n_ctg_copies": ctx.unitig_copies[u]}),
+            ]
+        )
+        for u in unitigs
+    ]
     return pragmas, regions
 
 
@@ -297,12 +360,12 @@ def assemble(pragmas: list[str], regions: list[str], features: list[str]) -> str
 
 MAX_INTRON = {"mito": 8000, "pltd": 4000}  # longest cis intron in the Arabidopsis mito reference: 3511bp
 MIN_INTRON = 250  # a shorter gap between consecutive model pieces is one exon whose HMM hit broke
-                  # (ycf1/ycf2/rpoC2 gaps of 25-200 bp) - organellar group I/II introns are longer
+# (ycf1/ycf2/rpoC2 gaps of 25-200 bp) - organellar group I/II introns are longer
 MODEL_OVERLAP_TOL = 60  # successive exons' HMM ranges may overlap a little at envelope edges
 PARTIAL_COVERAGE = 0.8  # below this share of its gene's usual model span a copy is tagged partial -
-                        # Arabidopsis mito: real copies >= 0.89, fragments/pseudogene pieces <= 0.68
+# Arabidopsis mito: real copies >= 0.89, fragments/pseudogene pieces <= 0.68
 TRNASCAN_SUPPORT = 35.0  # extra tRNA copies need tRNAscan-SE >= this AND an oatkDB hit; real
-                         # Arabidopsis mito tRNAs score >= 41.5, plastid-derived fragments ~27
+# Arabidopsis mito tRNAs score >= 41.5, plastid-derived fragments ~27
 
 
 @dataclass
@@ -310,6 +373,7 @@ class Locus:
     """One genomic locus of a gene: overlapping hits collapsed (antisense
     members of the overlap - weak reverse-strand rRNA/tRNA model hits -
     dropped in favour of the strongest hit's strand)."""
+
     contig: str
     start: int
     end: int
@@ -342,11 +406,19 @@ def collapse_hits(hits: pd.DataFrame) -> list[Locus]:
             best = max(cluster, key=hit_strength)
             keep = [c for c in cluster if c.strand == best.strand]
             model = [c for c in keep if c.source == "oatkDB" and pd.notna(c.hmm_from)]
-            loci.append(Locus(contig, min(c.start for c in keep), max(c.end for c in keep), best.strand,
-                              max(float(c.score) for c in model) if model else hit_strength(best),
-                              int(min(c.hmm_from for c in model)) if model else None,
-                              int(max(c.hmm_to for c in model)) if model else None,
-                              int(model[0].model_len) if model else None, keep))
+            loci.append(
+                Locus(
+                    contig,
+                    min(c.start for c in keep),
+                    max(c.end for c in keep),
+                    best.strand,
+                    max(float(c.score) for c in model) if model else hit_strength(best),
+                    int(min(c.hmm_from for c in model)) if model else None,
+                    int(max(c.hmm_to for c in model)) if model else None,
+                    int(model[0].model_len) if model else None,
+                    keep,
+                )
+            )
             if h is not None:
                 cluster, cluster_end = [h], h.end
     return loci
@@ -358,8 +430,10 @@ def chain_exons(loci: list[Locus], organelle: str) -> list[list[Locus]]:
     gene model where the previous one left off. A second copy restarts
     the model, so it never extends an existing chain. A gap under
     MIN_INTRON isn't an intron: the two pieces merge into one exon."""
+
     def tx_order(l):
         return (l.contig, l.strand, l.start if l.strand != "-" else -l.end)
+
     chains: list[list[Locus]] = []
     for loc in sorted(loci, key=tx_order):
         best, best_gap = None, None
@@ -376,9 +450,17 @@ def chain_exons(loci: list[Locus], organelle: str) -> list[list[Locus]]:
                 best, best_gap = chain, gap
         if best is not None and best_gap < MIN_INTRON:
             last = best[-1]
-            best[-1] = Locus(last.contig, min(last.start, loc.start), max(last.end, loc.end), last.strand,
-                             max(last.score, loc.score), last.hmm_from, loc.hmm_to, last.model_len,
-                             last.hits + loc.hits)
+            best[-1] = Locus(
+                last.contig,
+                min(last.start, loc.start),
+                max(last.end, loc.end),
+                last.strand,
+                max(last.score, loc.score),
+                last.hmm_from,
+                loc.hmm_to,
+                last.model_len,
+                last.hits + loc.hits,
+            )
         elif best is not None:
             best.append(loc)
         else:
@@ -397,7 +479,8 @@ def expected_model_spans(calls: pd.DataFrame) -> dict[tuple[str, str], float]:
     how complete a hit is; what full-length genes actually cover does not."""
     o = calls[(calls.source == "oatkDB") & calls.hmm_from.notna()]
     per_species = o.groupby(["organelle", "gene", "species"])[["hmm_from", "hmm_to"]].apply(
-        lambda d: covered_model_bp(zip(d.hmm_from.astype(int), d.hmm_to.astype(int))))
+        lambda d: covered_model_bp(zip(d.hmm_from.astype(int), d.hmm_to.astype(int)))
+    )
     return per_species.groupby(level=[0, 1]).median().to_dict()
 
 
@@ -446,8 +529,9 @@ def trna_supported(copy: dict) -> bool:
     hits = [h for l in copy["loci"] for h in l.hits]
     if len(copy["loci"]) > 1 and not copy["partial"]:
         return True
-    return (any(h.source == "oatkDB" for h in hits)
-            and any(h.source == "tRNAscan-SE" and h.score >= TRNASCAN_SUPPORT for h in hits))
+    return any(h.source == "oatkDB" for h in hits) and any(
+        h.source == "tRNAscan-SE" and h.score >= TRNASCAN_SUPPORT for h in hits
+    )
 
 
 def merge_intervals(ivs):
@@ -466,9 +550,11 @@ def gff_attrs(d: dict) -> str:
 
 def copy_attrs(copy: dict) -> dict:
     cov = copy.get("coverage")
-    return {"copy_number": copy.get("copy_number"),
-            "model_coverage": f"{cov:.2f}" if cov is not None else None,
-            "partial": "true" if copy.get("partial") else None}
+    return {
+        "copy_number": copy.get("copy_number"),
+        "model_coverage": f"{cov:.2f}" if cov is not None else None,
+        "partial": "true" if copy.get("partial") else None,
+    }
 
 
 def emit_rna_gene(lines: list[str], gene: str, suffix: str, chain: list[Locus], feature: str, copy: dict) -> None:
@@ -481,22 +567,61 @@ def emit_rna_gene(lines: list[str], gene: str, suffix: str, chain: list[Locus], 
     tools = "+".join(sorted({h.source for l in chain for h in l.hits}))
     contig, strand = chain[0].contig, chain[0].strand
     coords = [str(min(l.start for l in chain) + 1), str(max(l.end for l in chain)), f"{copy['score']:.3f}", strand, "."]
-    lines.append("\t".join([contig, "gff_export", "gene", *coords,
-                             gff_attrs({"ID": gid, "Name": gene, "annotation_tier": "raw", **copy_attrs(copy),
-                                        "tool_support": tools})]))
-    lines.append("\t".join([contig, "gff_export", feature, *coords,
-                             gff_attrs({"ID": fid, "Parent": gid, "Name": gene,
-                                        "n_exons": len(chain) if len(chain) > 1 else None})]))
+    lines.append(
+        "\t".join(
+            [
+                contig,
+                "gff_export",
+                "gene",
+                *coords,
+                gff_attrs(
+                    {"ID": gid, "Name": gene, "annotation_tier": "raw", **copy_attrs(copy), "tool_support": tools}
+                ),
+            ]
+        )
+    )
+    lines.append(
+        "\t".join(
+            [
+                contig,
+                "gff_export",
+                feature,
+                *coords,
+                gff_attrs({"ID": fid, "Parent": gid, "Name": gene, "n_exons": len(chain) if len(chain) > 1 else None}),
+            ]
+        )
+    )
     if len(chain) > 1:
         for k, l in enumerate(chain, start=1):
-            lines.append("\t".join([contig, "gff_export", "exon", str(l.start + 1), str(l.end), f"{l.score:.3f}",
-                                     strand, ".", gff_attrs({"ID": f"exon-{gene}{suffix}-{k}", "Parent": fid,
-                                                             "exon_number": k})]))
+            lines.append(
+                "\t".join(
+                    [
+                        contig,
+                        "gff_export",
+                        "exon",
+                        str(l.start + 1),
+                        str(l.end),
+                        f"{l.score:.3f}",
+                        strand,
+                        ".",
+                        gff_attrs({"ID": f"exon-{gene}{suffix}-{k}", "Parent": fid, "exon_number": k}),
+                    ]
+                )
+            )
 
 
-def emit_protein_coding_gene(lines: list[str], gene: str, suffix: str, tier: str, parts: list[dict],
-                              edits: list[dict], gene_score: float, n_edits_summary: int, copy: dict,
-                              phase_from_lengths: bool) -> None:
+def emit_protein_coding_gene(
+    lines: list[str],
+    gene: str,
+    suffix: str,
+    tier: str,
+    parts: list[dict],
+    edits: list[dict],
+    gene_score: float,
+    n_edits_summary: int,
+    copy: dict,
+    phase_from_lengths: bool,
+) -> None:
     """parts: list of {contig, start, end, strand, score, exon_number} in exon order.
     edits: list of {genomic_pos, resulting_aa, [slot]} to attach as sequence_alteration
     children - `slot` (trans_splicing) names the exon, and so the contig, an edit sits on.
@@ -521,12 +646,43 @@ def emit_protein_coding_gene(lines: list[str], gene: str, suffix: str, tier: str
         by_contig[p["contig"]].append(p)
     for contig, cparts in by_contig.items():
         span = [str(min(p["start"] for p in cparts) + 1), str(max(p["end"] for p in cparts))]
-        lines.append("\t".join([contig, "gff_export", "gene", *span, f"{gene_score:.3f}", gene_strand, ".",
-                                 gff_attrs({"ID": gid, "Name": gene, "annotation_tier": tier, **copy_attrs(copy)})]))
-        lines.append("\t".join([contig, "gff_export", "mRNA", *span, f"{gene_score:.3f}", gene_strand, ".",
-                                 gff_attrs({"ID": mid, "Parent": gid, "Name": gene,
-                                            "n_exons": len(parts), "n_edits": n_edits_summary,
-                                            "exon_boundaries": "approximate" if approximate else None})]))
+        lines.append(
+            "\t".join(
+                [
+                    contig,
+                    "gff_export",
+                    "gene",
+                    *span,
+                    f"{gene_score:.3f}",
+                    gene_strand,
+                    ".",
+                    gff_attrs({"ID": gid, "Name": gene, "annotation_tier": tier, **copy_attrs(copy)}),
+                ]
+            )
+        )
+        lines.append(
+            "\t".join(
+                [
+                    contig,
+                    "gff_export",
+                    "mRNA",
+                    *span,
+                    f"{gene_score:.3f}",
+                    gene_strand,
+                    ".",
+                    gff_attrs(
+                        {
+                            "ID": mid,
+                            "Parent": gid,
+                            "Name": gene,
+                            "n_exons": len(parts),
+                            "n_edits": n_edits_summary,
+                            "exon_boundaries": "approximate" if approximate else None,
+                        }
+                    ),
+                ]
+            )
+        )
     upstream = 0
     for p in parts:
         if p.get("phase") is not None:
@@ -534,27 +690,65 @@ def emit_protein_coding_gene(lines: list[str], gene: str, suffix: str, tier: str
         else:
             phase = (3 - upstream % 3) % 3 if phase_from_lengths else 0
         upstream += p["end"] - p["start"]
-        lines.append("\t".join([p["contig"], "gff_export", "CDS", str(p["start"] + 1), str(p["end"]),
-                                 f"{p['score']:.3f}", p["strand"], str(phase),
-                                 gff_attrs({"ID": cid, "Parent": mid, "exon_number": p["exon_number"]})]))
+        lines.append(
+            "\t".join(
+                [
+                    p["contig"],
+                    "gff_export",
+                    "CDS",
+                    str(p["start"] + 1),
+                    str(p["end"]),
+                    f"{p['score']:.3f}",
+                    p["strand"],
+                    str(phase),
+                    gff_attrs({"ID": cid, "Parent": mid, "exon_number": p["exon_number"]}),
+                ]
+            )
+        )
     by_exon = {p["exon_number"]: p for p in parts}
     for i, e in enumerate(edits, start=1):
         pos = int(e["genomic_pos"])
         exon = by_exon.get(int(e["slot"]), parts[0]) if pd.notna(e.get("slot")) else parts[0]
-        lines.append("\t".join([exon["contig"], "gff_export", "sequence_alteration", str(pos + 1), str(pos + 1),
-                                 ".", exon["strand"], ".",
-                                 gff_attrs({"ID": f"sa-{gene}{suffix}-{i}", "Parent": cid,
-                                            "edited_from": "C", "edited_to": "T",
-                                            "resulting_aa": e.get("resulting_aa", "")})]))
+        lines.append(
+            "\t".join(
+                [
+                    exon["contig"],
+                    "gff_export",
+                    "sequence_alteration",
+                    str(pos + 1),
+                    str(pos + 1),
+                    ".",
+                    exon["strand"],
+                    ".",
+                    gff_attrs(
+                        {
+                            "ID": f"sa-{gene}{suffix}-{i}",
+                            "Parent": cid,
+                            "edited_from": "C",
+                            "edited_to": "T",
+                            "resulting_aa": e.get("resulting_aa", ""),
+                        }
+                    ),
+                ]
+            )
+        )
 
 
 def overlaps(a_contig, a_start, a_end, b_contig, b_start, b_end) -> bool:
     return a_contig == b_contig and a_start < b_end and b_start < a_end
 
 
-def build_species_gff(hits: pd.DataFrame, organelle: str, editing_calls: pd.DataFrame,
-                       editing_edits: pd.DataFrame, ts_genes: pd.DataFrame, ts_exons: pd.DataFrame,
-                       ts_edits: pd.DataFrame, stats: Counter, expected: dict) -> list[str]:
+def build_species_gff(
+    hits: pd.DataFrame,
+    organelle: str,
+    editing_calls: pd.DataFrame,
+    editing_edits: pd.DataFrame,
+    ts_genes: pd.DataFrame,
+    ts_exons: pd.DataFrame,
+    ts_edits: pd.DataFrame,
+    stats: Counter,
+    expected: dict,
+) -> list[str]:
     """Every table must already be restricted to one species AND one
     organelle - genes like atpA/rpl16/rps3 exist in both genomes, and
     matching on species+gene alone let one organelle's editing call or
@@ -572,8 +766,14 @@ def build_species_gff(hits: pd.DataFrame, organelle: str, editing_calls: pd.Data
         loci = collapse_hits(gh)
         is_rna = gene.startswith(("trn", "rrn"))
         models = [[l] for l in loci] if gene.startswith("rrn") else chain_exons(loci, organelle)
-        copies = [{"loci": m, "score": sum(l.score for l in m),
-                   "coverage": model_coverage(m, expected.get((organelle, gene)))} for m in models]
+        copies = [
+            {
+                "loci": m,
+                "score": sum(l.score for l in m),
+                "coverage": model_coverage(m, expected.get((organelle, gene))),
+            }
+            for m in models
+        ]
         for c in copies:
             c["partial"] = c["coverage"] is not None and c["coverage"] < PARTIAL_COVERAGE
         if gene.startswith("trn"):
@@ -591,19 +791,37 @@ def build_species_gff(hits: pd.DataFrame, organelle: str, editing_calls: pd.Data
             if not g.empty and int(g.iloc[0].n_filled) >= 1:
                 exons = ts_exons[ts_exons.gene == gene].sort_values("slot")
                 # transsplice >= 0.2.0 reports each exon's CDS phase (split codons)
-                parts = [{"contig": e.contig, "start": int(e.start), "end": int(e.end), "strand": e.strand,
-                          "score": e.score, "exon_number": int(e.slot),
-                          "phase": int(e.phase) if "phase" in exons.columns and pd.notna(e.phase) else None}
-                         for e in exons.itertuples()]
-                claimed = [c for c in copies if any(
-                    overlaps(l.contig, l.start, l.end, p["contig"], p["start"], p["end"])
-                    for l in c["loci"] for p in parts)]
+                parts = [
+                    {
+                        "contig": e.contig,
+                        "start": int(e.start),
+                        "end": int(e.end),
+                        "strand": e.strand,
+                        "score": e.score,
+                        "exon_number": int(e.slot),
+                        "phase": int(e.phase) if "phase" in exons.columns and pd.notna(e.phase) else None,
+                    }
+                    for e in exons.itertuples()
+                ]
+                claimed = [
+                    c
+                    for c in copies
+                    if any(
+                        overlaps(l.contig, l.start, l.end, p["contig"], p["start"], p["end"])
+                        for l in c["loci"]
+                        for p in parts
+                    )
+                ]
                 raw_loci = [l for c in copies for l in c["loci"]]
                 inconsistent = gene in CIS_SPLICED_MITO and not all(
-                    any(overlaps(l.contig, l.start, l.end, p["contig"], p["start"], p["end"])
-                        and p["start"] >= l.start - CIS_MAX_EXTENSION and p["end"] <= l.end + CIS_MAX_EXTENSION
-                        for l in raw_loci)
-                    for p in parts)
+                    any(
+                        overlaps(l.contig, l.start, l.end, p["contig"], p["start"], p["end"])
+                        and p["start"] >= l.start - CIS_MAX_EXTENSION
+                        and p["end"] <= l.end + CIS_MAX_EXTENSION
+                        for l in raw_loci
+                    )
+                    for p in parts
+                )
                 if inconsistent:
                     stats["cis_reconstruction_rejected_inconsistent_with_hits"] += 1
                     parts = None
@@ -615,25 +833,55 @@ def build_species_gff(hits: pd.DataFrame, organelle: str, editing_calls: pd.Data
                 else:
                     copies = [c for c in copies if c not in claimed]
             if not g.empty and int(g.iloc[0].n_filled) >= 1 and parts is not None:
-                corrected.append({"tier": "reconstructed", "parts": parts,
-                                  "edits": ts_edits[ts_edits.gene == gene].to_dict("records"),
-                                  "score": float(g.iloc[0].whole_gene_score),
-                                  "n_edits": int(g.iloc[0].whole_gene_n_edits), "coverage": None, "partial": False})
+                corrected.append(
+                    {
+                        "tier": "reconstructed",
+                        "parts": parts,
+                        "edits": ts_edits[ts_edits.gene == gene].to_dict("records"),
+                        "score": float(g.iloc[0].whole_gene_score),
+                        "n_edits": int(g.iloc[0].whole_gene_n_edits),
+                        "coverage": None,
+                        "partial": False,
+                    }
+                )
         e = editing_calls[editing_calls.gene == gene]
         if not corrected and not e.empty:
             erow = e.iloc[0]
             # editing corrected the single best-scoring hit; find the copy holding it
-            target = next((c for c in copies if any(
-                l.contig == h.contig_id and l.start <= h.start and h.end <= l.end
-                for l in c["loci"] for h in [gh.loc[gh.score.idxmax()]])), None)
+            target = next(
+                (
+                    c
+                    for c in copies
+                    if any(
+                        l.contig == h.contig_id and l.start <= h.start and h.end <= l.end
+                        for l in c["loci"]
+                        for h in [gh.loc[gh.score.idxmax()]]
+                    )
+                ),
+                None,
+            )
             if target is not None and len(target["loci"]) == 1:
                 l = target["loci"][0]
-                corrected.append({"tier": "edited", "score": float(erow.score), "n_edits": int(erow.n_edits),
-                                  "parts": [{"contig": l.contig, "start": int(erow.corrected_start),
-                                             "end": int(erow.corrected_end), "strand": l.strand,
-                                             "score": erow.score, "exon_number": 1}],
-                                  "edits": editing_edits[editing_edits.gene == gene].to_dict("records"),
-                                  "coverage": target["coverage"], "partial": target["partial"]})
+                corrected.append(
+                    {
+                        "tier": "edited",
+                        "score": float(erow.score),
+                        "n_edits": int(erow.n_edits),
+                        "parts": [
+                            {
+                                "contig": l.contig,
+                                "start": int(erow.corrected_start),
+                                "end": int(erow.corrected_end),
+                                "strand": l.strand,
+                                "score": erow.score,
+                                "exon_number": 1,
+                            }
+                        ],
+                        "edits": editing_edits[editing_edits.gene == gene].to_dict("records"),
+                        "coverage": target["coverage"],
+                        "partial": target["partial"],
+                    }
+                )
                 copies.remove(target)
             elif target is not None:
                 # an ORF search over one exon of a cis-spliced gene can't
@@ -651,20 +899,39 @@ def build_species_gff(hits: pd.DataFrame, organelle: str, editing_calls: pd.Data
                 emit_rna_gene(lines, gene, suffix, c["loci"], "tRNA" if gene.startswith("trn") else "rRNA", c)
                 continue
             if "tier" in c:
-                emit_protein_coding_gene(lines, gene, suffix, c["tier"], c["parts"], c["edits"], c["score"],
-                                          c["n_edits"], c, phase_from_lengths=False)
+                emit_protein_coding_gene(
+                    lines,
+                    gene,
+                    suffix,
+                    c["tier"],
+                    c["parts"],
+                    c["edits"],
+                    c["score"],
+                    c["n_edits"],
+                    c,
+                    phase_from_lengths=False,
+                )
                 stats[c["tier"]] += 1
                 continue
-            parts = [{"contig": l.contig, "start": l.start, "end": l.end, "strand": l.strand, "score": l.score,
-                      "exon_number": k} for k, l in enumerate(c["loci"], start=1)]
-            emit_protein_coding_gene(lines, gene, suffix, "raw", parts, [], c["score"], 0, c,
-                                      phase_from_lengths=True)
+            parts = [
+                {
+                    "contig": l.contig,
+                    "start": l.start,
+                    "end": l.end,
+                    "strand": l.strand,
+                    "score": l.score,
+                    "exon_number": k,
+                }
+                for k, l in enumerate(c["loci"], start=1)
+            ]
+            emit_protein_coding_gene(lines, gene, suffix, "raw", parts, [], c["score"], 0, c, phase_from_lengths=True)
             stats["raw"] += 1
             stats["multi_exon_raw"] += len(parts) > 1
 
     def sort_key(line: str):
         f = line.split("\t")
         return (f[0], int(f[3]))
+
     lines.sort(key=sort_key)
     return lines
 
@@ -673,23 +940,35 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--organelle", default="both", choices=["mito", "pltd", "both"])
     ap.add_argument("--species-list", default=None)
-    ap.add_argument("--gene-calls", default=None, help="raw gene_calls.tsv to use for tier-3 fallback + "
-                     "tRNA/rRNA + contig/strand lookups (default: denovo_annotation/results/gene_calls.tsv)")
+    ap.add_argument(
+        "--gene-calls",
+        default=None,
+        help="raw gene_calls.tsv to use for tier-3 fallback + "
+        "tRNA/rRNA + contig/strand lookups (default: denovo_annotation/results/gene_calls.tsv)",
+    )
     args = ap.parse_args()
 
     species_filter = sd.load_species_list(Path(args.species_list)) if args.species_list else None
 
-    raw_path = Path(args.gene_calls) if args.gene_calls else ANALYSIS_DIR / "denovo_annotation" / "results" / "gene_calls.tsv"
+    raw_path = (
+        Path(args.gene_calls) if args.gene_calls else ANALYSIS_DIR / "denovo_annotation" / "results" / "gene_calls.tsv"
+    )
     if not raw_path.exists():
-        print(f"[err] missing {raw_path} - run denovo_annotation/src/04_build_gene_calls.py first "
-              f"(or pass --gene-calls)", file=sys.stderr)
+        print(
+            f"[err] missing {raw_path} - run denovo_annotation/src/04_build_gene_calls.py first "
+            f"(or pass --gene-calls)",
+            file=sys.stderr,
+        )
         sys.exit(1)
     raw = pd.read_csv(raw_path, sep="\t")
     if "source" not in raw.columns:
         # a gene_calls.tsv from before the model columns existed: loci still
         # collapse, but nothing chains into cis-spliced genes without them
-        print(f"[warn] {raw_path} has no source/hmm_from/hmm_to/model_len columns - "
-              f"re-run denovo_annotation/src/04_build_gene_calls.py", file=sys.stderr)
+        print(
+            f"[warn] {raw_path} has no source/hmm_from/hmm_to/model_len columns - "
+            f"re-run denovo_annotation/src/04_build_gene_calls.py",
+            file=sys.stderr,
+        )
         raw = raw.assign(source="oatkDB", hmm_from=np.nan, hmm_to=np.nan, model_len=np.nan)
     if species_filter is not None:
         raw = raw[raw.species.isin(species_filter)]
@@ -704,16 +983,26 @@ def main():
         df = pd.read_csv(path, sep="\t")
         return df[df.species.isin(species_filter)] if species_filter is not None and not df.empty else df
 
-    editing_calls = load(ANALYSIS_DIR / "editing" / "results" / "edited_gene_calls.tsv",
-                          ["species", "organelle", "gene", "corrected_start", "corrected_end", "score", "n_edits"])
-    editing_edits = load(ANALYSIS_DIR / "editing" / "results" / "predicted_edits.tsv",
-                          ["species", "organelle", "gene", "genomic_pos", "resulting_aa"])
-    ts_genes = load(ANALYSIS_DIR / "trans_splicing" / "results" / "reconstructed_genes.tsv",
-                     ["species", "organelle", "gene", "n_filled", "whole_gene_score", "whole_gene_n_edits"])
-    ts_exons = load(ANALYSIS_DIR / "trans_splicing" / "results" / "reconstructed_exons.tsv",
-                     ["species", "organelle", "gene", "slot", "contig", "start", "end", "strand", "score"])
-    ts_edits = load(ANALYSIS_DIR / "trans_splicing" / "results" / "reconstructed_edits.tsv",
-                     ["species", "organelle", "gene", "slot", "genomic_pos", "resulting_aa"])
+    editing_calls = load(
+        ANALYSIS_DIR / "editing" / "results" / "edited_gene_calls.tsv",
+        ["species", "organelle", "gene", "corrected_start", "corrected_end", "score", "n_edits"],
+    )
+    editing_edits = load(
+        ANALYSIS_DIR / "editing" / "results" / "predicted_edits.tsv",
+        ["species", "organelle", "gene", "genomic_pos", "resulting_aa"],
+    )
+    ts_genes = load(
+        ANALYSIS_DIR / "trans_splicing" / "results" / "reconstructed_genes.tsv",
+        ["species", "organelle", "gene", "n_filled", "whole_gene_score", "whole_gene_n_edits"],
+    )
+    ts_exons = load(
+        ANALYSIS_DIR / "trans_splicing" / "results" / "reconstructed_exons.tsv",
+        ["species", "organelle", "gene", "slot", "contig", "start", "end", "strand", "score"],
+    )
+    ts_edits = load(
+        ANALYSIS_DIR / "trans_splicing" / "results" / "reconstructed_edits.tsv",
+        ["species", "organelle", "gene", "slot", "genomic_pos", "resulting_aa"],
+    )
 
     organelles = ["mito", "pltd"] if args.organelle == "both" else [args.organelle]
     out_dir = ANALYSIS_DIR / "gff_export" / "results"
@@ -725,8 +1014,11 @@ def main():
     split = [{k: g for k, g in t.groupby(["species", "organelle"])} if not t.empty else {} for t in tables]
     raw_split = {k: g for k, g in raw.groupby(["species", "organelle"])}
     # from the full table, so a --species-list run gets the same coverages
-    expected = expected_model_spans(pd.read_csv(raw_path, sep="\t") if species_filter is not None else raw) \
-        if "hmm_from" in raw.columns and raw.hmm_from.notna().any() else {}
+    expected = (
+        expected_model_spans(pd.read_csv(raw_path, sep="\t") if species_filter is not None else raw)
+        if "hmm_from" in raw.columns and raw.hmm_from.notna().any()
+        else {}
+    )
     stats: Counter = Counter()
 
     n_written = n_unitig = n_no_fasta = n_noted = 0
@@ -734,14 +1026,22 @@ def main():
     linearisation_notes = load_linearisation_notes()
     for organelle in organelles:
         species_here = sorted(raw[raw.organelle == organelle].species.unique())
-        ctg_fastas = {r.species: r.ctg_fasta for r in
-                      sd.discover_all(sd.repo_data_root(ROOT_DIR, organelle), organelle,
-                                      species_filter=set(species_here))
-                      if r.status == "ok"}
+        ctg_fastas = {
+            r.species: r.ctg_fasta
+            for r in sd.discover_all(
+                sd.repo_data_root(ROOT_DIR, organelle), organelle, species_filter=set(species_here)
+            )
+            if r.status == "ok"
+        }
         for species in species_here:
             key = (species, organelle)
-            lines = build_species_gff(raw_split[key], organelle, *[s.get(key, e) for s, e in zip(split, empty)],
-                                      stats=stats, expected=expected)
+            lines = build_species_gff(
+                raw_split[key],
+                organelle,
+                *[s.get(key, e) for s, e in zip(split, empty)],
+                stats=stats,
+                expected=expected,
+            )
             if not lines:
                 continue
             out_path = out_dir / f"{species}.{organelle}.gff"
@@ -775,10 +1075,12 @@ def main():
                 f.unlink()
                 n_stale += 1
     print(f"[info] build_gff: removed {n_stale} stale GFFs from earlier runs", file=sys.stderr)
-    print(f"[info] build_gff: {n_written} species -> {out_dir} ({n_unitig} with unitig-level GFF -> "
-          f"{unitig_out_dir}; {n_no_fasta} without a resolvable ctg.fasta, no region/unitig layer; "
-          f"{n_noted} marked linearisation=uncertain)",
-          file=sys.stderr)
+    print(
+        f"[info] build_gff: {n_written} species -> {out_dir} ({n_unitig} with unitig-level GFF -> "
+        f"{unitig_out_dir}; {n_no_fasta} without a resolvable ctg.fasta, no region/unitig layer; "
+        f"{n_noted} marked linearisation=uncertain)",
+        file=sys.stderr,
+    )
     print("[info] build_gff: " + " ".join(f"{k}={v}" for k, v in sorted(stats.items())), file=sys.stderr)
 
 

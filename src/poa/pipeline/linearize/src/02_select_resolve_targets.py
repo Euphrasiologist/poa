@@ -18,6 +18,7 @@ of read recruitment + GraphAligner + gfatk resolve is justified.
 Reads qc_summary.tsv (status_reasons contains "no_resolved_ctg_fasta") and
 writes analysis/linearize/work/resolve_targets.tsv: species, organelle, gfa.
 """
+
 from __future__ import annotations
 
 import os
@@ -40,8 +41,11 @@ import species_discovery as sd  # noqa: E402
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--qc-reason", default="no_resolved_ctg_fasta",
-                     help="only species x organelle whose status_reasons contains this substring (default: no_resolved_ctg_fasta)")
+    ap.add_argument(
+        "--qc-reason",
+        default="no_resolved_ctg_fasta",
+        help="only species x organelle whose status_reasons contains this substring (default: no_resolved_ctg_fasta)",
+    )
     ap.add_argument("--species-list", default=None)
     ap.add_argument("--out", default=str(ANALYSIS_DIR / "linearize" / "work" / "resolve_targets.tsv"))
     args = ap.parse_args()
@@ -63,16 +67,19 @@ def main():
         sf = sd.resolve_species(data_root / species, organelle)
         if sf.gfa is None:
             n_no_gfa += 1
-            print(f"[warn] {species} ({organelle}): matched '{args.qc_reason}' but has no GFA - skipped",
-                  file=sys.stderr)
+            print(
+                f"[warn] {species} ({organelle}): matched '{args.qc_reason}' but has no GFA - skipped", file=sys.stderr
+            )
             continue
         rows.append({"species": species, "organelle": organelle, "gfa": sf.gfa})
 
     out_path = Path(args.out)
     out_path.parent.mkdir(parents=True, exist_ok=True)
     pd.DataFrame(rows, columns=["species", "organelle", "gfa"]).to_csv(out_path, sep="\t", index=False)
-    print(f"[info] select_resolve_targets: matched={len(hits)} usable={len(rows)} no_gfa={n_no_gfa} "
-          f"-> {out_path}", file=sys.stderr)
+    print(
+        f"[info] select_resolve_targets: matched={len(hits)} usable={len(rows)} no_gfa={n_no_gfa} " f"-> {out_path}",
+        file=sys.stderr,
+    )
 
 
 if __name__ == "__main__":

@@ -22,6 +22,7 @@ one.
 
 Output: editing/reference/lineages/<lineage>/mito/<gene>.pssm (bundled)
 """
+
 from __future__ import annotations
 
 import argparse
@@ -43,8 +44,9 @@ from reference_genes import GENE_SYNONYMS, LINEAGE_MITOGENOMES  # noqa: E402
 
 # the profile maths is 00_build_reference_profiles.py's, so the two kinds of
 # profile are built identically
-_spec = importlib.util.spec_from_file_location("build_reference_profiles",
-                                               Path(__file__).with_name("00_build_reference_profiles.py"))
+_spec = importlib.util.spec_from_file_location(
+    "build_reference_profiles", Path(__file__).with_name("00_build_reference_profiles.py")
+)
 brp = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(brp)
 
@@ -88,8 +90,11 @@ def main() -> None:
         modal = n_exons[gene].most_common(1)[0][0] if n_exons[gene] else None
         stale = out_dir / f"{gene}.pssm"
         if modal != 1 or len(proteins[gene]) < brp.MIN_SEQUENCES:
-            print(f"[info] {gene}: no {args.lineage} profile (exon counts {dict(n_exons[gene])}, "
-                  f"{len(proteins[gene])} single-exon verified loci)", file=sys.stderr)
+            print(
+                f"[info] {gene}: no {args.lineage} profile (exon counts {dict(n_exons[gene])}, "
+                f"{len(proteins[gene])} single-exon verified loci)",
+                file=sys.stderr,
+            )
             stale.unlink(missing_ok=True)
             continue
         protein_fasta = work_dir / f"{gene}.protein.fasta"
@@ -99,8 +104,11 @@ def main() -> None:
             sys.exit(f"[err] mafft failed on {protein_fasta}")
         columns = brp.build_profile(brp.read_fasta(aligned))
         brp.write_profile(columns, out_dir / f"{gene}.pssm")
-        print(f"[info] {gene}: {args.lineage} profile from {len(proteins[gene])} RefSeq proteins, "
-              f"{len(columns)} columns -> {out_dir / gene}.pssm", file=sys.stderr)
+        print(
+            f"[info] {gene}: {args.lineage} profile from {len(proteins[gene])} RefSeq proteins, "
+            f"{len(columns)} columns -> {out_dir / gene}.pssm",
+            file=sys.stderr,
+        )
 
 
 if __name__ == "__main__":

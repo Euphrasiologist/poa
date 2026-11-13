@@ -27,6 +27,7 @@ and conflating them would hide which one actually explains a low value).
 
 Output: results/linearization_qc.tsv - one row per species x organelle.
 """
+
 from __future__ import annotations
 
 import os
@@ -80,8 +81,7 @@ def merge_intervals(intervals: list[tuple[int, int]]) -> list[tuple[int, int]]:
     return merged
 
 
-def evaluate_one(species: str, organelle: str, ctg_fasta: str, map_path: Path,
-                 unitig_fasta: Path) -> dict | None:
+def evaluate_one(species: str, organelle: str, ctg_fasta: str, map_path: Path, unitig_fasta: Path) -> dict | None:
     if not map_path.exists() or not unitig_fasta.exists():
         return None
     ctg_lengths = fasta_lengths(Path(ctg_fasta))
@@ -155,8 +155,9 @@ def main():
             if r.status != "ok":
                 continue
             map_path = map_dir / f"{r.species}.{organelle}.tsv"
-            result = evaluate_one(r.species, organelle, r.ctg_fasta, map_path,
-                                  fasta_dir / f"{r.species}.{organelle}.unitig.fasta")
+            result = evaluate_one(
+                r.species, organelle, r.ctg_fasta, map_path, fasta_dir / f"{r.species}.{organelle}.unitig.fasta"
+            )
             if result is None:
                 continue
             qc = qc_summary.get((r.species, organelle), {})
@@ -167,9 +168,22 @@ def main():
             rows.append(result)
 
     out_path = ANALYSIS_DIR / "unitig_coords" / "results" / "linearization_qc.tsv"
-    cols = ["species", "organelle", "map_source", "ctg_length_bp", "n_unitigs", "total_unitig_bp",
-            "pct_unitig_content_placed", "n_orphan_unitigs", "n_multicopy_unitigs",
-            "pct_ctg_explained_by_unitigs", "qc_status", "any_circular", "core_gene_pct", "n_contigs"]
+    cols = [
+        "species",
+        "organelle",
+        "map_source",
+        "ctg_length_bp",
+        "n_unitigs",
+        "total_unitig_bp",
+        "pct_unitig_content_placed",
+        "n_orphan_unitigs",
+        "n_multicopy_unitigs",
+        "pct_ctg_explained_by_unitigs",
+        "qc_status",
+        "any_circular",
+        "core_gene_pct",
+        "n_contigs",
+    ]
     with open(out_path, "w") as fh:
         fh.write("\t".join(cols) + "\n")
         for row in rows:

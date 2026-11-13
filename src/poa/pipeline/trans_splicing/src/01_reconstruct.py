@@ -21,6 +21,7 @@ Output: analysis/trans_splicing/results/reconstructed_genes.tsv
         analysis/trans_splicing/results/reconstructed_exons.tsv
         analysis/trans_splicing/results/reconstructed_junctions.tsv
 """
+
 from __future__ import annotations
 
 import os
@@ -49,8 +50,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from reference_genes import GENES  # noqa: E402  (shared with 00a/01/gff_export)
 
 
-def build_manifest(gene_calls: pd.DataFrame, species_filter: set | None,
-                   lineage_of: dict[str, str], default_lineage: str) -> list[dict]:
+def build_manifest(
+    gene_calls: pd.DataFrame, species_filter: set | None, lineage_of: dict[str, str], default_lineage: str
+) -> list[dict]:
     rows = []
     templates = {}
     for name in lin.LINEAGES:
@@ -75,12 +77,19 @@ def build_manifest(gene_calls: pd.DataFrame, species_filter: set | None,
         fasta_path = fasta_cache[row.species]
         if fasta_path is None:
             continue
-        rows.append({
-            "species": row.species, "organelle": "mito", "gene": row.gene,
-            "fasta": fasta_path, "template_dir": str(template),
-            "contig": row.contig_id, "start": int(row.start), "end": int(row.end),
-            "strand": row.strand,
-        })
+        rows.append(
+            {
+                "species": row.species,
+                "organelle": "mito",
+                "gene": row.gene,
+                "fasta": fasta_path,
+                "template_dir": str(template),
+                "contig": row.contig_id,
+                "start": int(row.start),
+                "end": int(row.end),
+                "strand": row.strand,
+            }
+        )
     return rows
 
 
@@ -100,34 +109,56 @@ def main():
     ap.add_argument("--merge-distance", type=int, default=5000)
     ap.add_argument("--junction-distance-threshold", type=int, default=10000)
     ap.add_argument("--exon-flank", type=int, default=60)
-    ap.add_argument("--gene-calls", default=None, help="path to a gene_calls.tsv-shaped table to anchor "
-                     "on (default: annotation/results/gene_calls.tsv, oatk's own calls) - e.g. point this "
-                     "at denovo_annotation/results/gene_calls.tsv to compare/use the oatk-independent "
-                     "nhmmscan-based calls instead")
-    ap.add_argument("--lineage", default="auto", choices=lin.CHOICES,
-                    help="exon-template lineage: auto (default) takes each species' from editing's lineage.tsv; "
-                         "or force one for all")
-    ap.add_argument("--force", action="store_true", help="accepted for CLI consistency; transsplice "
-                     "always does a full recompute over the manifest (no incremental skip yet)")
+    ap.add_argument(
+        "--gene-calls",
+        default=None,
+        help="path to a gene_calls.tsv-shaped table to anchor "
+        "on (default: annotation/results/gene_calls.tsv, oatk's own calls) - e.g. point this "
+        "at denovo_annotation/results/gene_calls.tsv to compare/use the oatk-independent "
+        "nhmmscan-based calls instead",
+    )
+    ap.add_argument(
+        "--lineage",
+        default="auto",
+        choices=lin.CHOICES,
+        help="exon-template lineage: auto (default) takes each species' from editing's lineage.tsv; "
+        "or force one for all",
+    )
+    ap.add_argument(
+        "--force",
+        action="store_true",
+        help="accepted for CLI consistency; transsplice "
+        "always does a full recompute over the manifest (no incremental skip yet)",
+    )
     args = ap.parse_args()
 
     if not Path(TRANSSPLICE).exists():
-        print(f"[err] transsplice binary not found at {TRANSSPLICE} (`cargo install --path .` in its repo)",
-              file=sys.stderr)
+        print(
+            f"[err] transsplice binary not found at {TRANSSPLICE} (`cargo install --path .` in its repo)",
+            file=sys.stderr,
+        )
         sys.exit(1)
 
-    gene_calls_path = Path(args.gene_calls) if args.gene_calls else ANALYSIS_DIR / "denovo_annotation" / "results" / "gene_calls.tsv"
+    gene_calls_path = (
+        Path(args.gene_calls) if args.gene_calls else ANALYSIS_DIR / "denovo_annotation" / "results" / "gene_calls.tsv"
+    )
     if not gene_calls_path.exists():
-        print(f"[err] missing {gene_calls_path} - run denovo_annotation/src/04_build_gene_calls.py first "
-              f"(or pass --gene-calls)", file=sys.stderr)
+        print(
+            f"[err] missing {gene_calls_path} - run denovo_annotation/src/04_build_gene_calls.py first "
+            f"(or pass --gene-calls)",
+            file=sys.stderr,
+        )
         sys.exit(1)
     gene_calls = pd.read_csv(gene_calls_path, sep="\t")
 
     species_filter = sd.load_species_list(Path(args.species_list)) if args.species_list else None
     lineage_of = lin.load(ANALYSIS_DIR) if args.lineage == "auto" else {}
     if lineage_of is None:
-        print(f"[warn] no {lin.table_path(ANALYSIS_DIR)} (run editing/src/01_scan_editing.py first) - "
-              f"using {lin.DEFAULT_LINEAGE} templates for every species", file=sys.stderr)
+        print(
+            f"[warn] no {lin.table_path(ANALYSIS_DIR)} (run editing/src/01_scan_editing.py first) - "
+            f"using {lin.DEFAULT_LINEAGE} templates for every species",
+            file=sys.stderr,
+        )
         lineage_of = {}
     default_lineage = lin.DEFAULT_LINEAGE if args.lineage == "auto" else args.lineage
 
@@ -148,20 +179,34 @@ def main():
     # the shared tables down to just the scoped species. Write to work_dir
     # instead, then merge_species_scoped_tsv decides how that relates to
     # what's already in results_dir (see its docstring).
-    out_names = ["reconstructed_genes.tsv", "reconstructed_exons.tsv",
-                 "reconstructed_junctions.tsv", "reconstructed_edits.tsv"]
+    out_names = [
+        "reconstructed_genes.tsv",
+        "reconstructed_exons.tsv",
+        "reconstructed_junctions.tsv",
+        "reconstructed_edits.tsv",
+    ]
     work_outs = {name: work_dir / name.replace(".tsv", ".new.tsv") for name in out_names}
     cmd = [
-        TRANSSPLICE, "scan-batch",
-        "--manifest", str(manifest_path),
-        "--genes-out", str(work_outs["reconstructed_genes.tsv"]),
-        "--exons-out", str(work_outs["reconstructed_exons.tsv"]),
-        "--junctions-out", str(work_outs["reconstructed_junctions.tsv"]),
-        "--edits-out", str(work_outs["reconstructed_edits.tsv"]),
-        "--threads", str(args.threads),
-        "--merge-distance", str(args.merge_distance),
-        "--junction-distance-threshold", str(args.junction_distance_threshold),
-        "--exon-flank", str(args.exon_flank),
+        TRANSSPLICE,
+        "scan-batch",
+        "--manifest",
+        str(manifest_path),
+        "--genes-out",
+        str(work_outs["reconstructed_genes.tsv"]),
+        "--exons-out",
+        str(work_outs["reconstructed_exons.tsv"]),
+        "--junctions-out",
+        str(work_outs["reconstructed_junctions.tsv"]),
+        "--edits-out",
+        str(work_outs["reconstructed_edits.tsv"]),
+        "--threads",
+        str(args.threads),
+        "--merge-distance",
+        str(args.merge_distance),
+        "--junction-distance-threshold",
+        str(args.junction_distance_threshold),
+        "--exon-flank",
+        str(args.exon_flank),
     ]
     proc = subprocess.run(cmd)
     if proc.returncode != 0:
@@ -170,8 +215,10 @@ def main():
 
     for name in out_names:
         io_utils.merge_species_scoped_tsv(results_dir / name, work_outs[name], species_filter)
-    print(f"[info] reconstruct: merged into {results_dir} "
-          f"({'species-scoped' if species_filter else 'full rewrite'})", file=sys.stderr)
+    print(
+        f"[info] reconstruct: merged into {results_dir} " f"({'species-scoped' if species_filter else 'full rewrite'})",
+        file=sys.stderr,
+    )
 
 
 if __name__ == "__main__":

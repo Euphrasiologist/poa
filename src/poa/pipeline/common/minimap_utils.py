@@ -3,6 +3,7 @@ mito-vs-plastid contamination pre-screen) and synteny (the full MTPT/dotplot
 module). Keeping this in one place means both modules agree on what
 "total aligned length" means.
 """
+
 from __future__ import annotations
 
 import shutil
@@ -11,9 +12,20 @@ from pathlib import Path
 
 MINIMAP2 = shutil.which("minimap2") or "/software/team301/minimap2/minimap2"
 
-PAF_COLS = ["query_name", "query_length", "query_start", "query_end", "strand",
-            "target_name", "target_length", "target_start", "target_end",
-            "n_matches", "aln_block_length", "mapq"]
+PAF_COLS = [
+    "query_name",
+    "query_length",
+    "query_start",
+    "query_end",
+    "strand",
+    "target_name",
+    "target_length",
+    "target_start",
+    "target_end",
+    "n_matches",
+    "aln_block_length",
+    "mapq",
+]
 
 
 def run_asm5(ref_fasta: str | Path, query_fasta: str | Path, timeout: int = 120) -> list[dict]:
@@ -23,8 +35,9 @@ def run_asm5(ref_fasta: str | Path, query_fasta: str | Path, timeout: int = 120)
     target (indexed), second = query. PAF "query_*" columns describe
     query_fasta, "target_*" columns describe ref_fasta.
     """
-    proc = subprocess.run([MINIMAP2, "-x", "asm5", str(ref_fasta), str(query_fasta)],
-                           capture_output=True, text=True, timeout=timeout)
+    proc = subprocess.run(
+        [MINIMAP2, "-x", "asm5", str(ref_fasta), str(query_fasta)], capture_output=True, text=True, timeout=timeout
+    )
     if proc.returncode != 0:
         return []
     records = []
@@ -33,8 +46,17 @@ def run_asm5(ref_fasta: str | Path, query_fasta: str | Path, timeout: int = 120)
         if len(fields) < 12:
             continue
         rec = dict(zip(PAF_COLS, fields[:12]))
-        for k in ("query_length", "query_start", "query_end", "target_length",
-                  "target_start", "target_end", "n_matches", "aln_block_length", "mapq"):
+        for k in (
+            "query_length",
+            "query_start",
+            "query_end",
+            "target_length",
+            "target_start",
+            "target_end",
+            "n_matches",
+            "aln_block_length",
+            "mapq",
+        ):
             rec[k] = int(rec[k])
         records.append(rec)
     return records

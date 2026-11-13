@@ -12,6 +12,7 @@ Output: analysis/qc_basic_stats/results/gfa_stats.tsv
 Columns: species organelle subgraph_id n_subgraphs n_nodes n_edges circular
          dead_end_nodes total_length gc_content avg_coverage parse_status
 """
+
 from __future__ import annotations
 
 import os
@@ -32,11 +33,24 @@ sys.path.insert(0, str(CODE_DIR / "common"))
 import io_utils  # noqa: E402
 import species_discovery as sd  # noqa: E402
 
-COLUMNS = ["species", "organelle", "subgraph_id", "n_subgraphs", "n_nodes", "n_edges",
-           "circular", "dead_end_nodes", "total_length", "gc_content", "avg_coverage", "parse_status"]
+COLUMNS = [
+    "species",
+    "organelle",
+    "subgraph_id",
+    "n_subgraphs",
+    "n_nodes",
+    "n_edges",
+    "circular",
+    "dead_end_nodes",
+    "total_length",
+    "gc_content",
+    "avg_coverage",
+    "parse_status",
+]
 KEY_COLS = ["species", "organelle"]
 
 import shutil  # noqa: E402
+
 GFATK = shutil.which("gfatk") or str(Path.home() / ".cargo" / "bin" / "gfatk")
 
 
@@ -46,47 +60,111 @@ def parse_gfatk_stats(text: str):
     blocks = re.split(r"Subgraph \d+:", text)[1:]
     subgraphs = []
     for block in blocks:
+
         def grab(pattern):
             m = re.search(pattern, block)
             return m.group(1) if m else None
-        subgraphs.append({
-            "n_nodes": grab(r"Number of nodes/segments:\s*(\d+)"),
-            "n_edges": grab(r"Number of edges/links:\s*(\d+)"),
-            "circular": grab(r"Circular:\s*(\w+)"),
-            "dead_end_nodes": grab(r"Dead-end nodes:\s*(\d+)"),
-            "total_length": grab(r"Total sequence length:\s*(\d+)"),
-            "gc_content": grab(r"GC content of total sequence:\s*([\d.eE+-]+)"),
-            "avg_coverage": grab(r"Average coverage of total segments:\s*([\d.eE+-]+)"),
-        })
+
+        subgraphs.append(
+            {
+                "n_nodes": grab(r"Number of nodes/segments:\s*(\d+)"),
+                "n_edges": grab(r"Number of edges/links:\s*(\d+)"),
+                "circular": grab(r"Circular:\s*(\w+)"),
+                "dead_end_nodes": grab(r"Dead-end nodes:\s*(\d+)"),
+                "total_length": grab(r"Total sequence length:\s*(\d+)"),
+                "gc_content": grab(r"GC content of total sequence:\s*([\d.eE+-]+)"),
+                "avg_coverage": grab(r"Average coverage of total segments:\s*([\d.eE+-]+)"),
+            }
+        )
     return n_subgraphs, subgraphs
 
 
 def rows_for_species(species: str, organelle: str, gfa_path: str | None) -> list[dict]:
     base = {"species": species, "organelle": organelle}
     if not gfa_path:
-        return [{**base, "subgraph_id": None, "n_subgraphs": None, "n_nodes": None, "n_edges": None,
-                 "circular": None, "dead_end_nodes": None, "total_length": None, "gc_content": None,
-                 "avg_coverage": None, "parse_status": "missing_gfa"}]
+        return [
+            {
+                **base,
+                "subgraph_id": None,
+                "n_subgraphs": None,
+                "n_nodes": None,
+                "n_edges": None,
+                "circular": None,
+                "dead_end_nodes": None,
+                "total_length": None,
+                "gc_content": None,
+                "avg_coverage": None,
+                "parse_status": "missing_gfa",
+            }
+        ]
     try:
         proc = subprocess.run([GFATK, "stats", gfa_path], capture_output=True, text=True, timeout=120)
     except Exception as exc:  # noqa: BLE001
-        return [{**base, "subgraph_id": None, "n_subgraphs": None, "n_nodes": None, "n_edges": None,
-                 "circular": None, "dead_end_nodes": None, "total_length": None, "gc_content": None,
-                 "avg_coverage": None, "parse_status": f"gfatk_error:{exc}"}]
+        return [
+            {
+                **base,
+                "subgraph_id": None,
+                "n_subgraphs": None,
+                "n_nodes": None,
+                "n_edges": None,
+                "circular": None,
+                "dead_end_nodes": None,
+                "total_length": None,
+                "gc_content": None,
+                "avg_coverage": None,
+                "parse_status": f"gfatk_error:{exc}",
+            }
+        ]
     if proc.returncode != 0:
-        return [{**base, "subgraph_id": None, "n_subgraphs": None, "n_nodes": None, "n_edges": None,
-                 "circular": None, "dead_end_nodes": None, "total_length": None, "gc_content": None,
-                 "avg_coverage": None, "parse_status": "gfatk_error"}]
+        return [
+            {
+                **base,
+                "subgraph_id": None,
+                "n_subgraphs": None,
+                "n_nodes": None,
+                "n_edges": None,
+                "circular": None,
+                "dead_end_nodes": None,
+                "total_length": None,
+                "gc_content": None,
+                "avg_coverage": None,
+                "parse_status": "gfatk_error",
+            }
+        ]
 
     n_subgraphs, subgraphs = parse_gfatk_stats(proc.stdout)
     if n_subgraphs is None:
-        return [{**base, "subgraph_id": None, "n_subgraphs": None, "n_nodes": None, "n_edges": None,
-                 "circular": None, "dead_end_nodes": None, "total_length": None, "gc_content": None,
-                 "avg_coverage": None, "parse_status": "gfatk_error"}]
+        return [
+            {
+                **base,
+                "subgraph_id": None,
+                "n_subgraphs": None,
+                "n_nodes": None,
+                "n_edges": None,
+                "circular": None,
+                "dead_end_nodes": None,
+                "total_length": None,
+                "gc_content": None,
+                "avg_coverage": None,
+                "parse_status": "gfatk_error",
+            }
+        ]
     if n_subgraphs == 0:
-        return [{**base, "subgraph_id": None, "n_subgraphs": 0, "n_nodes": None, "n_edges": None,
-                 "circular": None, "dead_end_nodes": None, "total_length": None, "gc_content": None,
-                 "avg_coverage": None, "parse_status": "empty"}]
+        return [
+            {
+                **base,
+                "subgraph_id": None,
+                "n_subgraphs": 0,
+                "n_nodes": None,
+                "n_edges": None,
+                "circular": None,
+                "dead_end_nodes": None,
+                "total_length": None,
+                "gc_content": None,
+                "avg_coverage": None,
+                "parse_status": "empty",
+            }
+        ]
 
     rows = []
     for i, sg in enumerate(subgraphs, start=1):
@@ -111,8 +189,9 @@ def main():
     n_computed = n_skipped = 0
     for organelle in organelles:
         data_root = sd.repo_data_root(ROOT_DIR, organelle)
-        resolved = sd.discover_all(data_root, organelle, species_filter=species_filter,
-                                    logger=lambda m: print(f"[warn] {m}", file=sys.stderr))
+        resolved = sd.discover_all(
+            data_root, organelle, species_filter=species_filter, logger=lambda m: print(f"[warn] {m}", file=sys.stderr)
+        )
         for r in resolved:
             key = (r.species, organelle)
             input_path = Path(r.gfa) if r.gfa else data_root / r.species
@@ -124,8 +203,10 @@ def main():
 
     merged = io_utils.merge_rows(existing_df, new_rows, KEY_COLS, COLUMNS)
     io_utils.atomic_write_tsv(out_path, merged.to_dict("records"), COLUMNS)
-    print(f"[info] gfa_stats: computed={n_computed} skipped={n_skipped} total_rows={len(merged)} -> {out_path}",
-          file=sys.stderr)
+    print(
+        f"[info] gfa_stats: computed={n_computed} skipped={n_skipped} total_rows={len(merged)} -> {out_path}",
+        file=sys.stderr,
+    )
 
 
 if __name__ == "__main__":

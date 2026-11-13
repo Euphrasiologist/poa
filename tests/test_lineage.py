@@ -3,6 +3,7 @@ editing/01_scan_editing.py splits its orfedit runs by it.
 
     python3 -m unittest tests.test_lineage
 """
+
 from __future__ import annotations
 
 import importlib.util
@@ -44,9 +45,11 @@ class Choose(unittest.TestCase):
         self.assertEqual(lin.choose(scores(500, 500 + lin.MIN_MARGIN))[0], "moss")
 
     def test_too_few_shared_genes(self):
-        few = GENES[:lin.MIN_SHARED_GENES - 1]
-        self.assertEqual(lin.choose(scores(100, 900, few)),
-                         ("angiosperm", len(few), {"angiosperm": 100 * len(few), "moss": 900 * len(few)}))
+        few = GENES[: lin.MIN_SHARED_GENES - 1]
+        self.assertEqual(
+            lin.choose(scores(100, 900, few)),
+            ("angiosperm", len(few), {"angiosperm": 100 * len(few), "moss": 900 * len(few)}),
+        )
 
     def test_only_shared_genes_count(self):
         s = scores(300, 600)
@@ -61,9 +64,12 @@ class SplitRuns(unittest.TestCase):
     def setUp(self):
         def calls(rows):
             return pd.DataFrame(rows, columns=["species", "organelle", "gene", "score"]).astype(str)
-        self.angio = calls([("Moss", "mito", g, 300) for g in GENES + ["nad5"]]
-                           + [("Moss", "pltd", "psbA", 900)]
-                           + [("Rose", "mito", g, 600) for g in GENES + ["nad5"]])
+
+        self.angio = calls(
+            [("Moss", "mito", g, 300) for g in GENES + ["nad5"]]
+            + [("Moss", "pltd", "psbA", 900)]
+            + [("Rose", "mito", g, 600) for g in GENES + ["nad5"]]
+        )
         self.moss = calls([("Moss", "mito", g, 600) for g in GENES] + [("Rose", "mito", g, 200) for g in GENES])
 
     def test_assign_and_keep(self):
@@ -105,7 +111,9 @@ class References(unittest.TestCase):
         self.assertFalse((ts / "rps10").exists())  # lost from moss mitogenomes
         ed = lin.editing_profiles(PIPELINE, "moss") / "mito"
         self.assertEqual(sorted(p.stem for p in ed.glob("*.pssm")), sorted(GENES))
-        self.assertEqual(lin.trans_splicing_reference(PIPELINE, "angiosperm"), PIPELINE / "trans_splicing" / "reference")
+        self.assertEqual(
+            lin.trans_splicing_reference(PIPELINE, "angiosperm"), PIPELINE / "trans_splicing" / "reference"
+        )
 
 
 if __name__ == "__main__":

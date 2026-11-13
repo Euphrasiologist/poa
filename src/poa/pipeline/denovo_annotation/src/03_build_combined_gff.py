@@ -17,6 +17,7 @@ signal, and dropping rows would hide disagreement rather than surface it.
 
 Output: analysis/denovo_annotation/results/gff/<species>.<organelle>.gff
 """
+
 from __future__ import annotations
 
 import os

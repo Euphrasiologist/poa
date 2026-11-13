@@ -21,6 +21,7 @@ The filtered tblout keeps the input's lines verbatim (filter_tblout
 re-rendered them; 04_build_gene_calls.py reads it whitespace-split, so the
 columns are what matter).
 """
+
 from __future__ import annotations
 
 from pathlib import Path
@@ -83,8 +84,25 @@ def filter_and_convert(tblout: Path, fam: Path, evalue: str) -> tuple[str, str]:
         ratio = np.float32(end - start) / np.float32(lengths[target])
         coverage = f"partial:{float(ratio * np.float32(100.0)):.2f}" if ratio < COVERAGE else "full"
         attrs = f"target_name={target};ID={seqid}_{n};coverage={coverage};e_value={rust_exp2(e)}"
-        gff_rows.append((seqid, start, "\t".join([
-            seqid, "oatkDB", feature, str(start), str(end), rust_f32(np.float32(f[SCORE])), f[STRAND][0], ".", attrs])))
+        gff_rows.append(
+            (
+                seqid,
+                start,
+                "\t".join(
+                    [
+                        seqid,
+                        "oatkDB",
+                        feature,
+                        str(start),
+                        str(end),
+                        rust_f32(np.float32(f[SCORE])),
+                        f[STRAND][0],
+                        ".",
+                        attrs,
+                    ]
+                ),
+            )
+        )
     gff_rows.sort(key=lambda r: (r[0], r[1]))  # stable, like Rust's sort_by
     gff = "##gff-version 3\n" + "".join(row + "\n" for _, _, row in gff_rows)
     return "".join(kept_lines), gff

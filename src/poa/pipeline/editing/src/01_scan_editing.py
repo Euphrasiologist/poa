@@ -23,6 +23,7 @@ Output: analysis/editing/results/edited_gene_calls.tsv
         analysis/editing/results/predicted_edits.tsv
         analysis/editing/results/lineage.tsv
 """
+
 from __future__ import annotations
 
 import os
@@ -57,15 +58,19 @@ def best_hits_per_species(gene_calls: pd.DataFrame, organelle: str, genes: list[
     return sub.loc[idx]
 
 
-def build_manifest(gene_calls: pd.DataFrame, organelles: list[str], species_filter: set | None,
-                    profiles_dir: Path) -> list[dict]:
+def build_manifest(
+    gene_calls: pd.DataFrame, organelles: list[str], species_filter: set | None, profiles_dir: Path
+) -> list[dict]:
     rows = []
     for organelle in organelles:
         organelle_profiles_dir = profiles_dir / organelle
         genes = sorted(p.stem for p in organelle_profiles_dir.glob("*.pssm"))
         if not genes:
-            print(f"[warn] {organelle}: no profiles in {organelle_profiles_dir} - run "
-                  f"00_build_reference_profiles.py first", file=sys.stderr)
+            print(
+                f"[warn] {organelle}: no profiles in {organelle_profiles_dir} - run "
+                f"00_build_reference_profiles.py first",
+                file=sys.stderr,
+            )
             continue
         hits = best_hits_per_species(gene_calls, organelle, genes)
         if hits.empty:
@@ -82,12 +87,19 @@ def build_manifest(gene_calls: pd.DataFrame, organelles: list[str], species_filt
             fasta_path = fasta_cache[row.species]
             if fasta_path is None:
                 continue
-            rows.append({
-                "species": row.species, "organelle": organelle, "gene": row.gene,
-                "fasta": fasta_path, "profile": str(organelle_profiles_dir / f"{row.gene}.pssm"),
-                "contig": row.contig_id, "start": int(row.start), "end": int(row.end),
-                "strand": row.strand,
-            })
+            rows.append(
+                {
+                    "species": row.species,
+                    "organelle": organelle,
+                    "gene": row.gene,
+                    "fasta": fasta_path,
+                    "profile": str(organelle_profiles_dir / f"{row.gene}.pssm"),
+                    "contig": row.contig_id,
+                    "start": int(row.start),
+                    "end": int(row.end),
+                    "strand": row.strand,
+                }
+            )
     return rows
 
 
@@ -107,13 +119,20 @@ def run_orfedit(rows: list[dict], tag: str, work_dir: Path, args) -> tuple[pd.Da
     print(f"[info] scan_editing: {tag} manifest has {len(rows)} rows -> {manifest_path}", file=sys.stderr)
     calls_out, edits_out = work_dir / f"edited_gene_calls.{tag}.tsv", work_dir / f"predicted_edits.{tag}.tsv"
     cmd = [
-        ORFEDIT, "scan-batch",
-        "--manifest", str(manifest_path),
-        "--gene-calls-out", str(calls_out),
-        "--edits-out", str(edits_out),
-        "--threads", str(args.threads),
-        "--flank", str(args.flank),
-        "--edit-penalty", str(args.edit_penalty),
+        ORFEDIT,
+        "scan-batch",
+        "--manifest",
+        str(manifest_path),
+        "--gene-calls-out",
+        str(calls_out),
+        "--edits-out",
+        str(edits_out),
+        "--threads",
+        str(args.threads),
+        "--flank",
+        str(args.flank),
+        "--edit-penalty",
+        str(args.edit_penalty),
     ]
     proc = subprocess.run(cmd)
     if proc.returncode != 0:
@@ -132,8 +151,15 @@ def assign_lineages(runs: dict[str, pd.DataFrame], forced: str | None) -> pd.Dat
     out = []
     for species in sorted(scores):
         chosen, n, totals = lin.choose(scores[species])
-        out.append({"species": species, "lineage": forced or chosen, "decided_by": "forced" if forced else "auto",
-                    "n_genes": n, **{f"{x}_score": f"{totals[x]:.3f}" if x in totals else "" for x in lin.LINEAGES}})
+        out.append(
+            {
+                "species": species,
+                "lineage": forced or chosen,
+                "decided_by": "forced" if forced else "auto",
+                "n_genes": n,
+                **{f"{x}_score": f"{totals[x]:.3f}" if x in totals else "" for x in lin.LINEAGES},
+            }
+        )
     return pd.DataFrame(out, columns=lin.COLUMNS)
 
 
@@ -155,25 +181,44 @@ def main():
     ap.add_argument("--threads", type=int, default=4)
     ap.add_argument("--flank", type=int, default=300)
     ap.add_argument("--edit-penalty", type=float, default=2.5)
-    ap.add_argument("--lineage", default="auto", choices=lin.CHOICES,
-                    help="mito reference lineage: auto picks per species (default), or force one for all")
-    ap.add_argument("--gene-calls", default=None, help="path to a gene_calls.tsv-shaped table to anchor "
-                     "on (default: annotation/results/gene_calls.tsv, oatk's own calls) - e.g. point this "
-                     "at denovo_annotation/results/gene_calls.tsv to use the oatk-independent "
-                     "nhmmscan-based calls instead")
-    ap.add_argument("--force", action="store_true", help="accepted for CLI consistency; orfedit "
-                     "always does a full recompute over the manifest (no incremental skip yet)")
+    ap.add_argument(
+        "--lineage",
+        default="auto",
+        choices=lin.CHOICES,
+        help="mito reference lineage: auto picks per species (default), or force one for all",
+    )
+    ap.add_argument(
+        "--gene-calls",
+        default=None,
+        help="path to a gene_calls.tsv-shaped table to anchor "
+        "on (default: annotation/results/gene_calls.tsv, oatk's own calls) - e.g. point this "
+        "at denovo_annotation/results/gene_calls.tsv to use the oatk-independent "
+        "nhmmscan-based calls instead",
+    )
+    ap.add_argument(
+        "--force",
+        action="store_true",
+        help="accepted for CLI consistency; orfedit "
+        "always does a full recompute over the manifest (no incremental skip yet)",
+    )
     args = ap.parse_args()
 
     if not Path(ORFEDIT).exists():
-        print(f"[err] orfedit binary not found at {ORFEDIT} - see orfedit's own README "
-              f"(`cargo install --path .`)", file=sys.stderr)
+        print(
+            f"[err] orfedit binary not found at {ORFEDIT} - see orfedit's own README " f"(`cargo install --path .`)",
+            file=sys.stderr,
+        )
         sys.exit(1)
 
-    gene_calls_path = Path(args.gene_calls) if args.gene_calls else ANALYSIS_DIR / "denovo_annotation" / "results" / "gene_calls.tsv"
+    gene_calls_path = (
+        Path(args.gene_calls) if args.gene_calls else ANALYSIS_DIR / "denovo_annotation" / "results" / "gene_calls.tsv"
+    )
     if not gene_calls_path.exists():
-        print(f"[err] missing {gene_calls_path} - run denovo_annotation/src/04_build_gene_calls.py first "
-              f"(or pass --gene-calls)", file=sys.stderr)
+        print(
+            f"[err] missing {gene_calls_path} - run denovo_annotation/src/04_build_gene_calls.py first "
+            f"(or pass --gene-calls)",
+            file=sys.stderr,
+        )
         sys.exit(1)
     gene_calls = pd.read_csv(gene_calls_path, sep="\t")
 
@@ -223,8 +268,11 @@ def main():
     io_utils.merge_species_scoped_tsv(results_dir / "edited_gene_calls.tsv", work_gene_calls_out, species_filter)
     io_utils.merge_species_scoped_tsv(results_dir / "predicted_edits.tsv", work_edits_out, species_filter)
     io_utils.merge_species_scoped_tsv(lin.table_path(ANALYSIS_DIR), work_lineage_out, species_filter)
-    print(f"[info] scan_editing: merged into {results_dir} "
-          f"({'species-scoped' if species_filter else 'full rewrite'})", file=sys.stderr)
+    print(
+        f"[info] scan_editing: merged into {results_dir} "
+        f"({'species-scoped' if species_filter else 'full rewrite'})",
+        file=sys.stderr,
+    )
 
 
 if __name__ == "__main__":

@@ -87,6 +87,7 @@ Output:
     (non-linearised) unitig sequences, one record per GFA segment, named
     by their GFA segment ID (u5, u14, ...) - "the unitig reference"
 """
+
 from __future__ import annotations
 
 import os
@@ -155,16 +156,18 @@ def read_ctg_fasta(fasta_path: Path) -> tuple[list[tuple[str, str | None, bool]]
                 # gfatk's (unverified) - keep those on seqmatch
                 m = None if "resolver=gfatk_resolve" in header else PATH_RE.search(header)
                 cm = CIRCULAR_RE.search(header)
-                headers.append((name, m.group("path") if m else None,
-                                cm is not None and cm.group("circular") == "true"))
+                headers.append(
+                    (name, m.group("path") if m else None, cm is not None and cm.group("circular") == "true")
+                )
                 seqs[name] = []
             elif name is not None:
                 seqs[name].append(line)
     return headers, {k: "".join(v) for k, v in seqs.items()}
 
 
-def walk_path(path_str: str, circular: bool, segs: dict[str, str],
-              overlaps: dict[tuple[str, str, str, str], int]) -> list[tuple[str, int, int, str]] | None:
+def walk_path(
+    path_str: str, circular: bool, segs: dict[str, str], overlaps: dict[tuple[str, str, str, str], int]
+) -> list[tuple[str, int, int, str]] | None:
     """Returns [(unitig, ctg_start, ctg_end, strand), ...] or None if any
     segment/overlap along the walk can't be resolved (caller falls back to
     seqmatch rather than emit a partial/wrong map)."""
@@ -194,8 +197,10 @@ def walk_path(path_str: str, circular: bool, segs: dict[str, str],
             return None
         closing = overlaps[key]
         ctg_len = pos - closing
-        placements = [(seg, (a - closing) % ctg_len, (a - closing) % ctg_len + (b - a), strand)
-                      for seg, a, b, strand in placements]
+        placements = [
+            (seg, (a - closing) % ctg_len, (a - closing) % ctg_len + (b - a), strand)
+            for seg, a, b, strand in placements
+        ]
     return placements
 
 
@@ -210,8 +215,7 @@ def _hits(haystack_doubled: str, hay_len: int, sub: str) -> list[int]:
         start = p + 1
 
 
-def find_all_with_tolerance(haystack_doubled: str, hay_len: int, needle: str,
-                            max_trim: int) -> tuple[list[int], int]:
+def find_all_with_tolerance(haystack_doubled: str, hay_len: int, needle: str, max_trim: int) -> tuple[list[int], int]:
     """Search a self-doubled haystack for `needle`, allowing the smallest
     symmetric trim (0..max_trim) off both ends that yields a hit (handles a
     circular join's overlap trim). Hits are monotone in trim - a trimmed
@@ -225,26 +229,32 @@ def find_all_with_tolerance(haystack_doubled: str, hay_len: int, needle: str,
     exact = _hits(haystack_doubled, hay_len, needle)
     if exact:
         return exact, 0
-    if max_trim == 0 or not _hits(haystack_doubled, hay_len, needle[max_trim:len(needle) - max_trim]):
+    if max_trim == 0 or not _hits(haystack_doubled, hay_len, needle[max_trim : len(needle) - max_trim]):
         return [], 0
     lo, hi = 0, max_trim  # lo misses, hi hits
     while hi - lo > 1:
         mid = (lo + hi) // 2
-        if _hits(haystack_doubled, hay_len, needle[mid:len(needle) - mid]):
+        if _hits(haystack_doubled, hay_len, needle[mid : len(needle) - mid]):
             hi = mid
         else:
             lo = mid
-    return [(p - hi) % hay_len for p in _hits(haystack_doubled, hay_len, needle[hi:len(needle) - hi])], hi
+    return [(p - hi) % hay_len for p in _hits(haystack_doubled, hay_len, needle[hi : len(needle) - hi])], hi
 
 
-def build_one(species: str, organelle: str, gfa_path: str, ctg_fasta_path: str,
-              map_dir: Path, fasta_dir: Path, force: bool) -> str:
+def build_one(
+    species: str, organelle: str, gfa_path: str, ctg_fasta_path: str, map_dir: Path, fasta_dir: Path, force: bool
+) -> str:
     map_out = map_dir / f"{species}.{organelle}.tsv"
     fasta_out = fasta_dir / f"{species}.{organelle}.unitig.fasta"
     # a map older than its inputs is stale (e.g. linearize/07_restore_pathfinder
     # swapped the genome in place) and is rebuilt even without --force
-    if (not force and map_out.exists() and fasta_out.exists() and map_out.stat().st_size > 0
-            and map_out.stat().st_mtime >= max(Path(p).stat().st_mtime for p in (gfa_path, ctg_fasta_path))):
+    if (
+        not force
+        and map_out.exists()
+        and fasta_out.exists()
+        and map_out.stat().st_size > 0
+        and map_out.stat().st_mtime >= max(Path(p).stat().st_mtime for p in (gfa_path, ctg_fasta_path))
+    ):
         return "skipped"
 
     segs, overlaps = read_gfa(Path(gfa_path))
@@ -276,8 +286,9 @@ def build_one(species: str, organelle: str, gfa_path: str, ctg_fasta_path: str,
                 for strand, needle in (("+", useq), ("-", u_rc)):
                     positions, trim = find_all_with_tolerance(doubled[cid], len(cseq), needle, max_trim)
                     for pos in positions:
-                        rows.append(f"{uname}\t{len(useq)}\t{cid}\t{pos}\t{pos + len(useq)}\t{strand}"
-                                    f"\tseqmatch\t{trim}")
+                        rows.append(
+                            f"{uname}\t{len(useq)}\t{cid}\t{pos}\t{pos + len(useq)}\t{strand}" f"\tseqmatch\t{trim}"
+                        )
 
     map_out.write_text("\n".join(rows) + "\n")
     if any_walked:
@@ -302,9 +313,11 @@ def main():
     qc_eligible = None
     if qc_path.exists():
         import csv
+
         with open(qc_path) as fh:
-            qc_eligible = {(r["species"], r["organelle"]) for r in csv.DictReader(fh, delimiter="\t")
-                           if r["status"] in qc_status}
+            qc_eligible = {
+                (r["species"], r["organelle"]) for r in csv.DictReader(fh, delimiter="\t") if r["status"] in qc_status
+            }
     else:
         print(f"[warn] missing {qc_path} - not filtering by QC status", file=sys.stderr)
 
@@ -316,15 +329,19 @@ def main():
     for organelle in organelles:
         data_root = sd.repo_data_root(ROOT_DIR, organelle)
         resolved = sd.discover_all(data_root, organelle, species_filter=species_filter)
-        tasks = [r for r in resolved if r.status == "ok" and r.gfa
-                 and (qc_eligible is None or (r.species, organelle) in qc_eligible)]
+        tasks = [
+            r
+            for r in resolved
+            if r.status == "ok" and r.gfa and (qc_eligible is None or (r.species, organelle) in qc_eligible)
+        ]
 
         counts: dict[str, int] = {}
         path_failed = []
         with ThreadPoolExecutor(max_workers=max(1, args.jobs)) as pool:
             futures = {
-                pool.submit(build_one, r.species, organelle, r.gfa, r.ctg_fasta,
-                            map_dir, fasta_dir, args.force): r.species
+                pool.submit(
+                    build_one, r.species, organelle, r.gfa, r.ctg_fasta, map_dir, fasta_dir, args.force
+                ): r.species
                 for r in tasks
             }
             for fut in as_completed(futures):
@@ -335,8 +352,10 @@ def main():
         summary = " ".join(f"{k}={v}" for k, v in sorted(counts.items()))
         print(f"[info] build_unitig_map: {organelle}: {summary} -> {map_dir}", file=sys.stderr)
         for species in sorted(path_failed):
-            print(f"[warn] {species}.{organelle}: path= header present but unwalkable, fell back to seqmatch",
-                  file=sys.stderr)
+            print(
+                f"[warn] {species}.{organelle}: path= header present but unwalkable, fell back to seqmatch",
+                file=sys.stderr,
+            )
 
 
 if __name__ == "__main__":

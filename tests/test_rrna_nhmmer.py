@@ -4,6 +4,7 @@ for the Arabidopsis assemblies in tests/data (fixtures/rrna/*.barrnap.gff).
 
     python3 -m unittest tests.test_rrna_nhmmer
 """
+
 from __future__ import annotations
 
 import gzip
@@ -26,17 +27,22 @@ ASSEMBLIES = {
 class Parsing(unittest.TestCase):
     def test_partial_and_reject(self):
         row = "ctg1 - {g} - 1 100 {a} {b} 1 100 9999 + {e} 50.0 0.1 -"
-        tbl = "\n".join([
-            row.format(g="16S_rRNA", a=1, b=1585, e="0"),            # full length
-            row.format(g="16S_rRNA", a=3000, b=2001, e="1.2e-30"),   # 1000 bp, minus strand: partial
-            row.format(g="5S_rRNA", a=10, b=30, e="0.001"),          # 21 bp < int(0.25 x 119): rejected
-        ])
+        tbl = "\n".join(
+            [
+                row.format(g="16S_rRNA", a=1, b=1585, e="0"),  # full length
+                row.format(g="16S_rRNA", a=3000, b=2001, e="1.2e-30"),  # 1000 bp, minus strand: partial
+                row.format(g="5S_rRNA", a=10, b=30, e="0.001"),  # 21 bp < int(0.25 x 119): rejected
+            ]
+        )
         gff = tblout_to_gff(tbl).splitlines()
         self.assertEqual(gff[0], "##gff-version 3")
         self.assertEqual(gff[1], "ctg1\tbarrnap:0.9\trRNA\t1\t1585\t0\t+\t.\tName=16S_rRNA;product=16S ribosomal RNA")
-        self.assertEqual(gff[2], "ctg1\tbarrnap:0.9\trRNA\t2001\t3000\t1.2e-30\t-\t.\t"
-                                 "Name=16S_rRNA;product=16S ribosomal RNA (partial);"
-                                 "note=aligned only 63 percent of the 16S ribosomal RNA")
+        self.assertEqual(
+            gff[2],
+            "ctg1\tbarrnap:0.9\trRNA\t2001\t3000\t1.2e-30\t-\t.\t"
+            "Name=16S_rRNA;product=16S ribosomal RNA (partial);"
+            "note=aligned only 63 percent of the 16S ribosomal RNA",
+        )
         self.assertEqual(len(gff), 3)
 
 

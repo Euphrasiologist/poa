@@ -32,6 +32,7 @@ reports how much of the assembly runs through low-depth unitigs.
 
 Reports only - changes nothing. Output: results/low_depth_paths.tsv
 """
+
 from __future__ import annotations
 
 import argparse
@@ -129,8 +130,7 @@ def fasta_lengths(path: Path) -> dict[str, int]:
     return lengths
 
 
-def gene_unitigs_from_calls(calls: list[tuple[str, int, int]], map_path: Path,
-                            ctg_lengths: dict[str, int]) -> set[str]:
+def gene_unitigs_from_calls(calls: list[tuple[str, int, int]], map_path: Path, ctg_lengths: dict[str, int]) -> set[str]:
     """Unitigs whose placement on the contigs covers >= MIN_CALL_OVERLAP of a
     gene call. A placement across a circular contig's origin runs past the
     contig's end (unitig_coords' convention) - the usual shape of a
@@ -148,8 +148,11 @@ def gene_unitigs_from_calls(calls: list[tuple[str, int, int]], map_path: Path,
             u_start, u_end = int(r["ctg_start"]) + trim, int(r["ctg_end"]) - trim
             clen = ctg_lengths.get(r["ctg_seqid"], 0)
             shifts = (0, clen) if clen and u_end > clen else (0,)
-            if any(min(end + k, u_end) - max(start + k, u_start) >= MIN_CALL_OVERLAP * (end - start)
-                   for start, end in by_ctg.get(r["ctg_seqid"], ()) for k in shifts):
+            if any(
+                min(end + k, u_end) - max(start + k, u_start) >= MIN_CALL_OVERLAP * (end - start)
+                for start, end in by_ctg.get(r["ctg_seqid"], ())
+                for k in shifts
+            ):
                 out.add(r["unitig"])
     return out
 
@@ -167,8 +170,9 @@ def weighted_median(pairs):
 def scan_one(species: str, gfa: Path, calls: list[tuple[str, int, int]], ctg: Path | None) -> dict | None:
     d = gfa.parent
     prefix = gfa.name[: -len(".mito.gfa")]
-    annot = next((p for p in (d / f"{prefix}.annot_mito.txt", d / "superseded" / f"{prefix}.annot_mito.txt")
-                  if p.exists()), None)
+    annot = next(
+        (p for p in (d / f"{prefix}.annot_mito.txt", d / "superseded" / f"{prefix}.annot_mito.txt") if p.exists()), None
+    )
     depth, length, adj = read_graph(gfa)
     if not depth or any(v is None for v in depth.values()):
         return {"species": species, "status": "no_depth_tags"}
@@ -204,11 +208,20 @@ def scan_one(species: str, gfa: Path, calls: list[tuple[str, int, int]], ctg: Pa
             self_bp += bp
 
     total_bp = sum(length.values())
-    row = {"species": species, "status": "ok", "gene_source": gene_source, "run_prefix": prefix,
-           "graph_bp": total_bp, "n_unitigs": len(depth), "genome_depth": round(genome_depth, 1),
-           "low_depth_bp": sum(length[u] for u in low), "embedded_low_bp": embedded_bp,
-           "n_embedded_pieces": n_embedded, "self_contained_low_bp": self_bp,
-           "embedded_low_frac": round(embedded_bp / total_bp, 3) if total_bp else 0.0}
+    row = {
+        "species": species,
+        "status": "ok",
+        "gene_source": gene_source,
+        "run_prefix": prefix,
+        "graph_bp": total_bp,
+        "n_unitigs": len(depth),
+        "genome_depth": round(genome_depth, 1),
+        "low_depth_bp": sum(length[u] for u in low),
+        "embedded_low_bp": embedded_bp,
+        "n_embedded_pieces": n_embedded,
+        "self_contained_low_bp": self_bp,
+        "embedded_low_frac": round(embedded_bp / total_bp, 3) if total_bp else 0.0,
+    }
     row["flagged"] = embedded_bp >= FLAG_MIN_BP or row["embedded_low_frac"] >= FLAG_MIN_FRAC
 
     if map_path.exists():
@@ -237,13 +250,31 @@ def main():
             ctg = ROOT_DIR / ctg
         row = scan_one(r.species, gfa, calls.get(r.species, []), ctg)
         if row:
-            row["resolver"] = ("gfatk_resolve" if ctg and ctg.exists() and ctg.stat().st_size
-                               and "resolver=gfatk_resolve" in open(ctg).readline() else "oatk_pathfinder")
+            row["resolver"] = (
+                "gfatk_resolve"
+                if ctg and ctg.exists() and ctg.stat().st_size and "resolver=gfatk_resolve" in open(ctg).readline()
+                else "oatk_pathfinder"
+            )
             rows.append(row)
 
-    cols = ["species", "status", "resolver", "run_prefix", "graph_bp", "n_unitigs", "genome_depth", "low_depth_bp",
-            "embedded_low_bp", "n_embedded_pieces", "self_contained_low_bp", "embedded_low_frac",
-            "assembly_bp_via_low", "assembly_frac_via_low", "flagged", "gene_source"]
+    cols = [
+        "species",
+        "status",
+        "resolver",
+        "run_prefix",
+        "graph_bp",
+        "n_unitigs",
+        "genome_depth",
+        "low_depth_bp",
+        "embedded_low_bp",
+        "n_embedded_pieces",
+        "self_contained_low_bp",
+        "embedded_low_frac",
+        "assembly_bp_via_low",
+        "assembly_frac_via_low",
+        "flagged",
+        "gene_source",
+    ]
     out = ANALYSIS_DIR / "qc_basic_stats" / "results" / "low_depth_paths.tsv"
     with open(out, "w") as fh:
         fh.write("\t".join(cols) + "\n")

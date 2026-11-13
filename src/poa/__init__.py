@@ -1,4 +1,5 @@
 """poa - plant organelle annotator."""
+
 from importlib.metadata import PackageNotFoundError, version
 from pathlib import Path
 

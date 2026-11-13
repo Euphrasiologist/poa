@@ -25,6 +25,7 @@ gene's successive exons (consecutive model ranges) from a second copy
 
 Output: analysis/denovo_annotation/results/gene_calls.tsv
 """
+
 from __future__ import annotations
 
 import os
@@ -43,8 +44,20 @@ sys.path.insert(0, str(CODE_DIR / "common"))
 import species_discovery as sd  # noqa: E402
 import io_utils  # noqa: E402
 
-COLUMNS = ["species", "organelle", "contig_id", "start", "end", "gene", "score", "strand",
-           "source", "hmm_from", "hmm_to", "model_len"]
+COLUMNS = [
+    "species",
+    "organelle",
+    "contig_id",
+    "start",
+    "end",
+    "gene",
+    "score",
+    "strand",
+    "source",
+    "hmm_from",
+    "hmm_to",
+    "model_len",
+]
 WORK_DIR = ANALYSIS_DIR / "denovo_annotation" / "work"
 
 
@@ -63,11 +76,31 @@ def read_tblout_models(path: Path) -> dict[tuple[str, str, int, int], tuple[int,
         out[(contig, target, min(env_a, env_b), max(env_a, env_b))] = (hmm_from, hmm_to, model_len)
     return out
 
+
 AA_3TO1 = {
-    "Ala": "A", "Arg": "R", "Asn": "N", "Asp": "D", "Cys": "C", "Gln": "Q", "Glu": "E",
-    "Gly": "G", "His": "H", "Ile": "I", "Leu": "L", "Lys": "K", "Met": "M", "Phe": "F",
-    "Pro": "P", "Ser": "S", "Thr": "T", "Trp": "W", "Tyr": "Y", "Val": "V", "SeC": "U",
-    "Sup": "X", "Pseudo": "X",
+    "Ala": "A",
+    "Arg": "R",
+    "Asn": "N",
+    "Asp": "D",
+    "Cys": "C",
+    "Gln": "Q",
+    "Glu": "E",
+    "Gly": "G",
+    "His": "H",
+    "Ile": "I",
+    "Leu": "L",
+    "Lys": "K",
+    "Met": "M",
+    "Phe": "F",
+    "Pro": "P",
+    "Ser": "S",
+    "Thr": "T",
+    "Trp": "W",
+    "Tyr": "Y",
+    "Val": "V",
+    "SeC": "U",
+    "Sup": "X",
+    "Pseudo": "X",
 }
 
 RRNA_NAME = {
@@ -137,10 +170,22 @@ def gff_to_rows(path: Path, species: str, organelle: str) -> list[dict]:
             m = models.get((contig, gene, int(start), int(end)))
             if m:
                 hmm_from, hmm_to, model_len = m
-        rows.append({"species": species, "organelle": organelle, "contig_id": contig,
-                      "start": int(start) - 1, "end": int(end), "gene": gene,
-                      "score": score, "strand": strand, "source": source.split(":")[0],
-                      "hmm_from": hmm_from, "hmm_to": hmm_to, "model_len": model_len})
+        rows.append(
+            {
+                "species": species,
+                "organelle": organelle,
+                "contig_id": contig,
+                "start": int(start) - 1,
+                "end": int(end),
+                "gene": gene,
+                "score": score,
+                "strand": strand,
+                "source": source.split(":")[0],
+                "hmm_from": hmm_from,
+                "hmm_to": hmm_to,
+                "model_len": model_len,
+            }
+        )
     return rows
 
 
@@ -180,8 +225,11 @@ def main():
         for row in all_rows:
             fh.write("\t".join(str(row[c]) for c in COLUMNS) + "\n")
     io_utils.merge_species_scoped_tsv(out_path, new_path, species_filter)
-    print(f"[info] build_gene_calls: {len(all_rows)} rows "
-          f"({'species-scoped merge' if species_filter else 'full rewrite'}) -> {out_path}", file=sys.stderr)
+    print(
+        f"[info] build_gene_calls: {len(all_rows)} rows "
+        f"({'species-scoped merge' if species_filter else 'full rewrite'}) -> {out_path}",
+        file=sys.stderr,
+    )
 
 
 if __name__ == "__main__":

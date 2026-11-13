@@ -5,6 +5,7 @@ map. On the dataset it agrees with oatk's own unitig hits on every flag
 
     python3 -m unittest tests.test_low_depth_paths
 """
+
 from __future__ import annotations
 
 import importlib.util
@@ -14,7 +15,8 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
 spec = importlib.util.spec_from_file_location(
-    "low_depth_paths", REPO / "src/poa/pipeline/qc_basic_stats/src/06_low_depth_paths.py")
+    "low_depth_paths", REPO / "src/poa/pipeline/qc_basic_stats/src/06_low_depth_paths.py"
+)
 ldp = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(ldp)
 
@@ -36,8 +38,7 @@ def write_map(rows: list[str]) -> Path:
 
 class GeneUnitigsFromCalls(unittest.TestCase):
     def test_linear_placements(self):
-        m = write_map(["u1\t1000\tctg1\t0\t1000\t+\tpath\t0",
-                       "u2\t1000\tctg1\t990\t1990\t+\tpath\t0"])
+        m = write_map(["u1\t1000\tctg1\t0\t1000\t+\tpath\t0", "u2\t1000\tctg1\t990\t1990\t+\tpath\t0"])
         # mostly on u2, only 10bp on u1
         self.assertEqual(ldp.gene_unitigs_from_calls([("ctg1", 980, 1500)], m, {"ctg1": 1990}), {"u2"})
         # straddling both evenly: both carry it

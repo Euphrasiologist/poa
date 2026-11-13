@@ -8,6 +8,7 @@ else ~/.cache/poa - and reused from then on. Preparing it is atomic
 (built in a temp dir, then renamed), so parallel jobs can't see a
 half-pressed database.
 """
+
 from __future__ import annotations
 
 import gzip

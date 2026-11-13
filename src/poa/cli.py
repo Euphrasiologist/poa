@@ -1,8 +1,9 @@
 """poa command line.
 
-    poa check      are the external tools and the oatkDB databases usable?
-    poa run        annotate one sample's mito and/or plastid assembly
+poa check      are the external tools and the oatkDB databases usable?
+poa run        annotate one sample's mito and/or plastid assembly
 """
+
 from __future__ import annotations
 
 import argparse
@@ -65,6 +66,7 @@ def check(_args: argparse.Namespace) -> int:
     print("oatkDB databases:")
     sys.path.insert(0, str(PIPELINE_DIR / "common"))
     import oatkdb
+
     for organelle in ("mito", "pltd"):
         try:
             print(f"  ok       {organelle:13} {oatkdb.fam_path(organelle)}")
@@ -81,8 +83,12 @@ def main(argv: list[str] | None = None) -> int:
     sub = ap.add_subparsers(dest="command", required=True)
     p = sub.add_parser("check", help="check external tools and the oatkDB databases")
     p.set_defaults(func=check)
-    p = sub.add_parser("run", help="annotate one sample's mito and/or plastid assembly",
-                       description=run.__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    p = sub.add_parser(
+        "run",
+        help="annotate one sample's mito and/or plastid assembly",
+        description=run.__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
     run.add_arguments(p)
     p.set_defaults(func=run.run)
     args = ap.parse_args(argv)

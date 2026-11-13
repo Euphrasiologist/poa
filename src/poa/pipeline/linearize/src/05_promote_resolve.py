@@ -38,6 +38,7 @@ Usage:
 Output: appends to meta/promotion_log_<timestamp>.tsv (same convention as
 src/09_promote_revision.py).
 """
+
 from __future__ import annotations
 
 import os
@@ -64,21 +65,34 @@ sys.path.insert(0, str(CODE_DIR / "common"))
 import graph_coverage  # noqa: E402
 import species_discovery as sd  # noqa: E402
 
-_spec = importlib.util.spec_from_file_location("restore_pathfinder", Path(__file__).with_name("07_restore_pathfinder.py"))
+_spec = importlib.util.spec_from_file_location(
+    "restore_pathfinder", Path(__file__).with_name("07_restore_pathfinder.py")
+)
 restore_pathfinder = importlib.util.module_from_spec(_spec)
 sys.modules["restore_pathfinder"] = restore_pathfinder
 _spec.loader.exec_module(restore_pathfinder)
 
 SUFFIXES_TO_ARCHIVE = {
-    "mito": {"ctg_bed": ".mito.ctg.bed", "ctg_fasta": ".mito.ctg.fasta", "bed": ".mito.bed", "annot": ".annot_mito.txt"},
-    "pltd": {"ctg_bed": ".pltd.ctg.bed", "ctg_fasta": ".pltd.ctg.fasta", "bed": ".pltd.bed", "annot": ".annot_pltd.txt"},
+    "mito": {
+        "ctg_bed": ".mito.ctg.bed",
+        "ctg_fasta": ".mito.ctg.fasta",
+        "bed": ".mito.bed",
+        "annot": ".annot_mito.txt",
+    },
+    "pltd": {
+        "ctg_bed": ".pltd.ctg.bed",
+        "ctg_fasta": ".pltd.ctg.fasta",
+        "bed": ".pltd.bed",
+        "annot": ".annot_pltd.txt",
+    },
 }
 GFA_SUFFIX = {"mito": ".mito.gfa", "pltd": ".pltd.gfa"}
 DATA_DIRNAME = {"mito": "mito", "pltd": "plastid"}
 
 # gfatk >= 0.6 appends :circular=true:path=<walk> (oatk-style); older releases end at :bp=
-CIRCUIT_RE = re.compile(r"^.+_circuit(?P<circuit>\d+):n_segments=(?P<n_segments>\d+):bp=(?P<bp>\d+)"
-                        r"(?::circular=\S+?)?(?::path=\S+)?$")
+CIRCUIT_RE = re.compile(
+    r"^.+_circuit(?P<circuit>\d+):n_segments=(?P<n_segments>\d+):bp=(?P<bp>\d+)" r"(?::circular=\S+?)?(?::path=\S+)?$"
+)
 BUBBLE_ARM_RE = re.compile(r"^bubble_arm:")
 
 
@@ -111,12 +125,14 @@ def write_promoted_fasta(path: Path, circuits: list[dict]) -> None:
     tmp = path.with_suffix(path.suffix + ".tmp")
     with open(tmp, "w") as fh:
         for i, c in enumerate(circuits, start=1):
-            header = (f"ctg{i:06d}c length={c['bp']} nv={c['n_segments']} circular=true "
-                      f"resolver=gfatk_resolve source_header={c['header']}")
+            header = (
+                f"ctg{i:06d}c length={c['bp']} nv={c['n_segments']} circular=true "
+                f"resolver=gfatk_resolve source_header={c['header']}"
+            )
             fh.write(f">{header}\n")
             seq = c["seq"]
             for j in range(0, len(seq), 70):
-                fh.write(seq[j:j + 70] + "\n")
+                fh.write(seq[j : j + 70] + "\n")
     tmp.replace(path)
 
 
@@ -152,18 +168,34 @@ def main():
             species = fasta_path.name[: -len(".resolve.fasta")]
             circuits = parse_circuits(fasta_path)
             if not circuits:
-                rows.append({"species": species, "organelle": organelle, "promoted": False,
-                             "reason": "no_circuit_resolved", "n_circuits": 0, "total_bp": None,
-                             "annotation_status": None})
+                rows.append(
+                    {
+                        "species": species,
+                        "organelle": organelle,
+                        "promoted": False,
+                        "reason": "no_circuit_resolved",
+                        "n_circuits": 0,
+                        "total_bp": None,
+                        "annotation_status": None,
+                    }
+                )
                 continue
 
             species_dir = data_root / species
             gfa_suffix = GFA_SUFFIX[organelle]
             existing_gfas = list(species_dir.glob(f"*{gfa_suffix}")) if species_dir.is_dir() else []
             if not existing_gfas:
-                rows.append({"species": species, "organelle": organelle, "promoted": False,
-                             "reason": "no_existing_gfa_to_pair_with", "n_circuits": len(circuits),
-                             "total_bp": sum(c["bp"] for c in circuits), "annotation_status": None})
+                rows.append(
+                    {
+                        "species": species,
+                        "organelle": organelle,
+                        "promoted": False,
+                        "reason": "no_existing_gfa_to_pair_with",
+                        "n_circuits": len(circuits),
+                        "total_bp": sum(c["bp"] for c in circuits),
+                        "annotation_status": None,
+                    }
+                )
                 continue
             prefix = existing_gfas[0].name[: -len(gfa_suffix)]
 
@@ -178,8 +210,17 @@ def main():
                 elif any("circular=true" in h or not re.search(r"\bnv=1\b", h) for h in headers):
                     skip = "resolved_genome_present"  # e.g. restored by 07_restore_pathfinder.py
                 if skip:
-                    rows.append({"species": species, "organelle": organelle, "promoted": False, "reason": skip,
-                                 "n_circuits": len(circuits), "total_bp": total_bp, "annotation_status": None})
+                    rows.append(
+                        {
+                            "species": species,
+                            "organelle": organelle,
+                            "promoted": False,
+                            "reason": skip,
+                            "n_circuits": len(circuits),
+                            "total_bp": total_bp,
+                            "annotation_status": None,
+                        }
+                    )
                     continue
             with tempfile.TemporaryDirectory() as tmp:
                 regen = restore_pathfinder.plan_one(species, organelle, existing_gfas[0], Path(tmp))
@@ -187,14 +228,30 @@ def main():
                 circuit_fa.write_text("".join(f">c{i}\n{c['seq']}\n" for i, c in enumerate(circuits)))
                 placed = graph_coverage.unitig_content_placed(existing_gfas[0], circuit_fa)
             if regen["action"] == "restore":
-                rows.append({"species": species, "organelle": organelle, "promoted": False,
-                             "reason": "pathfinder_genome_recoverable_run_07", "n_circuits": len(circuits),
-                             "total_bp": total_bp, "annotation_status": None})
+                rows.append(
+                    {
+                        "species": species,
+                        "organelle": organelle,
+                        "promoted": False,
+                        "reason": "pathfinder_genome_recoverable_run_07",
+                        "n_circuits": len(circuits),
+                        "total_bp": total_bp,
+                        "annotation_status": None,
+                    }
+                )
                 continue
             if placed < restore_pathfinder.GATE[organelle]:
-                rows.append({"species": species, "organelle": organelle, "promoted": False,
-                             "reason": f"circuit_places_{placed:.0%}_of_graph", "n_circuits": len(circuits),
-                             "total_bp": total_bp, "annotation_status": None})
+                rows.append(
+                    {
+                        "species": species,
+                        "organelle": organelle,
+                        "promoted": False,
+                        "reason": f"circuit_places_{placed:.0%}_of_graph",
+                        "n_circuits": len(circuits),
+                        "total_bp": total_bp,
+                        "annotation_status": None,
+                    }
+                )
                 continue
             if not args.dry_run:
                 archived = archive_old_files(species_dir, prefix, organelle)
@@ -203,9 +260,18 @@ def main():
             else:
                 archived = None
 
-            rows.append({"species": species, "organelle": organelle, "promoted": True, "reason": "circuit_resolved",
-                         "n_circuits": len(circuits), "total_bp": total_bp,
-                         "annotation_status": "not_yet_annotated", "archived_files": archived})
+            rows.append(
+                {
+                    "species": species,
+                    "organelle": organelle,
+                    "promoted": True,
+                    "reason": "circuit_resolved",
+                    "n_circuits": len(circuits),
+                    "total_bp": total_bp,
+                    "annotation_status": "not_yet_annotated",
+                    "archived_files": archived,
+                }
+            )
 
     df = pd.DataFrame(rows)
     ts = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -214,10 +280,13 @@ def main():
         df.to_csv(log_path, sep="\t", index=False)
 
     n_promoted = int(df["promoted"].sum()) if not df.empty else 0
-    print(df.groupby(["organelle", "promoted", "reason"]).size() if not df.empty else "no resolve outputs found",
-          file=sys.stderr)
-    print(f"[info] {'(dry run) ' if args.dry_run else ''}promoted={n_promoted}/{len(df)} -> {log_path}",
-          file=sys.stderr)
+    print(
+        df.groupby(["organelle", "promoted", "reason"]).size() if not df.empty else "no resolve outputs found",
+        file=sys.stderr,
+    )
+    print(
+        f"[info] {'(dry run) ' if args.dry_run else ''}promoted={n_promoted}/{len(df)} -> {log_path}", file=sys.stderr
+    )
 
 
 if __name__ == "__main__":

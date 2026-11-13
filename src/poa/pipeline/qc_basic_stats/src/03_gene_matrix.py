@@ -9,6 +9,7 @@ matters for a real completeness signal.
 Output: analysis/qc_basic_stats/results/gene_matrix_{mito,pltd}.tsv
 Columns: species organelle gene n_hits max_score total_aligned_length n_contigs
 """
+
 from __future__ import annotations
 
 import os
@@ -39,12 +40,16 @@ def rows_for_species(species: str, organelle: str, ctg_bed: str) -> list[dict]:
     if df.empty:
         return []
     df["aligned_length"] = (df["align_to"] - df["align_from"]).abs()
-    grouped = df.groupby("gene").agg(
-        n_hits=("gene", "size"),
-        max_score=("score", "max"),
-        total_aligned_length=("aligned_length", "sum"),
-        n_contigs=("seq_name", "nunique"),
-    ).reset_index()
+    grouped = (
+        df.groupby("gene")
+        .agg(
+            n_hits=("gene", "size"),
+            max_score=("score", "max"),
+            total_aligned_length=("aligned_length", "sum"),
+            n_contigs=("seq_name", "nunique"),
+        )
+        .reset_index()
+    )
     grouped["species"] = species
     grouped["organelle"] = organelle
     return grouped[COLUMNS].to_dict("records")
@@ -69,11 +74,11 @@ def main():
 
         new_rows = []
         stale_keys = []  # species that HAD a ctg_bed in a prior run but don't now
-                          # (e.g. archived by a promotion that didn't re-annotate) -
-                          # must be purged explicitly, since merge_rows only replaces
-                          # keys present in new_rows and would otherwise leave this
-                          # species' old gene calls in gene_matrix.tsv forever, silently
-                          # feeding a stale core_gene_pct into qc_summary.
+        # (e.g. archived by a promotion that didn't re-annotate) -
+        # must be purged explicitly, since merge_rows only replaces
+        # keys present in new_rows and would otherwise leave this
+        # species' old gene calls in gene_matrix.tsv forever, silently
+        # feeding a stale core_gene_pct into qc_summary.
         n_computed = n_skipped = n_no_bed = 0
         for r in resolved:
             key = (r.species, organelle)
@@ -93,9 +98,11 @@ def main():
 
         merged = io_utils.merge_rows(existing_df, new_rows, KEY_COLS, COLUMNS)
         io_utils.atomic_write_tsv(out_path, merged.to_dict("records"), COLUMNS)
-        print(f"[info] gene_matrix_{organelle}: computed={n_computed} skipped={n_skipped} "
-              f"no_bed={n_no_bed} purged_stale={len(stale_keys)} total_rows={len(merged)} -> {out_path}",
-              file=sys.stderr)
+        print(
+            f"[info] gene_matrix_{organelle}: computed={n_computed} skipped={n_skipped} "
+            f"no_bed={n_no_bed} purged_stale={len(stale_keys)} total_rows={len(merged)} -> {out_path}",
+            file=sys.stderr,
+        )
 
 
 if __name__ == "__main__":

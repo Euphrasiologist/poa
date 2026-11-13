@@ -41,6 +41,7 @@ build, on that lineage's RefSeq loci (00a_fetch_references.py --lineage).
 A gene the lineage has lost (moss rps10) gets no profile, and a gene with
 no intron there (moss rps3, rpl2) gets a one-slot template.
 """
+
 from __future__ import annotations
 
 import csv
@@ -76,6 +77,7 @@ PSEUDOCOUNT = 0.5
 GAP_COLUMN_THRESHOLD = 0.9  # same reasoning/value as editing/00_build_reference_profiles.py
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from reference_genes import GENES  # noqa: E402  (shared with 00a/01/gff_export)
+
 # Slot floor = this fraction of the lowest training self-score. With exons
 # translated in frame, self-scores are high (nad5 exon 2: 1013), and a
 # floor at the bare minimum rejected even Arabidopsis's own nad5 exons 1-2
@@ -147,13 +149,19 @@ def load_junctions() -> dict[tuple[str, str, str], dict]:
 
 def run_mafft(protein_fasta: Path, out_fasta: Path) -> bool:
     # a minimal env, but keep TMPDIR: mafft's mktemp otherwise needs a writable /tmp
-    env = ({"MAFFT_BINARIES": MAFFT_BINARIES_DIR, "PATH": "/usr/bin:/bin"}
-           if Path(MAFFT_BINARIES_DIR).is_dir() else dict(os.environ))
+    env = (
+        {"MAFFT_BINARIES": MAFFT_BINARIES_DIR, "PATH": "/usr/bin:/bin"}
+        if Path(MAFFT_BINARIES_DIR).is_dir()
+        else dict(os.environ)
+    )
     if os.environ.get("TMPDIR"):
         env["TMPDIR"] = os.environ["TMPDIR"]
     proc = subprocess.run(
         [MAFFT, "--auto", "--quiet", str(protein_fasta)],
-        capture_output=True, text=True, timeout=120, env=env,
+        capture_output=True,
+        text=True,
+        timeout=120,
+        env=env,
     )
     if proc.returncode != 0 or not proc.stdout.strip():
         print(f"[warn] mafft failed for {protein_fasta.name}: {proc.stderr.strip()[:300]}", file=sys.stderr)
@@ -224,11 +232,19 @@ def compute_min_self_score(gene: str, slot: int, dna_seqs: dict[str, str], profi
     for name, seq in dna_seqs.items():
         fasta_path = WORK_DIR / f"selfscore.{gene}.exon{slot}.{name}.fasta"
         fasta_path.write_text(f">self\n{seq}\n")
-        manifest_rows.append({
-            "species": name, "organelle": "mito", "gene": f"{gene}_exon{slot}",
-            "fasta": str(fasta_path), "profile": str(profile_path),
-            "contig": "self", "start": 0, "end": len(seq), "strand": "+",
-        })
+        manifest_rows.append(
+            {
+                "species": name,
+                "organelle": "mito",
+                "gene": f"{gene}_exon{slot}",
+                "fasta": str(fasta_path),
+                "profile": str(profile_path),
+                "contig": "self",
+                "start": 0,
+                "end": len(seq),
+                "strand": "+",
+            }
+        )
     manifest_path = WORK_DIR / f"selfscore.{gene}.exon{slot}.manifest.tsv"
     cols = ["species", "organelle", "gene", "fasta", "profile", "contig", "start", "end", "strand"]
     with open(manifest_path, "w") as fh:
@@ -238,13 +254,29 @@ def compute_min_self_score(gene: str, slot: int, dna_seqs: dict[str, str], profi
 
     out_path = WORK_DIR / f"selfscore.{gene}.exon{slot}.out.tsv"
     edits_path = WORK_DIR / f"selfscore.{gene}.exon{slot}.edits.tsv"
-    proc = subprocess.run([
-        ORFEDIT, "scan-batch", "--manifest", str(manifest_path),
-        "--gene-calls-out", str(out_path), "--edits-out", str(edits_path),
-        "--threads", "1", "--flank", "0",
-    ], capture_output=True, text=True, timeout=120)
+    proc = subprocess.run(
+        [
+            ORFEDIT,
+            "scan-batch",
+            "--manifest",
+            str(manifest_path),
+            "--gene-calls-out",
+            str(out_path),
+            "--edits-out",
+            str(edits_path),
+            "--threads",
+            "1",
+            "--flank",
+            "0",
+        ],
+        capture_output=True,
+        text=True,
+        timeout=120,
+    )
     if proc.returncode != 0:
-        print(f"[warn] {gene} exon{slot}: self-scoring orfedit call failed: {proc.stderr.strip()[:300]}", file=sys.stderr)
+        print(
+            f"[warn] {gene} exon{slot}: self-scoring orfedit call failed: {proc.stderr.strip()[:300]}", file=sys.stderr
+        )
         return None
     scores = []
     with open(out_path) as fh:
@@ -255,12 +287,21 @@ def compute_min_self_score(gene: str, slot: int, dna_seqs: dict[str, str], profi
 
 def main() -> None:
     import argparse
+
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--genes", nargs="+", default=GENES,
-                    help="build only these (default: all). Rebuilding a gene overwrites its whole_gene.pssm, "
-                         "including one 02_bootstrap_refine.py refined from this dataset")
-    ap.add_argument("--lineage", default=lin.DEFAULT_LINEAGE, choices=lin.LINEAGES,
-                    help="which lineage's references to build from (default: %(default)s)")
+    ap.add_argument(
+        "--genes",
+        nargs="+",
+        default=GENES,
+        help="build only these (default: all). Rebuilding a gene overwrites its whole_gene.pssm, "
+        "including one 02_bootstrap_refine.py refined from this dataset",
+    )
+    ap.add_argument(
+        "--lineage",
+        default=lin.DEFAULT_LINEAGE,
+        choices=lin.LINEAGES,
+        help="which lineage's references to build from (default: %(default)s)",
+    )
     args = ap.parse_args()
     global REFERENCE_DIR, RAW_DIR, PROFILES_DIR, WORK_DIR
     REFERENCE_DIR = lin.trans_splicing_reference(CODE_DIR, args.lineage)
@@ -300,8 +341,10 @@ def main() -> None:
             print(f"[warn] {gene}: no junction data for included loci - skipping exon slots", file=sys.stderr)
             continue
         k = n_exons_seen.most_common(1)[0][0]
-        print(f"[info] {gene}: {len(included)} loci, canonical exon count K={k} "
-              f"(seen: {dict(n_exons_seen)})", file=sys.stderr)
+        print(
+            f"[info] {gene}: {len(included)} loci, canonical exon count K={k} " f"(seen: {dict(n_exons_seen)})",
+            file=sys.stderr,
+        )
 
         # lead/trail per (locus, slot) from the locus's own cumulative exon
         # lengths - the junction phase, which the translation must respect
@@ -335,7 +378,7 @@ def main() -> None:
                 if slot in raw[key] and key in frames:
                     lead, trail = frames[key][slot]
                     seq = raw[key][slot]
-                    dna_seqs[f"{acc}_{locus}"] = seq[lead:len(seq) - trail]
+                    dna_seqs[f"{acc}_{locus}"] = seq[lead : len(seq) - trail]
             if len(dna_seqs) < 2:
                 print(f"[warn] {gene} exon{slot}: only {len(dna_seqs)} sequences - skipping", file=sys.stderr)
                 continue
@@ -351,8 +394,11 @@ def main() -> None:
             (gene_dir / f"exon{slot}.threshold").write_text(f"{floor:.4f}\n")
             lead, trail = Counter(frames[key][slot] for key in frames).most_common(1)[0][0]
             (gene_dir / f"exon{slot}.frame").write_text(f"{lead}\t{trail}\n")
-            print(f"[info] {gene} exon{slot}: {len(dna_seqs)} training seqs, "
-                  f"min_self_score={min_score:.3f} -> {profile_path.name}", file=sys.stderr)
+            print(
+                f"[info] {gene} exon{slot}: {len(dna_seqs)} training seqs, "
+                f"min_self_score={min_score:.3f} -> {profile_path.name}",
+                file=sys.stderr,
+            )
 
 
 if __name__ == "__main__":

@@ -31,6 +31,7 @@ This module is intentionally only about *file resolution* - it does not
 judge assembly quality (empty graphs, dead-ends, etc.); that's
 qc_basic_stats' job, using the paths this module resolves.
 """
+
 from __future__ import annotations
 
 import os
@@ -42,10 +43,20 @@ from pathlib import Path
 from typing import Optional
 
 ORGANELLE_SUFFIX = {
-    "mito": {"gfa": ".mito.gfa", "ctg_bed": ".mito.ctg.bed", "ctg_fasta": ".mito.ctg.fasta",
-             "bed": ".mito.bed", "annot": ".annot_mito.txt"},
-    "pltd": {"gfa": ".pltd.gfa", "ctg_bed": ".pltd.ctg.bed", "ctg_fasta": ".pltd.ctg.fasta",
-             "bed": ".pltd.bed", "annot": ".annot_pltd.txt"},
+    "mito": {
+        "gfa": ".mito.gfa",
+        "ctg_bed": ".mito.ctg.bed",
+        "ctg_fasta": ".mito.ctg.fasta",
+        "bed": ".mito.bed",
+        "annot": ".annot_mito.txt",
+    },
+    "pltd": {
+        "gfa": ".pltd.gfa",
+        "ctg_bed": ".pltd.ctg.bed",
+        "ctg_fasta": ".pltd.ctg.fasta",
+        "bed": ".pltd.bed",
+        "annot": ".annot_pltd.txt",
+    },
 }
 
 REQUIRED_FOR_COMPLETENESS = ("gfa", "ctg_fasta", "ctg_bed", "annot")
@@ -131,8 +142,9 @@ def resolve_species(species_dir: Path, organelle: str, logger=None) -> SpeciesFi
     )
 
 
-def discover_all(data_root: Path, organelle: str, species_filter: Optional[set] = None,
-                  logger=None) -> list[SpeciesFiles]:
+def discover_all(
+    data_root: Path, organelle: str, species_filter: Optional[set] = None, logger=None
+) -> list[SpeciesFiles]:
     results = []
     for species_dir in sorted(data_root.iterdir()):
         if not species_dir.is_dir():
@@ -155,7 +167,9 @@ def repo_data_root(root_dir: Path, organelle: str) -> Path:
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--organelle", required=True, choices=["mito", "pltd"])
-    ap.add_argument("--root-dir", default=None, help="data root (default: $PLANT_ORGANELLE_DATA_ROOT, else the current directory)")
+    ap.add_argument(
+        "--root-dir", default=None, help="data root (default: $PLANT_ORGANELLE_DATA_ROOT, else the current directory)"
+    )
     ap.add_argument("--species-list", default=None)
     ap.add_argument("--print-table", action="store_true", help="emit TSV to stdout")
     args = ap.parse_args()
@@ -178,8 +192,10 @@ def main():
     n_ok = sum(1 for r in results if r.status == "ok")
     n_no_fasta = sum(1 for r in results if r.status == "no_ctg_fasta")
     n_missing = sum(1 for r in results if r.status == "missing_gfa")
-    print(f"[info] {args.organelle}: {len(results)} species, ok={n_ok} no_ctg_fasta={n_no_fasta} missing_gfa={n_missing}",
-          file=sys.stderr)
+    print(
+        f"[info] {args.organelle}: {len(results)} species, ok={n_ok} no_ctg_fasta={n_no_fasta} missing_gfa={n_missing}",
+        file=sys.stderr,
+    )
 
 
 if __name__ == "__main__":

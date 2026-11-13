@@ -4,6 +4,7 @@ tools made from them (fixtures/nhmmscan/*.rust.gff).
 
     python3 -m unittest tests.test_nhmmscan_gff
 """
+
 from __future__ import annotations
 
 import sys

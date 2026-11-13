@@ -21,6 +21,7 @@ than silently vanishing.
 
 Output: results/resolve_summary.tsv
 """
+
 from __future__ import annotations
 
 import os
@@ -37,8 +38,9 @@ ROOT_DIR = Path(os.environ.get("PLANT_ORGANELLE_DATA_ROOT") or os.getcwd())
 ANALYSIS_DIR = ROOT_DIR / "analysis"
 
 # gfatk >= 0.6 appends :circular=true:path=<walk> (oatk-style); older releases end at :bp=
-CIRCUIT_RE = re.compile(r"^.+_circuit(?P<circuit>\d+):n_segments=(?P<n_segments>\d+):bp=(?P<bp>\d+)"
-                        r"(?::circular=\S+?)?(?::path=\S+)?$")
+CIRCUIT_RE = re.compile(
+    r"^.+_circuit(?P<circuit>\d+):n_segments=(?P<n_segments>\d+):bp=(?P<bp>\d+)" r"(?::circular=\S+?)?(?::path=\S+)?$"
+)
 BUBBLE_ARM_RE = re.compile(r"^bubble_arm:")
 # gfatk >= 0.6 also writes segments it could not place: reported, never promoted
 UNRESOLVED_RE = re.compile(r"^unresolved_segment:")
@@ -65,8 +67,13 @@ def parse_resolve_fasta(path: Path) -> tuple[list[dict], int]:
             if not m:
                 print(f"[warn] unparsed gfatk resolve header in {path}: {header!r}", file=sys.stderr)
                 continue
-            circuits.append({"circuit_id": m.group("circuit"), "n_segments": int(m.group("n_segments")),
-                              "length_bp": int(m.group("bp"))})
+            circuits.append(
+                {
+                    "circuit_id": m.group("circuit"),
+                    "n_segments": int(m.group("n_segments")),
+                    "length_bp": int(m.group("bp")),
+                }
+            )
     return circuits, n_bubble_arms
 
 
@@ -95,24 +102,43 @@ def main():
                 continue
             circuits, n_bubble_arms = parse_resolve_fasta(fasta_path)
             if not circuits:
-                rows.append({"species": species, "organelle": organelle, "n_circuits": 0,
-                             "n_bubble_arms": n_bubble_arms, "circuit_id": None,
-                             "n_segments": None, "length_bp": None})
+                rows.append(
+                    {
+                        "species": species,
+                        "organelle": organelle,
+                        "n_circuits": 0,
+                        "n_bubble_arms": n_bubble_arms,
+                        "circuit_id": None,
+                        "n_segments": None,
+                        "length_bp": None,
+                    }
+                )
                 n_unresolved += 1
                 continue
             for c in circuits:
-                rows.append({"species": species, "organelle": organelle, "n_circuits": len(circuits),
-                             "n_bubble_arms": n_bubble_arms, **c})
+                rows.append(
+                    {
+                        "species": species,
+                        "organelle": organelle,
+                        "n_circuits": len(circuits),
+                        "n_bubble_arms": n_bubble_arms,
+                        **c,
+                    }
+                )
             n_resolved += 1
 
     out_path = Path(args.out)
     out_path.parent.mkdir(parents=True, exist_ok=True)
     import pandas as pd
+
     df = pd.DataFrame(rows, columns=COLUMNS)
     df.to_csv(out_path, sep="\t", index=False)
 
-    print(f"[info] summarize_resolve: resolved={n_resolved} unresolved={n_unresolved} "
-          f"not_yet_run={n_missing} -> {out_path}", file=sys.stderr)
+    print(
+        f"[info] summarize_resolve: resolved={n_resolved} unresolved={n_unresolved} "
+        f"not_yet_run={n_missing} -> {out_path}",
+        file=sys.stderr,
+    )
 
 
 if __name__ == "__main__":
