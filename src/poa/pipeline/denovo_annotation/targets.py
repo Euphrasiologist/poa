@@ -10,12 +10,14 @@ for its own heavy step).
 
 from __future__ import annotations
 
-import sys
+import logging
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from typing import Callable, Iterable
 
 from poa.pipeline.common import species_discovery as sd
+
+log = logging.getLogger(__name__)
 
 ORGANELLES = ("mito", "pltd")
 
@@ -43,8 +45,7 @@ def scan_all(tasks: list, scan_one: Callable[[object], str], jobs: int) -> dict[
 
 
 def report(label: str, organelle: str, counts: dict[str, int], work_dir: Path) -> None:
-    print(
-        f"[info] {label}: {organelle}: scanned={counts['scanned']} skipped={counts['skipped']} "
-        f"failed={counts['failed']} -> {work_dir}",
-        file=sys.stderr,
+    log.info(
+        f"{label}: {organelle}: scanned={counts['scanned']} skipped={counts['skipped']} "
+        f"failed={counts['failed']} -> {work_dir}"
     )

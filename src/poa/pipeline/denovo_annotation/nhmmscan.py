@@ -22,10 +22,10 @@ src/00_run_nhmmscan.py is the command-line wrapper (main() here).
 from __future__ import annotations
 
 import argparse
+import logging
 import os
 import shutil
 import subprocess
-import sys
 from pathlib import Path
 from typing import Iterable
 
@@ -35,6 +35,9 @@ from poa.pipeline.common.errors import StageError
 from poa.pipeline.common.qc_gate import qc_eligible_species
 from poa.pipeline.denovo_annotation import targets
 from poa.pipeline.denovo_annotation.nhmmscan_gff import filter_and_convert
+from poa.pipeline.common.log import setup_logging
+
+log = logging.getLogger(__name__)
 
 DEFAULT_EVALUE = "1e-5"
 
@@ -59,13 +62,13 @@ def scan_one(
         timeout=1800,
     )
     if proc.returncode != 0:
-        print(f"[warn] nhmmscan failed for {species} ({organelle}): {proc.stderr.strip()[:300]}", file=sys.stderr)
+        log.warning(f"nhmmscan failed for {species} ({organelle}): {proc.stderr.strip()[:300]}")
         return "failed"
 
     try:
         filtered_text, gff_text = filter_and_convert(tblout, Path(fam), evalue)
     except (ValueError, KeyError, IndexError) as e:
-        print(f"[warn] tblout -> GFF failed for {species} ({organelle}): {e!r}", file=sys.stderr)
+        log.warning(f"tblout -> GFF failed for {species} ({organelle}): {e!r}")
         return "failed"
     filtered.write_text(filtered_text)
     gff.write_text(gff_text)
@@ -99,7 +102,7 @@ def run_nhmmscan(
         except (OSError, subprocess.CalledProcessError) as e:
             raise StageError(f"{organelle}: can't prepare the oatkDB database: {e}") from e
         if not fam.exists():
-            print(f"[warn] {organelle}: no oatkDB database at {fam} - skipping", file=sys.stderr)
+            log.warning(f"{organelle}: no oatkDB database at {fam} - skipping")
             continue
         tasks = targets.assemblies(root, organelle, species, qc_eligible)
         out[organelle] = counts = targets.scan_all(
@@ -112,6 +115,7 @@ def run_nhmmscan(
 
 
 def main(argv: list[str] | None = None) -> int:
+    setup_logging()
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--organelle", default="both", choices=["mito", "pltd", "both"])
     ap.add_argument("--species-list", default=None)
@@ -139,6 +143,6 @@ def main(argv: list[str] | None = None) -> int:
             force=args.force,
         )
     except StageError as e:
-        print(f"[err] {e}", file=sys.stderr)
+        log.error(e)
         return 1
     return 0

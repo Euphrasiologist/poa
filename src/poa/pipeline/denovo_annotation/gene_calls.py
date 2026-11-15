@@ -30,8 +30,8 @@ src/04_build_gene_calls.py is the command-line wrapper (main() here).
 from __future__ import annotations
 
 import argparse
+import logging
 import os
-import sys
 from pathlib import Path
 from typing import Iterable
 
@@ -39,6 +39,9 @@ from poa.pipeline.common import io_utils
 from poa.pipeline.common import species_discovery as sd
 from poa.pipeline.common.errors import StageError
 from poa.pipeline.denovo_annotation import targets
+from poa.pipeline.common.log import setup_logging
+
+log = logging.getLogger(__name__)
 
 COLUMNS = [
     "species",
@@ -204,7 +207,7 @@ def build_gene_calls(
             if rows:
                 all_rows.extend(rows)
                 n_species += 1
-        print(f"[info] build_gene_calls: {organelle}: {n_species} species with >=1 call", file=sys.stderr)
+        log.info(f"build_gene_calls: {organelle}: {n_species} species with >=1 call")
 
     out_path = analysis_dir / "denovo_annotation" / "results" / "gene_calls.tsv"
     # Always write what this run actually computed to its own path first;
@@ -218,15 +221,15 @@ def build_gene_calls(
         for row in all_rows:
             fh.write("\t".join(str(row[c]) for c in COLUMNS) + "\n")
     io_utils.merge_species_scoped_tsv(out_path, new_path, species)
-    print(
-        f"[info] build_gene_calls: {len(all_rows)} rows "
-        f"({'species-scoped merge' if species else 'full rewrite'}) -> {out_path}",
-        file=sys.stderr,
+    log.info(
+        f"build_gene_calls: {len(all_rows)} rows "
+        f"({'species-scoped merge' if species else 'full rewrite'}) -> {out_path}"
     )
     return out_path
 
 
 def main(argv: list[str] | None = None) -> int:
+    setup_logging()
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--organelle", default="both", choices=["mito", "pltd", "both"])
     ap.add_argument("--species-list", default=None)
@@ -239,6 +242,6 @@ def main(argv: list[str] | None = None) -> int:
             species=sd.load_species_list(Path(args.species_list)) if args.species_list else None,
         )
     except StageError as e:
-        print(f"[err] {e}", file=sys.stderr)
+        log.error(e)
         return 1
     return 0

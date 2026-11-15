@@ -28,9 +28,9 @@ failure. src/01_reconstruct.py is the command-line wrapper (main() here).
 from __future__ import annotations
 
 import argparse
+import logging
 import os
 import subprocess
-import sys
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -43,6 +43,9 @@ from poa.pipeline.common import species_discovery as sd
 from poa.pipeline.common.errors import StageError
 from poa.pipeline.common.tools import cargo_tool
 from poa.pipeline.trans_splicing.reference_genes import GENES
+from poa.pipeline.common.log import setup_logging
+
+log = logging.getLogger(__name__)
 
 DEFAULT_THREADS = 4
 DEFAULT_MERGE_DISTANCE = 5000
@@ -66,10 +69,7 @@ def build_manifest(
         templates[name] = {g: profiles_dir / g for g in GENES if (profiles_dir / g / "whole_gene.pssm").exists()}
     missing = set(GENES) - set(templates[lin.DEFAULT_LINEAGE])
     if missing:
-        print(
-            f"[warn] no template for {sorted(missing)} - run trans_splicing/src/00_build_exon_profiles.py first",
-            file=sys.stderr,
-        )
+        log.warning(f"no template for {sorted(missing)} - run trans_splicing/src/00_build_exon_profiles.py first")
 
     sub = gene_calls[(gene_calls["organelle"] == "mito") & (gene_calls["gene"].isin(GENES))]
     data_root = sd.repo_data_root(root, "mito")
@@ -146,10 +146,9 @@ def reconstruct(
 
     lineage_of = lin.load(analysis_dir) if lineage == "auto" else {}
     if lineage_of is None:
-        print(
-            f"[warn] no {lin.table_path(analysis_dir)} (run editing/src/01_scan_editing.py first) - "
-            f"using {lin.DEFAULT_LINEAGE} templates for every species",
-            file=sys.stderr,
+        log.warning(
+            f"no {lin.table_path(analysis_dir)} (run editing/src/01_scan_editing.py first) - "
+            f"using {lin.DEFAULT_LINEAGE} templates for every species"
         )
         lineage_of = {}
     default_lineage = lin.DEFAULT_LINEAGE if lineage == "auto" else lineage
@@ -161,7 +160,7 @@ def reconstruct(
     work_dir = analysis_dir / "trans_splicing" / "work"
     manifest_path = work_dir / "manifest.tsv"
     write_manifest(rows, manifest_path)
-    print(f"[info] reconstruct: manifest has {len(rows)} fragment rows -> {manifest_path}", file=sys.stderr)
+    log.info(f"reconstruct: manifest has {len(rows)} fragment rows -> {manifest_path}")
 
     results_dir = analysis_dir / "trans_splicing" / "results"
     results_dir.mkdir(parents=True, exist_ok=True)
@@ -200,14 +199,12 @@ def reconstruct(
     tables = {name: results_dir / f"{name}.tsv" for name in OUT_NAMES}
     for name in OUT_NAMES:
         io_utils.merge_species_scoped_tsv(tables[name], work_outs[name], species)
-    print(
-        f"[info] reconstruct: merged into {results_dir} ({'species-scoped' if species else 'full rewrite'})",
-        file=sys.stderr,
-    )
+    log.info(f"reconstruct: merged into {results_dir} ({'species-scoped' if species else 'full rewrite'})")
     return ReconstructResult(tables=tables)
 
 
 def main(argv: list[str] | None = None) -> int:
+    setup_logging()
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--species-list", default=None)
     ap.add_argument("--threads", type=int, default=DEFAULT_THREADS)
@@ -247,6 +244,6 @@ def main(argv: list[str] | None = None) -> int:
             lineage=args.lineage,
         )
     except StageError as e:
-        print(f"[err] {e}", file=sys.stderr)
+        log.error(e)
         return 1
     return 0

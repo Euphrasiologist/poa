@@ -47,9 +47,9 @@ from __future__ import annotations
 
 import argparse
 import csv
+import logging
 import os
 import subprocess
-import sys
 from collections import Counter, defaultdict
 from pathlib import Path
 
@@ -58,6 +58,9 @@ from poa.pipeline.common import lineage as lin
 from poa.pipeline.common.pssm import align_and_build, translate, read_fasta, write_profile
 from poa.pipeline.common.tools import cargo_tool
 from poa.pipeline.trans_splicing.reference_genes import GENES
+from poa.pipeline.common.log import setup_logging
+
+log = logging.getLogger(__name__)
 
 # Slot floor = this fraction of the lowest training self-score. With exons
 # translated in frame, self-scores are high (nad5 exon 2: 1013), and a
@@ -99,11 +102,11 @@ def load_junctions(raw_dir: Path) -> dict[tuple[str, str, str], dict]:
 
 def build_and_write_profile(protein_seqs: dict[str, str], out_path: Path, label: str, work_dir: Path) -> bool:
     if len(protein_seqs) < 2:
-        print(f"[warn] {label}: only {len(protein_seqs)} sequences, need >= 2 - skipping", file=sys.stderr)
+        log.warning(f"{label}: only {len(protein_seqs)} sequences, need >= 2 - skipping")
         return False
     columns = align_and_build(protein_seqs, work_dir, label)
     if columns is None:
-        print(f"[warn] {label}: no usable alignment - skipping", file=sys.stderr)
+        log.warning(f"{label}: no usable alignment - skipping")
         return False
     write_profile(columns, out_path)
     return True
@@ -162,9 +165,7 @@ def compute_min_self_score(
         timeout=120,
     )
     if proc.returncode != 0:
-        print(
-            f"[warn] {gene} exon{slot}: self-scoring orfedit call failed: {proc.stderr.strip()[:300]}", file=sys.stderr
-        )
+        log.warning(f"{gene} exon{slot}: self-scoring orfedit call failed: {proc.stderr.strip()[:300]}")
         return None
     scores = []
     with open(out_path) as fh:
@@ -203,7 +204,7 @@ def build_exon_profiles(
         included = [key for key in loci if not junctions.get(key, {}).get("excluded", False)]
         excluded = [key for key in loci if key not in included]
         if excluded:
-            print(f"[info] {gene}: excluding {[k[2] for k in excluded]} (flagged in junctions.tsv)", file=sys.stderr)
+            log.info(f"{gene}: excluding {[k[2] for k in excluded]} (flagged in junctions.tsv)")
 
         gene_dir = profiles_dir / gene
 
@@ -221,13 +222,10 @@ def build_exon_profiles(
         # intron-less rps3 from exon2 (it simply has no exon2 record).
         n_exons_seen = Counter(junctions[key]["n_exons"] for key in included if key in junctions)
         if not n_exons_seen:
-            print(f"[warn] {gene}: no junction data for included loci - skipping exon slots", file=sys.stderr)
+            log.warning(f"{gene}: no junction data for included loci - skipping exon slots")
             continue
         k = n_exons_seen.most_common(1)[0][0]
-        print(
-            f"[info] {gene}: {len(included)} loci, canonical exon count K={k} " f"(seen: {dict(n_exons_seen)})",
-            file=sys.stderr,
-        )
+        log.info(f"{gene}: {len(included)} loci, canonical exon count K={k} " f"(seen: {dict(n_exons_seen)})")
 
         # lead/trail per (locus, slot) from the locus's own cumulative exon
         # lengths - the junction phase, which the translation must respect
@@ -263,7 +261,7 @@ def build_exon_profiles(
                     seq = raw[key][slot]
                     dna_seqs[f"{acc}_{locus}"] = seq[lead : len(seq) - trail]
             if len(dna_seqs) < 2:
-                print(f"[warn] {gene} exon{slot}: only {len(dna_seqs)} sequences - skipping", file=sys.stderr)
+                log.warning(f"{gene} exon{slot}: only {len(dna_seqs)} sequences - skipping")
                 continue
             protein_seqs = {name: translate(seq).rstrip("*") for name, seq in dna_seqs.items()}
             profile_path = gene_dir / f"exon{slot}.pssm"
@@ -271,22 +269,22 @@ def build_exon_profiles(
                 continue
             min_score = compute_min_self_score(gene, slot, dna_seqs, profile_path, work_dir, orfedit)
             if min_score is None:
-                print(f"[warn] {gene} exon{slot}: could not compute min_self_score - skipping", file=sys.stderr)
+                log.warning(f"{gene} exon{slot}: could not compute min_self_score - skipping")
                 continue
             floor = min_score * FLOOR_FRACTION if min_score > 0 else min_score
             (gene_dir / f"exon{slot}.threshold").write_text(f"{floor:.4f}\n")
             lead, trail = Counter(frames[key][slot] for key in frames).most_common(1)[0][0]
             (gene_dir / f"exon{slot}.frame").write_text(f"{lead}\t{trail}\n")
-            print(
-                f"[info] {gene} exon{slot}: {len(dna_seqs)} training seqs, "
-                f"min_self_score={min_score:.3f} -> {profile_path.name}",
-                file=sys.stderr,
+            log.info(
+                f"{gene} exon{slot}: {len(dna_seqs)} training seqs, "
+                f"min_self_score={min_score:.3f} -> {profile_path.name}"
             )
 
     return profiles_dir
 
 
 def main(argv: list[str] | None = None) -> int:
+    setup_logging()
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument(
         "--genes",

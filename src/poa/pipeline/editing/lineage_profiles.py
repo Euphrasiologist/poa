@@ -27,8 +27,8 @@ src/00b_build_lineage_profiles.py is the command-line wrapper (main() here).
 from __future__ import annotations
 
 import argparse
+import logging
 import os
-import sys
 from collections import Counter
 from pathlib import Path
 
@@ -41,6 +41,9 @@ from poa.pipeline.common.refseq_mito import cds_exons, fetch, verify
 from poa.pipeline.common import pssm
 from poa.pipeline.editing import profiles
 from poa.pipeline.trans_splicing import reference_genes as rg
+from poa.pipeline.common.log import setup_logging
+
+log = logging.getLogger(__name__)
 
 GB_DIR = lin.trans_splicing_reference(PIPELINE_DIR, lin.DEFAULT_LINEAGE) / "genbank"
 BUNDLED_MITO = PIPELINE_DIR / "editing" / "reference" / "profiles" / "mito"
@@ -73,7 +76,7 @@ def build_lineage_profiles(lineage: str, work_root: Path) -> Path:
                 continue
             ok, note = verify(exons[0], f.qualifiers["translation"][0])
             if not ok:
-                print(f"[warn] {acc} {organism} {gene}: {note} - not used", file=sys.stderr)
+                log.warning(f"{acc} {organism} {gene}: {note} - not used")
                 continue
             proteins[gene][acc] = f.qualifiers["translation"][0]
 
@@ -84,10 +87,9 @@ def build_lineage_profiles(lineage: str, work_root: Path) -> Path:
         modal = n_exons[gene].most_common(1)[0][0] if n_exons[gene] else None
         stale = out_dir / f"{gene}.pssm"
         if modal != 1 or len(proteins[gene]) < profiles.MIN_SEQUENCES:
-            print(
-                f"[info] {gene}: no {lineage} profile (exon counts {dict(n_exons[gene])}, "
-                f"{len(proteins[gene])} single-exon verified loci)",
-                file=sys.stderr,
+            log.info(
+                f"{gene}: no {lineage} profile (exon counts {dict(n_exons[gene])}, "
+                f"{len(proteins[gene])} single-exon verified loci)"
             )
             stale.unlink(missing_ok=True)
             continue
@@ -95,22 +97,22 @@ def build_lineage_profiles(lineage: str, work_root: Path) -> Path:
         if columns is None:
             raise StageError(f"{gene}: no profile from {work_dir / gene}.protein.fasta (mafft failed or no columns)")
         pssm.write_profile(columns, out_dir / f"{gene}.pssm")
-        print(
-            f"[info] {gene}: {lineage} profile from {len(proteins[gene])} RefSeq proteins, "
-            f"{len(columns)} columns -> {out_dir / gene}.pssm",
-            file=sys.stderr,
+        log.info(
+            f"{gene}: {lineage} profile from {len(proteins[gene])} RefSeq proteins, "
+            f"{len(columns)} columns -> {out_dir / gene}.pssm"
         )
 
     return out_dir
 
 
 def main(argv: list[str] | None = None) -> int:
+    setup_logging()
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--lineage", required=True, choices=NON_DEFAULT)
     args = ap.parse_args(argv)
     try:
         build_lineage_profiles(args.lineage, Path(os.environ.get("PLANT_ORGANELLE_DATA_ROOT") or os.getcwd()))
     except StageError as e:
-        print(f"[err] {e}", file=sys.stderr)
+        log.error(e)
         return 1
     return 0

@@ -39,13 +39,16 @@ from __future__ import annotations
 
 import argparse
 import csv
+import logging
 import os
-import sys
 from collections import defaultdict
 from pathlib import Path
 
 from poa.pipeline.common import species_discovery as sd
 from poa.pipeline.common.errors import StageError
+from poa.pipeline.common.log import setup_logging
+
+log = logging.getLogger(__name__)
 
 LOW_DEPTH_RATIO = 0.2
 EMBEDDED_MAX_BP = 30_000
@@ -282,11 +285,12 @@ def low_depth_paths(root: Path, *, species: set[str] | None = None, gene_calls: 
         for r in rows:
             fh.write("\t".join(str(r.get(c, "")) for c in COLUMNS) + "\n")
     n_flag = sum(1 for r in rows if r.get("flagged"))
-    print(f"[info] low_depth_paths: {len(rows)} mito graphs, {n_flag} flagged -> {out}", file=sys.stderr)
+    log.info(f"low_depth_paths: {len(rows)} mito graphs, {n_flag} flagged -> {out}")
     return out
 
 
 def main(argv: list[str] | None = None) -> int:
+    setup_logging()
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--species-list", default=None)
     args = ap.parse_args(argv)
@@ -294,6 +298,6 @@ def main(argv: list[str] | None = None) -> int:
     try:
         low_depth_paths(root, species=sd.load_species_list(Path(args.species_list)) if args.species_list else None)
     except StageError as e:
-        print(f"[err] {e}", file=sys.stderr)
+        log.error(e)
         return 1
     return 0

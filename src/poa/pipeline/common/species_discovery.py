@@ -34,6 +34,7 @@ qc_basic_stats' job, using the paths this module resolves.
 
 from __future__ import annotations
 
+import logging
 import os
 import argparse
 import csv
@@ -41,6 +42,8 @@ import sys
 from dataclasses import dataclass, fields
 from pathlib import Path
 from typing import Optional
+
+log = logging.getLogger(__name__)
 
 ORGANELLE_SUFFIX = {
     "mito": {
@@ -165,6 +168,9 @@ def repo_data_root(root_dir: Path, organelle: str) -> Path:
 
 
 def main():
+    from poa.pipeline.common.log import setup_logging
+
+    setup_logging()
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--organelle", required=True, choices=["mito", "pltd"])
     ap.add_argument(
@@ -179,7 +185,7 @@ def main():
     species_filter = load_species_list(Path(args.species_list)) if args.species_list else None
 
     def logger(msg):
-        print(f"[warn] {msg}", file=sys.stderr)
+        log.warning(msg)
 
     results = discover_all(data_root, args.organelle, species_filter=species_filter, logger=logger)
 
@@ -192,10 +198,7 @@ def main():
     n_ok = sum(1 for r in results if r.status == "ok")
     n_no_fasta = sum(1 for r in results if r.status == "no_ctg_fasta")
     n_missing = sum(1 for r in results if r.status == "missing_gfa")
-    print(
-        f"[info] {args.organelle}: {len(results)} species, ok={n_ok} no_ctg_fasta={n_no_fasta} missing_gfa={n_missing}",
-        file=sys.stderr,
-    )
+    log.info(f"{args.organelle}: {len(results)} species, ok={n_ok} no_ctg_fasta={n_no_fasta} missing_gfa={n_missing}")
 
 
 if __name__ == "__main__":

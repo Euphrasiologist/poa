@@ -27,6 +27,7 @@ Output:
 from __future__ import annotations
 
 import gzip
+import logging
 import os
 import re
 import shutil
@@ -49,6 +50,8 @@ from .pipeline.qc_basic_stats.low_depth_paths import low_depth_paths
 from .pipeline.trans_splicing.reconstruct import reconstruct
 from .pipeline.unitig_coords.linearization_qc import linearization_qc
 from .pipeline.unitig_coords.unitig_map import build_unitig_maps
+
+log = logging.getLogger(__name__)
 
 ORGANELLES = {"mito": "mito", "pltd": "plastid"}  # suffix -> data/ subdirectory
 # a stage that reports failures this way failed, even with exit status 0
@@ -122,16 +125,16 @@ def run_stage(label: str, stage: Callable[[], object], logs: Path) -> None:
     t0 = time.time()
     print(f"[poa] {label} ...", end="", file=sys.stderr, flush=True)
     failed = False
-    with open(log_path, "w") as log:
+    with open(log_path, "w") as fh:
         try:
-            with fds_to(log):
+            with fds_to(fh):
                 stage()
         except StageError as e:
             failed = True
-            print(f"[err] {e}", file=log)
+            print(f"[err] {e}", file=fh)
         except Exception:
             failed = True
-            traceback.print_exc(file=log)
+            traceback.print_exc(file=fh)
     text = log_path.read_text()
     if failed or FAILURE_RE.search(text):
         print(" FAILED", file=sys.stderr)
@@ -233,7 +236,7 @@ def run(
         for label, stage in stages:
             run_stage(label, stage, logs)
     except StageFailed as e:
-        print(f"[err] {e}", file=sys.stderr)
+        log.error(e)
         return 1
 
     results = work / "analysis" / "gff_export" / "results"
@@ -247,7 +250,7 @@ def run(
                 shutil.copyfile(src, dst)
                 written.append(dst)
         if not (out / f"{name}.{o}.gff").exists():
-            print(f"[err] gff_export wrote no {o} GFF ({results})", file=sys.stderr)
+            log.error(f"gff_export wrote no {o} GFF ({results})")
             return 1
     (out / "tables").mkdir(exist_ok=True)
     for rel in TABLES:

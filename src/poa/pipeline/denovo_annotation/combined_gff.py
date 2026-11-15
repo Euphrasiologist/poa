@@ -22,14 +22,17 @@ src/03_build_combined_gff.py is the command-line wrapper (main() here).
 from __future__ import annotations
 
 import argparse
+import logging
 import os
-import sys
 from pathlib import Path
 from typing import Iterable
 
 from poa.pipeline.common import species_discovery as sd
 from poa.pipeline.common.errors import StageError
 from poa.pipeline.denovo_annotation import targets
+from poa.pipeline.common.log import setup_logging
+
+log = logging.getLogger(__name__)
 
 SOURCES = ("nhmmscan", "trnascan", "barrnap")  # work/ subdirectories
 
@@ -71,11 +74,12 @@ def build_combined_gff(
             lines.sort(key=sort_key)
             out_path.write_text("##gff-version 3\n" + "\n".join(lines) + "\n")
             n_written += 1
-        print(f"[info] build_combined_gff: {organelle}: {n_written} species -> {out_dir}", file=sys.stderr)
+        log.info(f"build_combined_gff: {organelle}: {n_written} species -> {out_dir}")
     return out_dir
 
 
 def main(argv: list[str] | None = None) -> int:
+    setup_logging()
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--organelle", default="both", choices=["mito", "pltd", "both"])
     ap.add_argument("--species-list", default=None)
@@ -90,6 +94,6 @@ def main(argv: list[str] | None = None) -> int:
             force=args.force,
         )
     except StageError as e:
-        print(f"[err] {e}", file=sys.stderr)
+        log.error(e)
         return 1
     return 0

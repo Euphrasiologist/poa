@@ -33,13 +33,16 @@ from __future__ import annotations
 
 import argparse
 import csv
+import logging
 import os
-import sys
 from pathlib import Path
 from typing import Iterable
 
 from poa.pipeline.common import species_discovery as sd
 from poa.pipeline.common.errors import StageError
+from poa.pipeline.common.log import setup_logging
+
+log = logging.getLogger(__name__)
 
 ORGANELLES = ("mito", "pltd")
 COLUMNS = [
@@ -186,11 +189,12 @@ def linearization_qc(root: Path, organelles: Iterable[str] = ORGANELLES, *, spec
         fh.write("\t".join(COLUMNS) + "\n")
         for row in rows:
             fh.write("\t".join(str(row[c]) for c in COLUMNS) + "\n")
-    print(f"[info] linearization_qc: {len(rows)} rows -> {out_path}", file=sys.stderr)
+    log.info(f"linearization_qc: {len(rows)} rows -> {out_path}")
     return out_path
 
 
 def main(argv: list[str] | None = None) -> int:
+    setup_logging()
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--organelle", default="both", choices=["mito", "pltd", "both"])
     ap.add_argument("--species-list", default=None)
@@ -203,6 +207,6 @@ def main(argv: list[str] | None = None) -> int:
             species=sd.load_species_list(Path(args.species_list)) if args.species_list else None,
         )
     except StageError as e:
-        print(f"[err] {e}", file=sys.stderr)
+        log.error(e)
         return 1
     return 0

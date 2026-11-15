@@ -32,8 +32,8 @@ src/02_bootstrap_refine.py is the command-line wrapper (main() here).
 from __future__ import annotations
 
 import argparse
+import logging
 import os
-import sys
 from pathlib import Path
 
 import pandas as pd
@@ -42,6 +42,9 @@ from poa import PIPELINE_DIR
 from poa.pipeline.common import lineage as lin
 from poa.pipeline.common.errors import StageError
 from poa.pipeline.common.pssm import align_and_build, write_profile
+from poa.pipeline.common.log import setup_logging
+
+log = logging.getLogger(__name__)
 
 MIN_TRAINING_SEQS = 5
 
@@ -66,32 +69,31 @@ def refine_whole_gene_profiles(root: Path, min_score: float = 0.0) -> list[str]:
     for gene, sub in df.groupby("gene"):
         good = sub[(sub["complete"]) & (sub["whole_gene_score"] > min_score)]
         if len(good) < MIN_TRAINING_SEQS:
-            print(
-                f"[warn] {gene}: only {len(good)} complete, score>{min_score} reconstructions "
-                f"(need >= {MIN_TRAINING_SEQS}) - keeping existing whole_gene.pssm",
-                file=sys.stderr,
+            log.warning(
+                f"{gene}: only {len(good)} complete, score>{min_score} reconstructions "
+                f"(need >= {MIN_TRAINING_SEQS}) - keeping existing whole_gene.pssm"
             )
             continue
 
         protein_seqs = {row.species: row.protein.replace("-", "") for row in good.itertuples()}
         columns = align_and_build(protein_seqs, work_dir, f"{gene}.whole_gene_refined")
         if columns is None:
-            print(f"[warn] {gene}: no usable alignment from refined training set - skipping", file=sys.stderr)
+            log.warning(f"{gene}: no usable alignment from refined training set - skipping")
             continue
         out_path = profiles_dir / gene / "whole_gene.pssm"
         write_profile(columns, out_path)
         refined.append(gene)
-        print(
-            f"[info] {gene}: whole_gene.pssm refined from {len(protein_seqs)} dataset-derived sequences "
-            f"(was: 5-7 GenBank references) -> {out_path}",
-            file=sys.stderr,
+        log.info(
+            f"{gene}: whole_gene.pssm refined from {len(protein_seqs)} dataset-derived sequences "
+            f"(was: 5-7 GenBank references) -> {out_path}"
         )
 
-    print("[info] bootstrap_refine: done - re-run 01_reconstruct.py to use the refined profiles", file=sys.stderr)
+    log.info("bootstrap_refine: done - re-run 01_reconstruct.py to use the refined profiles")
     return refined
 
 
 def main(argv: list[str] | None = None) -> int:
+    setup_logging()
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument(
         "--min-score", type=float, default=0.0, help="whole_gene_score floor for inclusion in the refined training set"
@@ -100,6 +102,6 @@ def main(argv: list[str] | None = None) -> int:
     try:
         refine_whole_gene_profiles(Path(os.environ.get("PLANT_ORGANELLE_DATA_ROOT") or os.getcwd()), args.min_score)
     except StageError as e:
-        print(f"[err] {e}", file=sys.stderr)
+        log.error(e)
         return 1
     return 0

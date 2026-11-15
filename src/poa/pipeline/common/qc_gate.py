@@ -9,9 +9,11 @@ run`, or a dataset before QC - nothing is filtered.
 from __future__ import annotations
 
 import csv
-import sys
+import logging
 from pathlib import Path
 from typing import Iterable
+
+log = logging.getLogger(__name__)
 
 
 def qc_eligible_species(root: Path, qc_status: Iterable[str]) -> set[tuple[str, str]] | None:
@@ -25,7 +27,7 @@ def qc_eligible_species(root: Path, qc_status: Iterable[str]) -> set[tuple[str, 
     everything out."""
     qc_path = Path(root) / "analysis" / "qc_basic_stats" / "results" / "qc_summary.tsv"
     if not qc_path.exists():
-        print(f"[warn] missing {qc_path} - not filtering by QC status", file=sys.stderr)
+        log.warning(f"missing {qc_path} - not filtering by QC status")
         return None
     qc_status = set(qc_status)
     with open(qc_path) as fh:

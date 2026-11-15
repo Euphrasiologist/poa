@@ -35,9 +35,9 @@ takes the data root from PLANT_ORGANELLE_DATA_ROOT or the current directory.
 from __future__ import annotations
 
 import argparse
+import logging
 import os
 import subprocess
-import sys
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -49,6 +49,9 @@ from poa.pipeline.common import lineage as lin
 from poa.pipeline.common import species_discovery as sd
 from poa.pipeline.common.errors import StageError
 from poa.pipeline.common.tools import cargo_tool
+from poa.pipeline.common.log import setup_logging
+
+log = logging.getLogger(__name__)
 
 ORGANELLES = ("mito", "pltd")
 DEFAULT_THREADS = 4
@@ -80,10 +83,9 @@ def build_manifest(
         organelle_profiles_dir = profiles_dir / organelle
         genes = sorted(p.stem for p in organelle_profiles_dir.glob("*.pssm"))
         if not genes:
-            print(
-                f"[warn] {organelle}: no profiles in {organelle_profiles_dir} - run "
-                f"editing/src/00_build_reference_profiles.py first",
-                file=sys.stderr,
+            log.warning(
+                f"{organelle}: no profiles in {organelle_profiles_dir} - run "
+                f"editing/src/00_build_reference_profiles.py first"
             )
             continue
         hits = best_hits_per_species(gene_calls, organelle, genes)
@@ -132,7 +134,7 @@ def run_orfedit(
     """One orfedit scan-batch over `rows`; (gene calls, edits) as all-string frames."""
     manifest_path = work_dir / f"manifest.{tag}.tsv"
     write_manifest(rows, manifest_path)
-    print(f"[info] scan_editing: {tag} manifest has {len(rows)} rows -> {manifest_path}", file=sys.stderr)
+    log.info(f"scan_editing: {tag} manifest has {len(rows)} rows -> {manifest_path}")
     calls_out, edits_out = work_dir / f"edited_gene_calls.{tag}.tsv", work_dir / f"predicted_edits.{tag}.tsv"
     cmd = [
         orfedit,
@@ -230,7 +232,7 @@ def scan(
         # a dataset too small for 00_build_reference_profiles.py (>=5 species
         # per gene) uses the bundled ones, built on the 1250-species dataset
         profiles_dir = PIPELINE_DIR / "editing" / "reference" / "profiles"
-        print(f"[info] scan_editing: no dataset-built profiles, using bundled {profiles_dir}", file=sys.stderr)
+        log.info(f"scan_editing: no dataset-built profiles, using bundled {profiles_dir}")
 
     rows = build_manifest(root, calls, organelles, species, profiles_dir)
     if not rows:
@@ -257,7 +259,7 @@ def scan(
     lineage_table = assign_lineages({k: c for k, (c, _) in runs.items()}, forced)
     lineages = dict(zip(lineage_table["species"], lineage_table["lineage"]))
     for name, n in lineage_table["lineage"].value_counts().items():
-        print(f"[info] scan_editing: {n} species use {name} mito profiles", file=sys.stderr)
+        log.info(f"scan_editing: {n} species use {name} mito profiles")
     work_gene_calls_out = work_dir / "edited_gene_calls.new.tsv"
     work_edits_out = work_dir / "predicted_edits.new.tsv"
     for i, out in enumerate((work_gene_calls_out, work_edits_out)):
@@ -275,14 +277,12 @@ def scan(
     io_utils.merge_species_scoped_tsv(result.edited_gene_calls, work_gene_calls_out, species)
     io_utils.merge_species_scoped_tsv(result.predicted_edits, work_edits_out, species)
     io_utils.merge_species_scoped_tsv(result.lineage_table, work_lineage_out, species)
-    print(
-        f"[info] scan_editing: merged into {results_dir} ({'species-scoped' if species else 'full rewrite'})",
-        file=sys.stderr,
-    )
+    log.info(f"scan_editing: merged into {results_dir} ({'species-scoped' if species else 'full rewrite'})")
     return result
 
 
 def main(argv: list[str] | None = None) -> int:
+    setup_logging()
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--organelle", default="both", choices=["mito", "pltd", "both"])
     ap.add_argument("--species-list", default=None)
@@ -321,6 +321,6 @@ def main(argv: list[str] | None = None) -> int:
             lineage=args.lineage,
         )
     except StageError as e:
-        print(f"[err] {e}", file=sys.stderr)
+        log.error(e)
         return 1
     return 0

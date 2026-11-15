@@ -13,10 +13,10 @@ src/01_run_trnascan.py is the command-line wrapper (main() here).
 from __future__ import annotations
 
 import argparse
+import logging
 import os
 import shutil
 import subprocess
-import sys
 from pathlib import Path
 from typing import Iterable
 
@@ -24,6 +24,9 @@ from poa.pipeline.common import species_discovery as sd
 from poa.pipeline.common.errors import StageError
 from poa.pipeline.common.qc_gate import qc_eligible_species
 from poa.pipeline.denovo_annotation import targets
+from poa.pipeline.common.log import setup_logging
+
+log = logging.getLogger(__name__)
 
 
 def trnascan_exe() -> str:
@@ -64,7 +67,7 @@ def scan_one(species: str, organelle: str, ctg_fasta: str, threads: int | str, w
         timeout=1800,
     )
     if proc.returncode != 0 or not out_gff.exists():
-        print(f"[warn] tRNAscan-SE failed for {species} ({organelle}): {proc.stderr.strip()[:300]}", file=sys.stderr)
+        log.warning(f"tRNAscan-SE failed for {species} ({organelle}): {proc.stderr.strip()[:300]}")
         return "failed"
     return "scanned"
 
@@ -98,6 +101,7 @@ def run_trnascan(
 
 
 def main(argv: list[str] | None = None) -> int:
+    setup_logging()
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--organelle", default="both", choices=["mito", "pltd", "both"])
     ap.add_argument("--species-list", default=None)
@@ -120,6 +124,6 @@ def main(argv: list[str] | None = None) -> int:
             force=args.force,
         )
     except StageError as e:
-        print(f"[err] {e}", file=sys.stderr)
+        log.error(e)
         return 1
     return 0

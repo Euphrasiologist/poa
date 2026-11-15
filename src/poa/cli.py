@@ -13,6 +13,7 @@ import sys
 import click
 
 from . import __version__, run
+from .pipeline.common.log import setup_logging
 
 # (command, version flag, what needs it); the version flag is only for display.
 # REQUIRED is what `poa run` needs; the rest only serve stages run by hand
@@ -90,6 +91,7 @@ def check_tools() -> int:
 @click.version_option(__version__, prog_name="poa", message="%(prog)s %(version)s")
 def main() -> None:
     """Plant organelle annotator."""
+    setup_logging()
 
 
 @main.command()

@@ -92,9 +92,9 @@ src/00_build_unitig_map.py is the command-line wrapper (main() here).
 from __future__ import annotations
 
 import argparse
+import logging
 import os
 import re
-import sys
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from typing import Iterable
@@ -102,6 +102,9 @@ from typing import Iterable
 from poa.pipeline.common import species_discovery as sd
 from poa.pipeline.common.errors import StageError
 from poa.pipeline.common.qc_gate import qc_eligible_species
+from poa.pipeline.common.log import setup_logging
+
+log = logging.getLogger(__name__)
 
 ORGANELLES = ("mito", "pltd")
 
@@ -342,16 +345,14 @@ def build_unitig_maps(
                     path_failed.append(futures[fut])
         out[organelle] = counts
         summary = " ".join(f"{k}={v}" for k, v in sorted(counts.items()))
-        print(f"[info] build_unitig_map: {organelle}: {summary} -> {map_dir}", file=sys.stderr)
+        log.info(f"build_unitig_map: {organelle}: {summary} -> {map_dir}")
         for sp in sorted(path_failed):
-            print(
-                f"[warn] {sp}.{organelle}: path= header present but unwalkable, fell back to seqmatch",
-                file=sys.stderr,
-            )
+            log.warning(f"{sp}.{organelle}: path= header present but unwalkable, fell back to seqmatch")
     return out
 
 
 def main(argv: list[str] | None = None) -> int:
+    setup_logging()
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--organelle", default="both", choices=["mito", "pltd", "both"])
     ap.add_argument("--species-list", default=None)
@@ -370,6 +371,6 @@ def main(argv: list[str] | None = None) -> int:
             force=args.force,
         )
     except StageError as e:
-        print(f"[err] {e}", file=sys.stderr)
+        log.error(e)
         return 1
     return 0

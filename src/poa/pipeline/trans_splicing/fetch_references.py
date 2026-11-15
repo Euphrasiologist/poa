@@ -24,7 +24,7 @@ from __future__ import annotations
 
 import argparse
 import csv
-import sys
+import logging
 from pathlib import Path
 
 from Bio import SeqIO
@@ -33,6 +33,9 @@ from poa import PIPELINE_DIR
 from poa.pipeline.common import lineage as lin
 from poa.pipeline.common.refseq_mito import cds_exons, fetch, verify
 from poa.pipeline.trans_splicing.reference_genes import CIS_SPLICED_MITO, GENE_SYNONYMS, GENES, LINEAGE_MITOGENOMES
+from poa.pipeline.common.log import setup_logging
+
+log = logging.getLogger(__name__)
 
 GB_DIR = lin.trans_splicing_reference(PIPELINE_DIR, lin.DEFAULT_LINEAGE) / "genbank"
 CIS_MAX_GAP = 10_000
@@ -125,9 +128,8 @@ def fetch_references(lineage: str = lin.DEFAULT_LINEAGE, force: bool = False) ->
                 f"{f.qualifiers['translation'][0]}\n"
             )
             (raw_dir / f"{acc}_{gene}{suffix}.fasta").write_text("".join(lines))
-            print(
-                f"[{'ok' if ok else 'UNRESOLVED'}] {acc} {organism}: {gene} ({locus}) {k} exon(s) - {note}",
-                file=sys.stderr,
+            (log.info if ok else log.warning)(
+                f"{'verified' if ok else 'UNRESOLVED'}: {acc} {organism}: {gene} ({locus}) {k} exon(s) - {note}"
             )
 
     if force:
@@ -137,11 +139,12 @@ def fetch_references(lineage: str = lin.DEFAULT_LINEAGE, force: bool = False) ->
         w = csv.DictWriter(fh, fieldnames=JUNCTION_COLS, delimiter="\t", lineterminator="\n")
         w.writeheader()
         w.writerows(existing_rows + new_rows)
-    print(f"[info] fetch_references: {n_ok} verified, {n_bad} UNRESOLVED loci written -> {raw_dir}", file=sys.stderr)
+    log.info(f"fetch_references: {n_ok} verified, {n_bad} UNRESOLVED loci written -> {raw_dir}")
     return raw_dir
 
 
 def main(argv: list[str] | None = None) -> int:
+    setup_logging()
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--lineage", default=lin.DEFAULT_LINEAGE, choices=sorted(LINEAGE_MITOGENOMES))
     ap.add_argument("--force", action="store_true", help="rewrite accession+gene files that already exist")

@@ -8,13 +8,15 @@ whole-gene templates - so all of them are made the same way.
 
 from __future__ import annotations
 
+import logging
 import math
 import os
 import shutil
 import subprocess
-import sys
 from collections import Counter
 from pathlib import Path
+
+log = logging.getLogger(__name__)
 
 MAFFT = shutil.which("mafft") or "/software/team301/mafft-7.525-with-extensions/core/mafft"
 MAFFT_BINARIES_DIR = os.environ.get("MAFFT_BINARIES", "/software/team301/mafft-7.525-with-extensions/core")
@@ -79,7 +81,7 @@ def run_mafft(protein_fasta: Path, out_fasta: Path) -> bool:
         env=env,
     )
     if proc.returncode != 0 or not proc.stdout.strip():
-        print(f"[warn] mafft failed for {protein_fasta.name}: {proc.stderr.strip()[:300]}", file=sys.stderr)
+        log.warning(f"mafft failed for {protein_fasta.name}: {proc.stderr.strip()[:300]}")
         return False
     out_fasta.write_text(proc.stdout)
     return True

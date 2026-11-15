@@ -15,9 +15,9 @@ src/02_run_barrnap.py is the command-line wrapper (main() here).
 from __future__ import annotations
 
 import argparse
+import logging
 import os
 import subprocess
-import sys
 from pathlib import Path
 from typing import Iterable
 
@@ -26,6 +26,9 @@ from poa.pipeline.common.errors import StageError
 from poa.pipeline.common.qc_gate import qc_eligible_species
 from poa.pipeline.denovo_annotation import targets
 from poa.pipeline.denovo_annotation.rrna_nhmmer import call_rrna
+from poa.pipeline.common.log import setup_logging
+
+log = logging.getLogger(__name__)
 
 DEFAULT_EVALUE = "1e-5"
 
@@ -40,7 +43,7 @@ def scan_one(
         gff = call_rrna(ctg_fasta, evalue, threads)
     except (OSError, ValueError, subprocess.SubprocessError) as e:
         err = getattr(e, "stderr", None) or str(e)
-        print(f"[warn] rRNA calling failed for {species} ({organelle}): {err.strip()[:300]}", file=sys.stderr)
+        log.warning(f"rRNA calling failed for {species} ({organelle}): {err.strip()[:300]}")
         return "failed"
     out_gff.write_text(gff)
     return "scanned"
@@ -76,6 +79,7 @@ def run_rrna(
 
 
 def main(argv: list[str] | None = None) -> int:
+    setup_logging()
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--organelle", default="both", choices=["mito", "pltd", "both"])
     ap.add_argument("--species-list", default=None)
@@ -98,6 +102,6 @@ def main(argv: list[str] | None = None) -> int:
             force=args.force,
         )
     except StageError as e:
-        print(f"[err] {e}", file=sys.stderr)
+        log.error(e)
         return 1
     return 0

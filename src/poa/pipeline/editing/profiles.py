@@ -30,12 +30,15 @@ is the command-line wrapper (main() here).
 from __future__ import annotations
 
 import argparse
+import logging
 import os
-import sys
 from pathlib import Path
 
 from poa.pipeline.common.errors import StageError
 from poa.pipeline.common.pssm import align_and_build, read_fasta, translate, write_profile
+from poa.pipeline.common.log import setup_logging
+
+log = logging.getLogger(__name__)
 
 MIN_SEQUENCES = 5  # below this, not enough signal for a meaningful profile
 MIN_PROTEIN_LEN = 20  # aa
@@ -98,31 +101,29 @@ def build_dataset_profiles(root: Path, organelles: list[str] | tuple[str, ...] =
             nuc_seqs = read_fasta(gene_fasta)
             proteins = clean_proteins(nuc_seqs)
             if len(proteins) < MIN_SEQUENCES:
-                print(
-                    f"[warn] {organelle}/{gene}: only {len(proteins)} clean sequences (need >= "
-                    f"{MIN_SEQUENCES}) - skipping",
-                    file=sys.stderr,
+                log.warning(
+                    f"{organelle}/{gene}: only {len(proteins)} clean sequences (need >= " f"{MIN_SEQUENCES}) - skipping"
                 )
                 continue
 
             columns = align_and_build(proteins, work_dir, f"{organelle}.{gene}")
             if columns is None:
-                print(f"[warn] {organelle}/{gene}: no usable alignment - skipping", file=sys.stderr)
+                log.warning(f"{organelle}/{gene}: no usable alignment - skipping")
                 continue
 
             write_profile(columns, profiles_dir / organelle / f"{gene}.pssm")
             n_built += 1
-            print(
-                f"[info] {organelle}/{gene}: profile from {len(proteins)} sequences, "
-                f"{len(columns)} columns -> profiles/{organelle}/{gene}.pssm",
-                file=sys.stderr,
+            log.info(
+                f"{organelle}/{gene}: profile from {len(proteins)} sequences, "
+                f"{len(columns)} columns -> profiles/{organelle}/{gene}.pssm"
             )
 
-    print(f"[info] build_reference_profiles: {n_built} profiles -> {profiles_dir}", file=sys.stderr)
+    log.info(f"build_reference_profiles: {n_built} profiles -> {profiles_dir}")
     return profiles_dir
 
 
 def main(argv: list[str] | None = None) -> int:
+    setup_logging()
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--organelle", default="both", choices=["mito", "pltd", "both"])
     ap.add_argument(
@@ -136,6 +137,6 @@ def main(argv: list[str] | None = None) -> int:
     try:
         build_dataset_profiles(root, ["mito", "pltd"] if args.organelle == "both" else [args.organelle])
     except StageError as e:
-        print(f"[err] {e}", file=sys.stderr)
+        log.error(e)
         return 1
     return 0

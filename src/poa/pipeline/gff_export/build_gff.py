@@ -79,9 +79,9 @@ from __future__ import annotations
 
 import argparse
 import csv
+import logging
 import os
 import re
-import sys
 from collections import Counter, defaultdict
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -93,6 +93,9 @@ import pandas as pd
 from poa.pipeline.common import species_discovery as sd
 from poa.pipeline.common.errors import StageError
 from poa.pipeline.trans_splicing.reference_genes import CIS_SPLICED_MITO, GENES as RECONSTRUCTED_GENES
+from poa.pipeline.common.log import setup_logging
+
+log = logging.getLogger(__name__)
 
 ORGANELLES = ("mito", "pltd")
 
@@ -962,10 +965,9 @@ def build_gff(
     if "source" not in raw.columns:
         # a gene_calls.tsv from before the model columns existed: loci still
         # collapse, but nothing chains into cis-spliced genes without them
-        print(
-            f"[warn] {raw_path} has no source/hmm_from/hmm_to/model_len columns - "
-            f"re-run denovo_annotation/src/04_build_gene_calls.py",
-            file=sys.stderr,
+        log.warning(
+            f"{raw_path} has no source/hmm_from/hmm_to/model_len columns - "
+            f"re-run denovo_annotation/src/04_build_gene_calls.py"
         )
         raw = raw.assign(source="oatkDB", hmm_from=np.nan, hmm_to=np.nan, model_len=np.nan)
     if species_filter is not None:
@@ -1070,18 +1072,18 @@ def build_gff(
             if f not in written:
                 f.unlink()
                 n_stale += 1
-    print(f"[info] build_gff: removed {n_stale} stale GFFs from earlier runs", file=sys.stderr)
-    print(
-        f"[info] build_gff: {n_written} species -> {out_dir} ({n_unitig} with unitig-level GFF -> "
+    log.info(f"build_gff: removed {n_stale} stale GFFs from earlier runs")
+    log.info(
+        f"build_gff: {n_written} species -> {out_dir} ({n_unitig} with unitig-level GFF -> "
         f"{unitig_out_dir}; {n_no_fasta} without a resolvable ctg.fasta, no region/unitig layer; "
-        f"{n_noted} marked linearisation=uncertain)",
-        file=sys.stderr,
+        f"{n_noted} marked linearisation=uncertain)"
     )
-    print("[info] build_gff: " + " ".join(f"{k}={v}" for k, v in sorted(stats.items())), file=sys.stderr)
+    log.info("build_gff: " + " ".join(f"{k}={v}" for k, v in sorted(stats.items())))
     return out_dir
 
 
 def main(argv: list[str] | None = None) -> int:
+    setup_logging()
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--organelle", default="both", choices=["mito", "pltd", "both"])
     ap.add_argument("--species-list", default=None)
@@ -1101,6 +1103,6 @@ def main(argv: list[str] | None = None) -> int:
             gene_calls=Path(args.gene_calls) if args.gene_calls else None,
         )
     except StageError as e:
-        print(f"[err] {e}", file=sys.stderr)
+        log.error(e)
         return 1
     return 0
