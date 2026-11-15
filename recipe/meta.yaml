@@ -7,8 +7,7 @@ package:
 
 source:
   url: https://github.com/Euphrasiologist/poa/archive/refs/tags/{{ version }}.tar.gz
-  # fill in once the 0.2.0 tag is pushed: curl -sL <url> | sha256sum
-  sha256: 0000000000000000000000000000000000000000000000000000000000000000
+  sha256: 860ae168a972d710b91ae1e204ef7de56b28909a6961dd254b0b846db925c4aa
 
 build:
   number: 0
