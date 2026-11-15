@@ -1,5 +1,5 @@
 {% set name = "poa" %}
-{% set version = "0.1.0" %}
+{% set version = "0.2.0" %}
 
 package:
   name: {{ name }}
@@ -7,7 +7,8 @@ package:
 
 source:
   url: https://github.com/Euphrasiologist/poa/archive/refs/tags/{{ version }}.tar.gz
-  sha256: f3268dc922c168c93cda4d524a29c7c051e03df41a06a544bdde301aac627d6e
+  # fill in once the 0.2.0 tag is pushed: curl -sL <url> | sha256sum
+  sha256: 0000000000000000000000000000000000000000000000000000000000000000
 
 build:
   number: 0
@@ -28,6 +29,7 @@ requirements:
     - pandas >=2,<3
     - numpy
     - biopython
+    - click >=8
     # poa run
     - hmmer >=3.4
     - trnascan-se >=2.0.12
