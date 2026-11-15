@@ -6,12 +6,13 @@ poa run        annotate one sample's mito and/or plastid assembly
 
 from __future__ import annotations
 
-import argparse
 import shutil
 import subprocess
 import sys
 
-from . import PIPELINE_DIR, __version__, run
+import click
+
+from . import __version__, run
 
 # (command, version flag, what needs it); the version flag is only for display.
 # REQUIRED is what `poa run` needs; the rest only serve stages run by hand
@@ -35,6 +36,15 @@ OPTIONAL = [
     ("mafft", "--version", "rebuilding reference profiles"),
 ]
 
+INPUT = click.Path(exists=True, dir_okay=False)
+
+
+def verbatim(doc: str) -> str:
+    """Help text shown as written: click rewraps paragraphs unless each
+    starts with a \\b line, which would mangle the stage diagram and the
+    output table in run's docstring."""
+    return "\n\n".join("\b\n" + para for para in doc.strip().split("\n\n"))
+
 
 def tool_version(cmd: str, flag: str | None) -> str:
     if flag is None:
@@ -47,7 +57,7 @@ def tool_version(cmd: str, flag: str | None) -> str:
     return out[0][:60] if out else ""
 
 
-def check(_args: argparse.Namespace) -> int:
+def check_tools() -> int:
     ok = True
     print(f"poa {__version__}")
     print("tools for poa run:")
@@ -76,23 +86,42 @@ def check(_args: argparse.Namespace) -> int:
     return 0 if ok else 1
 
 
-def main(argv: list[str] | None = None) -> int:
-    ap = argparse.ArgumentParser(prog="poa", description="Plant organelle annotator")
-    ap.add_argument("--version", action="version", version=f"poa {__version__}")
-    sub = ap.add_subparsers(dest="command", required=True)
-    p = sub.add_parser("check", help="check external tools and the oatkDB databases")
-    p.set_defaults(func=check)
-    p = sub.add_parser(
-        "run",
-        help="annotate one sample's mito and/or plastid assembly",
-        description=run.__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter,
-    )
-    run.add_arguments(p)
-    p.set_defaults(func=run.run)
-    args = ap.parse_args(argv)
-    return args.func(args)
+@click.group(context_settings={"help_option_names": ["-h", "--help"]})
+@click.version_option(__version__, prog_name="poa", message="%(prog)s %(version)s")
+def main() -> None:
+    """Plant organelle annotator."""
+
+
+@main.command()
+def check() -> None:
+    """Check external tools and the oatkDB databases."""
+    sys.exit(check_tools())
+
+
+@main.command(name="run", help=verbatim(run.__doc__), short_help="Annotate one sample's mito and/or plastid assembly.")
+@click.option("--mito", type=INPUT, metavar="FASTA", help="mitochondrial contigs (.fasta, may be .gz)")
+@click.option("--mito-gfa", type=INPUT, metavar="GFA", help="mitochondrial assembly graph, for unitig-level output")
+@click.option("--pltd", type=INPUT, metavar="FASTA", help="plastid contigs (.fasta, may be .gz)")
+@click.option("--pltd-gfa", type=INPUT, metavar="GFA", help="plastid assembly graph, for unitig-level output")
+@click.option("-o", "--outdir", required=True, type=click.Path(file_okay=False), help="output directory")
+@click.option(
+    "-n",
+    "--name",
+    help="sample name used in output file names (default: the first input's file name up to its first '.')",
+)
+@click.option(
+    "--lineage",
+    type=click.Choice(["auto", "angiosperm", "moss"]),
+    default="auto",
+    show_default=True,
+    help="reference lineage for mito editing profiles and spliced-gene templates: "
+    "auto picks the one the sample's genes fit best",
+)
+@click.option("-t", "--threads", type=click.IntRange(min=1), default=4, show_default=True, help="threads")
+@click.option("--force", is_flag=True, help="replace an existing OUTDIR/work")
+def run_command(**kwargs) -> None:
+    sys.exit(run.run(**kwargs))
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    main()

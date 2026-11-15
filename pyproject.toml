@@ -11,7 +11,7 @@ license = "MIT"
 license-files = ["LICENSE", "src/poa/data/*/NOTICE"]
 requires-python = ">=3.10"
 authors = [{ name = "Max Brown" }]
-dependencies = ["pandas>=2,<3", "numpy", "biopython"]
+dependencies = ["pandas>=2,<3", "numpy", "biopython", "click>=8"]
 
 [project.urls]
 Homepage = "https://github.com/Euphrasiologist/poa"

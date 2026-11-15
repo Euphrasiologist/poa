@@ -21,6 +21,7 @@ dependencies:
   - pandas>=2,<3  # validated on 2.2; pandas 3 changes string/copy semantics
   - numpy
   - biopython
+  - click>=8
 
   # gene calling (denovo_annotation): hmmer runs the bundled oatkDB and rRNA
   # models (and prepares them), tRNAscan-SE the tRNAs

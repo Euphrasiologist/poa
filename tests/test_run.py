@@ -7,7 +7,6 @@ tests/smoke/run_smoke.sh.
 
 from __future__ import annotations
 
-import argparse
 import gzip
 import shutil
 import subprocess
@@ -18,15 +17,11 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "src"))
-from poa import run  # noqa: E402
+from click.testing import CliRunner  # noqa: E402
+
+from poa import cli, run  # noqa: E402
 
 FASTA = b">ctg1\nACGT\n"
-
-
-def parse(*argv: str) -> argparse.Namespace:
-    p = argparse.ArgumentParser()
-    run.add_arguments(p)
-    return p.parse_args(argv)
 
 
 class DefaultName(unittest.TestCase):
@@ -47,36 +42,94 @@ class Refusals(unittest.TestCase):
         self.fa = self.tmp / "s.fasta"
         self.fa.write_bytes(FASTA)
 
-    def refuses(self, *argv: str) -> str:
+    def refuses(self, **kwargs) -> str:
         with self.assertRaises(SystemExit) as cm:
-            run.run(parse(*argv, "-o", str(self.tmp / "out")))
+            run.run(outdir=self.tmp / "out", **kwargs)
         return str(cm.exception.code)
 
     def test_no_fasta(self):
         self.assertIn("--mito and/or --pltd", self.refuses())
 
     def test_gfa_without_fasta(self):
-        self.assertIn("--mito-gfa needs --mito", self.refuses("--pltd", str(self.fa), "--mito-gfa", str(self.fa)))
+        self.assertIn("--mito-gfa needs --mito", self.refuses(pltd=str(self.fa), mito_gfa=str(self.fa)))
 
     def test_bad_name(self):
-        self.assertIn("--name", self.refuses("--mito", str(self.fa), "-n", "a.b"))
+        self.assertIn("--name", self.refuses(mito=str(self.fa), name="a.b"))
 
     def test_missing_and_empty_inputs(self):
-        self.assertIn("no such file", self.refuses("--mito", str(self.tmp / "nope.fasta")))
+        self.assertIn("no such file", self.refuses(mito=str(self.tmp / "nope.fasta")))
         empty = self.tmp / "empty.fasta"
         empty.write_bytes(b"")
-        self.assertIn("empty input", self.refuses("--mito", str(empty)))
+        self.assertIn("empty input", self.refuses(mito=str(empty)))
         self.assertFalse((self.tmp / "out" / "work").exists())
 
     def test_empty_after_decompressing(self):
         with gzip.open(self.tmp / "e.fasta.gz", "wb"):
             pass
-        self.assertIn("empty input", self.refuses("--mito", str(self.tmp / "e.fasta.gz")))
+        self.assertIn("empty input", self.refuses(mito=str(self.tmp / "e.fasta.gz")))
         self.assertFalse((self.tmp / "out" / "work").exists())
 
     def test_existing_work_needs_force(self):
         (self.tmp / "out" / "work").mkdir(parents=True)
-        self.assertIn("--force", self.refuses("--mito", str(self.fa)))
+        self.assertIn("--force", self.refuses(mito=str(self.fa)))
+
+
+class Cli(unittest.TestCase):
+    """The click layer: options reach run.run as keywords, and bad
+    options are usage errors (exit 2) before anything runs."""
+
+    def setUp(self):
+        self.tmp = Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, self.tmp)
+        self.fa = self.tmp / "s.fasta"
+        self.fa.write_bytes(FASTA)
+        self.calls = []
+        real = run.run
+        run.run = lambda **kw: self.calls.append(kw) or 0
+        self.addCleanup(setattr, run, "run", real)
+
+    def invoke(self, *argv: str):
+        return CliRunner().invoke(cli.main, list(argv))
+
+    def test_options_reach_run(self):
+        res = self.invoke("run", "--mito", str(self.fa), "-o", str(self.tmp / "out"), "-t", "8", "--lineage", "moss")
+        self.assertEqual(res.exit_code, 0, res.output)
+        self.assertEqual(
+            self.calls,
+            [
+                dict(
+                    mito=str(self.fa),
+                    mito_gfa=None,
+                    pltd=None,
+                    pltd_gfa=None,
+                    outdir=str(self.tmp / "out"),
+                    name=None,
+                    lineage="moss",
+                    threads=8,
+                    force=False,
+                )
+            ],
+        )
+
+    def test_usage_errors(self):
+        out = str(self.tmp / "out")
+        for argv in (
+            ("run", "--mito", str(self.fa)),  # no -o
+            ("run", "--mito", str(self.tmp / "nope.fasta"), "-o", out),
+            ("run", "--mito", str(self.fa), "-o", out, "--lineage", "fern"),
+            ("run", "--mito", str(self.fa), "-o", out, "-t", "0"),
+        ):
+            self.assertEqual(self.invoke(*argv).exit_code, 2, argv)
+        self.assertEqual(self.calls, [])
+
+    def test_help_keeps_layout(self):
+        res = self.invoke("run", "--help")
+        self.assertEqual(res.exit_code, 0)
+        self.assertIn("  denovo_annotation 00-04 -> editing 01", res.output)
+        self.assertIn("  OUTDIR/logs/<stage>.log ", res.output)
+
+    def test_version(self):
+        self.assertIn(f"poa {cli.__version__}", self.invoke("--version").output)
 
 
 class StageInput(unittest.TestCase):

@@ -26,7 +26,6 @@ Output:
 
 from __future__ import annotations
 
-import argparse
 import gzip
 import os
 import re
@@ -73,28 +72,6 @@ TABLES = [
 
 class StageFailed(Exception):
     pass
-
-
-def add_arguments(p: argparse.ArgumentParser) -> None:
-    p.add_argument("--mito", metavar="FASTA", help="mitochondrial contigs (.fasta, may be .gz)")
-    p.add_argument("--mito-gfa", metavar="GFA", help="mitochondrial assembly graph, for unitig-level output")
-    p.add_argument("--pltd", metavar="FASTA", help="plastid contigs (.fasta, may be .gz)")
-    p.add_argument("--pltd-gfa", metavar="GFA", help="plastid assembly graph, for unitig-level output")
-    p.add_argument("-o", "--outdir", required=True, help="output directory")
-    p.add_argument(
-        "-n",
-        "--name",
-        help="sample name used in output file names " "(default: the first input's file name up to its first '.')",
-    )
-    p.add_argument(
-        "--lineage",
-        choices=["auto", "angiosperm", "moss"],
-        default="auto",
-        help="reference lineage for mito editing profiles and spliced-gene templates: "
-        "auto (default) picks the one the sample's genes fit best",
-    )
-    p.add_argument("-t", "--threads", type=int, default=4, help="default 4")
-    p.add_argument("--force", action="store_true", help="replace an existing OUTDIR/work")
 
 
 def default_name(path: str) -> str:
@@ -163,9 +140,23 @@ def run_stage(label: str, stage: Callable[[], object], logs: Path) -> None:
     print(f" done ({time.time() - t0:.0f}s)", file=sys.stderr)
 
 
-def run(args: argparse.Namespace) -> int:
-    fastas = {o: getattr(args, o) for o in ORGANELLES if getattr(args, o)}
-    gfas = {o: getattr(args, f"{o}_gfa") for o in ORGANELLES if getattr(args, f"{o}_gfa")}
+def run(
+    *,
+    outdir: str | os.PathLike,
+    mito: str | None = None,
+    mito_gfa: str | None = None,
+    pltd: str | None = None,
+    pltd_gfa: str | None = None,
+    name: str | None = None,
+    lineage: str = "auto",
+    threads: int = 4,
+    force: bool = False,
+) -> int:
+    """Annotate one sample (see the module docstring); returns an exit status.
+    Bad input exits via SystemExit with an [err] message."""
+    inputs = {"mito": (mito, mito_gfa), "pltd": (pltd, pltd_gfa)}
+    fastas = {o: fa for o, (fa, _) in inputs.items() if fa}
+    gfas = {o: gfa for o, (_, gfa) in inputs.items() if gfa}
     if not fastas:
         sys.exit("[err] give --mito and/or --pltd (contig FASTA)")
     for o in gfas:
@@ -174,17 +165,17 @@ def run(args: argparse.Namespace) -> int:
                 f"[err] --{o}-gfa needs --{o}: poa annotates contigs, and the graph alone "
                 f"doesn't say which path through it is the genome"
             )
-    name = args.name or default_name(next(iter(fastas.values())))
+    name = name or default_name(next(iter(fastas.values())))
     if not NAME_RE.match(name):
         sys.exit(f"[err] --name may only contain letters, digits, '_' and '-': {name!r}")
 
     for path in (*fastas.values(), *gfas.values()):
         check_input(path)
 
-    out = Path(args.outdir).resolve()
+    out = Path(outdir).resolve()
     work, logs = out / "work", out / "logs"
     if work.exists():
-        if not args.force:
+        if not force:
             sys.exit(f"[err] {work} exists - pass --force to replace it")
         shutil.rmtree(work)
     logs.mkdir(parents=True, exist_ok=True)
@@ -202,8 +193,8 @@ def run(args: argparse.Namespace) -> int:
 
     orgs = list(fastas)
     jobs = len(orgs)
-    per_job = max(1, args.threads // len(orgs))
-    threads = max(1, args.threads)
+    per_job = max(1, threads // len(orgs))
+    threads = max(1, threads)
     every_qc = ("pass", "flag", "fail")
     gene_calls = work / "analysis/denovo_annotation/results/gene_calls.tsv"
     scan = dict(jobs=jobs, qc_status=every_qc)
@@ -215,14 +206,14 @@ def run(args: argparse.Namespace) -> int:
         ("gene_calls", lambda: build_gene_calls(work, orgs)),
         (
             "editing",
-            lambda: scan_editing(work, orgs, gene_calls=gene_calls, threads=threads, lineage=args.lineage),
+            lambda: scan_editing(work, orgs, gene_calls=gene_calls, threads=threads, lineage=lineage),
         ),
     ]
     if "mito" in orgs:
         stages.append(
             (
                 "trans_splicing",
-                lambda: reconstruct(work, gene_calls=gene_calls, threads=threads, lineage=args.lineage),
+                lambda: reconstruct(work, gene_calls=gene_calls, threads=threads, lineage=lineage),
             )
         )
     if gfas:
