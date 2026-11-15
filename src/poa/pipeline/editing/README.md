@@ -38,8 +38,8 @@ from poa.pipeline.editing.scan import scan
 result = scan(root, ["mito"], threads=8)  # -> ScanResult (output paths, species -> lineage)
 ```
 
-`poa run` calls `scan()` in-process; the other stages still run as scripts
-until they are converted the same way.
+`poa run` calls `scan()` in-process. The profile maths (mafft, log-odds
+columns) is `common/pssm.py`'s, shared with `trans_splicing`.
 
 ## Method
 

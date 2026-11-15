@@ -22,73 +22,24 @@ Output: analysis/editing/results/profiles/<gene>.pssm
         (TSV: header = 20 amino acid one-letter codes, one row per
         alignment column of log-odds scores)
 
-The profile maths here (clean_proteins, run_mafft, build_profile,
-write_profile) is shared with lineage_profiles.py, so dataset-built and
-RefSeq-built profiles are made the same way. src/00_build_reference_profiles.py
+The profile maths (alignment, log-odds columns) is common/pssm.py's,
+shared with every other profile poa builds. src/00_build_reference_profiles.py
 is the command-line wrapper (main() here).
 """
 
 from __future__ import annotations
 
 import argparse
-import math
 import os
-import shutil
-import subprocess
 import sys
-from collections import Counter
 from pathlib import Path
 
 from poa.pipeline.common.errors import StageError
+from poa.pipeline.common.pssm import align_and_build, read_fasta, translate, write_profile
 
-MAFFT = shutil.which("mafft") or "/software/team301/mafft-7.525-with-extensions/core/mafft"
-MAFFT_BINARIES_DIR = os.environ.get("MAFFT_BINARIES", "/software/team301/mafft-7.525-with-extensions/core")
-
-AA_ORDER = "ARNDCQEGHILKMFPSTWYV"
 MIN_SEQUENCES = 5  # below this, not enough signal for a meaningful profile
 MIN_PROTEIN_LEN = 20  # aa
 MAX_INTERNAL_STOPS = 0  # a stop anywhere but the very last codon = broken translation
-GAP_COLUMN_THRESHOLD = 0.9  # drop alignment columns gappier than this
-# 0.9, not the more obvious 0.5: verified empirically (see analysis/editing/
-# README.md) that a 0.5 cutoff systematically truncated almost every profile
-# by a few C-/N-terminal columns and made ~98% of zero-edit calls look
-# "changed" by ~1-2 codons - not real editing, just the training alignment
-# itself containing plenty of boundary-truncated raw calls (the exact
-# problem this tool exists to fix), so a naive per-column gap-majority
-# filter throws away genuine terminal signal, not just rare lineage-specific
-# insertions. 0.9 keeps columns unless they're gap in nearly everyone.
-PSEUDOCOUNT = 0.5
-
-CODON_TABLE = {}
-_bases = "TCAG"
-_aas = "FFLLSSSSYY**CC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG"
-for i, b1 in enumerate(_bases):
-    for j, b2 in enumerate(_bases):
-        for k, b3 in enumerate(_bases):
-            CODON_TABLE[b1 + b2 + b3] = _aas[i * 16 + j * 4 + k]
-
-
-def translate(seq: str) -> str:
-    seq = seq.upper()
-    codons = [seq[i : i + 3] for i in range(0, len(seq) - len(seq) % 3, 3)]
-    return "".join(CODON_TABLE.get(c, "X") for c in codons)
-
-
-def read_fasta(path: Path) -> dict[str, str]:
-    seqs: dict[str, str] = {}
-    name = None
-    chunks: list[str] = []
-    for line in path.read_text().splitlines():
-        if line.startswith(">"):
-            if name is not None:
-                seqs[name] = "".join(chunks)
-            name = line[1:].strip()
-            chunks = []
-        elif line.strip():
-            chunks.append(line.strip())
-    if name is not None:
-        seqs[name] = "".join(chunks)
-    return seqs
 
 
 def best_frame_translation(nuc: str) -> str:
@@ -117,65 +68,6 @@ def clean_proteins(nuc_seqs: dict[str, str]) -> dict[str, str]:
             continue
         out[species] = body
     return out
-
-
-def run_mafft(protein_fasta: Path, out_fasta: Path) -> bool:
-    env = (
-        {"MAFFT_BINARIES": MAFFT_BINARIES_DIR, "PATH": "/usr/bin:/bin"}
-        if Path(MAFFT_BINARIES_DIR).is_dir()
-        else dict(os.environ)
-    )
-    if os.environ.get("TMPDIR"):  # mafft's mktemp otherwise needs a writable /tmp
-        env["TMPDIR"] = os.environ["TMPDIR"]
-    proc = subprocess.run(
-        [MAFFT, "--auto", "--quiet", str(protein_fasta)],
-        capture_output=True,
-        text=True,
-        timeout=600,
-        env=env,
-    )
-    if proc.returncode != 0 or not proc.stdout.strip():
-        print(f"[warn] mafft failed for {protein_fasta.name}: {proc.stderr.strip()[:300]}", file=sys.stderr)
-        return False
-    out_fasta.write_text(proc.stdout)
-    return True
-
-
-def build_profile(alignment: dict[str, str]) -> list[dict[str, float]] | None:
-    n = len(alignment)
-    if n == 0:
-        return None
-    aln_len = len(next(iter(alignment.values())))
-
-    # Background = overall amino acid frequency across all non-gap residues.
-    bg_counts = Counter()
-    for seq in alignment.values():
-        bg_counts.update(c for c in seq if c in AA_ORDER)
-    bg_total = sum(bg_counts.values()) or 1
-    background = {aa: (bg_counts.get(aa, 0) + PSEUDOCOUNT) / (bg_total + PSEUDOCOUNT * 20) for aa in AA_ORDER}
-
-    columns = []
-    for i in range(aln_len):
-        col_chars = [seq[i] for seq in alignment.values()]
-        gap_frac = col_chars.count("-") / n
-        if gap_frac > GAP_COLUMN_THRESHOLD:
-            continue
-        counts = Counter(c for c in col_chars if c in AA_ORDER)
-        total = sum(counts.values()) or 1
-        scores = {}
-        for aa in AA_ORDER:
-            freq = (counts.get(aa, 0) + PSEUDOCOUNT) / (total + PSEUDOCOUNT * 20)
-            scores[aa] = math.log2(freq / background[aa])
-        columns.append(scores)
-    return columns or None
-
-
-def write_profile(columns: list[dict[str, float]], out_path: Path) -> None:
-    out_path.parent.mkdir(parents=True, exist_ok=True)
-    lines = ["\t".join(AA_ORDER)]
-    for col in columns:
-        lines.append("\t".join(f"{col[aa]:.4f}" for aa in AA_ORDER))
-    out_path.write_text("\n".join(lines) + "\n")
 
 
 def genes_for_organelle(analysis_dir: Path, organelle: str) -> list[str]:
@@ -213,16 +105,9 @@ def build_dataset_profiles(root: Path, organelles: list[str] | tuple[str, ...] =
                 )
                 continue
 
-            protein_fasta = work_dir / f"{organelle}.{gene}.protein.fasta"
-            protein_fasta.write_text("".join(f">{sp}\n{seq}\n" for sp, seq in proteins.items()))
-            aligned_fasta = work_dir / f"{organelle}.{gene}.aligned.fasta"
-            if not run_mafft(protein_fasta, aligned_fasta):
-                continue
-
-            alignment = read_fasta(aligned_fasta)
-            columns = build_profile(alignment)
+            columns = align_and_build(proteins, work_dir, f"{organelle}.{gene}")
             if columns is None:
-                print(f"[warn] {organelle}/{gene}: no usable alignment columns - skipping", file=sys.stderr)
+                print(f"[warn] {organelle}/{gene}: no usable alignment - skipping", file=sys.stderr)
                 continue
 
             write_profile(columns, profiles_dir / organelle / f"{gene}.pssm")

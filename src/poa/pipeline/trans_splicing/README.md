@@ -21,8 +21,24 @@ duplicating it).
 | script | output | what |
 |---|---|---|
 | `00_build_exon_profiles.py` | `reference/profiles/<gene>/exon{N}.pssm` + `.threshold`, `whole_gene.pssm` | per-exon-slot and whole-gene reference profiles, from 5 real GenBank mitochondrial genomes |
-| `01_reconstruct.py` | `results/reconstructed_genes.tsv`, `results/reconstructed_exons.tsv`, `results/reconstructed_junctions.tsv` | runs `transsplice scan-batch` over every species' raw `.ctg.bed` fragments for these genes |
+| `01_reconstruct.py` | `results/reconstructed_genes.tsv`, `results/reconstructed_exons.tsv`, `results/reconstructed_junctions.tsv`, `results/reconstructed_edits.tsv` | runs `transsplice scan-batch` over every species' raw `.ctg.bed` fragments for these genes |
 | `02_bootstrap_refine.py` | overwrites `whole_gene.pssm` | stage 2 - rebuilds the whole-gene profile from this dataset's own high-confidence reconstructions instead of just the 5 GenBank references |
+| `00a_fetch_references.py` | `reference/raw/` (or `reference/lineages/<x>/raw/`) | RefSeq mitogenomes -> verified exon sets, for `00_build_exon_profiles.py` |
+
+The scripts in `src/` are command-line wrappers. The code is in importable
+modules under `poa.pipeline.trans_splicing` - `reconstruct`,
+`exon_profiles`, `bootstrap`, `fetch_references` and `reference_genes`
+(the gene lists) - whose functions take the data root and every option as
+arguments and raise `StageError` on failure:
+
+```python
+from poa.pipeline.trans_splicing.reconstruct import reconstruct
+
+result = reconstruct(root, threads=8)  # -> ReconstructResult (paths of the four tables)
+```
+
+`poa run` calls `reconstruct()` in-process. The profile maths (mafft,
+log-odds columns) is `common/pssm.py`'s, shared with `editing`.
 
 ## Reference data: real GenBank genomes, independently verified
 

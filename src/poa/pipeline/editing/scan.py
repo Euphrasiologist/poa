@@ -36,7 +36,6 @@ from __future__ import annotations
 
 import argparse
 import os
-import shutil
 import subprocess
 import sys
 from dataclasses import dataclass
@@ -49,6 +48,7 @@ from poa.pipeline.common import io_utils
 from poa.pipeline.common import lineage as lin
 from poa.pipeline.common import species_discovery as sd
 from poa.pipeline.common.errors import StageError
+from poa.pipeline.common.tools import cargo_tool
 
 ORGANELLES = ("mito", "pltd")
 DEFAULT_THREADS = 4
@@ -62,13 +62,6 @@ class ScanResult:
     predicted_edits: Path
     lineage_table: Path
     lineages: dict[str, str]  # species -> lineage, for the species scanned
-
-
-def find_orfedit() -> str:
-    exe = shutil.which("orfedit") or str(Path.home() / ".cargo" / "bin" / "orfedit")
-    if not Path(exe).exists():
-        raise StageError(f"orfedit binary not found at {exe} - see orfedit's own README (`cargo install --path .`)")
-    return exe
 
 
 def best_hits_per_species(gene_calls: pd.DataFrame, organelle: str, genes: list[str]) -> pd.DataFrame:
@@ -221,7 +214,7 @@ def scan(
         raise ValueError(f"unknown organelle(s) {sorted(unknown)}; expected {ORGANELLES}")
     if lineage not in lin.CHOICES:
         raise ValueError(f"unknown lineage {lineage!r}; expected one of {lin.CHOICES}")
-    orfedit = find_orfedit()
+    orfedit = cargo_tool("orfedit")
 
     gene_calls_path = (
         Path(gene_calls) if gene_calls else analysis_dir / "denovo_annotation" / "results" / "gene_calls.tsv"

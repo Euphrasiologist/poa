@@ -89,7 +89,6 @@ class StageInput(unittest.TestCase):
         self.assertEqual((tmp / "out.fasta").read_bytes(), FASTA)
 
 
-
 class InProcessStage(unittest.TestCase):
     """A library stage's output - its own and its child processes' - goes to
     its log, and a failure becomes StageFailed, like a script stage's."""

@@ -92,8 +92,8 @@ sys.path.insert(0, str(CODE_DIR / "common"))
 
 import species_discovery as sd  # noqa: E402
 
-sys.path.insert(0, str(CODE_DIR / "trans_splicing" / "src"))
-from reference_genes import CIS_SPLICED_MITO, GENES as RECONSTRUCTED_GENES  # noqa: E402
+sys.path.insert(0, str(CODE_DIR.parent.parent))  # the directory holding the poa package
+from poa.pipeline.trans_splicing.reference_genes import CIS_SPLICED_MITO, GENES as RECONSTRUCTED_GENES  # noqa: E402
 
 # a cis-spliced gene's reconstruction must agree with the HMM evidence: every
 # exon overlaps a raw hit for the gene and extends no further than this past it

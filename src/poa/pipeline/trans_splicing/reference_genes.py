@@ -1,6 +1,6 @@
 """The genes trans_splicing builds templates for and reconstructs - one
-list shared by 00a_fetch_references.py, 00_build_exon_profiles.py,
-01_reconstruct.py and gff_export, so they can't drift apart.
+list shared by fetch_references, exon_profiles, reconstruct, gff_export
+and editing's lineage_profiles, so they can't drift apart.
 
 transsplice itself doesn't care whether a junction is cis or trans (it
 classifies each junction per species after assignment), so cis-spliced
@@ -10,7 +10,7 @@ genes are a later stage.
 Templates come per lineage (LINEAGE_MITOGENOMES): "angiosperm" lives in
 reference/{raw,profiles}/ as it always has, any other lineage in
 reference/lineages/<name>/{raw,profiles}/. Which lineage a species uses is
-decided once, by editing/src/01_scan_editing.py (common/lineage.py).
+decided once, by editing.scan (common/lineage.py).
 """
 
 TRANS_SPLICED_MITO = ["nad1", "nad2", "nad5", "rps3"]

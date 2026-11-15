@@ -11,7 +11,7 @@ built from RefSeq's curated proteins instead, for the genes the bundled
 mito profiles cover, so a moss is compared against mosses.
 
 Per gene: every single-exon CDS in the lineage's mitogenomes
-(trans_splicing/src/reference_genes.LINEAGE_MITOGENOMES; GenBank cached in
+(trans_splicing/reference_genes.LINEAGE_MITOGENOMES; GenBank cached in
 trans_splicing/reference/genbank/) whose genomic translation verifies
 against RefSeq's protein (common/refseq_mito.verify). A gene that is
 multi-exon in most of the lineage (moss nad5, nad9) gets no profile: a
@@ -38,21 +38,13 @@ from poa import PIPELINE_DIR
 from poa.pipeline.common import lineage as lin
 from poa.pipeline.common.errors import StageError
 from poa.pipeline.common.refseq_mito import cds_exons, fetch, verify
+from poa.pipeline.common import pssm
 from poa.pipeline.editing import profiles
+from poa.pipeline.trans_splicing import reference_genes as rg
 
 GB_DIR = lin.trans_splicing_reference(PIPELINE_DIR, lin.DEFAULT_LINEAGE) / "genbank"
 BUNDLED_MITO = PIPELINE_DIR / "editing" / "reference" / "profiles" / "mito"
 NON_DEFAULT = [x for x in lin.LINEAGES if x != lin.DEFAULT_LINEAGE]
-
-
-def reference_genes():
-    """trans_splicing's reference_genes (not a package yet, so by path)."""
-    sys.path.insert(0, str(PIPELINE_DIR / "trans_splicing" / "src"))
-    try:
-        import reference_genes
-    finally:
-        sys.path.pop(0)
-    return reference_genes
 
 
 def build_lineage_profiles(lineage: str, work_root: Path) -> Path:
@@ -61,7 +53,6 @@ def build_lineage_profiles(lineage: str, work_root: Path) -> Path:
     the profiles directory."""
     if lineage not in NON_DEFAULT:
         raise ValueError(f"lineage must be one of {NON_DEFAULT}, not {lineage!r}")
-    rg = reference_genes()
     synonyms = {**rg.GENE_SYNONYMS, "tatc": "mttB", "mttb": "mttB"}
     genes = sorted(p.stem for p in BUNDLED_MITO.glob("*.pssm"))
     wanted = {g.lower(): g for g in genes}
@@ -100,13 +91,10 @@ def build_lineage_profiles(lineage: str, work_root: Path) -> Path:
             )
             stale.unlink(missing_ok=True)
             continue
-        protein_fasta = work_dir / f"{gene}.protein.fasta"
-        protein_fasta.write_text("".join(f">{acc}\n{seq}\n" for acc, seq in proteins[gene].items()))
-        aligned = work_dir / f"{gene}.aligned.fasta"
-        if not profiles.run_mafft(protein_fasta, aligned):
-            raise StageError(f"mafft failed on {protein_fasta}")
-        columns = profiles.build_profile(profiles.read_fasta(aligned))
-        profiles.write_profile(columns, out_dir / f"{gene}.pssm")
+        columns = pssm.align_and_build(proteins[gene], work_dir, gene)
+        if columns is None:
+            raise StageError(f"{gene}: no profile from {work_dir / gene}.protein.fasta (mafft failed or no columns)")
+        pssm.write_profile(columns, out_dir / f"{gene}.pssm")
         print(
             f"[info] {gene}: {lineage} profile from {len(proteins[gene])} RefSeq proteins, "
             f"{len(columns)} columns -> {out_dir / gene}.pssm",

@@ -9,7 +9,7 @@ annotation pipeline on it:
 
 The stages run against a data root
 built in OUTDIR/work (data/{mito,plastid}/<name>/<name>.{mito,pltd}.ctg.fasta
-and .gfa): a stage that is a library function (editing so far) is
+and .gfa): a stage that is a library function (editing, trans_splicing so far) is
 called in-process, the rest still run as their command-line scripts under
 poa/pipeline/. Either way its output goes to OUTDIR/logs/<stage>.log.
 qc_basic_stats 01-05 are not run: they judge an assembly against
@@ -43,6 +43,7 @@ from typing import Callable, Iterator
 from . import PIPELINE_DIR
 from .pipeline.common.errors import StageError
 from .pipeline.editing import scan as editing_scan
+from .pipeline.trans_splicing import reconstruct as ts_reconstruct
 
 ORGANELLES = {"mito": "mito", "pltd": "plastid"}  # suffix -> data/ subdirectory
 # a stage that reports failures this way failed, even with exit status 0
@@ -245,8 +246,13 @@ def run(args: argparse.Namespace) -> int:
         stages.append(
             (
                 "trans_splicing",
-                "trans_splicing/src/01_reconstruct.py",
-                ["--threads", threads, "--lineage", args.lineage, *gene_calls],
+                lambda: ts_reconstruct.reconstruct(
+                    work,
+                    gene_calls=work / "analysis/denovo_annotation/results/gene_calls.tsv",
+                    threads=int(threads),
+                    lineage=args.lineage,
+                ),
+                [],
             )
         )
     if gfas:
