@@ -42,7 +42,7 @@ All bundled - nothing to download, no oatk install needed:
   `OATKDB_MITO_FAM` / `OATKDB_PLTD_FAM` to a pressed `.fam`.
 - `src/poa/data/rrna/plant.hmm` - the rRNA models (barrnap's bacterial
   16S/23S/5S plus Rfam's RF00001 5S; see `NOTICE` there), run with
-  `nhmmer` by `denovo_annotation/src/rrna_nhmmer.py`, a port of the
+  `nhmmer` by `denovo_annotation/rrna_nhmmer.py`, a port of the
   `barrnap --kingdom plant` set-up this pipeline was validated with.
   barrnap itself isn't needed.
 - `src/poa/pipeline/trans_splicing/reference/` - the 11 angiosperm RefSeq

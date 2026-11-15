@@ -72,7 +72,7 @@ read-level evidence: junction-spanning reads, what flanks the side-path
 reads). Any single contig sequence is then one reading of the graph, and
 a gfatk circuit can walk the real genome several times through them.
 
-For the species `qc_basic_stats/src/06_low_depth_paths.py` flags
+For the species `qc_basic_stats/low_depth_paths.py` flags
 (`results/low_depth_paths.tsv`), both GFFs start with a
 `# linearisation uncertain` comment and the contig `region` rows carry
 `linearisation=uncertain;linearisation_reason=low_depth_side_paths;
@@ -273,3 +273,8 @@ degrades gracefully to tier-3-only output if they haven't (every
 upstream table is loaded with its expected columns even when the file
 doesn't exist yet). The unitig layer needs `unitig_coords` run first and
 is skipped per species when its map is absent.
+
+`src/01_build_gff.py` is a command-line wrapper around
+`poa.pipeline.gff_export.build_gff.build_gff(root, organelles, species=,
+gene_calls=)`, the library API (paths passed in, failures raise
+`StageError`).

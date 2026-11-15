@@ -10,21 +10,15 @@ number here means the same thing as `pct_unitig_content_placed` in
 
 from __future__ import annotations
 
-import importlib.util
-import sys
 from pathlib import Path
 
-_MAP_SRC = Path(__file__).resolve().parents[1] / "unitig_coords" / "src" / "00_build_unitig_map.py"
-_spec = importlib.util.spec_from_file_location("unitig_map", _MAP_SRC)
-_um = importlib.util.module_from_spec(_spec)
-sys.modules["unitig_map"] = _um
-_spec.loader.exec_module(_um)
+from poa.pipeline.unitig_coords import unitig_map as _um
 
 
 def unitig_content_placed(gfa: Path, ctg_fasta: Path) -> float:
     """Fraction (0-1) of the graph's unique unitig bp found in `ctg_fasta`
     (forward or reverse complement; circular joins and trimmed repeat
-    variants handled as in 00_build_unitig_map.py)."""
+    variants handled as in unitig_coords/unitig_map.py)."""
     segs, _ = _um.read_gfa(gfa)
     _, ctgs = _um.read_ctg_fasta(ctg_fasta)
     total = sum(len(s) for s in segs.values())

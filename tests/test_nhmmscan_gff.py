@@ -13,10 +13,9 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
 FIXTURES = REPO / "tests" / "fixtures" / "nhmmscan"
-sys.path.insert(0, str(REPO / "src" / "poa" / "pipeline" / "denovo_annotation" / "src"))
-sys.path.insert(0, str(REPO / "src" / "poa" / "pipeline" / "common"))
-import oatkdb  # noqa: E402
-from nhmmscan_gff import filter_and_convert, rust_exp2, rust_f32  # noqa: E402
+sys.path.insert(0, str(REPO / "src"))
+from poa.pipeline.common import oatkdb  # noqa: E402
+from poa.pipeline.denovo_annotation.nhmmscan_gff import filter_and_convert, rust_exp2, rust_f32  # noqa: E402
 
 import numpy as np  # noqa: E402
 

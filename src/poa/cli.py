@@ -64,8 +64,7 @@ def check(_args: argparse.Namespace) -> int:
         else:
             print(f"  ok       {cmd:13} {tool_version(cmd, flag)}")
     print("oatkDB databases:")
-    sys.path.insert(0, str(PIPELINE_DIR / "common"))
-    import oatkdb
+    from .pipeline.common import oatkdb
 
     for organelle in ("mito", "pltd"):
         try:

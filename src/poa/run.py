@@ -7,11 +7,10 @@ annotation pipeline on it:
   denovo_annotation 00-04 -> editing 01 -> trans_splicing 01 (mito)
   -> unitig_coords 00-01 + qc_basic_stats 06 (with a GFA) -> gff_export 01
 
-The stages run against a data root
+Each stage is a library call, run in this process against a data root
 built in OUTDIR/work (data/{mito,plastid}/<name>/<name>.{mito,pltd}.ctg.fasta
-and .gfa): a stage that is a library function (editing, trans_splicing so far) is
-called in-process, the rest still run as their command-line scripts under
-poa/pipeline/. Either way its output goes to OUTDIR/logs/<stage>.log.
+and .gfa), with its output (and that of the tools it runs) going to
+OUTDIR/logs/<stage>.log.
 qc_basic_stats 01-05 are not run: they judge an assembly against
 the rest of a dataset (genus-level size, a dataset-derived core-gene set,
 oatk's own gene calls), so with no qc_summary.tsv every stage annotates
@@ -32,7 +31,6 @@ import gzip
 import os
 import re
 import shutil
-import subprocess
 import sys
 import time
 import traceback
@@ -40,10 +38,18 @@ from contextlib import contextmanager
 from pathlib import Path
 from typing import Callable, Iterator
 
-from . import PIPELINE_DIR
 from .pipeline.common.errors import StageError
-from .pipeline.editing import scan as editing_scan
-from .pipeline.trans_splicing import reconstruct as ts_reconstruct
+from .pipeline.denovo_annotation.combined_gff import build_combined_gff
+from .pipeline.denovo_annotation.gene_calls import build_gene_calls
+from .pipeline.denovo_annotation.nhmmscan import run_nhmmscan
+from .pipeline.denovo_annotation.rrna import run_rrna
+from .pipeline.denovo_annotation.trnascan import run_trnascan
+from .pipeline.editing.scan import scan as scan_editing
+from .pipeline.gff_export.build_gff import build_gff
+from .pipeline.qc_basic_stats.low_depth_paths import low_depth_paths
+from .pipeline.trans_splicing.reconstruct import reconstruct
+from .pipeline.unitig_coords.linearization_qc import linearization_qc
+from .pipeline.unitig_coords.unitig_map import build_unitig_maps
 
 ORGANELLES = {"mito": "mito", "pltd": "plastid"}  # suffix -> data/ subdirectory
 # a stage that reports failures this way failed, even with exit status 0
@@ -133,38 +139,27 @@ def fds_to(log) -> Iterator[None]:
             os.close(fd)
 
 
-def run_stage(label: str, stage: str | Callable[[], object], args: list[str], work: Path, logs: Path) -> None:
-    """stage: a pipeline script (path under PIPELINE_DIR, run with `args`
-    against data root `work`), or a library call, run in this process."""
+def run_stage(label: str, stage: Callable[[], object], logs: Path) -> None:
+    """Call `stage()`, with its output going to logs/<label>.log."""
     log_path = logs / f"{label}.log"
     t0 = time.time()
     print(f"[poa] {label} ...", end="", file=sys.stderr, flush=True)
+    failed = False
     with open(log_path, "w") as log:
-        if callable(stage):
-            returncode = 0
-            try:
-                with fds_to(log):
-                    stage()
-            except StageError as e:
-                returncode = 1
-                print(f"[err] {e}", file=log)
-            except Exception:
-                returncode = 1
-                traceback.print_exc(file=log)
-        else:
-            env = dict(os.environ, PLANT_ORGANELLE_DATA_ROOT=str(work))
-            returncode = subprocess.run(
-                [sys.executable, str(PIPELINE_DIR / stage), *args],
-                cwd=work,
-                env=env,
-                stdout=log,
-                stderr=subprocess.STDOUT,
-            ).returncode
+        try:
+            with fds_to(log):
+                stage()
+        except StageError as e:
+            failed = True
+            print(f"[err] {e}", file=log)
+        except Exception:
+            failed = True
+            traceback.print_exc(file=log)
     text = log_path.read_text()
-    if returncode != 0 or FAILURE_RE.search(text):
+    if failed or FAILURE_RE.search(text):
         print(" FAILED", file=sys.stderr)
         tail = "\n".join(text.splitlines()[-20:])
-        raise StageFailed(f"{label} failed (exit {returncode}); last lines of {log_path}:\n{tail}")
+        raise StageFailed(f"{label} failed; last lines of {log_path}:\n{tail}")
     print(f" done ({time.time() - t0:.0f}s)", file=sys.stderr)
 
 
@@ -206,75 +201,46 @@ def run(args: argparse.Namespace) -> int:
     (work / "analysis" / "qc_basic_stats" / "results").mkdir(parents=True)
 
     orgs = list(fastas)
-    organelle = orgs[0] if len(orgs) == 1 else "both"
-    jobs = str(len(orgs))
-    per_job = str(max(1, args.threads // len(orgs)))
-    threads = str(max(1, args.threads))
-    every_qc = ["--qc-status", "pass,flag,fail"]
-    gene_calls = ["--gene-calls", str(work / "analysis/denovo_annotation/results/gene_calls.tsv")]
+    jobs = len(orgs)
+    per_job = max(1, args.threads // len(orgs))
+    threads = max(1, args.threads)
+    every_qc = ("pass", "flag", "fail")
+    gene_calls = work / "analysis/denovo_annotation/results/gene_calls.tsv"
+    scan = dict(jobs=jobs, qc_status=every_qc)
     stages = [
-        (
-            "nhmmscan",
-            "denovo_annotation/src/00_run_nhmmscan.py",
-            ["--organelle", organelle, "--jobs", jobs, "--cpu", per_job, *every_qc],
-        ),
-        (
-            "trnascan",
-            "denovo_annotation/src/01_run_trnascan.py",
-            ["--organelle", organelle, "--jobs", jobs, "--thread", per_job, *every_qc],
-        ),
-        (
-            "rrna",
-            "denovo_annotation/src/02_run_barrnap.py",
-            ["--organelle", organelle, "--jobs", jobs, "--threads", per_job, *every_qc],
-        ),
-        ("combined_gff", "denovo_annotation/src/03_build_combined_gff.py", ["--organelle", organelle]),
-        ("gene_calls", "denovo_annotation/src/04_build_gene_calls.py", ["--organelle", organelle]),
+        ("nhmmscan", lambda: run_nhmmscan(work, orgs, cpu=per_job, **scan)),
+        ("trnascan", lambda: run_trnascan(work, orgs, threads=per_job, **scan)),
+        ("rrna", lambda: run_rrna(work, orgs, threads=per_job, **scan)),
+        ("combined_gff", lambda: build_combined_gff(work, orgs)),
+        ("gene_calls", lambda: build_gene_calls(work, orgs)),
         (
             "editing",
-            lambda: editing_scan.scan(
-                work,
-                orgs,
-                gene_calls=work / "analysis/denovo_annotation/results/gene_calls.tsv",
-                threads=int(threads),
-                lineage=args.lineage,
-            ),
-            [],
+            lambda: scan_editing(work, orgs, gene_calls=gene_calls, threads=threads, lineage=args.lineage),
         ),
     ]
     if "mito" in orgs:
         stages.append(
             (
                 "trans_splicing",
-                lambda: ts_reconstruct.reconstruct(
-                    work,
-                    gene_calls=work / "analysis/denovo_annotation/results/gene_calls.tsv",
-                    threads=int(threads),
-                    lineage=args.lineage,
-                ),
-                [],
+                lambda: reconstruct(work, gene_calls=gene_calls, threads=threads, lineage=args.lineage),
             )
         )
     if gfas:
         stages += [
-            (
-                "unitig_map",
-                "unitig_coords/src/00_build_unitig_map.py",
-                ["--organelle", organelle, "--jobs", jobs, *every_qc],
-            ),
-            ("linearization_qc", "unitig_coords/src/01_linearization_qc.py", ["--organelle", organelle]),
+            ("unitig_map", lambda: build_unitig_maps(work, orgs, **scan)),
+            ("linearization_qc", lambda: linearization_qc(work, orgs)),
         ]
     if "mito" in gfas:
-        stages.append(("low_depth_paths", "qc_basic_stats/src/06_low_depth_paths.py", []))
-    stages.append(("gff_export", "gff_export/src/01_build_gff.py", ["--organelle", organelle, *gene_calls]))
+        stages.append(("low_depth_paths", lambda: low_depth_paths(work)))
+    stages.append(("gff_export", lambda: build_gff(work, orgs, gene_calls=gene_calls)))
 
     print(
         f"[poa] {name}: {', '.join(orgs)}{' (+ graph: ' + ', '.join(gfas) + ')' if gfas else ''}; " f"output in {out}",
         file=sys.stderr,
     )
     try:
-        for label, script, stage_args in stages:
-            run_stage(label, script, stage_args, work, logs)
+        for label, stage in stages:
+            run_stage(label, stage, logs)
     except StageFailed as e:
         print(f"[err] {e}", file=sys.stderr)
         return 1

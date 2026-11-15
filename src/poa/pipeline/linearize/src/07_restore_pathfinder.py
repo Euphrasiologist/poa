@@ -53,8 +53,9 @@ CODE_DIR = Path(__file__).resolve().parents[2]
 ROOT_DIR = Path(os.environ.get("PLANT_ORGANELLE_DATA_ROOT") or os.getcwd())
 ANALYSIS_DIR = ROOT_DIR / "analysis"
 sys.path.insert(0, str(CODE_DIR / "common"))
+sys.path.insert(0, str(CODE_DIR.parents[1]))  # the poa package
 
-import graph_coverage  # noqa: E402
+from poa.pipeline.common import graph_coverage  # noqa: E402
 import species_discovery as sd  # noqa: E402
 
 PATHFINDER = shutil.which("pathfinder") or "/software/team301/oatk/pathfinder"

@@ -15,8 +15,8 @@ import unittest
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(REPO / "src" / "poa" / "pipeline" / "denovo_annotation" / "src"))
-from rrna_nhmmer import call_rrna, tblout_to_gff  # noqa: E402
+sys.path.insert(0, str(REPO / "src"))
+from poa.pipeline.denovo_annotation.rrna_nhmmer import call_rrna, tblout_to_gff  # noqa: E402
 
 ASSEMBLIES = {
     "mito": REPO / "tests/data/mito/Arabidopsis_thaliana/Arabidopsis_thaliana.mito.ctg.fasta.gz",

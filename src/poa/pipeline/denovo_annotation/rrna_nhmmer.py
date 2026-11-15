@@ -26,7 +26,7 @@ import subprocess
 import tempfile
 from pathlib import Path
 
-PLANT_HMM = Path(__file__).resolve().parents[3] / "data" / "rrna" / "plant.hmm"
+PLANT_HMM = Path(__file__).resolve().parents[2] / "data" / "rrna" / "plant.hmm"
 LENG = {
     "5S_rRNA": 119,
     "5S_rRNA_all_life": 120,

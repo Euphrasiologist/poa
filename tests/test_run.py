@@ -90,8 +90,8 @@ class StageInput(unittest.TestCase):
 
 
 class InProcessStage(unittest.TestCase):
-    """A library stage's output - its own and its child processes' - goes to
-    its log, and a failure becomes StageFailed, like a script stage's."""
+    """A stage's output - its own and its child processes' - goes to its
+    log, and a failure becomes StageFailed."""
 
     def setUp(self):
         self.logs = Path(tempfile.mkdtemp())
@@ -105,7 +105,7 @@ class InProcessStage(unittest.TestCase):
             print("from python", file=sys.stderr)
             subprocess.run(["echo", "from a child"], check=True)
 
-        run.run_stage("ok", stage, [], self.logs, self.logs)
+        run.run_stage("ok", stage, self.logs)
         self.assertEqual(self.log("ok").split("\n")[:2], ["from python", "from a child"])
 
     def test_stage_error(self):
@@ -113,7 +113,7 @@ class InProcessStage(unittest.TestCase):
             raise run.StageError("orfedit scan-batch failed (exit 2)")
 
         with self.assertRaises(run.StageFailed) as cm:
-            run.run_stage("bad", stage, [], self.logs, self.logs)
+            run.run_stage("bad", stage, self.logs)
         self.assertIn("[err] orfedit scan-batch failed", str(cm.exception))
 
     def test_bug_gives_traceback(self):
@@ -121,7 +121,7 @@ class InProcessStage(unittest.TestCase):
             return {}["missing"]
 
         with self.assertRaises(run.StageFailed):
-            run.run_stage("bug", stage, [], self.logs, self.logs)
+            run.run_stage("bug", stage, self.logs)
         self.assertIn("KeyError: 'missing'", self.log("bug"))
 
 

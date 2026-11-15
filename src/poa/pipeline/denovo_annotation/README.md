@@ -34,6 +34,23 @@ derived convenience for those two consumers, not a second source of truth.
 | `03_build_combined_gff.py` | `results/gff/<species>.<organelle>.gff` | **the primary output** - all three sources combined into one sorted GFF3, tagged by source, not deduplicated |
 | `04_build_gene_calls.py` | `results/gene_calls.tsv` | reshapes the combined GFF into one `annotation/results/gene_calls.tsv`-shaped table |
 
+Each script in `src/` is a command-line wrapper around a module of the
+`poa.pipeline.denovo_annotation` package, which is also the library API -
+paths are passed in, nothing is read from the environment, and failures
+raise `StageError` (a species whose scan fails is warned about and
+counted as `failed`, not raised):
+
+| script | function |
+|---|---|
+| `00_run_nhmmscan.py` | `nhmmscan.run_nhmmscan(root, organelles, species=, evalue=, cpu=, jobs=, qc_status=, force=)` |
+| `01_run_trnascan.py` | `trnascan.run_trnascan(root, organelles, species=, threads=, jobs=, qc_status=, force=)` |
+| `02_run_barrnap.py` | `rrna.run_rrna(root, organelles, species=, evalue=, threads=, jobs=, qc_status=, force=)` |
+| `03_build_combined_gff.py` | `combined_gff.build_combined_gff(root, organelles, species=, force=)` |
+| `04_build_gene_calls.py` | `gene_calls.build_gene_calls(root, organelles, species=)` |
+
+`targets.py` holds what the three scans share (the QC gate, which
+assemblies to scan, the thread pool).
+
 ## Validated finding, not a hypothesis: this measurably out-performs oatk's bundled calling
 
 On the same 14-species smoke test used throughout `editing/`/
@@ -86,7 +103,7 @@ genes `trans_splicing` cares about:
    `OATKDB_MITO_FAM`/`OATKDB_PLTD_FAM` to override), then an E-value filter
    at `1e-5` (same E-value floor as this repo's existing Pfam-scan
    precedent in `orf_scan`), then conversion to GFF3
-   (`src/nhmmscan_gff.py`, a Python port of the `filter_tblout`/
+   (`nhmmscan_gff.py`, a Python port of the `filter_tblout`/
    `hmm_to_gff` tools used originally). `1e-5` isn't
    arbitrary here either: the unfiltered tblout for `Acer_campestre`
    included a real `E=0.47` `nad2` hit that plainly shouldn't be trusted -

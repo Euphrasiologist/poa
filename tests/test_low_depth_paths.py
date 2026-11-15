@@ -1,4 +1,4 @@
-"""06_low_depth_paths' gene-calls fallback (no oatk .annot_mito.txt): which
+"""low_depth_paths' gene-calls fallback (no oatk .annot_mito.txt): which
 unitigs carry a gene, given poa's calls on the contigs and unitig_coords'
 map. On the dataset it agrees with oatk's own unitig hits on every flag
 (956 species).
@@ -8,17 +8,14 @@ map. On the dataset it agrees with oatk's own unitig hits on every flag
 
 from __future__ import annotations
 
-import importlib.util
+import sys
 import tempfile
 import unittest
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
-spec = importlib.util.spec_from_file_location(
-    "low_depth_paths", REPO / "src/poa/pipeline/qc_basic_stats/src/06_low_depth_paths.py"
-)
-ldp = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(ldp)
+sys.path.insert(0, str(REPO / "src"))
+from poa.pipeline.qc_basic_stats import low_depth_paths as ldp  # noqa: E402
 
 _TMP = tempfile.TemporaryDirectory()
 
