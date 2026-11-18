@@ -18,6 +18,7 @@ QC gate that every other module filters against by default.
 | `03_gene_matrix.py` | `gene_matrix_{mito,pltd}.tsv` | Long-format `(species, gene) → hits/score/aligned length/n_contigs`, straight from oatk's own `.ctg.bed` gene calls. |
 | `04_core_gene_list.py` | `core_genes_{mito,pltd}.tsv` | Per-gene prevalence across non-empty assemblies — **computed from the data, never a hardcoded gene list.** |
 | `05_qc_summary.py` | `qc_summary.tsv` | Combines everything into one `pass`/`flag`/`fail` per species×organelle, with a `status_reasons` column explaining why. |
+| `sample_qc.py` (`poa run`'s qc stage) | `sample_qc.tsv` | The `05_qc_summary.py` rules on one sample, with the dataset-derived parts (core-gene set, genus genome sizes) read from `reference/`, which `qc_reference.py` writes from a dataset's `results/`. See its docstring for the differences: a missing GFA isn't a fail, core genes come from poa's gene calls. |
 | `06_low_depth_paths.py` | `low_depth_paths.tsv` | Mito graphs with low-depth side paths embedded in them (reports only; `gff_export` marks the flagged species' linearisation uncertain). A wrapper around `low_depth_paths.low_depth_paths(root, species=, gene_calls=)`, the library function `poa run` calls; 01-05 are still scripts only, since they judge an assembly against the rest of a dataset. |
 
 ## Reading `qc_summary.tsv`

@@ -8,8 +8,8 @@ calling), RNA-editing-aware ORF finding, spliced gene reconstruction
 `ccmFc`/`cox2`/`rpl2`/`rps10`), unitig-level coordinates, and a merged GFF3
 export at contig and unitig level.
 
-It grew out of a 1250-species dataset repo (`plant_organellar_database`),
-which now uses poa rather than the other way round.
+It grew out of a need to annotate over 300 mitogenomes for a recent
+<a href="https://www.biorxiv.org/content/10.64898/2026.10.26.761860v1.abstract">paper</a>.
 
 ## Install
 
@@ -31,7 +31,7 @@ with it Docker/Singularity images) will install with
 
 ## Reference data
 
-All bundled - nothing to download, no oatk install needed:
+All bundled so nothing to download, no oatk install needed:
 
 - `src/poa/data/oatkdb/` - oatkDB's Viridiplantae mito and plastid
   gene-family HMM databases (`viridiplantae_mito_v20250217`,
@@ -88,6 +88,8 @@ Output in `out/`:
 
 - `<name>.<mito|pltd>.gff` - contig-level GFF3
 - `<name>.<mito|pltd>.unitig.gff` - unitig-level GFF3 (with a GFA)
+- `<name>.qc.tsv` - `pass`/`flag`/`fail` per organelle, with the reasons
+  and the measurements behind them (see "QC" below)
 - `tables/` - gene calls, predicted RNA edits, reconstructed spliced
   genes, linearisation QC
 - `logs/` - one log per stage; `work/` - intermediate files
@@ -96,12 +98,43 @@ Output in `out/`:
 (`-n` to set it). About 5 minutes for Arabidopsis mito + plastid on 4
 cores, most of it tRNAscan-SE.
 
-`poa run` runs the stages below on one sample and doesn't apply
-`qc_basic_stats`' dataset-level `pass`/`flag`/`fail` gate, which compares
-an assembly against the rest of a dataset. With a mito GFA it does run
-the low-depth side-path check (`qc_basic_stats 06`, in
-`tables/low_depth_paths.tsv`). A flagged graph gets a "linearisation
-uncertain" note in the contig GFF.
+### QC
+
+`poa run` ends with a `pass`/`flag`/`fail` line per organelle, also
+written to `<name>.qc.tsv`:
+
+```
+[poa] QC mito: pass -> Arabidopsis_thaliana.qc.tsv
+[poa] QC pltd: flag (core_gene_pct<0.80) -> Arabidopsis_thaliana.qc.tsv
+```
+
+and without a GFA or the other organelle, e.g.
+`[poa] QC mito: pass; not assessed: graph, cross_organelle`.
+
+The rules, thresholds and reason strings are those of the dataset QC gate
+(`qc_basic_stats`, the gate behind the DToL dataset's pass/flag/fail
+counts): dead-end nodes (flag >0, fail >2), fragmented graphs (flag >=5,
+fail >=10 disconnected pieces, not counting closed circles at genome
+depth), no circular contig (flag), a contig file of unjoined graph
+segments (flag), core genes present (flag <80%, fail <50%), genome size
+more than 4 MADs from its genus (flag), and, with both organelles, the
+share of one assembly aligning to the other (`minimap2 -x asm5`; flag
+>15%, fail >35%). The parts that need a dataset - which genes are core
+(present in 90% of DToL assemblies) and each genus's genome sizes - ship
+with poa as reference data (`qc_basic_stats/reference/`), so a single
+sample is judged the way the dataset judged its own assemblies.
+
+The genus comes from the first word of `--name`
+(`Arabidopsis_thaliana` -> Arabidopsis); `--genus` sets it. A genus with
+fewer than 3 DToL assemblies is compared with the whole dataset, as the
+dataset gate does. The graph checks need the GFA (needing gfatk), and
+the cross-organelle check both organelles (needing minimap2); whatever
+can't be checked is listed in the `not_assessed` column rather than
+counted against the assembly.
+
+With a mito GFA, `poa run` also runs the low-depth side-path check
+(`qc_basic_stats 06`, in `tables/low_depth_paths.tsv`). A flagged graph
+gets a "linearisation uncertain" note in the contig GFF.
 
 ### Reference lineage
 

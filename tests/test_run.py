@@ -92,7 +92,19 @@ class Cli(unittest.TestCase):
         return CliRunner().invoke(cli.main, list(argv))
 
     def test_options_reach_run(self):
-        res = self.invoke("run", "--mito", str(self.fa), "-o", str(self.tmp / "out"), "-t", "8", "--lineage", "moss")
+        res = self.invoke(
+            "run",
+            "--mito",
+            str(self.fa),
+            "-o",
+            str(self.tmp / "out"),
+            "-t",
+            "8",
+            "--lineage",
+            "moss",
+            "--genus",
+            "Silene",
+        )
         self.assertEqual(res.exit_code, 0, res.output)
         self.assertEqual(
             self.calls,
@@ -105,6 +117,7 @@ class Cli(unittest.TestCase):
                     outdir=str(self.tmp / "out"),
                     name=None,
                     lineage="moss",
+                    genus="Silene",
                     threads=8,
                     force=False,
                 )

@@ -6,19 +6,25 @@ annotation pipeline on it:
 
   denovo_annotation 00-04 -> editing 01 -> trans_splicing 01 (mito)
   -> unitig_coords 00-01 + qc_basic_stats 06 (with a GFA) -> gff_export 01
+  -> qc (pass/flag/fail per organelle)
 
 Each stage is a library call, run in this process against a data root
 built in OUTDIR/work (data/{mito,plastid}/<name>/<name>.{mito,pltd}.ctg.fasta
 and .gfa), with its output (and that of the tools it runs) going to
 OUTDIR/logs/<stage>.log.
-qc_basic_stats 01-05 are not run: they judge an assembly against
-the rest of a dataset (genus-level size, a dataset-derived core-gene set,
-oatk's own gene calls), so with no qc_summary.tsv every stage annotates
-whatever it is given.
+The dataset QC gate (qc_basic_stats 01-05) judges an assembly partly
+against the rest of a dataset, so it isn't run; every stage annotates
+whatever it is given. The qc stage applies the same rules to this sample
+alone (qc_basic_stats/sample_qc.py), with the dataset-derived parts - the
+core-gene set and genus genome sizes - shipped as reference data, and
+writes a pass/flag/fail line per organelle to OUTDIR/<name>.qc.tsv. Graph
+checks need the GFA, and the cross-organelle check both organelles; a
+check that can't run is listed under not_assessed.
 
 Output:
   OUTDIR/<name>.<organelle>.gff          contig-level GFF3
   OUTDIR/<name>.<organelle>.unitig.gff   unitig-level GFF3 (with a GFA)
+  OUTDIR/<name>.qc.tsv                   pass/flag/fail and reasons, per organelle
   OUTDIR/tables/                         gene calls, edits, spliced genes, QC
   OUTDIR/logs/<stage>.log                each stage's stderr
   OUTDIR/work/                           the data root (intermediate files)
@@ -26,6 +32,7 @@ Output:
 
 from __future__ import annotations
 
+import csv
 import gzip
 import logging
 import os
@@ -47,6 +54,7 @@ from .pipeline.denovo_annotation.trnascan import run_trnascan
 from .pipeline.editing.scan import scan as scan_editing
 from .pipeline.gff_export.build_gff import build_gff
 from .pipeline.qc_basic_stats.low_depth_paths import low_depth_paths
+from .pipeline.qc_basic_stats.sample_qc import sample_qc
 from .pipeline.trans_splicing.reconstruct import reconstruct
 from .pipeline.unitig_coords.linearization_qc import linearization_qc
 from .pipeline.unitig_coords.unitig_map import build_unitig_maps
@@ -152,6 +160,7 @@ def run(
     pltd_gfa: str | None = None,
     name: str | None = None,
     lineage: str = "auto",
+    genus: str | None = None,
     threads: int = 4,
     force: bool = False,
 ) -> int:
@@ -227,6 +236,7 @@ def run(
     if "mito" in gfas:
         stages.append(("low_depth_paths", lambda: low_depth_paths(work)))
     stages.append(("gff_export", lambda: build_gff(work, orgs, gene_calls=gene_calls)))
+    stages.append(("qc", lambda: sample_qc(work, orgs, gene_calls=gene_calls, genus=genus)))
 
     print(
         f"[poa] {name}: {', '.join(orgs)}{' (+ graph: ' + ', '.join(gfas) + ')' if gfas else ''}; " f"output in {out}",
@@ -260,4 +270,14 @@ def run(
     for path in written:
         n_genes = sum(1 for line in open(path) if "\tgene\t" in line)
         print(f"[poa] {path.name}: {n_genes} genes", file=sys.stderr)
+    qc_src = work / "analysis" / "qc_basic_stats" / "results" / "sample_qc.tsv"
+    if qc_src.exists():
+        qc_out = out / f"{name}.qc.tsv"
+        shutil.copyfile(qc_src, qc_out)
+        with open(qc_out) as fh:
+            for r in csv.DictReader(fh, delimiter="\t"):
+                why = f" ({r['status_reasons']})" if r["status_reasons"] else ""
+                skipped = re.sub(r"\([^)]*\)", "", r["not_assessed"]).replace(";", ", ")
+                skipped = f"; not assessed: {skipped}" if skipped else ""
+                print(f"[poa] QC {r['organelle']}: {r['status']}{why}{skipped} -> {qc_out.name}", file=sys.stderr)
     return 0

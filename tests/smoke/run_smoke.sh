@@ -97,4 +97,16 @@ for f in "${SP}.mito.gff" "${SP}.pltd.gff" "unitig/${SP}.mito.unitig.gff" "uniti
     || { echo "[err] poa run's $(basename "${f}") differs from the stage-by-stage run" >&2; exit 1; }
 done
 log "poa run: GFFs identical to the stage-by-stage run"
+
+# Arabidopsis mito and plastid both pass the dataset QC gate; the
+# single-sample QC must agree, with every check assessed
+QC="${DATA_ROOT}/poa_run/${SP}.qc.tsv"
+python3 - "${QC}" <<'PY' || exit 1
+import csv, sys
+rows = list(csv.DictReader(open(sys.argv[1]), delimiter="\t"))
+bad = [r for r in rows if r["status"] != "pass" or r["not_assessed"]]
+if sorted(r["organelle"] for r in rows) != ["mito", "pltd"] or bad:
+    sys.exit(f"[err] {sys.argv[1]}: expected mito and pltd pass with nothing unassessed, got {rows}")
+PY
+log "poa run: QC pass for mito and pltd"
 echo PASS

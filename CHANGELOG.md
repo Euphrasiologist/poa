@@ -2,6 +2,20 @@
 
 ## Unreleased
 
+- `poa run` ends with single-sample QC: a `pass`/`flag`/`fail` line per
+  organelle, with reasons, in `<name>.qc.tsv`. It applies the dataset QC
+  gate's rules (dead ends, fragmentation, circularity, unjoined contigs,
+  core genes, genome size against the genus, mito/plastid
+  cross-alignment), with the dataset-derived parts - the core-gene set and
+  per-genus genome sizes from the DToL assemblies - shipped as reference
+  data (`qc_basic_stats/reference/`). Re-run over all 2,906 DToL
+  assemblies, it gives the dataset gate's status and reason strings for
+  every assembly that has files, apart from two where the dataset gate is
+  wrong: a stale graph-stats row (Silene vulgaris mito) and an assembly
+  with no core genes recorded as unknown rather than 0% (Neottia ovata
+  mito). `--genus` sets the genus for the size check (default: the first
+  word of `--name`). Checks that need a GFA (gfatk) or both organelles
+  (minimap2) are listed as not assessed when they can't run.
 - RNA editing correction now covers 26 single-exon mito genes, up from 7.
   Genes the dataset-built profiles don't cover (they need a gene to be
   single-copy in 80% of species) use bundled profiles built from the 11

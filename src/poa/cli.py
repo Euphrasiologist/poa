@@ -28,10 +28,10 @@ REQUIRED = [
     ("transsplice", "--version", "spliced-gene reconstruction"),
 ]
 OPTIONAL = [
-    ("gfatk", "--version", "dataset QC, linearize"),
+    ("gfatk", "--version", "QC graph checks (poa run with a GFA), linearize"),
     ("gfatools", "version", "dataset QC"),
     ("seqkit", "version", "dataset QC, linearize"),
-    ("minimap2", "--version", "dataset QC, linearize"),
+    ("minimap2", "--version", "QC cross-organelle check (poa run with both organelles), linearize"),
     ("samtools", "--version", "linearize"),
     ("GraphAligner", "--version", "linearize"),
     ("mafft", "--version", "rebuilding reference profiles"),
@@ -118,6 +118,10 @@ def check() -> None:
     show_default=True,
     help="reference lineage for mito editing profiles and spliced-gene templates: "
     "auto picks the one the sample's genes fit best",
+)
+@click.option(
+    "--genus",
+    help="genus for the QC genome-size check (default: the first word of --name, e.g. Arabidopsis_thaliana)",
 )
 @click.option("-t", "--threads", type=click.IntRange(min=1), default=4, show_default=True, help="threads")
 @click.option("--force", is_flag=True, help="replace an existing OUTDIR/work")
