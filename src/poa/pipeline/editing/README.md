@@ -24,7 +24,7 @@ it corrects the boundaries of ones oatk already found.
 | script | output | what |
 |---|---|---|
 | `00_build_reference_profiles.py` | `results/profiles/<gene>.pssm` | per-gene amino acid profile (PSSM), built from this dataset's own already-annotated orthologs |
-| `01_scan_editing.py` | `results/edited_gene_calls.tsv`, `results/predicted_edits.tsv`, `results/lineage.tsv` | runs `orfedit scan-batch` over every (species, gene) anchor that has a profile |
+| `01_scan_editing.py` | `results/edited_gene_calls.tsv`, `results/predicted_edits.tsv`, `results/frameshifts.tsv`, `results/lineage.tsv` | runs `orfedit scan-batch` over every (species, gene) anchor that has a profile |
 | `00b_build_lineage_profiles.py` | `reference/lineages/<lineage>/mito/<gene>.pssm`, `reference/profiles_refseq/mito/<gene>.pssm` | bundled profiles from RefSeq: per non-angiosperm lineage (see "Moss profiles" below), and angiosperm profiles for the mito genes the dataset doesn't profile (see "RefSeq profiles") |
 
 The scripts in `src/` are command-line wrappers. The code is in importable
@@ -110,6 +110,15 @@ edit-corrected protein sequence. `predicted_edits.tsv`: one row per
 predicted edit site (genomic position, which profile/protein column it
 falls in - `n_columns_total` itself, i.e. one past the last real column,
 for a predicted edit-created stop - and the resulting amino acid).
+`frameshifts.tsv` (orfedit >= 0.2.0): one row per change of reading frame
+inside a corrected gene - the skipped bases' genomic `start`/`end`,
+`n_bases` (1: the gene has a base too many for its frame, e.g. a 1-bp
+insertion; 2: a base too few, e.g. a 1-bp deletion), the profile column it
+precedes, and `dtol_assemblies`, the number of DToL assemblies with a
+frameshift within 5 profile columns of it in the same gene
+(`reference/frameshifts_dtol.tsv`, written by `frameshift_reference.py`).
+orfedit only keeps a frame change with 10 well-aligned profile columns on
+each side; `--frameshift-penalty inf` turns them off.
 
 **`changed` means "editing was invoked" (`n_edits > 0`), not "coordinates
 moved at all".** Coordinate-equality was tried first and dropped: a

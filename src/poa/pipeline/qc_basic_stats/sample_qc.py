@@ -44,6 +44,15 @@ Differences from the dataset gate, all from having one sample:
   - A check whose tool (gfatk, minimap2) isn't installed is reported as
     not assessed instead of failing the run.
 
+Reported but not part of the status: frameshifts orfedit found in edited
+genes (editing/results/frameshifts.tsv) - n_frameshifts, and the genes
+carrying them as gene:N, N being how many DToL assemblies have a
+frameshift at the same place in that gene. A frameshift is either an
+assembly error worth checking against the reads or real biology (a
+pseudogene, a gene read in two frames), which no rule here can tell apart
+for certain; one seen in at most NEW_FRAMESHIFT_MAX DToL assemblies counts
+towards n_new_frameshifts, the ones most worth checking.
+
 Output: analysis/qc_basic_stats/results/sample_qc.tsv, one row per
 species x organelle (COLUMNS).
 
@@ -85,6 +94,7 @@ QC_CORE_GENE_PRESENCE_THRESHOLD = 0.90
 UNJOINED_MIN_CONTIGS = 5
 MIN_GENUS_N = 3
 GENE_ALIASES = {"ccmFn1": "ccmFn", "ccmFn2": "ccmFn"}
+NEW_FRAMESHIFT_MAX = 2
 
 COLUMNS = [
     "species",
@@ -104,6 +114,9 @@ COLUMNS = [
     "size_mad_z",
     "size_reference",
     "cross_organelle_aligned_frac",
+    "n_frameshifts",
+    "n_new_frameshifts",
+    "frameshifted_genes",
 ]
 
 HEADER_RE = re.compile(r"^>(\S+).*?length=(\d+).*?nv=(\d+).*?circular=(true|false)")
@@ -437,6 +450,12 @@ def sample_qc(
     if calls is None:
         log.warning(f"sample_qc: no {calls_path} - core genes not assessed")
     core, size_ref = load_core_genes(), load_size_reference()
+    shifts_path = analysis_dir / "editing" / "results" / "frameshifts.tsv"
+    shifts = (
+        pd.read_csv(shifts_path, sep="\t")
+        if shifts_path.exists()
+        else None
+    )
     gfatk, minimap2 = shutil.which("gfatk"), shutil.which("minimap2")
 
     found = {
@@ -471,6 +490,18 @@ def sample_qc(
                 size_ref=size_ref,
                 gfatk=gfatk,
             )
+            if shifts is not None:
+                fs = shifts[(shifts.species == species) & (shifts.organelle == organelle)]
+                seen = (
+                    pd.to_numeric(fs["dtol_assemblies"], errors="coerce")
+                    if "dtol_assemblies" in fs.columns
+                    else pd.Series(float("nan"), index=fs.index)
+                )
+                row["n_frameshifts"] = len(fs)
+                row["n_new_frameshifts"] = int((seen.fillna(0) <= NEW_FRAMESHIFT_MAX).sum())
+                row["frameshifted_genes"] = ",".join(
+                    f"{g}:{'' if pd.isna(n) else int(n)}" for g, n in sorted(zip(fs.gene, seen), key=lambda x: x[0])
+                )
             rows.append(row)
             log.info(
                 f"sample_qc: {species} {organelle}: {row['status']}"

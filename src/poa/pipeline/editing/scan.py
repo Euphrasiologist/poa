@@ -37,8 +37,20 @@ call only compares genes both lineages have profiles for, so this doesn't
 change it. The call is recorded in
 lineage.tsv, which trans_splicing reads to pick its exon templates.
 
+Frameshifts: orfedit may change reading frame inside a gene, skipping 1
+or 2 bases at a cost (DEFAULT_FRAMESHIFT_PENALTY), the way a
+frameshifting indel would - an assembly error (HiFi homopolymer length) or
+a real pseudogene. Each one is a row of frameshifts.tsv: the skipped
+bases' genomic [start, end), n_bases (1: the frame wants one base fewer,
+e.g. a 1-bp insertion; 2: one base more, e.g. a 1-bp deletion) and the
+profile column it falls before; edited_gene_calls.tsv counts them per copy
+(n_frameshifts). dtol_assemblies says how many DToL assemblies have one in
+the same gene within 5 profile columns (add_recurrence), which separates
+a gene's shared frameshifts (rpl16, infA, ndhK) from this assembly's own.
+
 Output: analysis/editing/results/edited_gene_calls.tsv
         analysis/editing/results/predicted_edits.tsv
+        analysis/editing/results/frameshifts.tsv
         analysis/editing/results/lineage.tsv
 
 Library use - everything is passed in, nothing is read from the
@@ -55,7 +67,9 @@ from __future__ import annotations
 
 import argparse
 import logging
+import math
 import os
+import re
 import subprocess
 from dataclasses import dataclass
 from pathlib import Path
@@ -77,6 +91,8 @@ ORGANELLES = ("mito", "pltd")
 DEFAULT_THREADS = 4
 DEFAULT_FLANK = 300
 DEFAULT_EDIT_PENALTY = 2.5
+# orfedit's cost of a frame change inside a gene (see FRAMESHIFTS below)
+DEFAULT_FRAMESHIFT_PENALTY = 30.0
 # a hit other than a gene's best is corrected as a copy of its own when it
 # covers at least this much of the HMM (a short fragment - Arabidopsis's
 # third atp6 hit spans 21% - stays raw)
@@ -97,6 +113,7 @@ COPY_SEP = "|"
 class ScanResult:
     edited_gene_calls: Path
     predicted_edits: Path
+    frameshifts: Path
     lineage_table: Path
     lineages: dict[str, str]  # species -> lineage, for the species scanned
 
@@ -224,14 +241,61 @@ def write_manifest(rows: list[dict], path: Path) -> None:
             fh.write("\t".join(str(r[c]) for c in cols) + "\n")
 
 
+def supports_frameshifts(orfedit: str) -> bool:
+    """orfedit >= 0.2.0 (frame changes, --frameshifts-out)."""
+    out = subprocess.run([orfedit, "--version"], capture_output=True, text=True).stdout
+    m = re.search(r"(\d+)\.(\d+)\.(\d+)", out)
+    return m is not None and tuple(map(int, m.groups())) >= (0, 2, 0)
+
+
+FRAMESHIFT_COLUMNS = ["species", "organelle", "gene", "start", "end", "n_bases", "profile_column"]
+# frameshifts orfedit found across the DToL dataset (frameshift_reference.py)
+FRAMESHIFT_REFERENCE = PIPELINE_DIR / "editing" / "reference" / "frameshifts_dtol.tsv"
+RECURRENCE_WINDOW = 5  # profile columns
+
+
+def add_recurrence(shifts: pd.DataFrame, lineages: dict[str, str]) -> pd.DataFrame:
+    """Add dtol_assemblies: how many DToL assemblies have a frameshift in
+    the same gene within RECURRENCE_WINDOW profile columns - many means a
+    shared feature of the gene (a pseudogene, an alternative frame), none
+    a frameshift of this assembly's own. Empty for a mito gene aligned to
+    another lineage's profile, whose columns the reference doesn't use."""
+    shifts = shifts.copy()
+    if not FRAMESHIFT_REFERENCE.exists() or shifts.empty:
+        shifts["dtol_assemblies"] = pd.Series(dtype=object)
+        return shifts
+    ref = pd.read_csv(FRAMESHIFT_REFERENCE, sep="\t")
+    by_gene = {k: g for k, g in ref.groupby(["organelle", "gene"])}
+    out = []
+    for r in shifts.itertuples():
+        if r.organelle == "mito" and lineages.get(r.species, lin.DEFAULT_LINEAGE) != lin.DEFAULT_LINEAGE:
+            out.append("")
+            continue
+        g = by_gene.get((r.organelle, r.gene))
+        col = int(r.profile_column)
+        near = 0 if g is None else int(g.loc[(g.profile_column - col).abs() <= RECURRENCE_WINDOW, "n_assemblies"].sum())
+        out.append(near)
+    shifts["dtol_assemblies"] = out
+    return shifts
+
+
 def run_orfedit(
-    orfedit: str, rows: list[dict], tag: str, work_dir: Path, threads: int, flank: int, edit_penalty: float
-) -> tuple[pd.DataFrame, pd.DataFrame]:
-    """One orfedit scan-batch over `rows`; (gene calls, edits) as all-string frames."""
+    orfedit: str,
+    rows: list[dict],
+    tag: str,
+    work_dir: Path,
+    threads: int,
+    flank: int,
+    edit_penalty: float,
+    frameshift_penalty: float,
+) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+    """One orfedit scan-batch over `rows`; (gene calls, edits, frameshifts)
+    as all-string frames."""
     manifest_path = work_dir / f"manifest.{tag}.tsv"
     write_manifest(rows, manifest_path)
     log.info(f"scan_editing: {tag} manifest has {len(rows)} rows -> {manifest_path}")
     calls_out, edits_out = work_dir / f"edited_gene_calls.{tag}.tsv", work_dir / f"predicted_edits.{tag}.tsv"
+    shifts_out = work_dir / f"frameshifts.{tag}.tsv"
     cmd = [
         orfedit,
         "scan-batch",
@@ -248,27 +312,30 @@ def run_orfedit(
         "--edit-penalty",
         str(edit_penalty),
     ]
+    if math.isfinite(frameshift_penalty):
+        cmd += ["--frameshifts-out", str(shifts_out), "--frameshift-penalty", str(frameshift_penalty)]
+    else:
+        pd.DataFrame(columns=FRAMESHIFT_COLUMNS).to_csv(shifts_out, sep="\t", index=False)
     proc = subprocess.run(cmd)
     if proc.returncode != 0:
         raise StageError(f"orfedit scan-batch failed (exit {proc.returncode})")
-    return drop_weak_copies(
-        split_copy_labels(pd.read_csv(calls_out, sep="\t", dtype=str)),
-        split_copy_labels(pd.read_csv(edits_out, sep="\t", dtype=str)),
-    )
+    calls, edits, shifts = (split_copy_labels(pd.read_csv(p, sep="\t", dtype=str)) for p in (calls_out, edits_out, shifts_out))
+    return drop_weak_copies(calls, edits, shifts)
 
 
-def drop_weak_copies(calls: pd.DataFrame, edits: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
+def drop_weak_copies(calls: pd.DataFrame, *per_gene: pd.DataFrame) -> tuple[pd.DataFrame, ...]:
     """Keep each species x gene's best-scoring corrected copy, and any other
-    copy orfedit aligned to at least MIN_COPY_COVERAGE of the profile."""
+    copy orfedit aligned to at least MIN_COPY_COVERAGE of the profile;
+    `per_gene` tables (edits, frameshifts) keep the kept copies' rows."""
     if calls.empty:
-        return calls, edits
+        return (calls, *per_gene)
     score = calls["score"].astype(float)
     frac = calls["n_columns_aligned"].astype(float) / calls["n_columns_total"].astype(float)
     best = score.groupby([calls.species, calls.organelle, calls.gene]).transform("max") == score
     kept = calls[best | (frac >= MIN_COPY_COVERAGE)]
     key = ["species", "organelle", "gene", "contig", "hit_start", "hit_end"]
-    edits = edits.merge(kept[key].drop_duplicates(), on=key, how="inner") if not edits.empty else edits
-    return kept, edits
+    kept_keys = kept[key].drop_duplicates()
+    return (kept, *(t.merge(kept_keys, on=key, how="inner") if not t.empty else t for t in per_gene))
 
 
 def assign_lineages(runs: dict[str, pd.DataFrame], forced: str | None) -> pd.DataFrame:
@@ -315,6 +382,7 @@ def scan(
     threads: int = DEFAULT_THREADS,
     flank: int = DEFAULT_FLANK,
     edit_penalty: float = DEFAULT_EDIT_PENALTY,
+    frameshift_penalty: float = DEFAULT_FRAMESHIFT_PENALTY,
     lineage: str = "auto",
 ) -> ScanResult:
     """Correct the gene calls under data root `root` for RNA editing.
@@ -332,6 +400,9 @@ def scan(
     if lineage not in lin.CHOICES:
         raise ValueError(f"unknown lineage {lineage!r}; expected one of {lin.CHOICES}")
     orfedit = cargo_tool("orfedit")
+    if math.isfinite(frameshift_penalty) and not supports_frameshifts(orfedit):
+        log.warning(f"scan_editing: {orfedit} is older than 0.2.0 - no frameshift calls")
+        frameshift_penalty = math.inf
 
     gene_calls_path = (
         Path(gene_calls) if gene_calls else analysis_dir / "denovo_annotation" / "results" / "gene_calls.tsv"
@@ -363,7 +434,7 @@ def scan(
     # truncate the shared table down to just the scoped species. It writes
     # to work_dir instead, then merge_species_scoped_tsv decides how that
     # relates to what's already in results_dir (see its docstring).
-    opts = dict(threads=threads, flank=flank, edit_penalty=edit_penalty)
+    opts = dict(threads=threads, flank=flank, edit_penalty=edit_penalty, frameshift_penalty=frameshift_penalty)
     runs = {lin.DEFAULT_LINEAGE: run_orfedit(orfedit, rows, lin.DEFAULT_LINEAGE, work_dir, **opts)}
     if "mito" in organelles and lineage != lin.DEFAULT_LINEAGE:
         for name in lin.LINEAGES[1:]:
@@ -372,26 +443,32 @@ def scan(
                 runs[name] = run_orfedit(orfedit, lrows, name, work_dir, **opts)
 
     forced = None if lineage == "auto" else lineage
-    lineage_table = assign_lineages({k: c for k, (c, _) in runs.items()}, forced)
+    lineage_table = assign_lineages({k: run[0] for k, run in runs.items()}, forced)
     lineages = dict(zip(lineage_table["species"], lineage_table["lineage"]))
     for name, n in lineage_table["lineage"].value_counts().items():
         log.info(f"scan_editing: {n} species use {name} mito profiles")
     work_gene_calls_out = work_dir / "edited_gene_calls.new.tsv"
     work_edits_out = work_dir / "predicted_edits.new.tsv"
-    for i, out in enumerate((work_gene_calls_out, work_edits_out)):
+    work_shifts_out = work_dir / "frameshifts.new.tsv"
+    for i, out in enumerate((work_gene_calls_out, work_edits_out, work_shifts_out)):
         parts = [keep_lineage(run[i], lineages, name) for name, run in runs.items()]
-        pd.concat(parts, ignore_index=True).to_csv(out, sep="\t", index=False)
+        table = pd.concat(parts, ignore_index=True)
+        if out == work_shifts_out:
+            table = add_recurrence(table, lineages)
+        table.to_csv(out, sep="\t", index=False)
     work_lineage_out = work_dir / "lineage.new.tsv"
     lineage_table.to_csv(work_lineage_out, sep="\t", index=False)
 
     result = ScanResult(
         edited_gene_calls=results_dir / "edited_gene_calls.tsv",
         predicted_edits=results_dir / "predicted_edits.tsv",
+        frameshifts=results_dir / "frameshifts.tsv",
         lineage_table=lin.table_path(analysis_dir),
         lineages=lineages,
     )
     io_utils.merge_species_scoped_tsv(result.edited_gene_calls, work_gene_calls_out, species)
     io_utils.merge_species_scoped_tsv(result.predicted_edits, work_edits_out, species)
+    io_utils.merge_species_scoped_tsv(result.frameshifts, work_shifts_out, species)
     io_utils.merge_species_scoped_tsv(result.lineage_table, work_lineage_out, species)
     log.info(f"scan_editing: merged into {results_dir} ({'species-scoped' if species else 'full rewrite'})")
     return result
@@ -405,6 +482,12 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--threads", type=int, default=DEFAULT_THREADS)
     ap.add_argument("--flank", type=int, default=DEFAULT_FLANK)
     ap.add_argument("--edit-penalty", type=float, default=DEFAULT_EDIT_PENALTY)
+    ap.add_argument(
+        "--frameshift-penalty",
+        type=float,
+        default=DEFAULT_FRAMESHIFT_PENALTY,
+        help="cost of a frame change inside a gene (inf: single-frame alignment, no frameshift calls)",
+    )
     ap.add_argument(
         "--lineage",
         default="auto",
@@ -434,6 +517,7 @@ def main(argv: list[str] | None = None) -> int:
             threads=args.threads,
             flank=args.flank,
             edit_penalty=args.edit_penalty,
+            frameshift_penalty=args.frameshift_penalty,
             lineage=args.lineage,
         )
     except StageError as e:

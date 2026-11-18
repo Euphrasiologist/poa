@@ -90,7 +90,7 @@ Output in `out/`:
 - `<name>.<mito|pltd>.unitig.gff` - unitig-level GFF3 (with a GFA)
 - `<name>.qc.tsv` - `pass`/`flag`/`fail` per organelle, with the reasons
   and the measurements behind them (see "QC" below)
-- `tables/` - gene calls, predicted RNA edits, reconstructed spliced
+- `tables/` - gene calls, predicted RNA edits, frameshifts, reconstructed spliced
   genes, linearisation QC
 - `logs/` - one log per stage; `work/` - intermediate files
 
@@ -135,6 +135,39 @@ counted against the assembly.
 With a mito GFA, `poa run` also runs the low-depth side-path check
 (`qc_basic_stats 06`, in `tables/low_depth_paths.tsv`). A flagged graph
 gets a "linearisation uncertain" note in the contig GFF.
+
+### Frameshifts
+
+The editing correction (orfedit >= 0.2.0) aligns each single-exon
+protein-coding gene to its reference profile allowing a change of reading
+frame inside the gene, and reports where it happens: an assembly indel
+(e.g. a miscounted homopolymer) or a real pseudogene, which poa can't
+tell apart - check it against the reads. Each one is a row of
+`tables/frameshifts.tsv` (the skipped bases' 0-based `start`/`end`,
+`n_bases`: 1 = one base too many for the frame, e.g. a 1-bp insertion; 2 =
+one too few, e.g. a 1-bp deletion), a `frameshift` feature under the
+gene's CDS in the GFF, and a count in the QC table (`n_frameshifts`,
+`frameshifted_genes`; not part of the status). `poa run` prints them:
+
+```
+[poa] frameshifts mito: 2 in atp1, cox1 -> tables/frameshifts.tsv
+```
+
+Multi-exon (trans- and cis-spliced) genes aren't checked. With orfedit
+0.1.0 there are no frameshift calls.
+
+### Circular contigs
+
+A circular genome given as linear sequence starts at an arbitrary base,
+and a gene through that base would be called as two partial genes, one
+at each end. When `poa run` finds the same gene at both ends of a contig
+(one not marked `circular=false` by oatk), it moves that contig's origin
+into its longest gene-free stretch, annotates it again, and maps
+everything back onto the sequence you gave it: the gene is one feature
+with its end past the contig's length (GFF3's convention for features
+across the origin of an `Is_circular=true` sequence). With a GFA it
+leaves the contig as it is and warns, since the unitig coordinates
+depend on the assembler's origin.
 
 ### Reference lineage
 

@@ -45,6 +45,9 @@ from contextlib import contextmanager
 from pathlib import Path
 from typing import Callable, Iterator
 
+import pandas as pd
+
+from .pipeline.common import origin
 from .pipeline.common.errors import StageError
 from .pipeline.denovo_annotation.combined_gff import build_combined_gff
 from .pipeline.denovo_annotation.gene_calls import build_gene_calls
@@ -71,6 +74,7 @@ TABLES = [
     "denovo_annotation/results/gene_calls.tsv",
     "editing/results/edited_gene_calls.tsv",
     "editing/results/predicted_edits.tsv",
+    "editing/results/frameshifts.tsv",
     "editing/results/lineage.tsv",
     "trans_splicing/results/reconstructed_genes.tsv",
     "trans_splicing/results/reconstructed_exons.tsv",
@@ -151,6 +155,55 @@ def run_stage(label: str, stage: Callable[[], object], logs: Path) -> None:
     print(f" done ({time.time() - t0:.0f}s)", file=sys.stderr)
 
 
+def move_origins(work: Path, orgs: list[str], name: str, gene_calls: Path, gfas: dict) -> dict[str, dict[str, int]]:
+    """Find genes called at both ends of a circular contig and move that
+    contig's origin into its longest gene-free stretch (common/origin.py).
+    Returns {organelle: {contig: offset}} for the contigs moved."""
+    calls = pd.read_csv(gene_calls, sep="\t")
+    moved: dict[str, dict[str, int]] = {}
+    for o in orgs:
+        fasta = work / "data" / ORGANELLES[o] / name / f"{name}.{o}.ctg.fasta"
+        info = origin.contigs(fasta)
+        sub = calls[(calls.organelle == o) & (calls.species == name)]
+        split = origin.split_genes(sub, info)
+        if not split:
+            continue
+        where = "; ".join(f"{', '.join(genes)} on {contig}" for contig, genes in split.items())
+        if o in gfas:
+            print(
+                f"[poa] warning: {o}: {where} run(s) across the contig's origin and stay split - "
+                f"the unitig map needs the assembler's origin",
+                file=sys.stderr,
+            )
+            continue
+        offsets = {c: origin.new_origin(sub[sub.contig_id == c], info[c][0]) for c in split}
+        origin.rotate_fasta(fasta, offsets)
+        moved[o] = offsets
+        to = ", ".join(f"{c} position {k + 1}" for c, k in offsets.items())
+        print(
+            f"[poa] {o}: {where} run(s) across the contig's origin; annotating with the origin "
+            f"moved to {to}, output mapped back to the input",
+            file=sys.stderr,
+        )
+    return moved
+
+
+def unrotate_outputs(out: Path, work: Path, name: str, moved: dict[str, dict[str, int]]) -> None:
+    """Map OUTDIR's GFFs and tables from the moved origins back onto the
+    input contigs."""
+    tables = out / "tables"
+    exons_path = tables / "reconstructed_exons.tsv"
+    exons = pd.read_csv(exons_path, sep="\t") if exons_path.exists() else None
+    for o, offsets in moved.items():
+        fasta = work / "data" / ORGANELLES[o] / name / f"{name}.{o}.ctg.fasta"
+        lengths = {c: n for c, (n, _) in origin.contigs(fasta).items()}
+        origin.unrotate_gff(out / f"{name}.{o}.gff", offsets, lengths)
+        # reconstructed_edits finds its contigs in reconstructed_exons, so first
+        for t in ["reconstructed_edits.tsv", *(t for t in origin.TABLE_COORDS)]:
+            if (tables / t).exists():
+                origin.unrotate_table(tables / t, o, offsets, lengths, exons=exons)
+
+
 def run(
     *,
     outdir: str | os.PathLike,
@@ -210,12 +263,18 @@ def run(
     every_qc = ("pass", "flag", "fail")
     gene_calls = work / "analysis/denovo_annotation/results/gene_calls.tsv"
     scan = dict(jobs=jobs, qc_status=every_qc)
+    def gene_calling(force: bool) -> list:
+        return [
+            ("nhmmscan", lambda: run_nhmmscan(work, orgs, cpu=per_job, force=force, **scan)),
+            ("trnascan", lambda: run_trnascan(work, orgs, threads=per_job, force=force, **scan)),
+            ("rrna", lambda: run_rrna(work, orgs, threads=per_job, force=force, **scan)),
+            ("combined_gff", lambda: build_combined_gff(work, orgs, force=force)),
+            ("gene_calls", lambda: build_gene_calls(work, orgs)),
+        ]
+
     stages = [
-        ("nhmmscan", lambda: run_nhmmscan(work, orgs, cpu=per_job, **scan)),
-        ("trnascan", lambda: run_trnascan(work, orgs, threads=per_job, **scan)),
-        ("rrna", lambda: run_rrna(work, orgs, threads=per_job, **scan)),
-        ("combined_gff", lambda: build_combined_gff(work, orgs)),
-        ("gene_calls", lambda: build_gene_calls(work, orgs)),
+        *gene_calling(False),
+        ("origin", None),  # see move_origins
         (
             "editing",
             lambda: scan_editing(work, orgs, gene_calls=gene_calls, threads=threads, lineage=lineage),
@@ -242,8 +301,15 @@ def run(
         f"[poa] {name}: {', '.join(orgs)}{' (+ graph: ' + ', '.join(gfas) + ')' if gfas else ''}; " f"output in {out}",
         file=sys.stderr,
     )
+    moved: dict[str, dict[str, int]] = {}
     try:
         for label, stage in stages:
+            if label == "origin":
+                moved = move_origins(work, orgs, name, gene_calls, gfas)
+                if moved:
+                    for again, call in gene_calling(True):
+                        run_stage(again, call, logs)
+                continue
             run_stage(label, stage, logs)
     except StageFailed as e:
         log.error(e)
@@ -267,6 +333,8 @@ def run(
         src = work / "analysis" / rel
         if src.exists():
             shutil.copyfile(src, out / "tables" / src.name)
+    if moved:
+        unrotate_outputs(out, work, name, moved)
     for path in written:
         n_genes = sum(1 for line in open(path) if "\tgene\t" in line)
         print(f"[poa] {path.name}: {n_genes} genes", file=sys.stderr)
@@ -280,4 +348,12 @@ def run(
                 skipped = re.sub(r"\([^)]*\)", "", r["not_assessed"]).replace(";", ", ")
                 skipped = f"; not assessed: {skipped}" if skipped else ""
                 print(f"[poa] QC {r['organelle']}: {r['status']}{why}{skipped} -> {qc_out.name}", file=sys.stderr)
+                if r.get("n_frameshifts") not in (None, "", "0"):
+                    genes = [g.split(":") for g in r["frameshifted_genes"].split(",")]
+                    where = ", ".join(f"{g} (in {n} DToL)" if n not in ("", "0") else g for g, n in genes)
+                    print(
+                        f"[poa] frameshifts {r['organelle']}: {r['n_frameshifts']}, "
+                        f"{r['n_new_frameshifts']} not seen in DToL - {where} -> tables/frameshifts.tsv",
+                        file=sys.stderr,
+                    )
     return 0

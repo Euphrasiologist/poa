@@ -41,6 +41,10 @@ GFF3 mechanics used here (see `../README.md` for the full explanation):
   under the relevant `CDS` `ID` (a real, general Sequence Ontology term
   for "this position differs from a reference" - a pragmatic choice, not
   a claim that this is THE canonical way to encode RNA editing in GFF3).
+- A frameshift orfedit found inside an edited gene is a child `frameshift`
+  feature of its `CDS` (SO:0000865), spanning the 1 or 2 bases the
+  alignment skipped to change frame (`n_bases`), and the mRNA carries
+  `n_frameshifts`. The CDS itself stays one row over the corrected span.
 - `phase` (GFF3 column 8) is `0` for `editing`/`trans_splicing`-derived
   exons. For editing's single-exon calls that's exact; for trans_splicing
   it is NOT - see README ("Known issue"). Raw cis-spliced models take each CDS's
@@ -622,8 +626,10 @@ def emit_protein_coding_gene(
     n_edits_summary: int,
     copy: dict,
     phase_from_lengths: bool,
+    frameshifts: list[dict] = (),
 ) -> None:
     """parts: list of {contig, start, end, strand, score, exon_number} in exon order.
+    frameshifts: list of {start, end, n_bases} (single-exon edited genes).
     edits: list of {genomic_pos, resulting_aa, [slot]} to attach as sequence_alteration
     children - `slot` (trans_splicing) names the exon, and so the contig, an edit sits on.
 
@@ -678,6 +684,7 @@ def emit_protein_coding_gene(
                             "Name": gene,
                             "n_exons": len(parts),
                             "n_edits": n_edits_summary,
+                            "n_frameshifts": len(frameshifts) or None,
                             "exon_boundaries": "approximate" if approximate else None,
                         }
                     ),
@@ -733,10 +740,27 @@ def emit_protein_coding_gene(
                 ]
             )
         )
+    for i, f in enumerate(frameshifts, start=1):
+        p = parts[0]
+        lines.append(
+            "\t".join(
+                [
+                    p["contig"],
+                    "gff_export",
+                    "frameshift",
+                    str(int(f["start"]) + 1),
+                    str(int(f["end"])),
+                    ".",
+                    p["strand"],
+                    ".",
+                    gff_attrs({"ID": f"fs-{gene}{suffix}-{i}", "Parent": cid, "n_bases": int(f["n_bases"])}),
+                ]
+            )
+        )
 
 
-def edited_copies(calls: pd.DataFrame, edits: pd.DataFrame, gene_hits: pd.DataFrame):
-    """(edited call, its edits) for each corrected copy of one gene, best
+def edited_copies(calls: pd.DataFrame, edits: pd.DataFrame, gene_hits: pd.DataFrame, shifts: pd.DataFrame):
+    """(edited call, its edits, its frameshifts) for each corrected copy of one gene, best
     first. editing.scan writes the copy each call was computed on
     (contig, hit_start, hit_end); tables from before that have one call per
     gene, on the best-scoring hit, and no copy columns."""
@@ -745,15 +769,19 @@ def edited_copies(calls: pd.DataFrame, edits: pd.DataFrame, gene_hits: pd.DataFr
         best = gene_hits.loc[gene_hits.score.idxmax()]
         erow = calls.iloc[0].copy()
         erow["contig"], erow["hit_start"], erow["hit_end"] = best.contig_id, best.start, best.end
-        yield erow, edits
+        yield erow, edits, shifts
         return
+    def same(t: pd.DataFrame) -> pd.DataFrame:
+        if t.empty:
+            return t
+        return t[
+            (t.contig == erow.contig)
+            & (t.hit_start.astype(int) == int(erow.hit_start))
+            & (t.hit_end.astype(int) == int(erow.hit_end))
+        ]
+
     for _, erow in calls.iterrows():
-        same = (
-            (edits.contig == erow.contig)
-            & (edits.hit_start.astype(int) == int(erow.hit_start))
-            & (edits.hit_end.astype(int) == int(erow.hit_end))
-        )
-        yield erow, edits[same]
+        yield erow, same(edits), same(shifts)
 
 
 def overlaps(a_contig, a_start, a_end, b_contig, b_start, b_end) -> bool:
@@ -768,6 +796,7 @@ def build_species_gff(
     ts_genes: pd.DataFrame,
     ts_exons: pd.DataFrame,
     ts_edits: pd.DataFrame,
+    shifts: pd.DataFrame,
     stats: Counter,
     expected: dict,
 ) -> list[str]:
@@ -868,7 +897,8 @@ def build_species_gff(
                 )
         e = editing_calls[editing_calls.gene == gene]
         if not corrected and not e.empty:
-            for erow, ed in edited_copies(e, editing_edits[editing_edits.gene == gene], gh):
+            gene_shifts = shifts[shifts.gene == gene] if not shifts.empty else shifts
+            for erow, ed, fs in edited_copies(e, editing_edits[editing_edits.gene == gene], gh, gene_shifts):
                 # the copy holding the hit editing corrected
                 target = next(
                     (
@@ -899,6 +929,7 @@ def build_species_gff(
                                 }
                             ],
                             "edits": ed.to_dict("records"),
+                            "frameshifts": fs.to_dict("records"),
                             "coverage": target["coverage"],
                             "partial": target["partial"],
                         }
@@ -932,8 +963,10 @@ def build_species_gff(
                     c["n_edits"],
                     c,
                     phase_from_lengths=False,
+                    frameshifts=c.get("frameshifts", []),
                 )
                 stats[c["tier"]] += 1
+                stats["frameshifts"] += len(c.get("frameshifts", []))
                 continue
             parts = [
                 {
@@ -1030,7 +1063,12 @@ def build_gff(
     unitig_out_dir = out_dir / "unitig"
     unitig_out_dir.mkdir(parents=True, exist_ok=True)
 
-    tables = [editing_calls, editing_edits, ts_genes, ts_exons, ts_edits]
+    shifts = load(
+        analysis_dir / "editing" / "results" / "frameshifts.tsv",
+        ["species", "organelle", "gene", "contig", "hit_start", "hit_end", "start", "end", "n_bases"],
+    )
+
+    tables = [editing_calls, editing_edits, ts_genes, ts_exons, ts_edits, shifts]
     empty = [t.iloc[0:0] for t in tables]
     split = [{k: g for k, g in t.groupby(["species", "organelle"])} if not t.empty else {} for t in tables]
     raw_split = {k: g for k, g in raw.groupby(["species", "organelle"])}

@@ -2,6 +2,30 @@
 
 ## Unreleased
 
+- Frameshifts: with orfedit >= 0.2.0, the editing correction allows a
+  change of reading frame inside a single-exon gene and reports where it
+  is - `tables/frameshifts.tsv` (the skipped bases' coordinates, 1- or
+  2-base type, profile column), a `frameshift` child of the gene's CDS in
+  the GFF, and `n_frameshifts`/`n_new_frameshifts`/`frameshifted_genes` in
+  the QC table, printed at the end of `poa run`. Each frameshift carries
+  `dtol_assemblies`, how many DToL assemblies have one at the same place
+  in the same gene (`editing/reference/frameshifts_dtol.tsv`): mito rpl16
+  has one in 239 of 979 mito assemblies, so that's the gene, while one
+  seen nowhere else is the first thing to check against the reads. On the
+  DToL dataset, 1-bp indels planted in 900 genes are found in 83% (94% of
+  plastid genes, 72% of mito), 99.9% with the right type, and every gene
+  without a frameshift is corrected exactly as before. With orfedit 0.1.0
+  there are no frameshift calls (a warning says so); `scan_editing
+  --frameshift-penalty inf` turns them off.
+- Circular contigs: a gene running through the start of a circular contig
+  (an oatk contig not marked `circular=false`, or a finished, linearised
+  organelle FASTA) was called as two partial genes, one at each end.
+  `poa run` now moves such a contig's origin into its longest gene-free
+  stretch, calls genes again, and maps the GFF and tables back onto the
+  input, the gene as one feature ending past the contig's length (GFF3's
+  convention for `Is_circular=true` sequences). With a GFA the contig is
+  left as it is, with a warning, as unitig coordinates need the
+  assembler's origin.
 - `poa run` ends with single-sample QC: a `pass`/`flag`/`fail` line per
   organelle, with reasons, in `<name>.qc.tsv`. It applies the dataset QC
   gate's rules (dead ends, fragmentation, circularity, unjoined contigs,

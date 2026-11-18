@@ -146,6 +146,11 @@ real, general term - "this position differs from a reference") as a
 pragmatic, documented choice, not a claim that it's the one definitive
 standard.
 
+**Frameshifts**: a frame change orfedit found inside an edited gene is a
+`frameshift` child of its `CDS` (SO:0000865), over the 1 or 2 bases skipped
+(`n_bases`), with `n_frameshifts` on the mRNA. The CDS stays a single row
+over the corrected span rather than being split at the frameshift.
+
 **Phase column** (GFF3 field 8, required for `CDS`): `0` for
 `editing`/`trans_splicing`-derived exons. For `editing`'s single-exon
 calls that is a verified guarantee (orfedit's DP only emits codon-aligned
