@@ -17,6 +17,18 @@ the lineage its genes fit best (common/lineage.py; --lineage to force
 one). A species' genes with no profile in its lineage (moss nad5/nad9,
 multi-exon there) are left uncorrected.
 
+Every substantial mito copy of a gene is corrected, not just the
+best-scoring hit: the best hit, plus any other hit covering at least
+MIN_COPY_SPAN of the HMM that overlaps neither a hit already taken nor a
+stronger hit of another gene (Arabidopsis has two atp6 genes with
+different N-termini; 41-129 species per gene in the DToL dataset have two
+or more such copies). An extra copy keeps its correction only if orfedit
+aligns at least MIN_COPY_COVERAGE of the profile. Plastids keep the best
+hit only (see COPY_ORGANELLES). Each copy goes to orfedit as gene
+`<gene>|<contig>:<start>-<end>`, which orfedit passes through untouched,
+and both output tables get the copy back as `contig`, `hit_start` and
+`hit_end`. The lineage call uses each gene's best-scoring copy.
+
 Angiosperm mito genes with no dataset-built (or bundled dataset) profile -
 everything but atp4 ccmB ccmC mttB nad5 nad9 rps14, which are the genes
 single-copy across the dataset - use the bundled RefSeq profiles
@@ -65,6 +77,20 @@ ORGANELLES = ("mito", "pltd")
 DEFAULT_THREADS = 4
 DEFAULT_FLANK = 300
 DEFAULT_EDIT_PENALTY = 2.5
+# a hit other than a gene's best is corrected as a copy of its own when it
+# covers at least this much of the HMM (a short fragment - Arabidopsis's
+# third atp6 hit spans 21% - stays raw)
+MIN_COPY_SPAN = 0.5
+# ...and keeps its correction only when orfedit aligns at least this much of
+# the profile (a gene's best copy is always kept, as before). The 5th
+# percentile for single-copy mito genes on the DToL dataset is 0.88-0.99.
+MIN_COPY_COVERAGE = 0.8
+# Extra copies are mito only. In plastids the candidates are mostly the
+# truncated rps19 at the inverted-repeat boundary (404 of 2328 across the
+# dataset) and duplicates from redundant contigs; the genes the inverted
+# repeat really duplicates (rps7, ycf2, ndhB, rpl2, rpl23) have no profile.
+COPY_ORGANELLES = ("mito",)
+COPY_SEP = "|"
 
 
 @dataclass(frozen=True)
@@ -75,12 +101,57 @@ class ScanResult:
     lineages: dict[str, str]  # species -> lineage, for the species scanned
 
 
-def best_hits_per_species(gene_calls: pd.DataFrame, organelle: str, genes: list[str]) -> pd.DataFrame:
-    sub = gene_calls[(gene_calls["organelle"] == organelle) & (gene_calls["gene"].isin(genes))]
+def hits_to_correct(gene_calls: pd.DataFrame, organelle: str, genes: list[str]) -> pd.DataFrame:
+    """Per species and gene: the best-scoring hit, plus every other hit
+    covering >= MIN_COPY_SPAN of the HMM that overlaps neither a hit already
+    taken on the same contig nor a stronger hit of a different gene (a
+    paralogue's locus: plastid psaA's HMM also hits psaB at 89% of its
+    length, scoring 434 against psaB's 2724). Only the best hit outside
+    COPY_ORGANELLES, or without hmm_from/hmm_to/model_len columns."""
+    org = gene_calls[gene_calls["organelle"] == organelle]
+    sub = org[org["gene"].isin(genes)]
     if sub.empty:
         return sub
-    idx = sub.groupby(["species", "gene"])["score"].idxmax()
-    return sub.loc[idx]
+    has_span = {"hmm_from", "hmm_to", "model_len"} <= set(sub.columns) and organelle in COPY_ORGANELLES
+    by_contig = {k: g for k, g in org.groupby(["species", "contig_id"])}
+    keep = []
+    for (species, _), g in sub.sort_values("score", ascending=False, kind="stable").groupby(
+        ["species", "gene"], sort=False
+    ):
+        taken: list = []
+        for i, h in g.iterrows():
+            if taken:
+                if not has_span or not (h.hmm_to - h.hmm_from + 1) >= MIN_COPY_SPAN * h.model_len:
+                    continue
+                if any(t.contig_id == h.contig_id and t.start <= h.end and h.start <= t.end for t in taken):
+                    continue
+                here = by_contig[(species, h.contig_id)]
+                rivals = here[(here.gene != h.gene) & (here.start <= h.end) & (h.start <= here.end)]
+                if (rivals.score > h.score).any():
+                    continue
+            taken.append(h)
+            keep.append(i)
+    return sub.loc[keep]
+
+
+def copy_label(gene: str, contig: str, start: int, end: int) -> str:
+    return f"{gene}{COPY_SEP}{contig}:{start}-{end}"
+
+
+def split_copy_labels(df: pd.DataFrame) -> pd.DataFrame:
+    """orfedit output with copy-labelled genes -> gene, contig, hit_start, hit_end."""
+    if df.empty:
+        return df.assign(contig=pd.Series(dtype=str), hit_start=pd.Series(dtype=str), hit_end=pd.Series(dtype=str))
+    parts = df["gene"].str.extract(r"^(?P<gene>[^|]+)\|(?P<contig>.+):(?P<hit_start>\d+)-(?P<hit_end>\d+)$")
+    if parts["gene"].isna().any():
+        raise StageError(
+            f"orfedit returned gene labels without a copy: {df.loc[parts.gene.isna(), 'gene'].unique()[:5]}"
+        )
+    df = df.drop(columns="gene")
+    at = list(df.columns).index("organelle") + 1
+    for j, col in enumerate(["gene", "contig", "hit_start", "hit_end"]):
+        df.insert(at + j, col, parts[col])
+    return df
 
 
 def profile_paths(profiles_dirs: list[Path], organelle: str) -> dict[str, Path]:
@@ -113,7 +184,7 @@ def build_manifest(
                 f"editing/src/00_build_reference_profiles.py first"
             )
             continue
-        hits = best_hits_per_species(gene_calls, organelle, genes)
+        hits = hits_to_correct(gene_calls, organelle, genes)
         if hits.empty:
             continue
         data_root = sd.repo_data_root(root, organelle)
@@ -132,7 +203,7 @@ def build_manifest(
                 {
                     "species": row.species,
                     "organelle": organelle,
-                    "gene": row.gene,
+                    "gene": copy_label(row.gene, row.contig_id, int(row.start), int(row.end)),
                     "fasta": fasta_path,
                     "profile": str(profiles[row.gene]),
                     "contig": row.contig_id,
@@ -180,7 +251,24 @@ def run_orfedit(
     proc = subprocess.run(cmd)
     if proc.returncode != 0:
         raise StageError(f"orfedit scan-batch failed (exit {proc.returncode})")
-    return pd.read_csv(calls_out, sep="\t", dtype=str), pd.read_csv(edits_out, sep="\t", dtype=str)
+    return drop_weak_copies(
+        split_copy_labels(pd.read_csv(calls_out, sep="\t", dtype=str)),
+        split_copy_labels(pd.read_csv(edits_out, sep="\t", dtype=str)),
+    )
+
+
+def drop_weak_copies(calls: pd.DataFrame, edits: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Keep each species x gene's best-scoring corrected copy, and any other
+    copy orfedit aligned to at least MIN_COPY_COVERAGE of the profile."""
+    if calls.empty:
+        return calls, edits
+    score = calls["score"].astype(float)
+    frac = calls["n_columns_aligned"].astype(float) / calls["n_columns_total"].astype(float)
+    best = score.groupby([calls.species, calls.organelle, calls.gene]).transform("max") == score
+    kept = calls[best | (frac >= MIN_COPY_COVERAGE)]
+    key = ["species", "organelle", "gene", "contig", "hit_start", "hit_end"]
+    edits = edits.merge(kept[key].drop_duplicates(), on=key, how="inner") if not edits.empty else edits
+    return kept, edits
 
 
 def assign_lineages(runs: dict[str, pd.DataFrame], forced: str | None) -> pd.DataFrame:
@@ -189,7 +277,9 @@ def assign_lineages(runs: dict[str, pd.DataFrame], forced: str | None) -> pd.Dat
     for name, calls in runs.items():
         mito = calls[calls["organelle"] == "mito"]
         for row in mito.itertuples():
-            scores.setdefault(row.species, {}).setdefault(name, {})[row.gene] = float(row.score)
+            # a gene's best copy speaks for it (one copy each when calibrated)
+            genes = scores.setdefault(row.species, {}).setdefault(name, {})
+            genes[row.gene] = max(genes.get(row.gene, float("-inf")), float(row.score))
     out = []
     for species in sorted(scores):
         chosen, n, totals = lin.choose(scores[species])

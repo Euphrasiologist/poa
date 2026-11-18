@@ -171,6 +171,32 @@ and a full-length profile can only partly fit either piece. atp6 stays
 raw in the check because Arabidopsis has two copies and `scan` corrects
 the best-scoring one, not the one RefSeq is compared against.
 
+### Gene copies
+
+`scan` corrects every substantial mito copy of a gene: the best-scoring
+hit, plus any other hit covering at least half the HMM
+(`MIN_COPY_SPAN`) that overlaps neither a copy already taken nor a
+stronger hit of another gene - a paralogue's locus, like plastid psaA's
+HMM hitting psaB at 89% of its length. An extra copy keeps its
+correction only when orfedit aligns at least 80% of the profile
+(`MIN_COPY_COVERAGE`); the best copy is kept regardless, as before. Each
+copy goes to orfedit with gene `<gene>|<contig>:<start>-<end>` and comes
+back as the `contig`, `hit_start` and `hit_end` columns of both output
+tables, which gff_export uses to put each correction on its own copy.
+The lineage call scores each gene by its best copy.
+
+Arabidopsis has two atp6 genes with different N-termini (385 and 349 aa
+in RefSeq); before, only the best-scoring one was corrected and the other
+stayed raw at 0.785 identity, now 0.975. Across the DToL gene calls the
+rule adds up to 1,366 mito copies (atp1 163, atp9 107, nad4L 93, atp8
+90).
+
+Plastids keep the best hit only (`COPY_ORGANELLES`). Their candidate
+extra copies are mostly the truncated rps19 at the inverted-repeat
+boundary (404 of 2,328) and duplicates from redundant contigs, and the
+genes the inverted repeat really duplicates (rps7, ycf2, ndhB, rpl2,
+rpl23) have no profile.
+
 ### Moss profiles and the lineage call
 
 The dataset-built profiles are angiosperm profiles in practice, because

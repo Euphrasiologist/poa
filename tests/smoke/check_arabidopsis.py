@@ -22,8 +22,13 @@ comparable; gene content, exon structure and protein sequence are.
     `annotation_tier=raw` models are nhmmscan spans with approximate
     boundaries, not reading frames, so for those only the best of three
     frames is scored (right locus, not right model) and no exon/identity
-    threshold applies. Where the GFF has several copies of a gene, the
-    best-matching one counts.
+    threshold applies.
+  - genes with more than one RefSeq CDS (atp6: two different proteins,
+    385 and 349 aa; ccmFN1/ccmFN2, Brassicaceae's split ccmFn) get a row
+    per RefSeq copy (`refseq_gene`: atp6#1, atp6#2, ccmFN1, ccmFN2). Each
+    copy is paired with a different GFF model where there are enough,
+    best pairs first, so one well-annotated copy can't stand in for an
+    unannotated one; otherwise copies share the best model.
 
 Writes a per-gene TSV (--out) and exits 1 if any EXPECT threshold fails.
 """
@@ -86,9 +91,11 @@ def editing_explains(codon: str, aa: str) -> bool:
     return False
 
 
-def refseq_genes(gb: Path) -> tuple[set[str], dict[str, dict]]:
+def refseq_genes(gb: Path) -> tuple[set[str], dict[str, list[dict]]]:
+    """Normalised gene names, and per name every RefSeq CDS copy (label,
+    exon lengths in transcript order, protein)."""
     rec = SeqIO.read(gb, "genbank")
-    names, proteins = set(), {}
+    names, proteins = set(), defaultdict(list)
     for f in rec.features:
         if f.type not in ("CDS", "tRNA", "rRNA") or "gene" not in f.qualifiers:
             continue
@@ -98,8 +105,19 @@ def refseq_genes(gb: Path) -> tuple[set[str], dict[str, dict]]:
             parts = list(f.location.parts)
             if "".join(str(p.extract(rec.seq)) for p in parts) != str(f.extract(rec.seq)):
                 parts = parts[::-1]  # transcript order
-            proteins[name] = {"exon_lengths": [len(p) for p in parts], "protein": f.qualifiers["translation"][0]}
-    return names, proteins
+            proteins[name].append(
+                {
+                    "label": f.qualifiers["gene"][0],
+                    "exon_lengths": [len(p) for p in parts],
+                    "protein": f.qualifiers["translation"][0],
+                }
+            )
+    for copies in proteins.values():
+        labels = [c["label"] for c in copies]
+        for i, c in enumerate(copies):
+            if labels.count(c["label"]) > 1:
+                c["label"] = f"{c['label']}#{i + 1}"
+    return names, dict(proteins)
 
 
 def gff_models(gff: Path) -> tuple[set[str], dict[str, list[tuple[str, list[tuple]]]]]:
@@ -164,64 +182,74 @@ def main() -> None:
         n = max(len(protein), len(ref))
         return edited / n, raw / n
 
+    def score(ref: dict, tier: str, model: list[tuple]) -> dict:
+        seq = Seq("")
+        for _, seqid, start, end, strand in model:
+            piece = genome[seqid][start - 1 : end]
+            seq += piece.reverse_complement() if strand == "-" else piece
+        frames = [0] if tier != "raw" else [0, 1, 2]
+        ident, raw_ident = max(identity(str(seq[f:]), ref["protein"]) for f in frames)
+        lengths = [end - start + 1 for _, _, start, end, _ in model]
+        ref_lengths = list(ref["exon_lengths"])
+        ref_lengths[-1] -= 3  # RefSeq CDS includes the stop codon; compare without it
+        # the last exon may or may not carry the stop codon
+        offsets = [
+            abs(x - y) if i < len(lengths) - 1 else min(abs(x - y), abs(x - y - 3))
+            for i, (x, y) in enumerate(zip(lengths, ref_lengths))
+        ]
+        same_count = len(lengths) == len(ref_lengths)
+        return {
+            "tier": tier,
+            "gff_n_exons": len(lengths),
+            "refseq_n_exons": len(ref_lengths),
+            "gff_exon_lengths": ",".join(map(str, lengths)),
+            "refseq_exon_lengths": ",".join(map(str, ref["exon_lengths"])),
+            "exact_exons": same_count and max(offsets) == 0,
+            "max_exon_offset": max(offsets) if same_count else "",
+            "protein_identity": round(ident, 4),
+            "raw_identity": round(raw_ident, 4),
+        }
+
+    def rank(r: dict) -> tuple:
+        return (r["exact_exons"], r["protein_identity"])
+
     rows, failures = [], []
-    for gene, ref in sorted(ref_prot.items()):
-        best = None
-        for tier, model in models.get(gene, []):
-            seq = Seq("")
-            for _, seqid, start, end, strand in model:
-                piece = genome[seqid][start - 1 : end]
-                seq += piece.reverse_complement() if strand == "-" else piece
-            frames = [0] if tier != "raw" else [0, 1, 2]
-            ident, raw_ident = max(identity(str(seq[f:]), ref["protein"]) for f in frames)
-            lengths = [end - start + 1 for _, _, start, end, _ in model]
-            ref_lengths = list(ref["exon_lengths"])
-            ref_lengths[-1] -= 3  # RefSeq CDS includes the stop codon; compare without it
-            # the last exon may or may not carry the stop codon
-            offsets = [
-                abs(x - y) if i < len(lengths) - 1 else min(abs(x - y), abs(x - y - 3))
-                for i, (x, y) in enumerate(zip(lengths, ref_lengths))
-            ]
-            same_count = len(lengths) == len(ref_lengths)
-            exact = same_count and max(offsets) == 0
-            cand = {
-                "gene": gene,
-                "tier": tier,
-                "n_models": len(models[gene]),
-                "gff_n_exons": len(lengths),
-                "refseq_n_exons": len(ref_lengths),
-                "gff_exon_lengths": ",".join(map(str, lengths)),
-                "refseq_exon_lengths": ",".join(map(str, ref["exon_lengths"])),
-                "exact_exons": exact,
-                "max_exon_offset": max(offsets) if same_count else "",
-                "protein_identity": round(ident, 4),
-                "raw_identity": round(raw_ident, 4),
-            }
-            if best is None or (cand["exact_exons"], ident) > (best["exact_exons"], best["protein_identity"]):
-                best = cand
-        rows.append(
-            best
-            or {
-                "gene": gene,
-                "tier": "missing",
-                "n_models": 0,
-                "gff_n_exons": 0,
-                "refseq_n_exons": len(ref["exon_lengths"]),
-                "gff_exon_lengths": "",
-                "refseq_exon_lengths": ",".join(map(str, ref["exon_lengths"])),
-                "exact_exons": False,
-                "max_exon_offset": "",
-                "protein_identity": 0.0,
-                "raw_identity": 0.0,
-            }
-        )
+    for gene, copies in sorted(ref_prot.items()):
+        gene_models = models.get(gene, [])
+        scored = {(i, j): score(ref, *gene_models[j]) for i, ref in enumerate(copies) for j in range(len(gene_models))}
+        # one-to-one where there are enough models, best pairs first
+        chosen: dict[int, int] = {}
+        for (i, j), r in sorted(scored.items(), key=lambda kv: rank(kv[1]), reverse=True):
+            if i not in chosen and j not in chosen.values():
+                chosen[i] = j
+        for i, ref in enumerate(copies):
+            if i not in chosen and gene_models:  # more copies than models
+                chosen[i] = max(range(len(gene_models)), key=lambda j: rank(scored[(i, j)]))
+            base = {"gene": gene, "refseq_gene": ref["label"], "n_models": len(gene_models)}
+            if i in chosen:
+                rows.append({**base, **scored[(i, chosen[i])]})
+            else:
+                rows.append(
+                    {
+                        **base,
+                        "tier": "missing",
+                        "gff_n_exons": 0,
+                        "refseq_n_exons": len(ref["exon_lengths"]),
+                        "gff_exon_lengths": "",
+                        "refseq_exon_lengths": ",".join(map(str, ref["exon_lengths"])),
+                        "exact_exons": False,
+                        "max_exon_offset": "",
+                        "protein_identity": 0.0,
+                        "raw_identity": 0.0,
+                    }
+                )
 
     missing = sorted(ref_names - gff_names)
     found = len(ref_names) - len(missing)
     edited = sorted(r["protein_identity"] for r in rows if r["refseq_n_exons"] == 1 and r["tier"] == "edited")
     median_edited = edited[len(edited) // 2] if edited else 0.0
 
-    by_gene = {r["gene"]: r for r in rows}
+    by_gene = {r["gene"]: r for r in rows if len(ref_prot[r["gene"]]) == 1}
     if found < MIN_GENES_FOUND:
         failures.append(f"gene content: {found}/{len(ref_names)} found, expected >= {MIN_GENES_FOUND}")
     if median_edited < MIN_EDITED_IDENTITY:
@@ -229,7 +257,7 @@ def main() -> None:
     for gene, want in EXPECT.items():
         r = by_gene.get(gene)
         if r is None:
-            failures.append(f"{gene}: not in RefSeq record")
+            failures.append(f"{gene}: not a single-copy gene in the RefSeq record")
             continue
         if "max_offset" in want and (r["max_exon_offset"] == "" or r["max_exon_offset"] > want["max_offset"]):
             failures.append(f"{gene}: exons {r['gff_exon_lengths'] or '-'} vs RefSeq {r['refseq_exon_lengths']}")
@@ -252,7 +280,7 @@ def main() -> None:
     print(f"{'gene':8} {'tier':>13} {'exons gff/ref':>13} {'offset':>6} {'identity':>9} {'raw':>6}")
     for r in rows:
         print(
-            f"{r['gene']:8} {r['tier']:>13} {r['gff_n_exons']:>6}/{r['refseq_n_exons']:<6} "
+            f"{r['refseq_gene']:8} {r['tier']:>13} {r['gff_n_exons']:>6}/{r['refseq_n_exons']:<6} "
             f"{str(r['max_exon_offset']):>6} {r['protein_identity']:>9.3f} {r['raw_identity']:>6.3f}"
         )
     if failures:

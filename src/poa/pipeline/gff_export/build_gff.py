@@ -20,9 +20,10 @@ Corrections then claim the loci they were computed on:
 1. `trans_splicing` reconstruction (`nad1`/`nad2`/`nad5`/`rps3`, >=1 filled
    exon) - unless a cis-spliced model of the same loci has more exons
    (rps3 is cis-spliced in most plants).
-2. `editing`'s RNA-editing-corrected call, on the single-exon copy holding
-   the hit it corrected (an ORF search over one exon of a cis-spliced gene
-   can't fix that gene's boundaries, so multi-exon copies stay raw).
+2. `editing`'s RNA-editing-corrected calls, each on the single-exon copy
+   holding the hit it corrected - every substantial copy is corrected (an
+   ORF search over one exon of a cis-spliced gene can't fix that gene's
+   boundaries, so multi-exon copies stay raw).
 3. Everything else is `raw` (also the only tier for tRNA/rRNA).
 
 Which tier won is recorded per gene as `annotation_tier=reconstructed|
@@ -734,6 +735,27 @@ def emit_protein_coding_gene(
         )
 
 
+def edited_copies(calls: pd.DataFrame, edits: pd.DataFrame, gene_hits: pd.DataFrame):
+    """(edited call, its edits) for each corrected copy of one gene, best
+    first. editing.scan writes the copy each call was computed on
+    (contig, hit_start, hit_end); tables from before that have one call per
+    gene, on the best-scoring hit, and no copy columns."""
+    calls = calls.sort_values("score", ascending=False, key=lambda x: x.astype(float))
+    if "contig" not in calls.columns:
+        best = gene_hits.loc[gene_hits.score.idxmax()]
+        erow = calls.iloc[0].copy()
+        erow["contig"], erow["hit_start"], erow["hit_end"] = best.contig_id, best.start, best.end
+        yield erow, edits
+        return
+    for _, erow in calls.iterrows():
+        same = (
+            (edits.contig == erow.contig)
+            & (edits.hit_start.astype(int) == int(erow.hit_start))
+            & (edits.hit_end.astype(int) == int(erow.hit_end))
+        )
+        yield erow, edits[same]
+
+
 def overlaps(a_contig, a_start, a_end, b_contig, b_start, b_end) -> bool:
     return a_contig == b_contig and a_start < b_end and b_start < a_end
 
@@ -846,47 +868,47 @@ def build_species_gff(
                 )
         e = editing_calls[editing_calls.gene == gene]
         if not corrected and not e.empty:
-            erow = e.iloc[0]
-            # editing corrected the single best-scoring hit; find the copy holding it
-            target = next(
-                (
-                    c
-                    for c in copies
-                    if any(
-                        l.contig == h.contig_id and l.start <= h.start and h.end <= l.end
-                        for l in c["loci"]
-                        for h in [gh.loc[gh.score.idxmax()]]
-                    )
-                ),
-                None,
-            )
-            if target is not None and len(target["loci"]) == 1:
-                l = target["loci"][0]
-                corrected.append(
-                    {
-                        "tier": "edited",
-                        "score": float(erow.score),
-                        "n_edits": int(erow.n_edits),
-                        "parts": [
-                            {
-                                "contig": l.contig,
-                                "start": int(erow.corrected_start),
-                                "end": int(erow.corrected_end),
-                                "strand": l.strand,
-                                "score": erow.score,
-                                "exon_number": 1,
-                            }
-                        ],
-                        "edits": editing_edits[editing_edits.gene == gene].to_dict("records"),
-                        "coverage": target["coverage"],
-                        "partial": target["partial"],
-                    }
+            for erow, ed in edited_copies(e, editing_edits[editing_edits.gene == gene], gh):
+                # the copy holding the hit editing corrected
+                target = next(
+                    (
+                        c
+                        for c in copies
+                        if any(
+                            l.contig == erow.contig and l.start <= int(erow.hit_start) and int(erow.hit_end) <= l.end
+                            for l in c["loci"]
+                        )
+                    ),
+                    None,
                 )
-                copies.remove(target)
-            elif target is not None:
-                # an ORF search over one exon of a cis-spliced gene can't
-                # correct the gene's boundaries - keep the multi-exon model raw
-                stats["editing_skipped_multi_exon"] += 1
+                if target is not None and len(target["loci"]) == 1:
+                    l = target["loci"][0]
+                    corrected.append(
+                        {
+                            "tier": "edited",
+                            "score": float(erow.score),
+                            "n_edits": int(erow.n_edits),
+                            "parts": [
+                                {
+                                    "contig": l.contig,
+                                    "start": int(erow.corrected_start),
+                                    "end": int(erow.corrected_end),
+                                    "strand": l.strand,
+                                    "score": erow.score,
+                                    "exon_number": 1,
+                                }
+                            ],
+                            "edits": ed.to_dict("records"),
+                            "coverage": target["coverage"],
+                            "partial": target["partial"],
+                        }
+                    )
+                    copies.remove(target)
+                elif target is not None:
+                    # an ORF search over one exon of a cis-spliced gene can't
+                    # correct the gene's boundaries - keep the multi-exon model raw
+                    stats["editing_skipped_multi_exon"] += 1
+            corrected.sort(key=lambda c: -c["score"])
 
         ordered = corrected + sorted(copies, key=lambda c: -c["score"])
         n_full = sum(1 for c in ordered if not c["partial"])

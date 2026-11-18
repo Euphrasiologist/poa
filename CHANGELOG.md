@@ -13,6 +13,18 @@
   unchanged.
 - `00b_build_lineage_profiles.py` takes `--lineage angiosperm`, and
   `--exclude ACC` / `--out-dir` for held-out validation.
+- Editing correction covers every substantial mito copy of a gene, not just
+  the best-scoring hit: any other hit covering at least half the HMM that
+  isn't another gene's stronger locus, kept if orfedit aligns at least 80%
+  of the profile. Arabidopsis's second atp6 (a different protein, 349 aa)
+  goes from raw (0.785 identity to RefSeq) to edited (0.975). Across the
+  DToL gene calls this is up to 1,366 extra mito copies (atp1 163, atp9
+  107). Plastids still correct the best hit only.
+  `edited_gene_calls.tsv` and `predicted_edits.tsv` gain `contig`,
+  `hit_start` and `hit_end` columns naming the copy.
+- The Arabidopsis smoke check keeps every RefSeq copy of a gene (atp6 x2,
+  ccmFN1/ccmFN2) and pairs copies with GFF models one-to-one; before, the
+  second RefSeq atp6 overwrote the first.
 
 ## 0.2.0
 
