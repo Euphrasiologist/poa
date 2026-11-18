@@ -22,6 +22,15 @@
   107). Plastids still correct the best hit only.
   `edited_gene_calls.tsv` and `predicted_edits.tsv` gain `contig`,
   `hit_start` and `hit_end` columns naming the copy.
+- Split ccmFn: where mitochondrial ccmFn is two genes (Brassicaceae,
+  Allium, Galeopsis - 37 species in the DToL dataset), its two nhmmscan
+  hits are named ccmFn1 and ccmFn2, as in RefSeq, and each is corrected
+  against its own profile, built from 11 RefSeq Brassicaceae and Allium
+  mitogenomes. Before, gff_export could chain the pieces into one
+  cis-spliced ccmFn when they were close, and editing corrected the first
+  piece against the full-length gene (Arabidopsis ccmFN1 1380 bp vs
+  RefSeq's 1149). With Arabidopsis held out, ccmFN1 goes from 0.826 to
+  0.995 identity and ccmFN2 from 0.784 (raw) to 1.000.
 - The Arabidopsis smoke check keeps every RefSeq copy of a gene (atp6 x2,
   ccmFN1/ccmFN2) and pairs copies with GFF models one-to-one; before, the
   second RefSeq atp6 overwrote the first.

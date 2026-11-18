@@ -171,6 +171,20 @@ and a full-length profile can only partly fit either piece. atp6 stays
 raw in the check because Arabidopsis has two copies and `scan` corrects
 the best-scoring one, not the one RefSeq is compared against.
 
+### Split ccmFn
+
+Brassicaceae, Allium and Galeopsis carry mitochondrial ccmFn as two
+genes (ccmFN1 and ccmFN2 in RefSeq), kilobases apart.
+`denovo_annotation/gene_calls.py` names the two nhmmscan hits ccmFn1 and
+ccmFn2 when they meet in the HMM with no full-length hit (37 DToL
+species), and `00b_build_lineage_profiles.py --lineage angiosperm` builds
+a profile for each piece from 11 RefSeq mitogenomes
+(`lineage_profiles.SPLIT_CCMFN_MITOGENOMES`: 10 Brassicaceae and Allium
+cepa). On Arabidopsis with NC_037304.1 held out: ccmFN1 0.995 identity
+to RefSeq (3 bp off in length), ccmFN2 1.000, against 0.826 and 0.784
+when the first piece was corrected against the full-length ccmFn
+profile.
+
 ### Gene copies
 
 `scan` corrects every substantial mito copy of a gene: the best-scoring

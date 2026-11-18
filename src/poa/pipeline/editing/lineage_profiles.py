@@ -29,6 +29,10 @@ lineage (moss nad5, nad9) gets no profile: a single-locus correction is
 the wrong model for it, and scan.py leaves it uncorrected for that
 lineage rather than borrow the angiosperm one.
 
+Split ccmFn: `--lineage angiosperm` also builds ccmFn1 and ccmFn2
+profiles, one per piece of the gene that Brassicaceae and Allium carry as
+two (SPLIT_CCMFN_MITOGENOMES; see denovo_annotation/gene_calls.py).
+
 `--exclude ACC` leaves mitogenomes out and `--out-dir` writes elsewhere,
 for held-out validation (the Arabidopsis smoke check compares against
 NC_037304.1, which is one of the angiosperm references).
@@ -75,6 +79,26 @@ REFSEQ_GENES = [
     "rps4", "rps7", "rps11", "rps12", "rps13", "rps14", "rps19", "sdh3", "sdh4",
 ]  # fmt: skip
 LINEAGE_GENES = {lin.DEFAULT_LINEAGE: REFSEQ_GENES, "moss": MOSS_GENES}
+# ccmFn is two genes in Brassicaceae and Allium (denovo_annotation's
+# gene_calls renames the pieces ccmFn1/ccmFn2), so each piece gets its own
+# profile, from these RefSeq mitogenomes: a spread of Brassicaceae, not
+# five near-identical Brassica, plus Allium cepa. Boechera and Capsella
+# call the first piece plain "ccmFn" (380 aa).
+SPLIT_CCMFN_GENES = ["ccmFn1", "ccmFn2"]
+SPLIT_CCMFN_MITOGENOMES = {
+    "NC_037304.1": "Arabidopsis thaliana",
+    "NC_081483.1": "Arabidopsis lyrata",
+    "NC_042143.1": "Boechera stricta",
+    "NC_042883.1": "Capsella rubella",
+    "NC_037070.1": "Arabis alpina",
+    "NC_085821.1": "Descurainia sophia",
+    "NC_088489.1": "Lepidium apetalum",
+    "NC_008285.1": "Brassica napus",
+    "NC_018551.1": "Raphanus sativus",
+    "NC_031896.1": "Sinapis arvensis",
+    "NC_030100.1": "Allium cepa",
+}
+SPLIT_CCMFN_SYNONYMS = {"ccmfn": "ccmFn1", "ccmfn1": "ccmFn1", "ccmfn2": "ccmFn2"}
 # Drop alignment columns gappier than this. pssm's default (0.9) is for
 # thousands of dataset calls, many boundary-truncated; with ~10 curated
 # RefSeq proteins it keeps a column only one species fills (1/9 = 89% gap),
@@ -113,23 +137,15 @@ def default_out_dir(lineage: str) -> Path:
     return lin.editing_profiles(PIPELINE_DIR, lineage) / "mito"
 
 
-def build_lineage_profiles(
-    lineage: str, work_root: Path, *, exclude: tuple[str, ...] = (), out_dir: Path | None = None
-) -> Path:
-    """(Re)build `lineage`'s bundled mito profiles in the installed package
-    (or in out_dir), leaving out the mitogenomes in `exclude`; alignments go
-    under work_root/analysis/editing/work/<lineage>. Returns the profiles
-    directory."""
-    if lineage not in LINEAGE_GENES:
-        raise ValueError(f"lineage must be one of {sorted(LINEAGE_GENES)}, not {lineage!r}")
-    if unknown := set(exclude) - set(rg.LINEAGE_MITOGENOMES[lineage]):
-        raise ValueError(f"--exclude: {sorted(unknown)} not among the {lineage} mitogenomes")
-    genes = LINEAGE_GENES[lineage]
-    synonyms = LINEAGE_SYNONYMS[lineage]
+def collect_proteins(
+    mitogenomes: dict[str, str], genes: list[str], synonyms: dict[str, str], exclude: tuple[str, ...]
+) -> tuple[dict[str, dict[str, str]], dict[str, Counter]]:
+    """Per gene, {accession: verified single-exon RefSeq protein}, and the
+    gene's exon counts across the mitogenomes."""
     wanted = {g.lower(): g for g in genes}
     proteins: dict[str, dict[str, str]] = {g: {} for g in genes}
     n_exons: dict[str, Counter] = {g: Counter() for g in genes}
-    for acc, organism in rg.LINEAGE_MITOGENOMES[lineage].items():
+    for acc, organism in mitogenomes.items():
         if acc in exclude:
             continue
         rec = SeqIO.read(fetch(acc, GB_DIR), "genbank")
@@ -137,7 +153,7 @@ def build_lineage_profiles(
             if f.type != "CDS" or "gene" not in f.qualifiers or "translation" not in f.qualifiers:
                 continue
             name = f.qualifiers["gene"][0].lower()
-            gene = wanted.get(name) or wanted.get(synonyms.get(name, "").lower())
+            gene = wanted.get(synonyms.get(name, "").lower()) or wanted.get(name)
             if gene is None or acc in proteins[gene]:
                 continue
             parts, exons = cds_exons(rec, f)
@@ -149,6 +165,30 @@ def build_lineage_profiles(
                 log.warning(f"{acc} {organism} {gene}: {note} - not used")
                 continue
             proteins[gene][acc] = f.qualifiers["translation"][0]
+    return proteins, n_exons
+
+
+def build_lineage_profiles(
+    lineage: str, work_root: Path, *, exclude: tuple[str, ...] = (), out_dir: Path | None = None
+) -> Path:
+    """(Re)build `lineage`'s bundled mito profiles in the installed package
+    (or in out_dir), leaving out the mitogenomes in `exclude`; alignments go
+    under work_root/analysis/editing/work/<lineage>. Returns the profiles
+    directory."""
+    if lineage not in LINEAGE_GENES:
+        raise ValueError(f"lineage must be one of {sorted(LINEAGE_GENES)}, not {lineage!r}")
+    known = set(rg.LINEAGE_MITOGENOMES[lineage])
+    if lineage == lin.DEFAULT_LINEAGE:
+        known |= set(SPLIT_CCMFN_MITOGENOMES)
+    if unknown := set(exclude) - known:
+        raise ValueError(f"--exclude: {sorted(unknown)} not among the {lineage} mitogenomes")
+    genes = list(LINEAGE_GENES[lineage])
+    proteins, n_exons = collect_proteins(rg.LINEAGE_MITOGENOMES[lineage], genes, LINEAGE_SYNONYMS[lineage], exclude)
+    if lineage == lin.DEFAULT_LINEAGE:
+        split, split_exons = collect_proteins(SPLIT_CCMFN_MITOGENOMES, SPLIT_CCMFN_GENES, SPLIT_CCMFN_SYNONYMS, exclude)
+        genes += SPLIT_CCMFN_GENES
+        proteins.update(split)
+        n_exons.update(split_exons)
 
     work_dir = Path(work_root) / "analysis" / "editing" / "work" / lineage
     work_dir.mkdir(parents=True, exist_ok=True)

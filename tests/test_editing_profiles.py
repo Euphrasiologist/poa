@@ -33,9 +33,9 @@ class BundledProfiles(unittest.TestCase):
 
     def test_refseq_profiles_bundled_for_single_exon_genes(self):
         bundled = {p.stem for p in (lp.refseq_profiles_dir() / "mito").glob("*.pssm")}
-        self.assertEqual(len(bundled), 26)
-        self.assertTrue({"atp6", "atp9", "cox1", "rps12"} <= bundled)
-        self.assertTrue(bundled <= set(lp.REFSEQ_GENES))
+        self.assertEqual(len(bundled), 28)
+        self.assertTrue({"atp6", "atp9", "cox1", "rps12", "ccmFn1", "ccmFn2"} <= bundled)
+        self.assertTrue(bundled <= set(lp.REFSEQ_GENES) | set(lp.SPLIT_CCMFN_GENES))
 
 
 class CopiesToCorrect(unittest.TestCase):
@@ -127,3 +127,54 @@ class CopiesToCorrect(unittest.TestCase):
         self.assertEqual(
             list(out.iloc[0][["gene", "contig", "hit_start", "hit_end"]]), ["atp6", "ctg000001c", "240429", "241852"]
         )
+
+
+class SplitCcmFn(unittest.TestCase):
+    def hit(self, contig, start, end, hmm_from, hmm_to, score=1000.0, gene="ccmFn"):
+        return {
+            "species": "x",
+            "organelle": "mito",
+            "contig_id": contig,
+            "start": start,
+            "end": end,
+            "gene": gene,
+            "score": score,
+            "strand": "-",
+            "source": "oatkDB",
+            "hmm_from": hmm_from,
+            "hmm_to": hmm_to,
+            "model_len": 2137,
+        }
+
+    def test_arabidopsis_pieces_renamed(self):
+        from poa.pipeline.denovo_annotation.gene_calls import relabel_split_ccmfn
+
+        rows = [self.hit("c1", 62820, 64123, 144, 1360, 1487.6), self.hit("c1", 87628, 88409, 1363, 2104, 897.0)]
+        self.assertEqual(relabel_split_ccmfn(rows), 2)
+        self.assertEqual([r["gene"] for r in rows], ["ccmFn1", "ccmFn2"])
+
+    def test_cardamine_close_pieces_still_split(self):
+        from poa.pipeline.denovo_annotation.gene_calls import relabel_split_ccmfn
+
+        rows = [self.hit("c1", 1000, 2216, 164, 1360), self.hit("c1", 3156, 3897, 1363, 2104)]
+        self.assertEqual(relabel_split_ccmfn(rows), 2)
+
+    def test_hmm_gap_is_one_gene(self):
+        from poa.pipeline.denovo_annotation.gene_calls import relabel_split_ccmfn
+
+        # Butomus: two hits 857 bp apart with a 665-position hole in the HMM
+        rows = [self.hit("c1", 1000, 1530, 226, 756), self.hit("c1", 1857, 2387, 1421, 1951)]
+        self.assertEqual(relabel_split_ccmfn(rows), 0)
+        self.assertEqual({r["gene"] for r in rows}, {"ccmFn"})
+
+    def test_full_length_hit_is_not_split(self):
+        from poa.pipeline.denovo_annotation.gene_calls import relabel_split_ccmfn
+
+        rows = [self.hit("c1", 1000, 3000, 10, 2100), self.hit("c2", 5000, 6200, 144, 1360)]
+        self.assertEqual(relabel_split_ccmfn(rows), 0)
+
+    def test_abutting_hits_are_one_gene(self):
+        from poa.pipeline.denovo_annotation.gene_calls import relabel_split_ccmfn
+
+        rows = [self.hit("c1", 1000, 2216, 144, 1360), self.hit("c1", 2300, 3041, 1363, 2104)]
+        self.assertEqual(relabel_split_ccmfn(rows), 0)
