@@ -56,6 +56,10 @@ All bundled - nothing to download, no oatk install needed:
 - `src/poa/pipeline/editing/reference/profiles/` - `orfedit` profiles built
   on the same dataset. `editing/src/01_scan_editing.py` uses them whenever
   the data root has none of its own.
+- `src/poa/pipeline/editing/reference/profiles_refseq/` - `orfedit`
+  profiles for the other single-exon mito genes, built from the 11
+  angiosperm RefSeq mitogenomes; used for any gene the dataset profiles
+  don't cover.
 - Moss references, under `lineages/moss/` in both of the above: exon
   templates and editing profiles built from 20 moss RefSeq mitogenomes
   (cached in the same `genbank/`). See "Reference lineage" below.

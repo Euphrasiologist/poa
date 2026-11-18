@@ -1,5 +1,19 @@
 # Changelog
 
+## Unreleased
+
+- RNA editing correction now covers 26 single-exon mito genes, up from 7.
+  Genes the dataset-built profiles don't cover (they need a gene to be
+  single-copy in 80% of species) use bundled profiles built from the 11
+  angiosperm RefSeq mitogenomes (`editing/reference/profiles_refseq/`).
+  On Arabidopsis, with Arabidopsis held out of the profiles, the median
+  protein identity of the 19 newly corrected genes against RefSeq rises
+  from 0.837 to 1.000 (rps12 0.57 -> 1.00, atp9 0.51 -> 1.00). The 7
+  existing profiles, the plastid annotation and the moss lineage call are
+  unchanged.
+- `00b_build_lineage_profiles.py` takes `--lineage angiosperm`, and
+  `--exclude ACC` / `--out-dir` for held-out validation.
+
 ## 0.2.0
 
 Annotations are unchanged from 0.1.0. On the full dataset each reworked

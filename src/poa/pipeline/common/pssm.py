@@ -87,7 +87,9 @@ def run_mafft(protein_fasta: Path, out_fasta: Path) -> bool:
     return True
 
 
-def build_profile(alignment: dict[str, str]) -> list[dict[str, float]] | None:
+def build_profile(
+    alignment: dict[str, str], gap_threshold: float = GAP_COLUMN_THRESHOLD
+) -> list[dict[str, float]] | None:
     n = len(alignment)
     if n == 0:
         return None
@@ -104,7 +106,7 @@ def build_profile(alignment: dict[str, str]) -> list[dict[str, float]] | None:
     for i in range(aln_len):
         col_chars = [seq[i] for seq in alignment.values()]
         gap_frac = col_chars.count("-") / n
-        if gap_frac > GAP_COLUMN_THRESHOLD:
+        if gap_frac > gap_threshold:
             continue
         counts = Counter(c for c in col_chars if c in AA_ORDER)
         total = sum(counts.values()) or 1
@@ -124,13 +126,16 @@ def write_profile(columns: list[dict[str, float]], out_path: Path) -> None:
     out_path.write_text("\n".join(lines) + "\n")
 
 
-def align_and_build(proteins: dict[str, str], work_dir: Path, label: str) -> list[dict[str, float]] | None:
+def align_and_build(
+    proteins: dict[str, str], work_dir: Path, label: str, gap_threshold: float = GAP_COLUMN_THRESHOLD
+) -> list[dict[str, float]] | None:
     """Write `proteins` to work_dir/<label>.protein.fasta, align them to
     <label>.aligned.fasta and return the profile columns (None if mafft
-    failed or no column survived)."""
+    failed or no column survived). Columns gappier than gap_threshold are
+    dropped."""
     protein_fasta = work_dir / f"{label}.protein.fasta"
     protein_fasta.write_text("".join(f">{name}\n{seq}\n" for name, seq in proteins.items()))
     aligned_fasta = work_dir / f"{label}.aligned.fasta"
     if not run_mafft(protein_fasta, aligned_fasta):
         return None
-    return build_profile(read_fasta(aligned_fasta))
+    return build_profile(read_fasta(aligned_fasta), gap_threshold)

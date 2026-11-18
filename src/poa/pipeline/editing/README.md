@@ -25,7 +25,7 @@ it corrects the boundaries of ones oatk already found.
 |---|---|---|
 | `00_build_reference_profiles.py` | `results/profiles/<gene>.pssm` | per-gene amino acid profile (PSSM), built from this dataset's own already-annotated orthologs |
 | `01_scan_editing.py` | `results/edited_gene_calls.tsv`, `results/predicted_edits.tsv`, `results/lineage.tsv` | runs `orfedit scan-batch` over every (species, gene) anchor that has a profile |
-| `00b_build_lineage_profiles.py` | `reference/lineages/<lineage>/mito/<gene>.pssm` | bundled profiles for a non-angiosperm lineage, from RefSeq (see "Moss profiles" below) |
+| `00b_build_lineage_profiles.py` | `reference/lineages/<lineage>/mito/<gene>.pssm`, `reference/profiles_refseq/mito/<gene>.pssm` | bundled profiles from RefSeq: per non-angiosperm lineage (see "Moss profiles" below), and angiosperm profiles for the mito genes the dataset doesn't profile (see "RefSeq profiles") |
 
 The scripts in `src/` are command-line wrappers. The code is in importable
 modules - `poa.pipeline.editing.scan`, `.profiles` and `.lineage_profiles` -
@@ -134,6 +134,42 @@ concentrated in ~50-60kb of CDS -> roughly 0.6-0.7/kb; this run's 1.24/kb
 is about 2x that, plausible for an uncalibrated MVP on real predictions
 rather than literature-verified sites, not the 10-100x-off signature of a
 real bug).
+
+### RefSeq profiles for the other mito genes
+
+`00_build_reference_profiles.py` only profiles genes single-copy in at
+least 80% of species, which in angiosperm mitochondria leaves 7: atp4,
+ccmB, ccmC, mttB, nad5, nad9 and rps14. atp6, atp9, cox1, rps12 and the
+rest are too often duplicated or missing, so their calls kept the raw
+HMM boundaries, which ran well past the gene (Arabidopsis rps12: 657 bp
+against RefSeq's 378).
+
+`src/00b_build_lineage_profiles.py --lineage angiosperm` builds profiles
+for every single-exon mito protein gene from the 11 angiosperm RefSeq
+mitogenomes (`trans_splicing/reference_genes.py`'s
+`REFERENCE_MITOGENOMES`), into `reference/profiles_refseq/mito/`: 26
+genes; rpl10, rps2, rps11, sdh3 and sdh4 have fewer than 5 verified
+RefSeq proteins and get none. RefSeq's `/translation` is the edited
+protein, so these profiles point straight at the target. `scan` uses one
+for a gene only when the dataset-built (or bundled dataset) profiles have
+none, so the 7 above are unchanged, and the lineage call, which compares
+only genes both lineages have profiles for, is unchanged.
+
+These profiles drop alignment columns that are gaps in more than half
+the proteins, not 90% as for the dataset profiles: with ~10 curated
+proteins, 90% keeps a column only one species fills, and orfedit then
+over-extends towards that species' extension (atp1 1845 bp vs RefSeq's
+1524 at 0.9).
+
+Validated on the Arabidopsis smoke assembly against RefSeq with
+Arabidopsis (NC_037304.1) held out of the profiles
+(`--exclude NC_037304.1 --out-dir ...`): the 19 mito genes that were
+previously raw have median protein identity 0.837 before and 1.000 after,
+and 13 match RefSeq's length exactly. ccmFn is the one that got worse
+(0.875 -> 0.826): in Brassicaceae it is split into ccmFN1 and ccmFN2,
+and a full-length profile can only partly fit either piece. atp6 stays
+raw in the check because Arabidopsis has two copies and `scan` corrects
+the best-scoring one, not the one RefSeq is compared against.
 
 ### Moss profiles and the lineage call
 

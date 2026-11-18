@@ -15,7 +15,14 @@ Mito genes are also scanned against each other lineage's bundled profiles
 (00b_build_lineage_profiles.py - moss), and each species keeps the run of
 the lineage its genes fit best (common/lineage.py; --lineage to force
 one). A species' genes with no profile in its lineage (moss nad5/nad9,
-multi-exon there) are left uncorrected. The call is recorded in
+multi-exon there) are left uncorrected.
+
+Angiosperm mito genes with no dataset-built (or bundled dataset) profile -
+everything but atp4 ccmB ccmC mttB nad5 nad9 rps14, which are the genes
+single-copy across the dataset - use the bundled RefSeq profiles
+(00b_build_lineage_profiles.py --lineage angiosperm) instead. The lineage
+call only compares genes both lineages have profiles for, so this doesn't
+change it. The call is recorded in
 lineage.tsv, which trans_splicing reads to pick its exon templates.
 
 Output: analysis/editing/results/edited_gene_calls.tsv
@@ -46,6 +53,7 @@ import pandas as pd
 from poa import PIPELINE_DIR
 from poa.pipeline.common import io_utils
 from poa.pipeline.common import lineage as lin
+from poa.pipeline.editing.lineage_profiles import refseq_profiles_dir
 from poa.pipeline.common import species_discovery as sd
 from poa.pipeline.common.errors import StageError
 from poa.pipeline.common.tools import cargo_tool
@@ -75,16 +83,33 @@ def best_hits_per_species(gene_calls: pd.DataFrame, organelle: str, genes: list[
     return sub.loc[idx]
 
 
+def profile_paths(profiles_dirs: list[Path], organelle: str) -> dict[str, Path]:
+    """{gene: profile} for one organelle; each gene from the first of
+    profiles_dirs (each holding <organelle>/<gene>.pssm) that has it."""
+    found: dict[str, Path] = {}
+    for d in profiles_dirs:
+        for p in sorted((Path(d) / organelle).glob("*.pssm")):
+            found.setdefault(p.stem, p)
+    return found
+
+
 def build_manifest(
-    root: Path, gene_calls: pd.DataFrame, organelles: list[str], species_filter: set | None, profiles_dir: Path
+    root: Path,
+    gene_calls: pd.DataFrame,
+    organelles: list[str],
+    species_filter: set | None,
+    profiles_dir: Path | list[Path],
 ) -> list[dict]:
+    """profiles_dir: one directory of <organelle>/<gene>.pssm, or several in
+    priority order."""
+    dirs = [profiles_dir] if isinstance(profiles_dir, (str, Path)) else list(profiles_dir)
     rows = []
     for organelle in organelles:
-        organelle_profiles_dir = profiles_dir / organelle
-        genes = sorted(p.stem for p in organelle_profiles_dir.glob("*.pssm"))
+        profiles = profile_paths(dirs, organelle)
+        genes = sorted(profiles)
         if not genes:
             log.warning(
-                f"{organelle}: no profiles in {organelle_profiles_dir} - run "
+                f"{organelle}: no profiles in {', '.join(str(Path(d) / organelle) for d in dirs)} - run "
                 f"editing/src/00_build_reference_profiles.py first"
             )
             continue
@@ -109,7 +134,7 @@ def build_manifest(
                     "organelle": organelle,
                     "gene": row.gene,
                     "fasta": fasta_path,
-                    "profile": str(organelle_profiles_dir / f"{row.gene}.pssm"),
+                    "profile": str(profiles[row.gene]),
                     "contig": row.contig_id,
                     "start": int(row.start),
                     "end": int(row.end),
@@ -234,7 +259,8 @@ def scan(
         profiles_dir = PIPELINE_DIR / "editing" / "reference" / "profiles"
         log.info(f"scan_editing: no dataset-built profiles, using bundled {profiles_dir}")
 
-    rows = build_manifest(root, calls, organelles, species, profiles_dir)
+    refseq_dir = refseq_profiles_dir(PIPELINE_DIR)
+    rows = build_manifest(root, calls, organelles, species, [profiles_dir, refseq_dir])
     if not rows:
         raise StageError("empty manifest - nothing to scan")
 
