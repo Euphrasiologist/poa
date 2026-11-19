@@ -15,6 +15,17 @@ it wins by at least MIN_MARGIN per gene. Anything less clear-cut, or with
 fewer than MIN_SHARED_GENES genes scored both ways, stays angiosperm - the
 references everything else in poa was validated on. The result is
 analysis/editing/results/lineage.tsv, which trans_splicing reads.
+
+"fern" is a lineage of a different kind: it has no references of its own
+yet (it uses the angiosperm ones) and is never chosen automatically, only
+with --lineage fern. What it changes is the editing model. Ferns edit U to
+C as well as C to U, and a fern organelle gene has genomic in-frame stop
+codons that editing turns into Gln or Arg - about nine per mitochondrial
+gene in Polypodiales. With the lineage set, orfedit and transsplice may
+read such a stop through at STOP_EDIT_PENALTY (orfedit >= 0.2.0 and
+transsplice >= 0.3.0 with --stop-edit-penalty). It is for ferns proper,
+quillworts (Isoetes) and hornworts; horsetails, clubmosses and Selaginella
+do not edit this way and should stay on the default.
 """
 
 from __future__ import annotations
@@ -24,7 +35,19 @@ from pathlib import Path
 
 DEFAULT_LINEAGE = "angiosperm"
 LINEAGES = (DEFAULT_LINEAGE, "moss")
-CHOICES = ("auto", *LINEAGES)
+# a lineage that borrows another's references: {name: the lineage whose
+# templates and profiles it uses}
+BORROWS = {"fern": DEFAULT_LINEAGE}
+FERN = "fern"
+CHOICES = ("auto", *LINEAGES, *BORROWS)
+# Cost of reading an in-frame TAA/TAG as Gln or TGA as Arg (a U-to-C
+# edit), per lineage; the same as a C-to-U edit. Calibrated on 43 DToL
+# fern assemblies against 60 angiosperm ones: at 2.5, fern mito genes
+# aligned over 99% of their profile go from 152 to 292 of 702, and U-to-C
+# comes to 32% of mito and 6% of plastid edits (33-35% and 1-10% measured
+# in fern transcriptomes); 4 and 6 lose alignments, and allowing other
+# U-to-C edits as well (at 8 or 12) changes nothing for ferns.
+STOP_EDIT_PENALTY = {"fern": 2.5}
 # Calibrated on the 956-species mito dataset (ToL-ID clades as truth). Every
 # moss has all 5 moss-profiled genes (atp4 ccmB ccmC mttB rps14) and wins by
 # 88-150 per gene; dicots and monocots lose by 57-430, liverworts by -25 to
@@ -37,6 +60,16 @@ MIN_SHARED_GENES = 4
 # angiosperm before it is used
 MIN_MARGIN = 50.0
 COLUMNS = ["species", "lineage", "decided_by", "n_genes", *[f"{x}_score" for x in LINEAGES]]
+
+
+def reference(lineage: str) -> str:
+    """The lineage whose templates and profiles `lineage` uses."""
+    return BORROWS.get(lineage, lineage)
+
+
+def stop_edit_penalty(lineage: str) -> float | None:
+    """Cost of a stop read-through for `lineage`, or None if it has none."""
+    return STOP_EDIT_PENALTY.get(lineage)
 
 
 def table_path(analysis_dir: Path) -> Path:

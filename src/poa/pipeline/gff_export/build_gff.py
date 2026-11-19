@@ -735,8 +735,11 @@ def emit_protein_coding_gene(
                         {
                             "ID": f"sa-{gene}{suffix}-{i}",
                             "Parent": cid,
-                            "edited_from": "C",
-                            "edited_to": "T",
+                            # orfedit/transsplice name the direction in an `edit`
+                            # column (C>U, or U>C with reverse editing on); tables
+                            # from before that column are all C-to-U
+                            "edited_from": "T" if e.get("edit") == "U>C" else "C",
+                            "edited_to": "C" if e.get("edit") == "U>C" else "T",
                             "resulting_aa": e.get("resulting_aa", ""),
                         }
                     ),

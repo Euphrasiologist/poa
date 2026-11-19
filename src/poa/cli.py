@@ -113,11 +113,13 @@ def check() -> None:
 )
 @click.option(
     "--lineage",
-    type=click.Choice(["auto", "angiosperm", "moss"]),
+    type=click.Choice(["auto", "angiosperm", "moss", "fern"]),
     default="auto",
     show_default=True,
     help="reference lineage for mito editing profiles and spliced-gene templates: "
-    "auto picks the one the sample's genes fit best",
+    "auto picks angiosperm or moss, whichever the sample's genes fit best. fern (never "
+    "picked automatically; for ferns, quillworts and hornworts) uses the angiosperm "
+    "references and reads in-frame stop codons through as U-to-C RNA edits",
 )
 @click.option(
     "--genus",

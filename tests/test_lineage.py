@@ -81,6 +81,27 @@ class SplitRuns(unittest.TestCase):
         self.assertEqual(sorted(kept_m.gene), sorted(GENES))
         self.assertEqual(set(kept_a[kept_a.species == "Rose"].gene), set(GENES + ["nad5"]))
 
+    def test_fern_borrows_the_default_references(self):
+        # fern: no references of its own, never chosen automatically, and a
+        # stop read-through cost
+        self.assertEqual(lin.reference("fern"), lin.DEFAULT_LINEAGE)
+        self.assertEqual(lin.reference("moss"), "moss")
+        self.assertIn("fern", lin.CHOICES)
+        self.assertNotIn("fern", lin.LINEAGES)
+        self.assertEqual(lin.stop_edit_penalty("fern"), 2.5)
+        self.assertIsNone(lin.stop_edit_penalty("angiosperm"))
+        self.assertIsNone(lin.stop_edit_penalty("moss"))
+        self.assertEqual(lin.choose(scores(100, 900))[0], "moss")  # auto never says fern
+
+    def test_forced_fern_keeps_the_default_run(self):
+        # a species forced to fern takes its mito rows from the default
+        # (angiosperm-profile) run, not from another lineage's
+        df = pd.DataFrame({"species": ["F", "F", "A"], "organelle": ["mito", "pltd", "mito"], "gene": ["atp4", "rbcL", "atp4"]})
+        lineages = {"F": "fern", "A": "angiosperm"}
+        kept = scan_editing.keep_lineage(df, lineages, lin.DEFAULT_LINEAGE)
+        self.assertEqual(len(kept), 3)
+        self.assertTrue(scan_editing.keep_lineage(df, lineages, "moss").empty)
+
     def test_forced(self):
         table = scan_editing.assign_lineages({"angiosperm": self.angio, "moss": self.moss}, "angiosperm")
         self.assertEqual(set(table["lineage"]), {"angiosperm"})

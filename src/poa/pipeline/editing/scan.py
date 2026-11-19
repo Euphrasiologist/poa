@@ -241,6 +241,12 @@ def write_manifest(rows: list[dict], path: Path) -> None:
             fh.write("\t".join(str(r[c]) for c in cols) + "\n")
 
 
+def supports_option(tool: str, option: str) -> bool:
+    """Whether `tool scan-batch` takes `option`."""
+    out = subprocess.run([tool, "scan-batch", "--help"], capture_output=True, text=True).stdout
+    return option in out
+
+
 def supports_frameshifts(orfedit: str) -> bool:
     """orfedit >= 0.2.0 (frame changes, --frameshifts-out)."""
     out = subprocess.run([orfedit, "--version"], capture_output=True, text=True).stdout
@@ -271,7 +277,7 @@ def add_recurrence(shifts: pd.DataFrame, lineages: dict[str, str], source: str =
     by_gene = {k: g for k, g in ref.groupby(["organelle", "gene"])}
     out = []
     for r in shifts.itertuples():
-        if r.organelle == "mito" and lineages.get(r.species, lin.DEFAULT_LINEAGE) != lin.DEFAULT_LINEAGE:
+        if r.organelle == "mito" and lin.reference(lineages.get(r.species, lin.DEFAULT_LINEAGE)) != lin.DEFAULT_LINEAGE:
             out.append("")
             continue
         g = by_gene.get((r.organelle, r.gene))
@@ -291,9 +297,11 @@ def run_orfedit(
     flank: int,
     edit_penalty: float,
     frameshift_penalty: float,
+    stop_edit_penalty: float | None = None,
 ) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     """One orfedit scan-batch over `rows`; (gene calls, edits, frameshifts)
-    as all-string frames."""
+    as all-string frames. stop_edit_penalty: read in-frame stop codons
+    through as U-to-C edits at this cost (common/lineage.py, fern)."""
     manifest_path = work_dir / f"manifest.{tag}.tsv"
     write_manifest(rows, manifest_path)
     log.info(f"scan_editing: {tag} manifest has {len(rows)} rows -> {manifest_path}")
@@ -319,6 +327,8 @@ def run_orfedit(
         cmd += ["--frameshifts-out", str(shifts_out), "--frameshift-penalty", str(frameshift_penalty)]
     else:
         pd.DataFrame(columns=FRAMESHIFT_COLUMNS).to_csv(shifts_out, sep="\t", index=False)
+    if stop_edit_penalty is not None:
+        cmd += ["--stop-edit-penalty", str(stop_edit_penalty)]
     proc = subprocess.run(cmd)
     if proc.returncode != 0:
         raise StageError(f"orfedit scan-batch failed (exit {proc.returncode})")
@@ -370,7 +380,7 @@ def keep_lineage(df: pd.DataFrame, lineages: dict[str, str], name: str) -> pd.Da
     species, plus (for the default run) everything that isn't mito."""
     if df.empty:
         return df
-    takes = df["species"].map(lineages).fillna(lin.DEFAULT_LINEAGE) == name
+    takes = df["species"].map(lineages).fillna(lin.DEFAULT_LINEAGE).map(lin.reference) == name
     if name == lin.DEFAULT_LINEAGE:
         return df[(df["organelle"] != "mito") | takes]
     return df[(df["organelle"] == "mito") & takes]
@@ -437,9 +447,16 @@ def scan(
     # truncate the shared table down to just the scoped species. It writes
     # to work_dir instead, then merge_species_scoped_tsv decides how that
     # relates to what's already in results_dir (see its docstring).
+    stop = lin.stop_edit_penalty(lineage)
+    if stop is not None and not supports_option(orfedit, "--stop-edit-penalty"):
+        raise StageError(f"--lineage {lineage} needs an orfedit with --stop-edit-penalty; {orfedit} has none")
     opts = dict(threads=threads, flank=flank, edit_penalty=edit_penalty, frameshift_penalty=frameshift_penalty)
-    runs = {lin.DEFAULT_LINEAGE: run_orfedit(orfedit, rows, lin.DEFAULT_LINEAGE, work_dir, **opts)}
-    if "mito" in organelles and lineage != lin.DEFAULT_LINEAGE:
+    runs = {
+        lin.DEFAULT_LINEAGE: run_orfedit(orfedit, rows, lin.DEFAULT_LINEAGE, work_dir, stop_edit_penalty=stop, **opts)
+    }
+    # a forced lineage that borrows the default references (fern) has no
+    # other lineage's profiles to try
+    if "mito" in organelles and lin.reference(lineage) != lin.DEFAULT_LINEAGE:
         for name in lin.LINEAGES[1:]:
             lrows = build_manifest(root, calls, ["mito"], species, lin.editing_profiles(PIPELINE_DIR, name))
             if lrows:

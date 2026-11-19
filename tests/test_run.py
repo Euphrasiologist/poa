@@ -129,7 +129,7 @@ class Cli(unittest.TestCase):
         for argv in (
             ("run", "--mito", str(self.fa)),  # no -o
             ("run", "--mito", str(self.tmp / "nope.fasta"), "-o", out),
-            ("run", "--mito", str(self.fa), "-o", out, "--lineage", "fern"),
+            ("run", "--mito", str(self.fa), "-o", out, "--lineage", "lichen"),  # not a lineage
             ("run", "--mito", str(self.fa), "-o", out, "-t", "0"),
         ):
             self.assertEqual(self.invoke(*argv).exit_code, 2, argv)

@@ -2,6 +2,24 @@
 
 ## Unreleased
 
+- `--lineage fern`, for ferns, quillworts and hornworts (never picked by
+  `auto`): the angiosperm references, with orfedit and transsplice
+  allowed to read a genomic in-frame stop codon as Gln or Arg by a
+  U-to-C RNA edit, at the cost of a C-to-U edit (`common/lineage.py`,
+  `STOP_EDIT_PENALTY`; needs orfedit and transsplice builds with
+  `--stop-edit-penalty`, and stops with an error otherwise). These
+  lineages edit both ways - a Polypodiales mito gene has about nine such
+  stops - and without it each one cost a skipped column, a frameshift
+  call or an early gene end. On 30 DToL fern assemblies: single-exon
+  mito copies aligned over 99% of their profile 152 -> 292 of 702,
+  frameshift calls 277 -> 113; spliced mito genes aligned over 99%
+  0 -> 80 of 249, plastid 74 -> 117 of 233; U-to-C comes to 32% of mito
+  and 6% of plastid edits, against 33-35% and 1-10% measured in fern
+  transcriptomes. Edit tables gain an `edit` column (`C>U`/`U>C`) and the
+  GFF's `sequence_alteration` features say `edited_from=T;edited_to=C`
+  for the reverse ones. In a dataset run, species recorded as fern in
+  `lineage.tsv` go through transsplice as a batch of their own. Fern
+  exon templates are still to do.
 - Exon placement in spliced genes, and gene ends. Checked on the 24
   RefSeq genomes the exon templates come from, each with its own genome
   held out of the templates, 89% of 477 exons now have both ends within

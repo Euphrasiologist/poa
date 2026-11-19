@@ -257,6 +257,25 @@ every other species is unchanged. Liverworts, hornworts, ferns and
 lycophytes still use the angiosperm references. See
 `trans_splicing/README.md` and `editing/README.md`.
 
+`--lineage fern` is for ferns, quillworts (*Isoetes*) and hornworts, and
+is never picked automatically. These lineages edit U to C as well as C to
+U, and their organelle genes have genomic in-frame stop codons that
+editing turns into Gln or Arg - about nine per mitochondrial gene in
+Polypodiales. The fern lineage uses the angiosperm references (there are
+no fern ones yet) and lets orfedit and transsplice read such stops
+through, at the cost of a C-to-U edit; it needs builds of both with
+`--stop-edit-penalty`. On 30 DToL fern assemblies, single-exon mito gene
+copies aligned over 99% of their profile go from 152 to 292 of 702 and
+their frameshift calls from 277 to 113; spliced mito genes aligned that
+well from 0 to 80 of 249. U-to-C edits are marked `U>C` in the `edit`
+column of the edit tables and `edited_from=T;edited_to=C` in the GFF.
+Without it, treat a fern's proteins and frameshift calls as unreliable:
+each unread stop is a skipped column, an apparent frame change or an
+early end. Horsetails, clubmosses and *Selaginella* do not edit this way
+and belong on the default. Fern exon structures still differ from the
+angiosperm templates (rps10 has one exon, rps3 three, nad1 four), so
+those genes stay poor until there are fern templates.
+
 ### Stage by stage, on a whole dataset
 
 The stages are scripts in the installed package

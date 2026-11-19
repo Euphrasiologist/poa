@@ -55,7 +55,7 @@ from poa.pipeline.common import lineage as lin
 from poa.pipeline.common import species_discovery as sd
 from poa.pipeline.common.errors import StageError
 from poa.pipeline.common.tools import cargo_tool
-from poa.pipeline.editing.scan import add_recurrence
+from poa.pipeline.editing.scan import add_recurrence, supports_option
 from poa.pipeline.trans_splicing.reference_genes import GENES, PLASTID_SPLICED, reference_dir
 from poa.pipeline.common.log import setup_logging
 
@@ -117,7 +117,7 @@ def build_manifest(
         rows += manifest_rows(sub, organelle, data_root, species_filter, lambda species, gene: (
             plastid.get(gene)
             if organelle == "pltd"
-            else templates[lineage_of.get(species, default_lineage)].get(gene)
+            else templates[lin.reference(lineage_of.get(species, default_lineage))].get(gene)
         ))
     return rows
 
@@ -219,10 +219,6 @@ def reconstruct(
         raise StageError("empty manifest - nothing to reconstruct")
 
     work_dir = analysis_dir / "trans_splicing" / "work"
-    manifest_path = work_dir / "manifest.tsv"
-    write_manifest(rows, manifest_path)
-    log.info(f"reconstruct: manifest has {len(rows)} fragment rows -> {manifest_path}")
-
     results_dir = analysis_dir / "trans_splicing" / "results"
     results_dir.mkdir(parents=True, exist_ok=True)
     # transsplice writes these paths itself (truncating), so a species-scoped
@@ -231,43 +227,70 @@ def reconstruct(
     # instead, then merge_species_scoped_tsv decides how that relates to
     # what's already in results_dir (see its docstring).
     work_outs = {name: work_dir / f"{name}.new.tsv" for name in OUT_NAMES}
-    cmd = [
-        transsplice,
-        "scan-batch",
-        "--manifest",
-        str(manifest_path),
-        "--genes-out",
-        str(work_outs["reconstructed_genes"]),
-        "--exons-out",
-        str(work_outs["reconstructed_exons"]),
-        "--junctions-out",
-        str(work_outs["reconstructed_junctions"]),
-        "--edits-out",
-        str(work_outs["reconstructed_edits"]),
-        "--threads",
-        str(threads),
-        "--merge-distance",
-        str(merge_distance),
-        "--junction-distance-threshold",
-        str(junction_distance_threshold),
-        "--exon-flank",
-        str(exon_flank),
-    ]
     if math.isfinite(frameshift_penalty) and not supports_frameshifts(transsplice):
         log.warning(f"reconstruct: {transsplice} is older than 0.3.0 - no frameshift calls")
         frameshift_penalty = math.inf
-    if math.isfinite(frameshift_penalty):
-        cmd += [
-            "--frameshift-penalty",
-            str(frameshift_penalty),
-            "--frameshifts-out",
-            str(work_outs["reconstructed_frameshifts"]),
+
+    # One transsplice run per editing model: species of a lineage with a
+    # stop read-through cost (fern) apart from the rest, as the cost is an
+    # option of the whole batch.
+    groups: dict[float | None, list[dict]] = {}
+    for row in rows:
+        stop = lin.stop_edit_penalty(lineage_of.get(row["species"], default_lineage))
+        groups.setdefault(stop, []).append(row)
+    if any(stop is not None for stop in groups) and not supports_option(transsplice, "--stop-edit-penalty"):
+        raise StageError(f"the fern lineage needs a transsplice with --stop-edit-penalty; {transsplice} has none")
+    parts: dict[str, list[pd.DataFrame]] = {name: [] for name in OUT_NAMES}
+    for n, (stop, group_rows) in enumerate(sorted(groups.items(), key=lambda g: (g[0] is not None, g[0] or 0))):
+        tag = "" if len(groups) == 1 else f".{n}"
+        manifest_path = work_dir / f"manifest{tag}.tsv"
+        write_manifest(group_rows, manifest_path)
+        log.info(
+            f"reconstruct: manifest has {len(group_rows)} fragment rows -> {manifest_path}"
+            + (f" (stop read-through at {stop})" if stop is not None else "")
+        )
+        outs = {name: work_dir / f"{name}.new{tag}.tsv" for name in OUT_NAMES}
+        cmd = [
+            transsplice,
+            "scan-batch",
+            "--manifest",
+            str(manifest_path),
+            "--genes-out",
+            str(outs["reconstructed_genes"]),
+            "--exons-out",
+            str(outs["reconstructed_exons"]),
+            "--junctions-out",
+            str(outs["reconstructed_junctions"]),
+            "--edits-out",
+            str(outs["reconstructed_edits"]),
+            "--threads",
+            str(threads),
+            "--merge-distance",
+            str(merge_distance),
+            "--junction-distance-threshold",
+            str(junction_distance_threshold),
+            "--exon-flank",
+            str(exon_flank),
         ]
-    else:
-        pd.DataFrame(columns=FRAMESHIFT_COLUMNS).to_csv(work_outs["reconstructed_frameshifts"], sep="\t", index=False)
-    proc = subprocess.run(cmd)
-    if proc.returncode != 0:
-        raise StageError(f"transsplice scan-batch failed (exit {proc.returncode})")
+        if math.isfinite(frameshift_penalty):
+            cmd += [
+                "--frameshift-penalty",
+                str(frameshift_penalty),
+                "--frameshifts-out",
+                str(outs["reconstructed_frameshifts"]),
+            ]
+        else:
+            pd.DataFrame(columns=FRAMESHIFT_COLUMNS).to_csv(outs["reconstructed_frameshifts"], sep="\t", index=False)
+        if stop is not None:
+            cmd += ["--stop-edit-penalty", str(stop)]
+        proc = subprocess.run(cmd)
+        if proc.returncode != 0:
+            raise StageError(f"transsplice scan-batch failed (exit {proc.returncode})")
+        for name in OUT_NAMES:
+            parts[name].append(pd.read_csv(outs[name], sep="\t", dtype=str))
+    if len(groups) > 1:
+        for name in OUT_NAMES:
+            pd.concat(parts[name], ignore_index=True).to_csv(work_outs[name], sep="\t", index=False)
 
     shifts = pd.read_csv(work_outs["reconstructed_frameshifts"], sep="\t")
     lineages = {sp: lineage_of.get(sp, default_lineage) for sp in shifts["species"].unique()}
