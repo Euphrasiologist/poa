@@ -32,6 +32,9 @@ GAP_COLUMN_THRESHOLD = 0.9  # drop alignment columns gappier than this
 # filter throws away genuine terminal signal, not just rare lineage-specific
 # insertions. 0.9 keeps columns unless they're gap in nearly everyone.
 PSEUDOCOUNT = 0.5
+# build_profile's trim_ends: an end column goes if more than this fraction
+# of sequences lack it
+END_GAP_THRESHOLD = 0.5
 
 CODON_TABLE = {}
 _bases = "TCAG"
@@ -101,8 +104,16 @@ def build_profile(
     gap_threshold: float = GAP_COLUMN_THRESHOLD,
     background: dict[str, float] | None = None,
     pseudocount_mass: float | None = None,
+    trim_ends: tuple[bool, bool] = (False, False),
 ) -> list[dict[str, float]] | None:
-    """background, pseudocount_mass: score against these amino acid
+    """trim_ends (start, end): at that end, also drop the run of columns
+    most sequences lack (END_GAP_THRESHOLD). For an exon slot's intron-side
+    ends: where one reference annotates the intron boundary a few codons
+    out (mito ccmFc exon 2 starts 7 codons early in 2 of 10 genomes), its
+    extra columns otherwise stay in the profile, and every other species'
+    exon is aligned that far into its intron.
+
+    background, pseudocount_mass: score against these amino acid
     frequencies, with `pseudocount_mass` pseudo-observations per column
     shared out in proportion to them. Without them the background is the
     alignment's own composition and every residue gets PSEUDOCOUNT, which
@@ -123,10 +134,19 @@ def build_profile(
         bg_total = sum(bg_counts.values()) or 1
         background = {aa: (bg_counts.get(aa, 0) + PSEUDOCOUNT) / (bg_total + PSEUDOCOUNT * 20) for aa in AA_ORDER}
 
+    gap_fracs = [sum(seq[i] == "-" for seq in alignment.values()) / n for i in range(aln_len)]
+    first, last = 0, aln_len
+    if trim_ends[0]:
+        while first < last and gap_fracs[first] > END_GAP_THRESHOLD:
+            first += 1
+    if trim_ends[1]:
+        while last > first and gap_fracs[last - 1] > END_GAP_THRESHOLD:
+            last -= 1
+
     columns = []
-    for i in range(aln_len):
+    for i in range(first, last):
         col_chars = [seq[i] for seq in alignment.values()]
-        gap_frac = col_chars.count("-") / n
+        gap_frac = gap_fracs[i]
         if gap_frac > gap_threshold:
             continue
         counts = Counter(c for c in col_chars if c in AA_ORDER)
@@ -157,6 +177,7 @@ def align_and_build(
     gap_threshold: float = GAP_COLUMN_THRESHOLD,
     background: dict[str, float] | None = None,
     pseudocount_mass: float | None = None,
+    trim_ends: tuple[bool, bool] = (False, False),
 ) -> list[dict[str, float]] | None:
     """Write `proteins` to work_dir/<label>.protein.fasta, align them to
     <label>.aligned.fasta and return the profile columns (None if mafft
@@ -167,4 +188,4 @@ def align_and_build(
     aligned_fasta = work_dir / f"{label}.aligned.fasta"
     if not run_mafft(protein_fasta, aligned_fasta):
         return None
-    return build_profile(read_fasta(aligned_fasta), gap_threshold, background, pseudocount_mass)
+    return build_profile(read_fasta(aligned_fasta), gap_threshold, background, pseudocount_mass, trim_ends)

@@ -66,9 +66,27 @@ log = logging.getLogger(__name__)
 # translated in frame, self-scores are high (nad5 exon 2: 1013), and a
 # floor at the bare minimum rejected even Arabidopsis's own nad5 exons 1-2
 # (a training genome) whenever the candidate window didn't span the whole
-# exon. 0.5 recovered them with no wrong-locus assignment it didn't
-# already have. Negative self-scores (tiny exons) are kept as-is.
-FLOOR_FRACTION = 0.5
+# exon. It was 0.5 with the old slot profiles. The SLOT_PSEUDOCOUNT ones
+# are sharper: a reference exon's self-score rose by about half, a
+# divergent species' exon by a fifth to two-fifths, so at 0.5 ferns and
+# lycophytes (on the angiosperm templates) lost most of their exons - 117
+# complete mito genes in 29 DToL assemblies fell to 27 - and angiosperms
+# lost some too. At 0.25: 125, and 6,900 complete in the other 926
+# assemblies against 6,590; held out on the 24 RefSeq genomes placement is
+# the same from 0.5 down to 0.075 (426 of 477 exons right). Negative
+# self-scores (tiny exons) are kept as-is.
+FLOOR_FRACTION = 0.25
+
+# Exon-slot profiles score against the whole protein's composition, with
+# this many pseudo-observations per column shared out in proportion to it
+# (pssm.build_profile). Before, the background was the slot alignment's own
+# composition with a flat pseudocount, which inverts the profile of a short
+# exon: a residue the exon lacks scored as a match in every column (nad5
+# exon 3, 7 codons: +1.6 for 16 of 20 residues, self-score floor -2.4).
+# Held out on the 24 RefSeq genomes: 2 placed 74% of exons within 3 bp
+# (5: 72%, 10: 71%, the old profiles 65%); every exon of 31-60 bp against
+# 2 of 15. None: the old profiles.
+SLOT_PSEUDOCOUNT = 2.0
 
 
 def load_all_raw_data(raw_dir: Path) -> dict[tuple[str, str, str], dict]:
@@ -107,11 +125,14 @@ def build_and_write_profile(
     work_dir: Path,
     background: dict[str, float] | None = None,
     pseudocount_mass: float | None = None,
+    trim_ends: tuple[bool, bool] = (False, False),
 ) -> bool:
     if len(protein_seqs) < 2:
         log.warning(f"{label}: only {len(protein_seqs)} sequences, need >= 2 - skipping")
         return False
-    columns = align_and_build(protein_seqs, work_dir, label, background=background, pseudocount_mass=pseudocount_mass)
+    columns = align_and_build(
+        protein_seqs, work_dir, label, background=background, pseudocount_mass=pseudocount_mass, trim_ends=trim_ends
+    )
     if columns is None:
         log.warning(f"{label}: no usable alignment - skipping")
         return False
@@ -188,14 +209,17 @@ def build_exon_profiles(
     organelle: str = "mito",
     exclude: tuple[str, ...] = (),
     out_dir: Path | None = None,
-    slot_pseudocount: float | None = None,
+    slot_pseudocount: float | None = SLOT_PSEUDOCOUNT,
+    slots_only: bool = False,
 ) -> Path:
     """(Re)build `lineage`'s exon-slot and whole-gene templates in the
     package's reference directory, from its raw/ exon sets. genes: only
     these (default reference_genes.GENES) - rebuilding a gene overwrites
     its whole_gene.pssm, including one bootstrap.py refined. Alignments and
     self-scoring files go under work_root/analysis/trans_splicing/work
-    (default: the current directory). Returns the profiles directory."""
+    (default: the current directory). slots_only: leave an existing
+    whole_gene.pssm alone (the exon slots still score against the RefSeq
+    proteins' composition). Returns the profiles directory."""
     if lineage not in lin.LINEAGES:
         raise ValueError(f"lineage must be one of {lin.LINEAGES}, not {lineage!r}")
     genes = list(genes or (PLASTID_SPLICED if organelle == "pltd" else GENES))
@@ -230,7 +254,8 @@ def build_exon_profiles(
             acc, _, locus = key
             if "refseq" in raw[key]:
                 whole_seqs[f"{acc}_{locus}"] = raw[key]["refseq"]
-        build_and_write_profile(whole_seqs, gene_dir / "whole_gene.pssm", f"{gene}.whole_gene", work_dir)
+        if not (slots_only and (gene_dir / "whole_gene.pssm").exists()):
+            build_and_write_profile(whole_seqs, gene_dir / "whole_gene.pssm", f"{gene}.whole_gene", work_dir)
         # exon slots score against the whole protein's composition, not
         # their own few residues' (see pssm.build_profile)
         slot_background = composition(whole_seqs.values()) if slot_pseudocount is not None else None
@@ -283,8 +308,12 @@ def build_exon_profiles(
                 continue
             protein_seqs = {name: translate(seq).rstrip("*") for name, seq in dna_seqs.items()}
             profile_path = gene_dir / f"exon{slot}.pssm"
+            # intron-side ends only (pssm.build_profile's trim_ends), and
+            # only with the new profiles: None rebuilds the old ones as
+            # they were
+            trim = (slot > 1, slot < k) if slot_pseudocount is not None else (False, False)
             if not build_and_write_profile(
-                protein_seqs, profile_path, f"{gene}.exon{slot}", work_dir, slot_background, slot_pseudocount
+                protein_seqs, profile_path, f"{gene}.exon{slot}", work_dir, slot_background, slot_pseudocount, trim
             ):
                 continue
             min_score = compute_min_self_score(gene, slot, dna_seqs, profile_path, work_dir, orfedit)
@@ -324,10 +353,17 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--out-dir", type=Path, default=None, help="write the templates here, not into the package")
     ap.add_argument(
         "--slot-pseudocount",
-        type=float,
-        default=None,
-        help="exon-slot profiles: score against the whole protein's composition, with this many "
-        "pseudo-observations per column (default: the alignment's own composition, flat pseudocounts)",
+        type=lambda x: None if x.lower() == "none" else float(x),
+        default=SLOT_PSEUDOCOUNT,
+        help="exon-slot profiles score against the whole protein's composition, with this many "
+        "pseudo-observations per column (default: %(default)s). none: the slot alignment's own "
+        "composition and flat pseudocounts, as before",
+    )
+    ap.add_argument(
+        "--slots-only",
+        action="store_true",
+        help="rebuild the exon-slot profiles and floors only, keeping each gene's whole_gene.pssm "
+        "(one 02_bootstrap_refine.py refined, say)",
     )
     args = ap.parse_args(argv)
     build_exon_profiles(
@@ -338,5 +374,6 @@ def main(argv: list[str] | None = None) -> int:
         tuple(args.exclude),
         args.out_dir,
         args.slot_pseudocount,
+        args.slots_only,
     )
     return 0

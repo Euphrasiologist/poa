@@ -84,6 +84,12 @@ structural. Cis vs trans is a per-species, per-junction *output label*
    invented cutoff - it's computed by running the slot's own training
    sequences back through a real `orfedit scan-batch` call against the
    profile just built from them, and taking the minimum genuine score.
+   Slot profiles score against the whole protein's composition with 2
+   pseudo-observations per column (`--slot-pseudocount`; `none` for the
+   old slot-alignment background with flat pseudocounts, which inverted
+   the profile of a short exon), and drop the end columns on an intron
+   side that most references lack. `--slots-only` rebuilds the slots and
+   floors and leaves `whole_gene.pssm` alone.
 2. **`01_reconstruct.py`** builds one manifest row per raw `.ctg.bed`
    fragment (not best-hit-only, unlike `editing`) and calls
    `transsplice scan-batch`, which per (species, gene):
@@ -95,10 +101,13 @@ structural. Cis vs trans is a per-species, per-junction *output label*
    - **Scores** every candidate against every exon-slot profile via
      `orfedit::scan_gene` reused as-is (so scoring *is* a boundary-corrected,
      edit-tolerant alignment, not a raw heuristic).
-   - **De novo fallback**: if a slot has no candidate above its floor
-     (the routine case for `nad5` - see caveat below), scans the same
-     contig(s) the other exons were found on, both strands, for that one
-     slot's profile - bounded to gene-known contigs, not a genome-wide scan.
+   - **De novo search**: if a slot has no candidate above its floor,
+     scans the same contig(s) the other exons were found on, both strands,
+     for that one slot's profile - bounded to gene-known contigs, not a
+     genome-wide scan. A short slot (30 profile columns or fewer) is
+     always searched for like this, and beside its neighbouring exons, the
+     whole-gene alignment and intron-end motifs deciding between what is
+     found and whatever candidate filled the slot (transsplice's README).
    - **Assigns** candidates to slots via best-scoring injective partial
      matching (brute force - K≤5, pool capped, trivially fast).
    - **Concatenates** assigned exons in slot order, each independently
@@ -111,6 +120,13 @@ structural. Cis vs trans is a per-species, per-junction *output label*
    (gap characters stripped) instead of just the 5 GenBank references, and
    re-run `01_reconstruct.py` to benefit. Same two-stage bootstrap pattern
    as `editing/README.md`'s.
+   transsplice chooses where a short exon goes by the whole-gene
+   alignment, so a whole-gene profile refined from reconstructions with a
+   misplaced short exon keeps it misplaced: the refined nad5 profile put
+   exon 3 right in 569 of 972 DToL assemblies, the RefSeq-only one in
+   880. The shipped whole-gene profiles are all RefSeq-only for that
+   reason; refine only from reconstructions made with transsplice >= 0.3.0
+   and the current slot profiles.
 
 ## A real bug this caught, worth knowing about
 

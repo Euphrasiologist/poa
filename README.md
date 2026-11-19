@@ -177,7 +177,8 @@ inside its window. Spliced genes: mito 84% found (652 of 778; rpl2, rps10
 and cox2 are the weak ones), plastid 92% when the indel is in the copy
 reconstructed (74% overall, as the second inverted-repeat copy of ndhB,
 rpl2 and rps12 isn't reconstructed), 99-100% with the right type and all
-in the right exon. The misses are mostly short genes (rps19, atp9, rps14)
+in the right exon (the spliced-gene figures were measured before the
+exon-placement changes below and not repeated since). The misses are mostly short genes (rps19, atp9, rps14)
 and indels near a gene end, with too little gene on one side to tell.
 Across the DToL assemblies there's a mean of 2 single-exon calls per
 assembly, nearly all in partial copies or recurring in other assemblies;
@@ -185,18 +186,37 @@ assembly, nearly all in partial copies or recurring in other assemblies;
 orfedit/transsplice there are no frameshift calls (a warning says so).
 
 Read frameshifts in spliced genes with care. In the DToL mitochondria
-18% of reconstructed genes carry one (ccmFc 61%, rpl2 44%, nad1 23%, nad5
-17%), most at a handful of positions shared by hundreds of assemblies
-(ccmFc profile column 470 in 273, nad1 column 62 in 183, nad5 column 248
-in 143) - so a high `dtol_assemblies` there says the gene differs from
-the template at that point in that lineage, not that the assembly is
-wrong. In plastids, rps12 and rps16 have a call in 12% of assemblies,
-all in one exon each, against 0-4% for the other seven genes: these two
-have a tiny exon that transsplice often misplaces, and a frame change in
-the neighbouring exon is how the alignment absorbs that. With frame
-changes allowed, 6% of mito spliced genes that end up with no frameshift
-still have an exon boundary placed differently from `--frameshift-penalty
-inf` (mostly nad7 and nad2).
+12% of reconstructed genes carry one (ccmFc 49%, rpl2 27%, nad5 16%, nad7
+6%), most at a handful of positions shared by hundreds of assemblies
+(ccmFc profile column 470 in 193, nad1 column 132 in 184, nad5 column 248 in 143)
+- so a high `dtol_assemblies` there says the gene differs from the
+template at that point in that lineage, not that the assembly is wrong.
+In plastids about 1% of reconstructed genes have one (rps16 3%,
+clpP 3%).
+
+### Exon placement
+
+Where transsplice puts exons was checked on the 24 RefSeq genomes the
+templates come from (11 mito, 13 plastid), each run with templates built
+without it (`build/exon_val`, `build/exon_impl`): 89% of 477 exons have
+both ends within 3 bp of GenBank's (mito 86%, plastid 92%) and 68% are
+base-exact; exons of 30 bp or less 15 of 16; last exons end exactly at
+the stop codon in 142 of 169 and first exons start exactly at the start
+codon in 166 of 178. Before these changes the same test gave 65% (no
+exon of 30 bp or less right). What changed: the exon-slot profiles
+(`00_build_exon_profiles.py`, see CHANGELOG), and in transsplice a
+whole-contig and a next-to-the-neighbours search for every short exon,
+decided by the whole-gene alignment and intron ends, and gene ends held
+to the start and stop codon. Single-exon genes corrected by orfedit now
+end at the stop codon too when the profile stops a few residues short
+of it: on the same genomes 89% of plastid and 80% of mito genes end
+exactly where GenBank's CDS does (17% and 67% before).
+
+What is still wrong, mostly: genes whose exon count differs from the
+template's (cox2 with one intron or two, an intron lost in a lineage),
+and gene ends the references disagree on (ccmFc, rpl2). Liverworts,
+hornworts, ferns and lycophytes are reconstructed on the angiosperm
+templates.
 
 The recurrence table leaves out the 54 DToL assemblies resolved with
 gfatk before 0.6.3, whose contigs repeat each graph overlap: they are

@@ -2,6 +2,63 @@
 
 ## Unreleased
 
+- Exon placement in spliced genes, and gene ends. Checked on the 24
+  RefSeq genomes the exon templates come from, each with its own genome
+  held out of the templates, 89% of 477 exons now have both ends within
+  3 bp of GenBank's (65% before; base-exact 68% against 45%), 15 of 16
+  exons of 30 bp or less (none before), 142 of 169 last exons end exactly
+  at the stop codon (73) and 166 of 178 first exons start exactly at the
+  start codon (120). Three changes:
+  - Exon-slot profiles (`00_build_exon_profiles.py`) score against the
+    whole protein's composition with 2 pseudo-observations per column
+    (`--slot-pseudocount`, now the default; `none` for the old way), and
+    lose end columns on their intron side that most references lack
+    (one reference annotating an intron boundary 7 codons out put every
+    other species' ccmFc exon 2 that far into its intron). The old slot
+    profiles were inverted for short exons - a residue the exon lacks
+    scored as a match in every column. All shipped slot profiles and
+    floors (mito, moss, plastid) are rebuilt; `--slots-only` rebuilds
+    them without touching `whole_gene.pssm`.
+  - transsplice (0.3.0, unreleased): every short exon slot gets a
+    whole-contig search and a search beside its neighbouring exons, and
+    the whole-gene alignment plus intron-end motifs choose between what
+    they find and what filled the slot; the first exon is cut back to
+    the start codon and the last ends at the stop codon.
+  - orfedit (0.2.0, unreleased; `--stop-search`, default 10 codons): a
+    corrected single-exon gene whose profile stops short of the protein's
+    end is extended to the stop codon. On the same 24 genomes 89% of
+    plastid and 80% of mito edited genes end exactly at GenBank's stop
+    (17% and 67% before); 511 ends fixed, none made wrong.
+  The whole-gene profiles of nad1, nad2, nad5 and rps3 are back to the
+  RefSeq-only ones: the versions refined from DToL reconstructions
+  (`02_bootstrap_refine.py`) had learned nad5's misplaced exon 3, and
+  with them the whole-gene alignment preferred the wrong exon (like a
+  reference exon in 569 of 972 DToL assemblies, against 880 with the
+  RefSeq profile; none before). Their `whole_gene_score`s are lower for
+  it (nad5 median 2,607 -> 1,663). Refine again only from reconstructions
+  made with this version.
+  Slot floors are a quarter of the lowest reference self-score
+  (`FLOOR_FRACTION`; half before): the new profiles are sharper, and at
+  half, ferns and lycophytes, which run on the angiosperm templates, lost
+  most of their exons (117 complete mito genes in 29 assemblies fell to
+  27; 125 at a quarter). Held-out placement is the same at either.
+  On the DToL assemblies (transsplice alone, angiosperm templates,
+  the 54 assemblies re-resolved with gfatk 0.6.3 left out):
+  complete mito genes 5,957 -> 6,925 of 8,566 (cox2 +353, nad4 +302,
+  nad1 +205, rpl2 +102; rps10 -95, in angiosperms placements unlike any
+  reference exon, in ferns unexplained), plastid 9,373 -> 9,792 of 9,954
+  (rps12 +303, clpP +47, rps16 +27); nad5 exon 3 like a reference
+  exon in 861 of 927 (0 of 775), nad1 exon 4 928 of 928 (79 of 834),
+  plastid rps12 exon 3 970 of 1,139 (0 of 837), rps16 exon 1 816 of 818
+  (2 of 777). Genes with a frameshift call: mito 1,521 -> 1,004 (nad1
+  215 -> 12, rpl2 292 -> 178, ccmFc 568 -> 457, rps10 53 -> 16; nad7
+  37 -> 56), plastid 362 -> 98 (rps12 136 -> 0, rps16 106 -> 27). On the
+  174 moss assemblies with the moss templates: 1,552 of 1,566 genes
+  complete (1,550), 24 with a frameshift call (165). `frameshifts_dtol.tsv`'s reconstruction
+  rows are rebuilt from these runs. On Arabidopsis (smoke test): nad1
+  0.936 -> 0.997 identical to RefSeq, nad5 0.990 -> 0.997, cox2 and rpl2
+  reconstructed (were raw), plastid rps16 0.85 -> 0.99, rps12 0.94 ->
+  1.00.
 - Frameshifts: every protein-coding gene poa corrects is aligned allowing
   a change of reading frame, and each change is reported - single-exon
   genes through orfedit >= 0.2.0 (`tables/frameshifts.tsv`), spliced ones
@@ -19,11 +76,8 @@
   right type, and genes without a frameshift corrected exactly as with
   frame changes off; mito spliced genes 84% (652 of 778); plastid spliced
   genes 92% when the indel is in the copy reconstructed. Known weak
-  points, in the README: calls in spliced genes are common and mostly
-  recurrent (18% of DToL mito reconstructions; ccmFc 61%), plastid rps12
-  and rps16 calls follow from a misplaced tiny exon, and 6% of mito
-  spliced genes without a frameshift have an exon boundary placed
-  differently from frame changes off. With older orfedit/transsplice
+  point, in the README: calls in spliced genes are common and mostly
+  recurrent (12% of DToL mito reconstructions; ccmFc 49%). With older orfedit/transsplice
   there are no frameshift calls (a warning says so);
   `--frameshift-penalty inf` turns them off.
 - transsplice 0.3.0 aligns the joined exons in frame 0 only, which changes
@@ -31,22 +85,15 @@
   genes 528 differ from 0.2.1, nearly all nad5, 174 of which become
   complete and none stop being complete.
 - `00_build_exon_profiles.py` takes `--exclude ACC`, `--out-dir` and
-  `--slot-pseudocount` (exon-slot profiles scored against the whole
-  protein's composition; off by default, so the shipped templates are
-  unchanged). The default slot profiles are wrong for very short exons -
-  a residue the exon lacks scores as a match in every column - which is
-  why no exon of 30 bp or less is placed right on the 24 RefSeq genomes
-  the templates come from; held out, `--slot-pseudocount 2` takes all
-  exons from 65% to 74% placed within 3 bp.
+  `--slot-pseudocount` (see the exon-placement entry above).
 - Plastid spliced genes (atpF, clpP, ndhA, ndhB, rpl2, rpoC1, rps12, rps16,
   ycf3) are reconstructed by transsplice like the mito ones, from exon
   templates built from 13 RefSeq plastomes across land plants
   (`trans_splicing/reference/plastid/`; `00a_fetch_references.py
   --organelle pltd`, `00_build_exon_profiles.py --organelle pltd`), and
   replace the raw multi-exon models in the plastid GFF when complete (73%
-  of DToL plastid rps12, 87-100% for the rest). On Arabidopsis, seven come
-  out identical or nearly identical (0.99-1.00) to RefSeq; rps16 (0.85) and rps12 (0.94)
-  have a misplaced tiny exon, as transsplice's tiny-exon limitation.
+  of DToL plastid rps12, 87-100% for the rest). On Arabidopsis, all nine come
+  out identical or nearly identical (0.99-1.00) to RefSeq.
   One copy per gene is reconstructed, so the second inverted-repeat copy
   of ndhB, rpl2 and rps12 isn't checked for frameshifts separately (in a
   graph assembly both copies come from one unitig).
