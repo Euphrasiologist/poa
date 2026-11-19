@@ -76,6 +76,9 @@ CTG_BED_SUFFIX = {"mito": ".mito.ctg.bed", "pltd": ".pltd.ctg.bed"}
 CTG_FASTA_SUFFIX = {"mito": ".mito.ctg.fasta", "pltd": ".pltd.ctg.fasta"}
 
 CIRCUIT_LOG_RE = re.compile(r"Circuit (\d+): (\d+) segments, (\d+) bp, path=(\S+)")
+# gfatk >= 0.6 writes the circuit's walk into its FASTA header, which
+# 05_promote_resolve.py keeps as source_header=; older releases only log it
+HEADER_PATH_RE = re.compile(r"resolver=gfatk_resolve source_header=\S*?_circuit\d+:\S*?:path=(\S+)")
 FLIP = {"+": "-", "-": "+"}
 
 
@@ -100,6 +103,34 @@ def parse_gfa(gfa_path: Path) -> tuple[dict, dict]:
 
 def parse_path_string(path_str: str) -> list[tuple[str, str]]:
     return [(tok[:-1], tok[-1]) for tok in path_str.split(",")]
+
+
+def circuit_paths_from_headers(ctg_fasta: Path) -> dict[str, list[tuple[str, str]]]:
+    """{contig name: walk} from the promoted contigs' own headers (gfatk >= 0.6).
+
+    Empty when any contig's header lacks a path (made with an older gfatk),
+    so the caller falls back to the resolve log for the whole assembly.
+    """
+    paths = {}
+    with open(ctg_fasta) as fh:
+        for line in fh:
+            if not line.startswith(">"):
+                continue
+            m = HEADER_PATH_RE.search(line)
+            if not m:
+                return {}
+            paths[line[1:].split()[0]] = parse_path_string(m.group(1))
+    return paths
+
+
+def circuit_paths_from_log(log_path: Path) -> dict[str, list[tuple[str, str]]]:
+    """{contig name: walk} from gfatk resolve's log, contigs numbered as 05 numbers them."""
+    by_circuit = {}
+    for line in open(log_path):
+        m = CIRCUIT_LOG_RE.search(line)
+        if m:
+            by_circuit[int(m.group(1))] = parse_path_string(m.group(4))
+    return {f"ctg{i:06d}c": by_circuit[c] for i, c in enumerate(sorted(by_circuit), start=1)}
 
 
 def path_offsets(path_segs, seg_len, overlaps):
@@ -228,29 +259,30 @@ def main():
             )
             continue
 
-        log_path = work_dir / f"{species}.{organelle}.resolve.log"
-        if not log_path.exists():
-            n_no_log += 1
-            print(f"[warn] {species} ({organelle}): no resolve.log (path info unrecoverable), skipped", file=sys.stderr)
-            continue
-        circuit_paths = {}
-        for line in open(log_path):
-            m = CIRCUIT_LOG_RE.search(line)
-            if m:
-                circuit_paths[int(m.group(1))] = parse_path_string(m.group(4))
+        circuit_paths = circuit_paths_from_headers(ctg_fasta)
+        if not circuit_paths:
+            log_path = work_dir / f"{species}.{organelle}.resolve.log"
+            if not log_path.exists():
+                n_no_log += 1
+                print(
+                    f"[warn] {species} ({organelle}): no path in the contig headers and no resolve.log, skipped",
+                    file=sys.stderr,
+                )
+                continue
+            circuit_paths = circuit_paths_from_log(log_path)
 
         seg_len, overlaps = parse_gfa(gfa)
         raw_hits = parse_raw_hits(annot)
 
         all_rows = []
         unmodeled = False
-        for ctg_num, circuit_id in enumerate(sorted(circuit_paths), start=1):
-            rows = transform_circuit(circuit_paths[circuit_id], seg_len, overlaps, raw_hits)
+        for ctg_name, walk in circuit_paths.items():
+            rows = transform_circuit(walk, seg_len, overlaps, raw_hits)
             if rows is None:
                 unmodeled = True
                 break
             for r in rows:
-                r["seq_name"] = f"ctg{ctg_num:06d}c"
+                r["seq_name"] = ctg_name
             all_rows.extend(rows)
 
         if unmodeled:

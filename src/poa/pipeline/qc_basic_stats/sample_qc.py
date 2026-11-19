@@ -44,8 +44,9 @@ Differences from the dataset gate, all from having one sample:
   - A check whose tool (gfatk, minimap2) isn't installed is reported as
     not assessed instead of failing the run.
 
-Reported but not part of the status: frameshifts orfedit found in edited
-genes (editing/results/frameshifts.tsv) - n_frameshifts, and the genes
+Reported but not part of the status: frameshifts found in edited genes
+(editing/results/frameshifts.tsv) and reconstructed spliced genes
+(trans_splicing/results/reconstructed_frameshifts.tsv) - n_frameshifts, and the genes
 carrying them as gene:N, N being how many DToL assemblies have a
 frameshift at the same place in that gene. A frameshift is either an
 assembly error worth checking against the reads or real biology (a
@@ -450,12 +451,15 @@ def sample_qc(
     if calls is None:
         log.warning(f"sample_qc: no {calls_path} - core genes not assessed")
     core, size_ref = load_core_genes(), load_size_reference()
-    shifts_path = analysis_dir / "editing" / "results" / "frameshifts.tsv"
-    shifts = (
-        pd.read_csv(shifts_path, sep="\t")
-        if shifts_path.exists()
-        else None
-    )
+    shift_tables = [
+        pd.read_csv(p, sep="\t")
+        for p in (
+            analysis_dir / "editing" / "results" / "frameshifts.tsv",
+            analysis_dir / "trans_splicing" / "results" / "reconstructed_frameshifts.tsv",
+        )
+        if p.exists()
+    ]
+    shifts = pd.concat(shift_tables, ignore_index=True) if shift_tables else None
     gfatk, minimap2 = shutil.which("gfatk"), shutil.which("minimap2")
 
     found = {

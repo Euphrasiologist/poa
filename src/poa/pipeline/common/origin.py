@@ -41,8 +41,9 @@ TABLE_COORDS: dict[str, tuple[str, list[tuple[str, str]], list[str]]] = {
         [],
     ),
     "predicted_edits.tsv": ("contig", [("hit_start", "hit_end")], ["genomic_pos"]),
-    "frameshifts.tsv": ("contig", [("hit_start", "hit_end"), ("start", "end")], []),
+    "frameshifts.tsv": ("contig", [("hit_start", "hit_end"), ("start", "end"), ("window_start", "window_end")], []),
     "reconstructed_exons.tsv": ("contig", [("start", "end")], []),
+    "reconstructed_frameshifts.tsv": ("contig", [("start", "end"), ("window_start", "window_end")], []),
 }
 
 
@@ -212,6 +213,8 @@ def unrotate_table(
     else:
         return
     ccol, intervals, points = spec
+    intervals = [(a, b) for a, b in intervals if a in df.columns and b in df.columns]  # older tool versions
+    points = [p for p in points if p in df.columns]
     for i, row in df.iterrows():
         c = row[ccol]
         if row["organelle"] != organelle or c not in offsets:

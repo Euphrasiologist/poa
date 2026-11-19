@@ -15,7 +15,7 @@ class Recurrence(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             ref = Path(tmp) / "ref.tsv"
             pd.DataFrame(
-                {"organelle": ["mito"] * 3, "gene": ["rpl16"] * 3, "profile_column": [20, 24, 40],
+                {"source": ["editing"] * 3, "organelle": ["mito"] * 3, "gene": ["rpl16"] * 3, "profile_column": [20, 24, 40],
                  "n_assemblies": [300, 17, 2]}  # fmt: skip
             ).to_csv(ref, sep="\t", index=False)
             shifts = pd.DataFrame(

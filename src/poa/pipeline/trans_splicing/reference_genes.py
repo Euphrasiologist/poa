@@ -5,7 +5,7 @@ and editing's lineage_profiles, so they can't drift apart.
 transsplice itself doesn't care whether a junction is cis or trans (it
 classifies each junction per species after assignment), so cis-spliced
 genes are just more templates. Mito only for now; plastid cis-spliced
-genes are a later stage.
+genes have their own template set (PLASTID_SPLICED, reference/plastid/).
 
 Templates come per lineage (LINEAGE_MITOGENOMES): "angiosperm" lives in
 reference/{raw,profiles}/ as it always has, any other lineage in
@@ -17,6 +17,45 @@ TRANS_SPLICED_MITO = ["nad1", "nad2", "nad5", "rps3"]
 # angiosperm mito cis-spliced genes (stage 2a)
 CIS_SPLICED_MITO = ["nad4", "nad7", "ccmFc", "cox2", "rpl2", "rps10"]
 GENES = TRANS_SPLICED_MITO + CIS_SPLICED_MITO
+
+# plastid genes with introns (rps12: exon 1 trans-spliced to exons 2-3).
+# Not petB, petD, rpl16: their first exons are 2-3 codons, too short to
+# template or find, and editing corrects their main exon as a single-exon
+# gene.
+# One template set for every land plant: plastid introns are far more
+# stable than mito ones; a species lacking one (grass clpP/rpoC1, Pinus
+# ndh genes) just doesn't fill a slot.
+PLASTID_SPLICED = ["atpF", "clpP", "ndhA", "ndhB", "rpl2", "rpoC1", "rps12", "rps16", "ycf3"]
+PLASTID_SYNONYMS = {"clpp1": "clpP", "pafi": "ycf3", "ycf3": "ycf3"}
+# RefSeq plastomes across land plants: eudicots, monocots, magnoliids,
+# Amborella, a conifer, a fern, a moss and a liverwort
+PLASTOMES = {
+    "NC_000932.1": "Arabidopsis thaliana",
+    "NC_001879.2": "Nicotiana tabacum",
+    "NC_002202.1": "Spinacia oleracea",
+    "NC_007957.1": "Vitis vinifera",
+    "NC_007942.1": "Glycine max",
+    "NC_001320.1": "Oryza sativa",
+    "NC_001666.2": "Zea mays",
+    "NC_008326.1": "Liriodendron tulipifera",
+    "NC_005086.1": "Amborella trichopoda",
+    "NC_001631.1": "Pinus thunbergii",
+    "NC_004766.1": "Adiantum capillus-veneris",
+    "NC_005087.2": "Physcomitrium patens",
+    "NC_001319.1": "Marchantia polymorpha",
+}
+
+
+def reference_dir(code_dir, organelle: str = "mito", lineage: str | None = None):
+    """trans_splicing/reference/ for a mito lineage (common/lineage), or
+    reference/plastid/ - one set for every plastid."""
+    from pathlib import Path
+
+    from poa.pipeline.common import lineage as lin
+
+    if organelle == "pltd":
+        return Path(code_dir) / "trans_splicing" / "reference" / "plastid"
+    return lin.trans_splicing_reference(code_dir, lineage or lin.DEFAULT_LINEAGE)
 
 # GenBank gene-name spellings -> ours (compared lower-cased)
 GENE_SYNONYMS = {"ccmfc": "ccmFc", "ccmf-c": "ccmFc", "yejv": "ccmFc", "coxii": "cox2", "cox-2": "cox2"}

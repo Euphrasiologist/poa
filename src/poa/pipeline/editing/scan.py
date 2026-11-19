@@ -92,7 +92,7 @@ DEFAULT_THREADS = 4
 DEFAULT_FLANK = 300
 DEFAULT_EDIT_PENALTY = 2.5
 # orfedit's cost of a frame change inside a gene (see FRAMESHIFTS below)
-DEFAULT_FRAMESHIFT_PENALTY = 30.0
+DEFAULT_FRAMESHIFT_PENALTY = 20.0
 # a hit other than a gene's best is corrected as a copy of its own when it
 # covers at least this much of the HMM (a short fragment - Arabidopsis's
 # third atp6 hit spans 21% - stays raw)
@@ -248,23 +248,26 @@ def supports_frameshifts(orfedit: str) -> bool:
     return m is not None and tuple(map(int, m.groups())) >= (0, 2, 0)
 
 
-FRAMESHIFT_COLUMNS = ["species", "organelle", "gene", "start", "end", "n_bases", "profile_column"]
+FRAMESHIFT_COLUMNS = ["species", "organelle", "gene", "start", "end", "n_bases", "profile_column", "window_start", "window_end"]
 # frameshifts orfedit found across the DToL dataset (frameshift_reference.py)
 FRAMESHIFT_REFERENCE = PIPELINE_DIR / "editing" / "reference" / "frameshifts_dtol.tsv"
 RECURRENCE_WINDOW = 5  # profile columns
 
 
-def add_recurrence(shifts: pd.DataFrame, lineages: dict[str, str]) -> pd.DataFrame:
+def add_recurrence(shifts: pd.DataFrame, lineages: dict[str, str], source: str = "editing") -> pd.DataFrame:
     """Add dtol_assemblies: how many DToL assemblies have a frameshift in
     the same gene within RECURRENCE_WINDOW profile columns - many means a
     shared feature of the gene (a pseudogene, an alternative frame), none
     a frameshift of this assembly's own. Empty for a mito gene aligned to
-    another lineage's profile, whose columns the reference doesn't use."""
+    another lineage's profile, whose columns the reference doesn't use.
+    source: "editing" (orfedit's profiles) or "reconstruction"
+    (transsplice's whole-gene profiles), which number columns differently."""
     shifts = shifts.copy()
     if not FRAMESHIFT_REFERENCE.exists() or shifts.empty:
         shifts["dtol_assemblies"] = pd.Series(dtype=object)
         return shifts
     ref = pd.read_csv(FRAMESHIFT_REFERENCE, sep="\t")
+    ref = ref[ref["source"] == source]
     by_gene = {k: g for k, g in ref.groupby(["organelle", "gene"])}
     out = []
     for r in shifts.itertuples():

@@ -37,7 +37,7 @@ requirements:
     # dataset-scale stages (QC, linearize); mafft and graphaligner are left
     # out because bioconda lacks builds for some platforms - poa check
     # lists them as optional
-    - gfatk >=0.6.1
+    - gfatk >=0.6.2
     - gfatools >=0.5
     - seqkit >=2.10
     - minimap2 >=2.28

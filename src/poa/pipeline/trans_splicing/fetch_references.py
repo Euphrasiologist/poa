@@ -32,7 +32,16 @@ from Bio import SeqIO
 from poa import PIPELINE_DIR
 from poa.pipeline.common import lineage as lin
 from poa.pipeline.common.refseq_mito import cds_exons, fetch, verify
-from poa.pipeline.trans_splicing.reference_genes import CIS_SPLICED_MITO, GENE_SYNONYMS, GENES, LINEAGE_MITOGENOMES
+from poa.pipeline.trans_splicing.reference_genes import (
+    CIS_SPLICED_MITO,
+    GENE_SYNONYMS,
+    GENES,
+    LINEAGE_MITOGENOMES,
+    PLASTID_SPLICED,
+    PLASTID_SYNONYMS,
+    PLASTOMES,
+    reference_dir,
+)
 from poa.pipeline.common.log import setup_logging
 
 log = logging.getLogger(__name__)
@@ -54,15 +63,20 @@ JUNCTION_COLS = [
 ]
 
 
-def fetch_references(lineage: str = lin.DEFAULT_LINEAGE, force: bool = False) -> Path:
+def fetch_references(lineage: str = lin.DEFAULT_LINEAGE, force: bool = False, organelle: str = "mito") -> Path:
     """Write `lineage`'s verified exon sets into the package's reference
     raw/ directory (returned). force: rewrite accession+gene files that
-    already exist."""
+    already exist. organelle "pltd": the plastid set (PLASTOMES,
+    PLASTID_SPLICED) into reference/plastid/raw/, lineage ignored."""
     if lineage not in LINEAGE_MITOGENOMES:
         raise ValueError(f"lineage must be one of {sorted(LINEAGE_MITOGENOMES)}, not {lineage!r}")
-    raw_dir = lin.trans_splicing_reference(PIPELINE_DIR, lineage) / "raw"
+    raw_dir = reference_dir(PIPELINE_DIR, organelle, lineage) / "raw"
     raw_dir.mkdir(parents=True, exist_ok=True)
-    genes = CIS_SPLICED_MITO if lineage == lin.DEFAULT_LINEAGE else GENES
+    if organelle == "pltd":
+        genes, accessions, synonyms, gb_dir = PLASTID_SPLICED, PLASTOMES, PLASTID_SYNONYMS, raw_dir.parent / "genbank"
+    else:
+        genes = CIS_SPLICED_MITO if lineage == lin.DEFAULT_LINEAGE else GENES
+        accessions, synonyms, gb_dir = LINEAGE_MITOGENOMES[lineage], GENE_SYNONYMS, GB_DIR
     junctions_path = raw_dir / "junctions.tsv"
     existing_rows = []
     if junctions_path.exists():
@@ -72,14 +86,14 @@ def fetch_references(lineage: str = lin.DEFAULT_LINEAGE, force: bool = False) ->
     wanted = {g.lower(): g for g in genes}
     new_rows, n_ok, n_bad = [], 0, 0
 
-    for acc, organism in LINEAGE_MITOGENOMES[lineage].items():
-        rec = SeqIO.read(fetch(acc, GB_DIR), "genbank")
+    for acc, organism in accessions.items():
+        rec = SeqIO.read(fetch(acc, gb_dir), "genbank")
         seen: dict[str, int] = {}
         for f in rec.features:
             if f.type != "CDS" or "gene" not in f.qualifiers or "translation" not in f.qualifiers:
                 continue
             name = f.qualifiers["gene"][0].lower()
-            gene = wanted.get(name) or (GENE_SYNONYMS.get(name) if GENE_SYNONYMS.get(name) in genes else None)
+            gene = wanted.get(name) or (synonyms.get(name) if synonyms.get(name) in genes else None)
             if gene is None or ((acc, gene) in done and not force):
                 continue
             parts, exons = cds_exons(rec, f)
@@ -148,6 +162,7 @@ def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--lineage", default=lin.DEFAULT_LINEAGE, choices=sorted(LINEAGE_MITOGENOMES))
     ap.add_argument("--force", action="store_true", help="rewrite accession+gene files that already exist")
+    ap.add_argument("--organelle", default="mito", choices=["mito", "pltd"], help="pltd: the plastid set")
     args = ap.parse_args(argv)
-    fetch_references(args.lineage, args.force)
+    fetch_references(args.lineage, args.force, args.organelle)
     return 0

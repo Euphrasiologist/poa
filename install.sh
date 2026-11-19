@@ -12,7 +12,7 @@ if ! command -v cargo >/dev/null 2>&1; then
 fi
 
 echo "[info] installing gfatk, orfedit, transsplice via cargo..."
-cargo install --locked gfatk@0.6.1
+cargo install --locked gfatk@0.6.2
 cargo install --locked orfedit@0.1.0
 cargo install --locked --git https://github.com/ARU-life-sciences/transsplice --tag 0.2.1 transsplice
 

@@ -87,20 +87,41 @@ def run_mafft(protein_fasta: Path, out_fasta: Path) -> bool:
     return True
 
 
+def composition(seqs) -> dict[str, float]:
+    """Amino acid frequencies of `seqs`, for build_profile's `background`."""
+    counts = Counter()
+    for seq in seqs:
+        counts.update(c for c in seq if c in AA_ORDER)
+    total = sum(counts.values())
+    return {aa: (counts.get(aa, 0) + 1) / (total + 20) for aa in AA_ORDER}
+
+
 def build_profile(
-    alignment: dict[str, str], gap_threshold: float = GAP_COLUMN_THRESHOLD
+    alignment: dict[str, str],
+    gap_threshold: float = GAP_COLUMN_THRESHOLD,
+    background: dict[str, float] | None = None,
+    pseudocount_mass: float | None = None,
 ) -> list[dict[str, float]] | None:
+    """background, pseudocount_mass: score against these amino acid
+    frequencies, with `pseudocount_mass` pseudo-observations per column
+    shared out in proportion to them. Without them the background is the
+    alignment's own composition and every residue gets PSEUDOCOUNT, which
+    only works when the alignment is long enough to hold every residue at
+    something like its real frequency: in a short one (a 7-codon exon) a
+    residue seen nowhere has a background far below its pseudocount and
+    scores as a match in every column."""
     n = len(alignment)
     if n == 0:
         return None
     aln_len = len(next(iter(alignment.values())))
 
-    # Background = overall amino acid frequency across all non-gap residues.
-    bg_counts = Counter()
-    for seq in alignment.values():
-        bg_counts.update(c for c in seq if c in AA_ORDER)
-    bg_total = sum(bg_counts.values()) or 1
-    background = {aa: (bg_counts.get(aa, 0) + PSEUDOCOUNT) / (bg_total + PSEUDOCOUNT * 20) for aa in AA_ORDER}
+    if background is None:
+        # Background = overall amino acid frequency across all non-gap residues.
+        bg_counts = Counter()
+        for seq in alignment.values():
+            bg_counts.update(c for c in seq if c in AA_ORDER)
+        bg_total = sum(bg_counts.values()) or 1
+        background = {aa: (bg_counts.get(aa, 0) + PSEUDOCOUNT) / (bg_total + PSEUDOCOUNT * 20) for aa in AA_ORDER}
 
     columns = []
     for i in range(aln_len):
@@ -112,7 +133,10 @@ def build_profile(
         total = sum(counts.values()) or 1
         scores = {}
         for aa in AA_ORDER:
-            freq = (counts.get(aa, 0) + PSEUDOCOUNT) / (total + PSEUDOCOUNT * 20)
+            if pseudocount_mass is None:
+                freq = (counts.get(aa, 0) + PSEUDOCOUNT) / (total + PSEUDOCOUNT * 20)
+            else:
+                freq = (counts.get(aa, 0) + pseudocount_mass * background[aa]) / (total + pseudocount_mass)
             scores[aa] = math.log2(freq / background[aa])
         columns.append(scores)
     return columns or None
@@ -127,7 +151,12 @@ def write_profile(columns: list[dict[str, float]], out_path: Path) -> None:
 
 
 def align_and_build(
-    proteins: dict[str, str], work_dir: Path, label: str, gap_threshold: float = GAP_COLUMN_THRESHOLD
+    proteins: dict[str, str],
+    work_dir: Path,
+    label: str,
+    gap_threshold: float = GAP_COLUMN_THRESHOLD,
+    background: dict[str, float] | None = None,
+    pseudocount_mass: float | None = None,
 ) -> list[dict[str, float]] | None:
     """Write `proteins` to work_dir/<label>.protein.fasta, align them to
     <label>.aligned.fasta and return the profile columns (None if mafft
@@ -138,4 +167,4 @@ def align_and_build(
     aligned_fasta = work_dir / f"{label}.aligned.fasta"
     if not run_mafft(protein_fasta, aligned_fasta):
         return None
-    return build_profile(read_fasta(aligned_fasta), gap_threshold)
+    return build_profile(read_fasta(aligned_fasta), gap_threshold, background, pseudocount_mass)

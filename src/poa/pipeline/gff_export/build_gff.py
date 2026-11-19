@@ -45,6 +45,9 @@ GFF3 mechanics used here (see `../README.md` for the full explanation):
   feature of its `CDS` (SO:0000865), spanning the 1 or 2 bases the
   alignment skipped to change frame (`n_bases`), and the mRNA carries
   `n_frameshifts`. The CDS itself stays one row over the corrected span.
+  `window=start-end` gives the stretch the frame change could equally well
+  sit in when that's wider than the skipped bases (a homopolymer run, or a
+  stretch both frames read about as well).
 - `phase` (GFF3 column 8) is `0` for `editing`/`trans_splicing`-derived
   exons. For editing's single-exon calls that's exact; for trans_splicing
   it is NOT - see README ("Known issue"). Raw cis-spliced models take each CDS's
@@ -97,7 +100,7 @@ import pandas as pd
 
 from poa.pipeline.common import species_discovery as sd
 from poa.pipeline.common.errors import StageError
-from poa.pipeline.trans_splicing.reference_genes import CIS_SPLICED_MITO, GENES as RECONSTRUCTED_GENES
+from poa.pipeline.trans_splicing.reference_genes import CIS_SPLICED_MITO, GENES as RECONSTRUCTED_GENES, PLASTID_SPLICED
 from poa.pipeline.common.log import setup_logging
 
 log = logging.getLogger(__name__)
@@ -741,7 +744,8 @@ def emit_protein_coding_gene(
             )
         )
     for i, f in enumerate(frameshifts, start=1):
-        p = parts[0]
+        # a reconstructed gene's frameshift names its exon (slot)
+        p = by_exon.get(int(f["slot"]), parts[0]) if pd.notna(f.get("slot")) else parts[0]
         lines.append(
             "\t".join(
                 [
@@ -753,10 +757,28 @@ def emit_protein_coding_gene(
                     ".",
                     p["strand"],
                     ".",
-                    gff_attrs({"ID": f"fs-{gene}{suffix}-{i}", "Parent": cid, "n_bases": int(f["n_bases"])}),
+                    gff_attrs(
+                        {
+                            "ID": f"fs-{gene}{suffix}-{i}",
+                            "Parent": cid,
+                            "n_bases": int(f["n_bases"]),
+                            "window": window_attr(f),
+                        }
+                    ),
                 ]
             )
         )
+
+
+def window_attr(f: dict) -> str | None:
+    """A frameshift's uncertainty window as 1-based start-end, when it's
+    wider than the bases skipped (absent from older tool versions)."""
+    ws, we = f.get("window_start"), f.get("window_end")
+    if ws is None or we is None or pd.isna(ws) or pd.isna(we):
+        return None
+    if int(ws) == int(f["start"]) and int(we) == int(f["end"]):
+        return None
+    return f"{int(ws) + 1}-{int(we)}"
 
 
 def edited_copies(calls: pd.DataFrame, edits: pd.DataFrame, gene_hits: pd.DataFrame, shifts: pd.DataFrame):
@@ -797,6 +819,7 @@ def build_species_gff(
     ts_exons: pd.DataFrame,
     ts_edits: pd.DataFrame,
     shifts: pd.DataFrame,
+    ts_shifts: pd.DataFrame,
     stats: Counter,
     expected: dict,
 ) -> list[str]:
@@ -837,8 +860,15 @@ def build_species_gff(
 
         # Corrections come first and claim the loci they were computed on.
         corrected: list[dict] = []
-        if gene in RECONSTRUCTED_GENES:
+        reconstructed = RECONSTRUCTED_GENES if organelle == "mito" else PLASTID_SPLICED
+        if gene in reconstructed:
             g = ts_genes[ts_genes.gene == gene]
+            # a plastid reconstruction is used only when complete: a gene
+            # that lost an intron (grass clpP, rpoC1) fills one slot, and
+            # its raw single-exon model is the whole gene
+            if organelle == "pltd" and not g.empty and str(g.iloc[0].complete).lower() != "true":
+                stats["plastid_reconstruction_incomplete_kept_raw"] += 1
+                g = g.iloc[0:0]
             if not g.empty and int(g.iloc[0].n_filled) >= 1:
                 exons = ts_exons[ts_exons.gene == gene].sort_values("slot")
                 # transsplice >= 0.2.0 reports each exon's CDS phase (split codons)
@@ -889,6 +919,9 @@ def build_species_gff(
                         "tier": "reconstructed",
                         "parts": parts,
                         "edits": ts_edits[ts_edits.gene == gene].to_dict("records"),
+                        "frameshifts": (ts_shifts[ts_shifts.gene == gene] if not ts_shifts.empty else ts_shifts).to_dict(
+                            "records"
+                        ),
                         "score": float(g.iloc[0].whole_gene_score),
                         "n_edits": int(g.iloc[0].whole_gene_n_edits),
                         "coverage": None,
@@ -1048,7 +1081,7 @@ def build_gff(
     )
     ts_genes = load(
         analysis_dir / "trans_splicing" / "results" / "reconstructed_genes.tsv",
-        ["species", "organelle", "gene", "n_filled", "whole_gene_score", "whole_gene_n_edits"],
+        ["species", "organelle", "gene", "n_filled", "complete", "whole_gene_score", "whole_gene_n_edits"],
     )
     ts_exons = load(
         analysis_dir / "trans_splicing" / "results" / "reconstructed_exons.tsv",
@@ -1068,7 +1101,12 @@ def build_gff(
         ["species", "organelle", "gene", "contig", "hit_start", "hit_end", "start", "end", "n_bases"],
     )
 
-    tables = [editing_calls, editing_edits, ts_genes, ts_exons, ts_edits, shifts]
+    ts_shifts = load(
+        analysis_dir / "trans_splicing" / "results" / "reconstructed_frameshifts.tsv",
+        ["species", "organelle", "gene", "slot", "contig", "start", "end", "n_bases"],
+    )
+
+    tables = [editing_calls, editing_edits, ts_genes, ts_exons, ts_edits, shifts, ts_shifts]
     empty = [t.iloc[0:0] for t in tables]
     split = [{k: g for k, g in t.groupby(["species", "organelle"])} if not t.empty else {} for t in tables]
     raw_split = {k: g for k, g in raw.groupby(["species", "organelle"])}

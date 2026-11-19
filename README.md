@@ -21,7 +21,7 @@ poa check           # every tool found, oatkDB databases ready
 ```
 
 `environment.yml` pins every external tool from bioconda/conda-forge,
-including this project's own `gfatk` 0.6.1, `orfedit` 0.1.0 and
+including this project's own `gfatk` 0.6.2, `orfedit` 0.1.0 and
 `transsplice` 0.2.1, built for linux-64, linux-aarch64 and macOS (Intel and
 Apple silicon). To build those three from source instead, remove them from
 `environment.yml` and run `./install.sh` (cargo). A bioconda recipe for
@@ -138,23 +138,69 @@ gets a "linearisation uncertain" note in the contig GFF.
 
 ### Frameshifts
 
-The editing correction (orfedit >= 0.2.0) aligns each single-exon
-protein-coding gene to its reference profile allowing a change of reading
-frame inside the gene, and reports where it happens: an assembly indel
-(e.g. a miscounted homopolymer) or a real pseudogene, which poa can't
-tell apart - check it against the reads. Each one is a row of
-`tables/frameshifts.tsv` (the skipped bases' 0-based `start`/`end`,
-`n_bases`: 1 = one base too many for the frame, e.g. a 1-bp insertion; 2 =
-one too few, e.g. a 1-bp deletion), a `frameshift` feature under the
-gene's CDS in the GFF, and a count in the QC table (`n_frameshifts`,
-`frameshifted_genes`; not part of the status). `poa run` prints them:
+Every protein-coding gene poa corrects is aligned to its reference
+profile allowing a change of reading frame inside it, and each change is
+reported: an assembly indel (e.g. a miscounted homopolymer) or a real
+pseudogene, which poa can't tell apart - check it against the reads.
+Single-exon genes go through orfedit (>= 0.2.0); spliced genes - mito
+nad1/2/4/5/7, ccmFc, cox2, rpl2, rps3, rps10 and plastid atpF, clpP,
+ndhA, ndhB, rpl2, rpoC1, rps12, rps16, ycf3 - through transsplice
+(>= 0.3.0), which aligns the joined exons and names the exon.
+
+Each frameshift is a row of `tables/frameshifts.tsv` (single-exon) or
+`tables/reconstructed_frameshifts.tsv` (spliced, with the exon `slot`):
+the skipped bases' 0-based `start`/`end`; `n_bases` (1 = one base too
+many for the frame, e.g. a 1-bp insertion; 2 = one too few, e.g. a 1-bp
+deletion); `window_start`/`window_end`, the stretch the change could
+equally well sit in (a homopolymer run, say); and `dtol_assemblies`, how
+many DToL assemblies have one at the same place in that gene. It is also
+a `frameshift` feature under the gene's CDS in the GFF (`window=` when
+wider than the skipped bases), and counted in the QC table
+(`n_frameshifts`, `n_new_frameshifts` - seen in at most 2 DToL
+assemblies - and `frameshifted_genes`; not part of the status). `poa run`
+prints them:
 
 ```
-[poa] frameshifts mito: 2 in atp1, cox1 -> tables/frameshifts.tsv
+[poa] frameshifts mito: 2, 0 not seen in DToL - rps14 (in 12 DToL), rps19 (in 4 DToL) -> tables/frameshifts.tsv
 ```
 
-Multi-exon (trans- and cis-spliced) genes aren't checked. With orfedit
-0.1.0 there are no frameshift calls.
+(Arabidopsis's mitochondrial rps14 and rps19 are pseudogenes.) A
+frameshift seen in many DToL assemblies is a feature of the gene; one
+seen nowhere else in a gene that otherwise aligns well is the first thing
+to check.
+
+How well it works, on 1-bp indels planted at random in the coding
+sequence of real DToL genes (scripts in `build/fs_val`, `build/ts_val`):
+single-exon genes 92% found (96% plastid, 88% mito; 94% in genes' best,
+near-complete copies), 99% with the right type, the indel at the call or
+inside its window. Spliced genes: mito 84% found (652 of 778; rpl2, rps10
+and cox2 are the weak ones), plastid 92% when the indel is in the copy
+reconstructed (74% overall, as the second inverted-repeat copy of ndhB,
+rpl2 and rps12 isn't reconstructed), 99-100% with the right type and all
+in the right exon. The misses are mostly short genes (rps19, atp9, rps14)
+and indels near a gene end, with too little gene on one side to tell.
+Across the DToL assemblies there's a mean of 2 single-exon calls per
+assembly, nearly all in partial copies or recurring in other assemblies;
+79 are one-off calls in a gene's best copy. With older
+orfedit/transsplice there are no frameshift calls (a warning says so).
+
+Read frameshifts in spliced genes with care. In the DToL mitochondria
+18% of reconstructed genes carry one (ccmFc 61%, rpl2 44%, nad1 23%, nad5
+17%), most at a handful of positions shared by hundreds of assemblies
+(ccmFc profile column 470 in 273, nad1 column 62 in 183, nad5 column 248
+in 143) - so a high `dtol_assemblies` there says the gene differs from
+the template at that point in that lineage, not that the assembly is
+wrong. In plastids, rps12 and rps16 have a call in 12% of assemblies,
+all in one exon each, against 0-4% for the other seven genes: these two
+have a tiny exon that transsplice often misplaces, and a frame change in
+the neighbouring exon is how the alignment absorbs that. With frame
+changes allowed, 6% of mito spliced genes that end up with no frameshift
+still have an exon boundary placed differently from `--frameshift-penalty
+inf` (mostly nad7 and nad2).
+
+The recurrence table leaves out the 54 DToL assemblies resolved with
+gfatk before 0.6.3, whose contigs repeat each graph overlap: they are
+2.5% of the assemblies and had 8% of the single-exon calls.
 
 ### Circular contigs
 

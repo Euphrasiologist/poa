@@ -55,9 +55,9 @@ from pathlib import Path
 
 from poa import PIPELINE_DIR
 from poa.pipeline.common import lineage as lin
-from poa.pipeline.common.pssm import align_and_build, translate, read_fasta, write_profile
+from poa.pipeline.common.pssm import align_and_build, composition, translate, read_fasta, write_profile
 from poa.pipeline.common.tools import cargo_tool
-from poa.pipeline.trans_splicing.reference_genes import GENES
+from poa.pipeline.trans_splicing.reference_genes import GENES, PLASTID_SPLICED, reference_dir
 from poa.pipeline.common.log import setup_logging
 
 log = logging.getLogger(__name__)
@@ -100,11 +100,18 @@ def load_junctions(raw_dir: Path) -> dict[tuple[str, str, str], dict]:
     return out
 
 
-def build_and_write_profile(protein_seqs: dict[str, str], out_path: Path, label: str, work_dir: Path) -> bool:
+def build_and_write_profile(
+    protein_seqs: dict[str, str],
+    out_path: Path,
+    label: str,
+    work_dir: Path,
+    background: dict[str, float] | None = None,
+    pseudocount_mass: float | None = None,
+) -> bool:
     if len(protein_seqs) < 2:
         log.warning(f"{label}: only {len(protein_seqs)} sequences, need >= 2 - skipping")
         return False
-    columns = align_and_build(protein_seqs, work_dir, label)
+    columns = align_and_build(protein_seqs, work_dir, label, background=background, pseudocount_mass=pseudocount_mass)
     if columns is None:
         log.warning(f"{label}: no usable alignment - skipping")
         return False
@@ -175,7 +182,13 @@ def compute_min_self_score(
 
 
 def build_exon_profiles(
-    lineage: str = lin.DEFAULT_LINEAGE, genes: list[str] | None = None, work_root: Path | None = None
+    lineage: str = lin.DEFAULT_LINEAGE,
+    genes: list[str] | None = None,
+    work_root: Path | None = None,
+    organelle: str = "mito",
+    exclude: tuple[str, ...] = (),
+    out_dir: Path | None = None,
+    slot_pseudocount: float | None = None,
 ) -> Path:
     """(Re)build `lineage`'s exon-slot and whole-gene templates in the
     package's reference directory, from its raw/ exon sets. genes: only
@@ -185,13 +198,15 @@ def build_exon_profiles(
     (default: the current directory). Returns the profiles directory."""
     if lineage not in lin.LINEAGES:
         raise ValueError(f"lineage must be one of {lin.LINEAGES}, not {lineage!r}")
-    genes = list(genes or GENES)
+    genes = list(genes or (PLASTID_SPLICED if organelle == "pltd" else GENES))
     orfedit = cargo_tool("orfedit")
-    reference_dir = lin.trans_splicing_reference(PIPELINE_DIR, lineage)
-    raw_dir = reference_dir / "raw"
-    profiles_dir = reference_dir / "profiles"
+    ref_dir = reference_dir(PIPELINE_DIR, organelle, lineage)
+    raw_dir = ref_dir / "raw"
+    profiles_dir = Path(out_dir) if out_dir else ref_dir / "profiles"
     work_dir = Path(work_root or os.getcwd()) / "analysis" / "trans_splicing" / "work"
-    if lineage != lin.DEFAULT_LINEAGE:
+    if organelle == "pltd":
+        work_dir = work_dir / "plastid"
+    elif lineage != lin.DEFAULT_LINEAGE:
         work_dir = work_dir / lineage
     work_dir.mkdir(parents=True, exist_ok=True)
     profiles_dir.mkdir(parents=True, exist_ok=True)
@@ -200,7 +215,7 @@ def build_exon_profiles(
     junctions = load_junctions(raw_dir)
 
     for gene in genes:
-        loci = [key for key in raw if key[1] == gene]
+        loci = [key for key in raw if key[1] == gene and key[0] not in exclude]
         included = [key for key in loci if not junctions.get(key, {}).get("excluded", False)]
         excluded = [key for key in loci if key not in included]
         if excluded:
@@ -216,6 +231,9 @@ def build_exon_profiles(
             if "refseq" in raw[key]:
                 whole_seqs[f"{acc}_{locus}"] = raw[key]["refseq"]
         build_and_write_profile(whole_seqs, gene_dir / "whole_gene.pssm", f"{gene}.whole_gene", work_dir)
+        # exon slots score against the whole protein's composition, not
+        # their own few residues' (see pssm.build_profile)
+        slot_background = composition(whole_seqs.values()) if slot_pseudocount is not None else None
 
         # Per-exon-slot profiles: only loci with the canonical (modal) exon
         # count contribute a given slot - naturally excludes Beta vulgaris'
@@ -265,7 +283,9 @@ def build_exon_profiles(
                 continue
             protein_seqs = {name: translate(seq).rstrip("*") for name, seq in dna_seqs.items()}
             profile_path = gene_dir / f"exon{slot}.pssm"
-            if not build_and_write_profile(protein_seqs, profile_path, f"{gene}.exon{slot}", work_dir):
+            if not build_and_write_profile(
+                protein_seqs, profile_path, f"{gene}.exon{slot}", work_dir, slot_background, slot_pseudocount
+            ):
                 continue
             min_score = compute_min_self_score(gene, slot, dna_seqs, profile_path, work_dir, orfedit)
             if min_score is None:
@@ -289,8 +309,8 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument(
         "--genes",
         nargs="+",
-        default=GENES,
-        help="build only these (default: all). Rebuilding a gene overwrites its whole_gene.pssm, "
+        default=None,
+        help="build only these (default: all the organelle's). Rebuilding a gene overwrites its whole_gene.pssm, "
         "including one 02_bootstrap_refine.py refined from this dataset",
     )
     ap.add_argument(
@@ -299,6 +319,24 @@ def main(argv: list[str] | None = None) -> int:
         choices=lin.LINEAGES,
         help="which lineage's references to build from (default: %(default)s)",
     )
+    ap.add_argument("--organelle", default="mito", choices=["mito", "pltd"], help="pltd: the plastid templates")
+    ap.add_argument("--exclude", nargs="+", default=[], metavar="ACC", help="leave these accessions out (held-out tests)")
+    ap.add_argument("--out-dir", type=Path, default=None, help="write the templates here, not into the package")
+    ap.add_argument(
+        "--slot-pseudocount",
+        type=float,
+        default=None,
+        help="exon-slot profiles: score against the whole protein's composition, with this many "
+        "pseudo-observations per column (default: the alignment's own composition, flat pseudocounts)",
+    )
     args = ap.parse_args(argv)
-    build_exon_profiles(args.lineage, args.genes, Path(os.environ.get("PLANT_ORGANELLE_DATA_ROOT") or os.getcwd()))
+    build_exon_profiles(
+        args.lineage,
+        args.genes,
+        Path(os.environ.get("PLANT_ORGANELLE_DATA_ROOT") or os.getcwd()),
+        args.organelle,
+        tuple(args.exclude),
+        args.out_dir,
+        args.slot_pseudocount,
+    )
     return 0

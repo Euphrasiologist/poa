@@ -4,7 +4,7 @@ Takes the contig FASTA for each organelle (from oatk or any other
 assembler), optionally with its assembly graph (GFA), and runs the
 annotation pipeline on it:
 
-  denovo_annotation 00-04 -> editing 01 -> trans_splicing 01 (mito)
+  denovo_annotation 00-04 -> editing 01 -> trans_splicing 01
   -> unitig_coords 00-01 + qc_basic_stats 06 (with a GFA) -> gff_export 01
   -> qc (pass/flag/fail per organelle)
 
@@ -79,6 +79,7 @@ TABLES = [
     "trans_splicing/results/reconstructed_genes.tsv",
     "trans_splicing/results/reconstructed_exons.tsv",
     "trans_splicing/results/reconstructed_junctions.tsv",
+    "trans_splicing/results/reconstructed_frameshifts.tsv",
     "trans_splicing/results/reconstructed_edits.tsv",
     "unitig_coords/results/linearization_qc.tsv",
     "qc_basic_stats/results/low_depth_paths.tsv",
@@ -280,13 +281,12 @@ def run(
             lambda: scan_editing(work, orgs, gene_calls=gene_calls, threads=threads, lineage=lineage),
         ),
     ]
-    if "mito" in orgs:
-        stages.append(
-            (
-                "trans_splicing",
-                lambda: reconstruct(work, gene_calls=gene_calls, threads=threads, lineage=lineage),
-            )
+    stages.append(
+        (
+            "trans_splicing",
+            lambda: reconstruct(work, gene_calls=gene_calls, threads=threads, lineage=lineage, organelles=orgs),
         )
+    )
     if gfas:
         stages += [
             ("unitig_map", lambda: build_unitig_maps(work, orgs, **scan)),

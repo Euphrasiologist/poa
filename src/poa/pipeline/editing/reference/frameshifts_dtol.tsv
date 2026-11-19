@@ -1,237 +1,1527 @@
-organelle	gene	profile_column	n_assemblies
-mito	atp1	299	1
-mito	atp1	301	2
-mito	atp1	381	1
-mito	atp1	382	2
-mito	atp1	453	1
-mito	atp1	488	1
-mito	atp4	59	1
-mito	atp4	120	2
-mito	atp4	134	1
-mito	atp9	18	1
-mito	atp9	22	2
-mito	atp9	23	1
-mito	atp9	25	7
-mito	atp9	26	16
-mito	atp9	28	1
-mito	atp9	31	4
-mito	atp9	37	1
-mito	atp9	50	1
-mito	ccmB	60	1
-mito	ccmC	127	1
-mito	ccmC	224	1
-mito	ccmC	228	16
-mito	ccmFn	354	3
-mito	ccmFn	464	1
-mito	cob	83	1
-mito	cob	98	1
-mito	cox1	174	1
-mito	cox3	207	1
-mito	matR	197	1
-mito	matR	623	6
-mito	matR	629	8
-mito	matR	634	1
-mito	matR	635	3
-mito	matR	637	1
-mito	matR	642	2
-mito	matR	644	1
-mito	nad3	49	1
-mito	nad6	154	3
-mito	nad6	195	2
-mito	nad9	71	1
-mito	nad9	152	1
-mito	rpl16	28	2
-mito	rpl16	30	117
-mito	rpl16	31	6
-mito	rpl16	32	18
-mito	rpl16	33	33
-mito	rpl16	34	12
-mito	rpl16	35	11
-mito	rpl16	44	3
-mito	rpl16	58	13
-mito	rpl16	62	3
-mito	rpl16	77	1
-mito	rpl16	84	12
-mito	rpl16	94	1
-mito	rpl16	103	1
-mito	rpl16	130	11
-mito	rpl16	132	1
-mito	rpl16	133	6
-mito	rpl16	149	2
-mito	rpl5	30	1
-mito	rpl5	33	2
-mito	rpl5	49	2
-mito	rpl5	90	1
-mito	rpl5	92	1
-mito	rpl5	104	3
-mito	rpl5	108	1
-mito	rpl5	142	2
-mito	rpl5	146	1
-mito	rpl5	167	2
-mito	rpl5	168	17
-mito	rpl5	169	1
-mito	rpl5	172	3
-mito	rps1	22	1
-mito	rps1	46	1
-mito	rps1	50	18
-mito	rps1	52	1
-mito	rps1	82	1
-mito	rps1	92	1
-mito	rps1	116	5
-mito	rps1	118	5
-mito	rps1	119	1
-mito	rps1	123	3
-mito	rps12	34	2
-mito	rps12	45	2
-mito	rps12	70	1
-mito	rps12	86	2
-mito	rps12	87	1
-mito	rps13	29	1
-mito	rps13	43	3
-mito	rps13	80	1
-mito	rps14	16	3
-mito	rps14	18	1
-mito	rps14	22	1
-mito	rps14	24	11
-mito	rps14	25	2
-mito	rps14	28	4
-mito	rps14	31	1
-mito	rps14	33	6
-mito	rps14	35	1
-mito	rps14	64	1
-mito	rps14	65	2
-mito	rps14	66	1
-mito	rps14	72	8
-mito	rps14	76	1
-mito	rps14	81	1
-mito	rps19	25	1
-mito	rps19	35	9
-mito	rps19	39	1
-mito	rps19	42	1
-mito	rps19	43	1
-mito	rps19	49	1
-mito	rps19	51	4
-mito	rps19	52	2
-mito	rps19	58	1
-mito	rps19	73	1
-mito	rps4	84	1
-mito	rps4	113	2
-mito	rps4	117	1
-mito	rps4	220	1
-mito	rps4	224	1
-mito	rps4	294	1
-mito	rps4	295	1
-mito	rps4	329	46
-mito	rps4	338	1
-mito	rps7	28	1
-mito	rps7	51	1
-mito	rps7	81	3
-mito	rps7	86	1
-mito	rps7	88	4
-mito	rps7	97	1
-mito	rps7	99	7
-mito	rps7	104	1
-mito	rps7	109	1
-mito	rps7	115	8
-mito	rps7	132	1
-mito	rps7	135	1
-pltd	infA	23	11
-pltd	infA	24	1
-pltd	infA	35	2
-pltd	infA	43	2
-pltd	infA	47	1
-pltd	infA	49	1
-pltd	infA	62	1
-pltd	infA	63	2
-pltd	infA	70	1
-pltd	infA	71	1
-pltd	matK	455	3
-pltd	ndhC	12	1
-pltd	ndhC	14	1
-pltd	ndhC	21	1
-pltd	ndhC	35	1
-pltd	ndhC	60	1
-pltd	ndhC	82	1
-pltd	ndhC	90	1
-pltd	ndhC	91	1
-pltd	ndhC	102	1
-pltd	ndhC	104	1
-pltd	ndhD	65	1
-pltd	ndhD	147	1
-pltd	ndhD	149	1
-pltd	ndhD	292	1
-pltd	ndhE	30	2
-pltd	ndhE	53	1
-pltd	ndhG	13	4
-pltd	ndhG	15	1
-pltd	ndhG	98	1
-pltd	ndhG	108	1
-pltd	ndhG	110	1
-pltd	ndhG	122	1
-pltd	ndhG	166	1
-pltd	ndhH	19	2
-pltd	ndhH	53	1
-pltd	ndhH	60	1
-pltd	ndhH	100	1
-pltd	ndhH	121	1
-pltd	ndhH	146	2
-pltd	ndhH	163	1
-pltd	ndhH	198	1
-pltd	ndhH	307	1
-pltd	ndhI	69	1
-pltd	ndhI	86	1
-pltd	ndhI	88	2
-pltd	ndhI	104	1
-pltd	ndhJ	116	1
-pltd	ndhK	32	1
-pltd	ndhK	36	1
-pltd	ndhK	37	2
-pltd	ndhK	41	1
-pltd	ndhK	66	2
-pltd	ndhK	101	3
-pltd	ndhK	112	5
-pltd	ndhK	129	1
-pltd	ndhK	160	1
-pltd	ndhK	178	3
-pltd	ndhK	206	1
-pltd	ndhK	208	1
-pltd	ndhK	209	2
-pltd	ndhK	212	1
-pltd	ndhK	214	1
-pltd	ndhK	216	4
-pltd	petB	158	1
-pltd	psaC	66	1
-pltd	psaJ	21	1
-pltd	psbB	432	1
-pltd	psbC	307	2
-pltd	psbK	47	1
-pltd	psbT	17	1
-pltd	rpl14	10	1
-pltd	rpl16	56	1
-pltd	rpl22	52	1
-pltd	rpl22	76	1
-pltd	rpl22	96	1
-pltd	rpl22	97	6
-pltd	rpl32	39	1
-pltd	rpoB	97	1
-pltd	rpoB	211	2
-pltd	rpoC2	1392	1
-pltd	rpoC2	1399	2
-pltd	rpoC2	1409	6
-pltd	rpoC2	1410	5
-pltd	rpoC2	1412	2
-pltd	rpoC2	1415	10
-pltd	rpoC2	1418	3
-pltd	rps11	82	1
-pltd	rps15	11	1
-pltd	rps15	16	1
-pltd	rps15	47	1
-pltd	rps15	68	1
-pltd	rps15	69	1
-pltd	rps15	70	1
-pltd	rps15	72	3
-pltd	rps2	94	1
-pltd	rps2	157	1
-pltd	rps2	160	1
-pltd	rps8	17	2
-pltd	rps8	107	2
+source	organelle	gene	profile_column	n_assemblies
+editing	mito	atp1	10	1
+editing	mito	atp1	20	1
+editing	mito	atp1	21	1
+editing	mito	atp1	23	1
+editing	mito	atp1	34	1
+editing	mito	atp1	35	1
+editing	mito	atp1	36	1
+editing	mito	atp1	45	1
+editing	mito	atp1	52	1
+editing	mito	atp1	71	1
+editing	mito	atp1	82	1
+editing	mito	atp1	83	1
+editing	mito	atp1	84	1
+editing	mito	atp1	98	2
+editing	mito	atp1	119	1
+editing	mito	atp1	122	2
+editing	mito	atp1	134	1
+editing	mito	atp1	137	1
+editing	mito	atp1	152	1
+editing	mito	atp1	158	3
+editing	mito	atp1	166	1
+editing	mito	atp1	168	1
+editing	mito	atp1	169	2
+editing	mito	atp1	176	1
+editing	mito	atp1	203	2
+editing	mito	atp1	212	1
+editing	mito	atp1	221	1
+editing	mito	atp1	224	1
+editing	mito	atp1	230	1
+editing	mito	atp1	231	1
+editing	mito	atp1	257	1
+editing	mito	atp1	260	1
+editing	mito	atp1	274	1
+editing	mito	atp1	279	2
+editing	mito	atp1	298	1
+editing	mito	atp1	299	1
+editing	mito	atp1	301	5
+editing	mito	atp1	308	1
+editing	mito	atp1	319	1
+editing	mito	atp1	329	1
+editing	mito	atp1	337	1
+editing	mito	atp1	343	2
+editing	mito	atp1	351	1
+editing	mito	atp1	355	1
+editing	mito	atp1	362	1
+editing	mito	atp1	365	1
+editing	mito	atp1	371	1
+editing	mito	atp1	383	1
+editing	mito	atp1	387	1
+editing	mito	atp1	390	62
+editing	mito	atp1	393	1
+editing	mito	atp1	407	5
+editing	mito	atp1	408	1
+editing	mito	atp1	421	1
+editing	mito	atp1	423	1
+editing	mito	atp1	426	1
+editing	mito	atp1	430	1
+editing	mito	atp1	433	1
+editing	mito	atp1	435	22
+editing	mito	atp1	446	1
+editing	mito	atp1	447	1
+editing	mito	atp1	448	1
+editing	mito	atp1	451	1
+editing	mito	atp1	453	5
+editing	mito	atp1	455	1
+editing	mito	atp1	461	1
+editing	mito	atp1	463	2
+editing	mito	atp1	466	1
+editing	mito	atp1	467	1
+editing	mito	atp1	469	4
+editing	mito	atp1	470	1
+editing	mito	atp1	472	2
+editing	mito	atp1	481	1
+editing	mito	atp1	493	1
+editing	mito	atp1	498	1
+editing	mito	atp4	10	1
+editing	mito	atp4	18	1
+editing	mito	atp4	59	1
+editing	mito	atp4	120	2
+editing	mito	atp6	17	1
+editing	mito	atp6	18	1
+editing	mito	atp6	20	40
+editing	mito	atp6	21	1
+editing	mito	atp6	23	3
+editing	mito	atp6	24	7
+editing	mito	atp6	25	1
+editing	mito	atp6	26	1
+editing	mito	atp6	28	1
+editing	mito	atp6	31	1
+editing	mito	atp6	33	3
+editing	mito	atp6	34	1
+editing	mito	atp6	35	1
+editing	mito	atp6	36	4
+editing	mito	atp6	37	6
+editing	mito	atp6	39	1
+editing	mito	atp6	40	1
+editing	mito	atp6	42	5
+editing	mito	atp6	43	2
+editing	mito	atp6	44	1
+editing	mito	atp6	45	3
+editing	mito	atp6	46	3
+editing	mito	atp6	47	6
+editing	mito	atp6	48	2
+editing	mito	atp6	49	10
+editing	mito	atp6	50	4
+editing	mito	atp6	51	2
+editing	mito	atp6	52	4
+editing	mito	atp6	53	2
+editing	mito	atp6	55	1
+editing	mito	atp6	56	2
+editing	mito	atp6	57	4
+editing	mito	atp6	58	5
+editing	mito	atp6	60	2
+editing	mito	atp6	62	6
+editing	mito	atp6	63	1
+editing	mito	atp6	64	3
+editing	mito	atp6	65	4
+editing	mito	atp6	66	4
+editing	mito	atp6	68	2
+editing	mito	atp6	69	2
+editing	mito	atp6	70	4
+editing	mito	atp6	71	5
+editing	mito	atp6	72	2
+editing	mito	atp6	73	8
+editing	mito	atp6	76	9
+editing	mito	atp6	77	3
+editing	mito	atp6	80	4
+editing	mito	atp6	81	6
+editing	mito	atp6	82	1
+editing	mito	atp6	83	5
+editing	mito	atp6	84	4
+editing	mito	atp6	85	3
+editing	mito	atp6	86	4
+editing	mito	atp6	87	2
+editing	mito	atp6	89	5
+editing	mito	atp6	90	3
+editing	mito	atp6	92	1
+editing	mito	atp6	93	5
+editing	mito	atp6	95	1
+editing	mito	atp6	96	4
+editing	mito	atp6	97	2
+editing	mito	atp6	98	15
+editing	mito	atp6	99	74
+editing	mito	atp6	100	2
+editing	mito	atp6	101	3
+editing	mito	atp6	102	3
+editing	mito	atp6	113	1
+editing	mito	atp6	115	1
+editing	mito	atp6	126	17
+editing	mito	atp6	128	4
+editing	mito	atp6	254	1
+editing	mito	atp6	354	8
+editing	mito	atp8	52	1
+editing	mito	atp8	68	1
+editing	mito	atp8	76	1
+editing	mito	atp8	94	2
+editing	mito	atp8	114	2
+editing	mito	atp9	14	1
+editing	mito	atp9	18	1
+editing	mito	atp9	22	2
+editing	mito	atp9	23	1
+editing	mito	atp9	24	4
+editing	mito	atp9	25	14
+editing	mito	atp9	26	19
+editing	mito	atp9	27	36
+editing	mito	atp9	28	1
+editing	mito	atp9	29	2
+editing	mito	atp9	30	55
+editing	mito	atp9	31	22
+editing	mito	atp9	32	16
+editing	mito	atp9	37	1
+editing	mito	atp9	50	1
+editing	mito	atp9	59	1
+editing	mito	ccmB	60	1
+editing	mito	ccmB	74	1
+editing	mito	ccmC	224	1
+editing	mito	ccmC	228	14
+editing	mito	ccmC	229	1
+editing	mito	ccmFn	151	7
+editing	mito	ccmFn	164	15
+editing	mito	ccmFn	314	1
+editing	mito	ccmFn	325	1
+editing	mito	ccmFn	354	3
+editing	mito	ccmFn	384	2
+editing	mito	ccmFn	412	1
+editing	mito	ccmFn	416	1
+editing	mito	ccmFn	454	2
+editing	mito	ccmFn	455	3
+editing	mito	ccmFn	489	1
+editing	mito	ccmFn	519	1
+editing	mito	ccmFn	544	1
+editing	mito	ccmFn	551	1
+editing	mito	ccmFn	557	1
+editing	mito	ccmFn	565	1
+editing	mito	cob	35	8
+editing	mito	cob	36	11
+editing	mito	cob	38	4
+editing	mito	cob	43	1
+editing	mito	cob	45	15
+editing	mito	cob	47	2
+editing	mito	cob	55	2
+editing	mito	cob	59	1
+editing	mito	cob	61	1
+editing	mito	cob	62	4
+editing	mito	cob	66	1
+editing	mito	cob	68	1
+editing	mito	cob	82	3
+editing	mito	cob	84	1
+editing	mito	cob	85	7
+editing	mito	cob	87	1
+editing	mito	cob	88	1
+editing	mito	cob	89	10
+editing	mito	cob	92	1
+editing	mito	cob	97	4
+editing	mito	cob	98	17
+editing	mito	cob	101	1
+editing	mito	cob	104	2
+editing	mito	cob	108	13
+editing	mito	cob	110	2
+editing	mito	cob	113	2
+editing	mito	cob	115	5
+editing	mito	cob	116	5
+editing	mito	cob	119	4
+editing	mito	cob	121	53
+editing	mito	cob	125	2
+editing	mito	cob	143	12
+editing	mito	cob	148	1
+editing	mito	cob	153	2
+editing	mito	cob	156	1
+editing	mito	cob	159	1
+editing	mito	cob	161	1
+editing	mito	cob	169	1
+editing	mito	cob	172	1
+editing	mito	cob	174	24
+editing	mito	cob	191	2
+editing	mito	cob	193	1
+editing	mito	cob	197	1
+editing	mito	cob	199	2
+editing	mito	cob	207	5
+editing	mito	cob	213	1
+editing	mito	cob	218	3
+editing	mito	cob	224	1
+editing	mito	cob	225	8
+editing	mito	cob	226	1
+editing	mito	cob	227	4
+editing	mito	cob	234	1
+editing	mito	cob	238	3
+editing	mito	cob	241	1
+editing	mito	cob	246	1
+editing	mito	cob	247	1
+editing	mito	cob	254	1
+editing	mito	cob	275	1
+editing	mito	cob	276	1
+editing	mito	cob	279	1
+editing	mito	cob	293	1
+editing	mito	cob	296	2
+editing	mito	cob	312	2
+editing	mito	cob	315	1
+editing	mito	cob	325	1
+editing	mito	cob	328	1
+editing	mito	cob	329	1
+editing	mito	cob	331	1
+editing	mito	cob	337	2
+editing	mito	cob	386	3
+editing	mito	cob	388	1
+editing	mito	cox1	9	1
+editing	mito	cox1	14	1
+editing	mito	cox1	24	5
+editing	mito	cox1	30	1
+editing	mito	cox1	46	1
+editing	mito	cox1	64	1
+editing	mito	cox1	74	1
+editing	mito	cox1	78	2
+editing	mito	cox1	82	1
+editing	mito	cox1	101	1
+editing	mito	cox1	108	1
+editing	mito	cox1	109	15
+editing	mito	cox1	111	1
+editing	mito	cox1	116	1
+editing	mito	cox1	120	2
+editing	mito	cox1	138	1
+editing	mito	cox1	153	2
+editing	mito	cox1	156	1
+editing	mito	cox1	167	2
+editing	mito	cox1	177	4
+editing	mito	cox1	181	36
+editing	mito	cox1	182	1
+editing	mito	cox1	192	1
+editing	mito	cox1	199	2
+editing	mito	cox1	215	1
+editing	mito	cox1	228	17
+editing	mito	cox1	230	1
+editing	mito	cox1	231	2
+editing	mito	cox1	233	1
+editing	mito	cox1	236	4
+editing	mito	cox1	238	5
+editing	mito	cox1	242	2
+editing	mito	cox1	271	1
+editing	mito	cox1	278	5
+editing	mito	cox1	291	49
+editing	mito	cox1	358	2
+editing	mito	cox1	376	1
+editing	mito	cox1	377	1
+editing	mito	cox1	396	2
+editing	mito	cox1	400	16
+editing	mito	cox1	404	1
+editing	mito	cox1	416	1
+editing	mito	cox1	420	30
+editing	mito	cox1	441	1
+editing	mito	cox1	442	1
+editing	mito	cox1	446	3
+editing	mito	cox1	455	1
+editing	mito	cox1	457	1
+editing	mito	cox1	478	5
+editing	mito	cox1	481	1
+editing	mito	cox1	519	1
+editing	mito	cox1	522	1
+editing	mito	cox3	16	1
+editing	mito	cox3	17	1
+editing	mito	cox3	24	11
+editing	mito	cox3	57	1
+editing	mito	cox3	141	1
+editing	mito	cox3	198	1
+editing	mito	cox3	200	3
+editing	mito	cox3	203	47
+editing	mito	cox3	208	1
+editing	mito	cox3	209	15
+editing	mito	cox3	210	1
+editing	mito	cox3	212	4
+editing	mito	cox3	213	2
+editing	mito	cox3	215	3
+editing	mito	cox3	221	1
+editing	mito	cox3	228	5
+editing	mito	cox3	229	4
+editing	mito	matR	20	7
+editing	mito	matR	21	4
+editing	mito	matR	22	1
+editing	mito	matR	33	1
+editing	mito	matR	36	1
+editing	mito	matR	51	1
+editing	mito	matR	73	4
+editing	mito	matR	84	3
+editing	mito	matR	86	1
+editing	mito	matR	87	1
+editing	mito	matR	155	1
+editing	mito	matR	175	1
+editing	mito	matR	186	1
+editing	mito	matR	188	1
+editing	mito	matR	197	1
+editing	mito	matR	208	1
+editing	mito	matR	232	1
+editing	mito	matR	281	1
+editing	mito	matR	334	1
+editing	mito	matR	342	2
+editing	mito	matR	365	4
+editing	mito	matR	390	3
+editing	mito	matR	404	3
+editing	mito	matR	444	6
+editing	mito	matR	536	1
+editing	mito	matR	564	6
+editing	mito	matR	606	1
+editing	mito	matR	620	2
+editing	mito	matR	623	6
+editing	mito	matR	629	8
+editing	mito	matR	634	1
+editing	mito	matR	635	6
+editing	mito	matR	637	1
+editing	mito	matR	638	1
+editing	mito	matR	639	3
+editing	mito	matR	642	19
+editing	mito	matR	644	1
+editing	mito	mttB	35	1
+editing	mito	mttB	131	1
+editing	mito	mttB	173	1
+editing	mito	mttB	236	1
+editing	mito	mttB	244	45
+editing	mito	nad3	16	1
+editing	mito	nad3	26	5
+editing	mito	nad3	28	23
+editing	mito	nad3	30	1
+editing	mito	nad3	31	6
+editing	mito	nad3	40	1
+editing	mito	nad3	42	1
+editing	mito	nad3	49	2
+editing	mito	nad3	90	1
+editing	mito	nad4L	26	17
+editing	mito	nad4L	29	1
+editing	mito	nad4L	87	2
+editing	mito	nad6	21	1
+editing	mito	nad6	44	1
+editing	mito	nad6	79	1
+editing	mito	nad6	110	1
+editing	mito	nad6	138	2
+editing	mito	nad6	162	1
+editing	mito	nad6	195	27
+editing	mito	nad9	33	2
+editing	mito	nad9	38	1
+editing	mito	nad9	47	14
+editing	mito	nad9	58	7
+editing	mito	nad9	60	1
+editing	mito	nad9	63	2
+editing	mito	nad9	64	1
+editing	mito	nad9	65	1
+editing	mito	nad9	66	17
+editing	mito	nad9	68	1
+editing	mito	nad9	69	2
+editing	mito	nad9	71	8
+editing	mito	nad9	76	3
+editing	mito	rpl16	20	2
+editing	mito	rpl16	28	2
+editing	mito	rpl16	29	1
+editing	mito	rpl16	30	169
+editing	mito	rpl16	31	10
+editing	mito	rpl16	32	28
+editing	mito	rpl16	33	26
+editing	mito	rpl16	34	13
+editing	mito	rpl16	35	13
+editing	mito	rpl16	36	1
+editing	mito	rpl16	37	1
+editing	mito	rpl16	41	3
+editing	mito	rpl16	44	4
+editing	mito	rpl16	48	3
+editing	mito	rpl16	50	1
+editing	mito	rpl16	52	6
+editing	mito	rpl16	56	3
+editing	mito	rpl16	58	13
+editing	mito	rpl16	59	1
+editing	mito	rpl16	61	1
+editing	mito	rpl16	62	5
+editing	mito	rpl16	66	1
+editing	mito	rpl16	67	1
+editing	mito	rpl16	72	1
+editing	mito	rpl16	77	1
+editing	mito	rpl16	78	30
+editing	mito	rpl16	82	1
+editing	mito	rpl16	84	13
+editing	mito	rpl16	86	2
+editing	mito	rpl16	94	1
+editing	mito	rpl16	102	1
+editing	mito	rpl16	103	1
+editing	mito	rpl16	106	12
+editing	mito	rpl16	109	1
+editing	mito	rpl16	112	2
+editing	mito	rpl16	115	1
+editing	mito	rpl16	123	1
+editing	mito	rpl16	124	2
+editing	mito	rpl16	125	1
+editing	mito	rpl16	128	1
+editing	mito	rpl16	130	11
+editing	mito	rpl16	132	2
+editing	mito	rpl16	133	6
+editing	mito	rpl16	134	4
+editing	mito	rpl16	135	1
+editing	mito	rpl16	136	3
+editing	mito	rpl16	138	2
+editing	mito	rpl16	140	1
+editing	mito	rpl16	143	2
+editing	mito	rpl16	148	1
+editing	mito	rpl16	149	2
+editing	mito	rpl5	27	3
+editing	mito	rpl5	28	1
+editing	mito	rpl5	30	1
+editing	mito	rpl5	33	2
+editing	mito	rpl5	35	1
+editing	mito	rpl5	43	1
+editing	mito	rpl5	49	1
+editing	mito	rpl5	57	3
+editing	mito	rpl5	76	1
+editing	mito	rpl5	80	1
+editing	mito	rpl5	83	3
+editing	mito	rpl5	88	2
+editing	mito	rpl5	90	1
+editing	mito	rpl5	92	1
+editing	mito	rpl5	104	3
+editing	mito	rpl5	105	2
+editing	mito	rpl5	108	1
+editing	mito	rpl5	115	1
+editing	mito	rpl5	134	1
+editing	mito	rpl5	138	3
+editing	mito	rpl5	142	2
+editing	mito	rpl5	146	1
+editing	mito	rpl5	150	1
+editing	mito	rpl5	152	1
+editing	mito	rpl5	167	2
+editing	mito	rpl5	168	17
+editing	mito	rpl5	172	3
+editing	mito	rpl5	174	1
+editing	mito	rps1	11	1
+editing	mito	rps1	18	1
+editing	mito	rps1	22	1
+editing	mito	rps1	29	1
+editing	mito	rps1	40	1
+editing	mito	rps1	45	1
+editing	mito	rps1	46	1
+editing	mito	rps1	50	18
+editing	mito	rps1	51	1
+editing	mito	rps1	52	1
+editing	mito	rps1	54	1
+editing	mito	rps1	56	1
+editing	mito	rps1	58	1
+editing	mito	rps1	80	1
+editing	mito	rps1	82	13
+editing	mito	rps1	92	1
+editing	mito	rps1	98	1
+editing	mito	rps1	102	1
+editing	mito	rps1	109	4
+editing	mito	rps1	111	1
+editing	mito	rps1	114	12
+editing	mito	rps1	115	1
+editing	mito	rps1	116	5
+editing	mito	rps1	118	5
+editing	mito	rps1	119	1
+editing	mito	rps1	123	4
+editing	mito	rps1	126	1
+editing	mito	rps1	142	3
+editing	mito	rps1	145	2
+editing	mito	rps1	146	4
+editing	mito	rps1	149	1
+editing	mito	rps12	5	2
+editing	mito	rps12	29	2
+editing	mito	rps12	32	1
+editing	mito	rps12	34	2
+editing	mito	rps12	37	5
+editing	mito	rps12	45	2
+editing	mito	rps12	55	1
+editing	mito	rps12	68	1
+editing	mito	rps12	70	1
+editing	mito	rps12	76	1
+editing	mito	rps12	86	1
+editing	mito	rps12	87	1
+editing	mito	rps12	104	9
+editing	mito	rps12	117	2
+editing	mito	rps13	16	1
+editing	mito	rps13	20	2
+editing	mito	rps13	29	1
+editing	mito	rps13	32	1
+editing	mito	rps13	43	3
+editing	mito	rps13	57	1
+editing	mito	rps13	63	2
+editing	mito	rps13	80	1
+editing	mito	rps14	8	2
+editing	mito	rps14	10	1
+editing	mito	rps14	12	4
+editing	mito	rps14	13	4
+editing	mito	rps14	14	1
+editing	mito	rps14	16	7
+editing	mito	rps14	17	19
+editing	mito	rps14	18	3
+editing	mito	rps14	19	2
+editing	mito	rps14	21	1
+editing	mito	rps14	22	1
+editing	mito	rps14	23	1
+editing	mito	rps14	24	18
+editing	mito	rps14	25	5
+editing	mito	rps14	26	14
+editing	mito	rps14	28	19
+editing	mito	rps14	29	8
+editing	mito	rps14	30	1
+editing	mito	rps14	31	4
+editing	mito	rps14	33	25
+editing	mito	rps14	35	2
+editing	mito	rps14	39	2
+editing	mito	rps14	40	4
+editing	mito	rps14	41	1
+editing	mito	rps14	42	1
+editing	mito	rps14	43	1
+editing	mito	rps14	45	25
+editing	mito	rps14	48	6
+editing	mito	rps14	51	1
+editing	mito	rps14	54	13
+editing	mito	rps14	58	1
+editing	mito	rps14	59	1
+editing	mito	rps14	61	1
+editing	mito	rps14	64	4
+editing	mito	rps14	65	7
+editing	mito	rps14	66	1
+editing	mito	rps14	68	11
+editing	mito	rps14	71	3
+editing	mito	rps14	72	10
+editing	mito	rps14	73	7
+editing	mito	rps14	74	11
+editing	mito	rps14	75	1
+editing	mito	rps14	76	12
+editing	mito	rps14	77	1
+editing	mito	rps14	78	6
+editing	mito	rps14	81	20
+editing	mito	rps14	82	1
+editing	mito	rps14	83	2
+editing	mito	rps14	84	21
+editing	mito	rps14	87	2
+editing	mito	rps14	88	1
+editing	mito	rps19	11	14
+editing	mito	rps19	19	1
+editing	mito	rps19	21	5
+editing	mito	rps19	22	1
+editing	mito	rps19	23	5
+editing	mito	rps19	24	1
+editing	mito	rps19	26	5
+editing	mito	rps19	27	9
+editing	mito	rps19	28	1
+editing	mito	rps19	32	2
+editing	mito	rps19	34	7
+editing	mito	rps19	35	38
+editing	mito	rps19	36	1
+editing	mito	rps19	38	6
+editing	mito	rps19	39	4
+editing	mito	rps19	40	4
+editing	mito	rps19	43	5
+editing	mito	rps19	44	23
+editing	mito	rps19	47	4
+editing	mito	rps19	49	7
+editing	mito	rps19	50	5
+editing	mito	rps19	51	4
+editing	mito	rps19	52	3
+editing	mito	rps19	53	1
+editing	mito	rps19	56	13
+editing	mito	rps19	58	1
+editing	mito	rps19	59	2
+editing	mito	rps19	60	1
+editing	mito	rps19	63	1
+editing	mito	rps19	64	11
+editing	mito	rps19	66	2
+editing	mito	rps19	67	2
+editing	mito	rps19	68	3
+editing	mito	rps19	69	13
+editing	mito	rps19	71	1
+editing	mito	rps19	72	1
+editing	mito	rps19	73	4
+editing	mito	rps19	76	3
+editing	mito	rps19	78	3
+editing	mito	rps19	79	8
+editing	mito	rps19	80	3
+editing	mito	rps4	35	1
+editing	mito	rps4	64	1
+editing	mito	rps4	71	1
+editing	mito	rps4	84	1
+editing	mito	rps4	107	1
+editing	mito	rps4	110	1
+editing	mito	rps4	113	2
+editing	mito	rps4	117	1
+editing	mito	rps4	131	1
+editing	mito	rps4	133	1
+editing	mito	rps4	139	1
+editing	mito	rps4	143	1
+editing	mito	rps4	180	1
+editing	mito	rps4	215	2
+editing	mito	rps4	217	4
+editing	mito	rps4	220	2
+editing	mito	rps4	223	1
+editing	mito	rps4	224	1
+editing	mito	rps4	230	1
+editing	mito	rps4	233	2
+editing	mito	rps4	243	1
+editing	mito	rps4	246	2
+editing	mito	rps4	251	3
+editing	mito	rps4	256	2
+editing	mito	rps4	257	1
+editing	mito	rps4	265	1
+editing	mito	rps4	266	1
+editing	mito	rps4	271	1
+editing	mito	rps4	272	2
+editing	mito	rps4	274	2
+editing	mito	rps4	275	1
+editing	mito	rps4	283	6
+editing	mito	rps4	294	2
+editing	mito	rps4	295	1
+editing	mito	rps4	301	1
+editing	mito	rps4	303	1
+editing	mito	rps4	309	1
+editing	mito	rps4	329	47
+editing	mito	rps4	333	1
+editing	mito	rps4	338	1
+editing	mito	rps7	7	1
+editing	mito	rps7	27	1
+editing	mito	rps7	28	1
+editing	mito	rps7	34	1
+editing	mito	rps7	35	3
+editing	mito	rps7	38	1
+editing	mito	rps7	43	1
+editing	mito	rps7	51	1
+editing	mito	rps7	58	1
+editing	mito	rps7	64	1
+editing	mito	rps7	72	1
+editing	mito	rps7	79	1
+editing	mito	rps7	81	5
+editing	mito	rps7	86	1
+editing	mito	rps7	87	2
+editing	mito	rps7	88	8
+editing	mito	rps7	90	1
+editing	mito	rps7	97	1
+editing	mito	rps7	99	7
+editing	mito	rps7	102	2
+editing	mito	rps7	104	1
+editing	mito	rps7	105	2
+editing	mito	rps7	109	1
+editing	mito	rps7	110	1
+editing	mito	rps7	113	3
+editing	mito	rps7	115	8
+editing	mito	rps7	119	5
+editing	mito	rps7	121	1
+editing	mito	rps7	125	1
+editing	mito	rps7	132	1
+editing	mito	rps7	135	1
+editing	mito	rps7	136	1
+editing	pltd	cemA	9	1
+editing	pltd	cemA	24	1
+editing	pltd	cemA	68	1
+editing	pltd	cemA	72	1
+editing	pltd	infA	5	1
+editing	pltd	infA	6	2
+editing	pltd	infA	7	5
+editing	pltd	infA	9	2
+editing	pltd	infA	10	6
+editing	pltd	infA	11	1
+editing	pltd	infA	14	1
+editing	pltd	infA	18	3
+editing	pltd	infA	19	10
+editing	pltd	infA	20	2
+editing	pltd	infA	21	1
+editing	pltd	infA	22	7
+editing	pltd	infA	23	33
+editing	pltd	infA	24	4
+editing	pltd	infA	25	2
+editing	pltd	infA	26	1
+editing	pltd	infA	27	2
+editing	pltd	infA	28	7
+editing	pltd	infA	29	3
+editing	pltd	infA	30	2
+editing	pltd	infA	32	5
+editing	pltd	infA	33	1
+editing	pltd	infA	34	2
+editing	pltd	infA	35	6
+editing	pltd	infA	36	1
+editing	pltd	infA	37	2
+editing	pltd	infA	39	3
+editing	pltd	infA	40	4
+editing	pltd	infA	41	6
+editing	pltd	infA	42	8
+editing	pltd	infA	43	5
+editing	pltd	infA	44	2
+editing	pltd	infA	45	3
+editing	pltd	infA	46	3
+editing	pltd	infA	47	9
+editing	pltd	infA	48	2
+editing	pltd	infA	49	4
+editing	pltd	infA	50	1
+editing	pltd	infA	52	4
+editing	pltd	infA	53	2
+editing	pltd	infA	54	2
+editing	pltd	infA	55	3
+editing	pltd	infA	56	4
+editing	pltd	infA	57	1
+editing	pltd	infA	58	1
+editing	pltd	infA	59	5
+editing	pltd	infA	60	1
+editing	pltd	infA	61	6
+editing	pltd	infA	62	1
+editing	pltd	infA	63	4
+editing	pltd	infA	64	1
+editing	pltd	infA	65	11
+editing	pltd	infA	66	1
+editing	pltd	infA	69	5
+editing	pltd	infA	70	11
+editing	pltd	infA	71	4
+editing	pltd	infA	72	1
+editing	pltd	infA	74	3
+editing	pltd	infA	76	1
+editing	pltd	matK	7	11
+editing	pltd	matK	11	1
+editing	pltd	matK	50	1
+editing	pltd	matK	52	1
+editing	pltd	matK	99	2
+editing	pltd	matK	101	1
+editing	pltd	matK	102	1
+editing	pltd	matK	130	2
+editing	pltd	matK	139	1
+editing	pltd	matK	214	1
+editing	pltd	matK	455	3
+editing	pltd	matK	524	2
+editing	pltd	matK	525	4
+editing	pltd	ndhC	12	1
+editing	pltd	ndhC	14	1
+editing	pltd	ndhC	20	1
+editing	pltd	ndhC	21	1
+editing	pltd	ndhC	34	1
+editing	pltd	ndhC	35	3
+editing	pltd	ndhC	41	1
+editing	pltd	ndhC	56	3
+editing	pltd	ndhC	60	1
+editing	pltd	ndhC	62	1
+editing	pltd	ndhC	63	1
+editing	pltd	ndhC	71	1
+editing	pltd	ndhC	78	1
+editing	pltd	ndhC	82	2
+editing	pltd	ndhC	90	3
+editing	pltd	ndhC	91	1
+editing	pltd	ndhC	98	1
+editing	pltd	ndhC	102	1
+editing	pltd	ndhC	104	2
+editing	pltd	ndhC	105	1
+editing	pltd	ndhC	107	1
+editing	pltd	ndhD	10	2
+editing	pltd	ndhD	28	2
+editing	pltd	ndhD	31	3
+editing	pltd	ndhD	34	1
+editing	pltd	ndhD	57	1
+editing	pltd	ndhD	64	5
+editing	pltd	ndhD	65	1
+editing	pltd	ndhD	84	1
+editing	pltd	ndhD	97	1
+editing	pltd	ndhD	102	1
+editing	pltd	ndhD	105	2
+editing	pltd	ndhD	127	2
+editing	pltd	ndhD	128	1
+editing	pltd	ndhD	147	2
+editing	pltd	ndhD	149	1
+editing	pltd	ndhD	152	1
+editing	pltd	ndhD	164	2
+editing	pltd	ndhD	165	2
+editing	pltd	ndhD	167	1
+editing	pltd	ndhD	174	3
+editing	pltd	ndhD	175	1
+editing	pltd	ndhD	178	1
+editing	pltd	ndhD	181	1
+editing	pltd	ndhD	191	1
+editing	pltd	ndhD	206	1
+editing	pltd	ndhD	208	3
+editing	pltd	ndhD	220	3
+editing	pltd	ndhD	222	1
+editing	pltd	ndhD	224	2
+editing	pltd	ndhD	231	1
+editing	pltd	ndhD	234	1
+editing	pltd	ndhD	235	1
+editing	pltd	ndhD	236	1
+editing	pltd	ndhD	238	1
+editing	pltd	ndhD	240	1
+editing	pltd	ndhD	245	1
+editing	pltd	ndhD	248	3
+editing	pltd	ndhD	269	1
+editing	pltd	ndhD	270	1
+editing	pltd	ndhD	271	2
+editing	pltd	ndhD	284	3
+editing	pltd	ndhD	289	1
+editing	pltd	ndhD	292	3
+editing	pltd	ndhD	293	1
+editing	pltd	ndhD	300	2
+editing	pltd	ndhD	309	1
+editing	pltd	ndhD	323	3
+editing	pltd	ndhD	335	1
+editing	pltd	ndhD	340	1
+editing	pltd	ndhD	343	1
+editing	pltd	ndhD	356	3
+editing	pltd	ndhD	364	1
+editing	pltd	ndhD	365	1
+editing	pltd	ndhD	392	1
+editing	pltd	ndhD	401	1
+editing	pltd	ndhD	405	1
+editing	pltd	ndhD	407	1
+editing	pltd	ndhD	412	1
+editing	pltd	ndhD	422	1
+editing	pltd	ndhD	424	3
+editing	pltd	ndhD	425	1
+editing	pltd	ndhD	429	1
+editing	pltd	ndhD	450	2
+editing	pltd	ndhD	464	1
+editing	pltd	ndhD	480	1
+editing	pltd	ndhE	11	1
+editing	pltd	ndhE	27	1
+editing	pltd	ndhE	30	2
+editing	pltd	ndhE	38	1
+editing	pltd	ndhE	43	2
+editing	pltd	ndhE	53	1
+editing	pltd	ndhE	54	1
+editing	pltd	ndhE	56	1
+editing	pltd	ndhE	82	1
+editing	pltd	ndhG	8	1
+editing	pltd	ndhG	9	1
+editing	pltd	ndhG	13	3
+editing	pltd	ndhG	15	3
+editing	pltd	ndhG	18	1
+editing	pltd	ndhG	34	1
+editing	pltd	ndhG	42	2
+editing	pltd	ndhG	63	1
+editing	pltd	ndhG	89	1
+editing	pltd	ndhG	98	1
+editing	pltd	ndhG	108	1
+editing	pltd	ndhG	110	1
+editing	pltd	ndhG	116	1
+editing	pltd	ndhG	122	1
+editing	pltd	ndhG	152	3
+editing	pltd	ndhG	154	1
+editing	pltd	ndhG	166	1
+editing	pltd	ndhG	168	1
+editing	pltd	ndhH	16	1
+editing	pltd	ndhH	19	3
+editing	pltd	ndhH	27	1
+editing	pltd	ndhH	28	1
+editing	pltd	ndhH	29	1
+editing	pltd	ndhH	39	1
+editing	pltd	ndhH	50	1
+editing	pltd	ndhH	53	1
+editing	pltd	ndhH	56	1
+editing	pltd	ndhH	60	1
+editing	pltd	ndhH	61	1
+editing	pltd	ndhH	62	1
+editing	pltd	ndhH	88	1
+editing	pltd	ndhH	91	1
+editing	pltd	ndhH	95	3
+editing	pltd	ndhH	96	1
+editing	pltd	ndhH	100	1
+editing	pltd	ndhH	115	2
+editing	pltd	ndhH	121	4
+editing	pltd	ndhH	137	1
+editing	pltd	ndhH	144	1
+editing	pltd	ndhH	145	1
+editing	pltd	ndhH	146	3
+editing	pltd	ndhH	160	1
+editing	pltd	ndhH	163	1
+editing	pltd	ndhH	185	1
+editing	pltd	ndhH	198	1
+editing	pltd	ndhH	202	1
+editing	pltd	ndhH	283	1
+editing	pltd	ndhH	304	1
+editing	pltd	ndhH	307	1
+editing	pltd	ndhH	343	1
+editing	pltd	ndhI	37	1
+editing	pltd	ndhI	69	1
+editing	pltd	ndhI	70	1
+editing	pltd	ndhI	86	1
+editing	pltd	ndhI	87	1
+editing	pltd	ndhI	88	2
+editing	pltd	ndhI	104	1
+editing	pltd	ndhI	157	1
+editing	pltd	ndhJ	2	1
+editing	pltd	ndhJ	34	3
+editing	pltd	ndhJ	39	1
+editing	pltd	ndhJ	43	1
+editing	pltd	ndhJ	45	3
+editing	pltd	ndhJ	52	1
+editing	pltd	ndhJ	67	1
+editing	pltd	ndhJ	76	1
+editing	pltd	ndhJ	80	3
+editing	pltd	ndhJ	89	4
+editing	pltd	ndhJ	90	2
+editing	pltd	ndhJ	93	1
+editing	pltd	ndhJ	116	1
+editing	pltd	ndhJ	124	2
+editing	pltd	ndhJ	129	1
+editing	pltd	ndhJ	140	3
+editing	pltd	ndhJ	142	1
+editing	pltd	ndhJ	147	1
+editing	pltd	ndhK	7	1
+editing	pltd	ndhK	24	1
+editing	pltd	ndhK	27	1
+editing	pltd	ndhK	32	1
+editing	pltd	ndhK	36	1
+editing	pltd	ndhK	37	2
+editing	pltd	ndhK	41	1
+editing	pltd	ndhK	44	1
+editing	pltd	ndhK	49	1
+editing	pltd	ndhK	51	2
+editing	pltd	ndhK	66	2
+editing	pltd	ndhK	86	3
+editing	pltd	ndhK	91	1
+editing	pltd	ndhK	99	2
+editing	pltd	ndhK	101	3
+editing	pltd	ndhK	102	1
+editing	pltd	ndhK	103	1
+editing	pltd	ndhK	111	1
+editing	pltd	ndhK	112	5
+editing	pltd	ndhK	119	1
+editing	pltd	ndhK	122	1
+editing	pltd	ndhK	129	2
+editing	pltd	ndhK	130	2
+editing	pltd	ndhK	138	3
+editing	pltd	ndhK	143	1
+editing	pltd	ndhK	152	1
+editing	pltd	ndhK	154	1
+editing	pltd	ndhK	155	2
+editing	pltd	ndhK	158	1
+editing	pltd	ndhK	160	1
+editing	pltd	ndhK	163	3
+editing	pltd	ndhK	173	1
+editing	pltd	ndhK	174	1
+editing	pltd	ndhK	178	3
+editing	pltd	ndhK	188	1
+editing	pltd	ndhK	205	1
+editing	pltd	ndhK	206	1
+editing	pltd	ndhK	208	1
+editing	pltd	ndhK	209	2
+editing	pltd	ndhK	210	1
+editing	pltd	ndhK	211	1
+editing	pltd	ndhK	212	1
+editing	pltd	ndhK	213	1
+editing	pltd	ndhK	214	2
+editing	pltd	ndhK	215	1
+editing	pltd	ndhK	216	9
+editing	pltd	ndhK	217	4
+editing	pltd	ndhK	219	1
+editing	pltd	petA	6	1
+editing	pltd	petA	300	1
+editing	pltd	petB	158	1
+editing	pltd	psaC	66	1
+editing	pltd	psaJ	21	1
+editing	pltd	psbB	432	1
+editing	pltd	psbC	7	1
+editing	pltd	psbC	76	1
+editing	pltd	psbC	103	1
+editing	pltd	psbC	118	1
+editing	pltd	psbC	409	1
+editing	pltd	psbF	6	2
+editing	pltd	psbJ	36	1
+editing	pltd	psbK	47	1
+editing	pltd	psbT	17	1
+editing	pltd	rpl14	10	1
+editing	pltd	rpl22	6	36
+editing	pltd	rpl22	8	6
+editing	pltd	rpl22	22	6
+editing	pltd	rpl22	37	2
+editing	pltd	rpl22	42	1
+editing	pltd	rpl22	48	1
+editing	pltd	rpl22	52	2
+editing	pltd	rpl22	68	3
+editing	pltd	rpl22	71	1
+editing	pltd	rpl22	89	1
+editing	pltd	rpl22	96	1
+editing	pltd	rpl22	97	6
+editing	pltd	rpl22	98	2
+editing	pltd	rpl22	118	1
+editing	pltd	rpl32	10	2
+editing	pltd	rpl32	15	1
+editing	pltd	rpl32	16	1
+editing	pltd	rpl32	20	1
+editing	pltd	rpl32	25	1
+editing	pltd	rpl32	39	1
+editing	pltd	rpl32	42	1
+editing	pltd	rpl32	43	1
+editing	pltd	rpl32	45	2
+editing	pltd	rpl32	47	1
+editing	pltd	rpl33	14	1
+editing	pltd	rpl33	16	1
+editing	pltd	rpl33	31	5
+editing	pltd	rpl33	55	1
+editing	pltd	rpoB	97	1
+editing	pltd	rpoB	211	2
+editing	pltd	rpoB	770	1
+editing	pltd	rpoC2	780	1
+editing	pltd	rpoC2	1007	1
+editing	pltd	rpoC2	1116	1
+editing	pltd	rpoC2	1374	1
+editing	pltd	rpoC2	1377	2
+editing	pltd	rpoC2	1382	3
+editing	pltd	rpoC2	1383	2
+editing	pltd	rpoC2	1388	2
+editing	pltd	rpoC2	1392	3
+editing	pltd	rpoC2	1394	2
+editing	pltd	rpoC2	1395	1
+editing	pltd	rpoC2	1396	1
+editing	pltd	rpoC2	1397	1
+editing	pltd	rpoC2	1399	4
+editing	pltd	rpoC2	1409	6
+editing	pltd	rpoC2	1410	8
+editing	pltd	rpoC2	1411	3
+editing	pltd	rpoC2	1412	5
+editing	pltd	rpoC2	1413	1
+editing	pltd	rpoC2	1415	17
+editing	pltd	rpoC2	1416	1
+editing	pltd	rpoC2	1417	1
+editing	pltd	rpoC2	1418	5
+editing	pltd	rpoC2	1419	2
+editing	pltd	rpoC2	1421	2
+editing	pltd	rps11	82	2
+editing	pltd	rps11	93	1
+editing	pltd	rps11	133	1
+editing	pltd	rps14	59	1
+editing	pltd	rps15	2	3
+editing	pltd	rps15	11	1
+editing	pltd	rps15	16	1
+editing	pltd	rps15	19	1
+editing	pltd	rps15	47	2
+editing	pltd	rps15	68	1
+editing	pltd	rps15	69	1
+editing	pltd	rps15	70	2
+editing	pltd	rps15	72	2
+editing	pltd	rps18	78	1
+editing	pltd	rps18	85	7
+editing	pltd	rps18	87	4
+editing	pltd	rps19	36	2
+editing	pltd	rps2	94	1
+editing	pltd	rps2	157	1
+editing	pltd	rps2	160	1
+editing	pltd	rps2	229	1
+editing	pltd	rps2	230	2
+editing	pltd	rps3	47	1
+editing	pltd	rps3	77	1
+editing	pltd	rps3	91	1
+editing	pltd	rps3	197	2
+editing	pltd	rps4	6	1
+editing	pltd	rps4	8	1
+editing	pltd	rps4	43	2
+editing	pltd	rps4	58	1
+editing	pltd	rps4	67	1
+editing	pltd	rps4	68	1
+editing	pltd	rps8	17	2
+editing	pltd	rps8	107	2
+editing	pltd	ycf4	57	1
+editing	pltd	ycf4	113	1
+editing	pltd	ycf4	134	1
+reconstruction	mito	ccmFc	1	5
+reconstruction	mito	ccmFc	2	144
+reconstruction	mito	ccmFc	3	29
+reconstruction	mito	ccmFc	153	1
+reconstruction	mito	ccmFc	180	1
+reconstruction	mito	ccmFc	197	2
+reconstruction	mito	ccmFc	204	1
+reconstruction	mito	ccmFc	263	4
+reconstruction	mito	ccmFc	269	1
+reconstruction	mito	ccmFc	274	22
+reconstruction	mito	ccmFc	454	1
+reconstruction	mito	ccmFc	457	3
+reconstruction	mito	ccmFc	459	1
+reconstruction	mito	ccmFc	460	43
+reconstruction	mito	ccmFc	461	3
+reconstruction	mito	ccmFc	462	14
+reconstruction	mito	ccmFc	465	1
+reconstruction	mito	ccmFc	467	1
+reconstruction	mito	ccmFc	468	1
+reconstruction	mito	ccmFc	469	14
+reconstruction	mito	ccmFc	470	273
+reconstruction	mito	ccmFc	472	1
+reconstruction	mito	ccmFc	473	6
+reconstruction	mito	ccmFc	476	19
+reconstruction	mito	ccmFc	482	3
+reconstruction	mito	ccmFc	483	1
+reconstruction	mito	ccmFc	484	1
+reconstruction	mito	ccmFc	485	3
+reconstruction	mito	ccmFc	486	1
+reconstruction	mito	ccmFc	487	1
+reconstruction	mito	ccmFc	491	2
+reconstruction	mito	ccmFc	493	1
+reconstruction	mito	ccmFc	497	4
+reconstruction	mito	cox2	23	14
+reconstruction	mito	cox2	24	1
+reconstruction	mito	cox2	39	13
+reconstruction	mito	cox2	42	8
+reconstruction	mito	cox2	44	7
+reconstruction	mito	cox2	45	2
+reconstruction	mito	cox2	70	1
+reconstruction	mito	cox2	76	1
+reconstruction	mito	cox2	87	19
+reconstruction	mito	cox2	129	6
+reconstruction	mito	cox2	130	59
+reconstruction	mito	nad1	62	183
+reconstruction	mito	nad1	129	4
+reconstruction	mito	nad1	146	7
+reconstruction	mito	nad1	160	3
+reconstruction	mito	nad1	223	14
+reconstruction	mito	nad1	225	4
+reconstruction	mito	nad2	58	1
+reconstruction	mito	nad2	107	1
+reconstruction	mito	nad2	149	1
+reconstruction	mito	nad2	172	1
+reconstruction	mito	nad2	182	1
+reconstruction	mito	nad2	190	1
+reconstruction	mito	nad2	235	1
+reconstruction	mito	nad4	95	1
+reconstruction	mito	nad4	155	5
+reconstruction	mito	nad4	469	2
+reconstruction	mito	nad5	116	1
+reconstruction	mito	nad5	248	143
+reconstruction	mito	nad5	294	1
+reconstruction	mito	nad5	479	1
+reconstruction	mito	nad5	482	1
+reconstruction	mito	nad5	483	1
+reconstruction	mito	nad5	488	1
+reconstruction	mito	nad5	489	1
+reconstruction	mito	nad5	661	1
+reconstruction	mito	nad7	13	2
+reconstruction	mito	nad7	18	1
+reconstruction	mito	nad7	19	1
+reconstruction	mito	nad7	20	1
+reconstruction	mito	nad7	35	1
+reconstruction	mito	nad7	46	1
+reconstruction	mito	nad7	47	2
+reconstruction	mito	nad7	68	1
+reconstruction	mito	nad7	72	1
+reconstruction	mito	nad7	85	1
+reconstruction	mito	nad7	86	5
+reconstruction	mito	nad7	98	8
+reconstruction	mito	nad7	103	1
+reconstruction	mito	nad7	111	1
+reconstruction	mito	nad7	134	8
+reconstruction	mito	nad7	138	1
+reconstruction	mito	nad7	141	1
+reconstruction	mito	nad7	172	7
+reconstruction	mito	nad7	217	1
+reconstruction	mito	nad7	223	1
+reconstruction	mito	nad7	224	3
+reconstruction	mito	nad7	242	7
+reconstruction	mito	nad7	274	3
+reconstruction	mito	nad7	288	3
+reconstruction	mito	nad7	289	1
+reconstruction	mito	nad7	350	1
+reconstruction	mito	nad7	358	1
+reconstruction	mito	rpl2	1	1
+reconstruction	mito	rpl2	13	2
+reconstruction	mito	rpl2	22	1
+reconstruction	mito	rpl2	23	6
+reconstruction	mito	rpl2	31	1
+reconstruction	mito	rpl2	45	1
+reconstruction	mito	rpl2	47	1
+reconstruction	mito	rpl2	50	2
+reconstruction	mito	rpl2	52	1
+reconstruction	mito	rpl2	60	1
+reconstruction	mito	rpl2	66	1
+reconstruction	mito	rpl2	67	1
+reconstruction	mito	rpl2	80	2
+reconstruction	mito	rpl2	85	1
+reconstruction	mito	rpl2	89	1
+reconstruction	mito	rpl2	95	11
+reconstruction	mito	rpl2	96	1
+reconstruction	mito	rpl2	104	2
+reconstruction	mito	rpl2	105	2
+reconstruction	mito	rpl2	110	1
+reconstruction	mito	rpl2	119	1
+reconstruction	mito	rpl2	125	1
+reconstruction	mito	rpl2	134	1
+reconstruction	mito	rpl2	135	5
+reconstruction	mito	rpl2	137	1
+reconstruction	mito	rpl2	142	1
+reconstruction	mito	rpl2	143	2
+reconstruction	mito	rpl2	147	5
+reconstruction	mito	rpl2	150	3
+reconstruction	mito	rpl2	151	2
+reconstruction	mito	rpl2	154	2
+reconstruction	mito	rpl2	155	1
+reconstruction	mito	rpl2	161	1
+reconstruction	mito	rpl2	171	1
+reconstruction	mito	rpl2	176	1
+reconstruction	mito	rpl2	177	2
+reconstruction	mito	rpl2	178	1
+reconstruction	mito	rpl2	180	1
+reconstruction	mito	rpl2	189	1
+reconstruction	mito	rpl2	190	1
+reconstruction	mito	rpl2	192	6
+reconstruction	mito	rpl2	193	1
+reconstruction	mito	rpl2	194	1
+reconstruction	mito	rpl2	197	4
+reconstruction	mito	rpl2	201	2
+reconstruction	mito	rpl2	202	1
+reconstruction	mito	rpl2	203	2
+reconstruction	mito	rpl2	204	2
+reconstruction	mito	rpl2	206	5
+reconstruction	mito	rpl2	214	5
+reconstruction	mito	rpl2	215	2
+reconstruction	mito	rpl2	218	2
+reconstruction	mito	rpl2	219	4
+reconstruction	mito	rpl2	222	1
+reconstruction	mito	rpl2	228	1
+reconstruction	mito	rpl2	229	1
+reconstruction	mito	rpl2	232	1
+reconstruction	mito	rpl2	237	5
+reconstruction	mito	rpl2	246	2
+reconstruction	mito	rpl2	249	2
+reconstruction	mito	rpl2	254	3
+reconstruction	mito	rpl2	256	3
+reconstruction	mito	rpl2	257	3
+reconstruction	mito	rpl2	260	2
+reconstruction	mito	rpl2	261	1
+reconstruction	mito	rpl2	266	2
+reconstruction	mito	rpl2	267	1
+reconstruction	mito	rpl2	268	1
+reconstruction	mito	rpl2	269	1
+reconstruction	mito	rpl2	270	3
+reconstruction	mito	rpl2	271	8
+reconstruction	mito	rpl2	273	3
+reconstruction	mito	rpl2	274	1
+reconstruction	mito	rpl2	284	1
+reconstruction	mito	rpl2	286	2
+reconstruction	mito	rpl2	294	1
+reconstruction	mito	rpl2	298	3
+reconstruction	mito	rpl2	299	2
+reconstruction	mito	rpl2	306	2
+reconstruction	mito	rpl2	309	1
+reconstruction	mito	rpl2	310	1
+reconstruction	mito	rpl2	311	4
+reconstruction	mito	rpl2	312	1
+reconstruction	mito	rpl2	313	1
+reconstruction	mito	rpl2	314	2
+reconstruction	mito	rpl2	315	1
+reconstruction	mito	rpl2	316	1
+reconstruction	mito	rpl2	322	3
+reconstruction	mito	rpl2	327	9
+reconstruction	mito	rpl2	328	1
+reconstruction	mito	rpl2	330	4
+reconstruction	mito	rpl2	332	1
+reconstruction	mito	rpl2	334	1
+reconstruction	mito	rpl2	340	2
+reconstruction	mito	rpl2	342	2
+reconstruction	mito	rpl2	344	4
+reconstruction	mito	rpl2	345	6
+reconstruction	mito	rpl2	346	2
+reconstruction	mito	rpl2	350	1
+reconstruction	mito	rpl2	351	2
+reconstruction	mito	rpl2	353	1
+reconstruction	mito	rpl2	355	2
+reconstruction	mito	rpl2	356	1
+reconstruction	mito	rpl2	358	2
+reconstruction	mito	rpl2	361	1
+reconstruction	mito	rpl2	366	1
+reconstruction	mito	rpl2	367	2
+reconstruction	mito	rpl2	375	1
+reconstruction	mito	rpl2	376	2
+reconstruction	mito	rpl2	387	1
+reconstruction	mito	rpl2	389	2
+reconstruction	mito	rpl2	391	3
+reconstruction	mito	rpl2	404	5
+reconstruction	mito	rpl2	413	1
+reconstruction	mito	rpl2	419	1
+reconstruction	mito	rpl2	422	1
+reconstruction	mito	rpl2	425	11
+reconstruction	mito	rpl2	429	12
+reconstruction	mito	rpl2	430	1
+reconstruction	mito	rpl2	431	2
+reconstruction	mito	rpl2	432	2
+reconstruction	mito	rpl2	434	8
+reconstruction	mito	rpl2	435	2
+reconstruction	mito	rpl2	436	1
+reconstruction	mito	rpl2	440	7
+reconstruction	mito	rpl2	441	5
+reconstruction	mito	rpl2	443	5
+reconstruction	mito	rpl2	444	1
+reconstruction	mito	rpl2	446	1
+reconstruction	mito	rpl2	449	1
+reconstruction	mito	rpl2	452	1
+reconstruction	mito	rpl2	453	1
+reconstruction	mito	rpl2	454	3
+reconstruction	mito	rpl2	455	2
+reconstruction	mito	rpl2	457	2
+reconstruction	mito	rpl2	458	2
+reconstruction	mito	rpl2	460	2
+reconstruction	mito	rpl2	463	5
+reconstruction	mito	rpl2	464	4
+reconstruction	mito	rpl2	465	1
+reconstruction	mito	rpl2	467	5
+reconstruction	mito	rpl2	468	6
+reconstruction	mito	rpl2	469	1
+reconstruction	mito	rpl2	471	2
+reconstruction	mito	rpl2	472	4
+reconstruction	mito	rpl2	475	5
+reconstruction	mito	rpl2	476	1
+reconstruction	mito	rpl2	478	1
+reconstruction	mito	rpl2	479	3
+reconstruction	mito	rpl2	481	23
+reconstruction	mito	rpl2	484	1
+reconstruction	mito	rpl2	485	1
+reconstruction	mito	rpl2	486	1
+reconstruction	mito	rpl2	488	4
+reconstruction	mito	rpl2	490	10
+reconstruction	mito	rpl2	493	2
+reconstruction	mito	rpl2	494	3
+reconstruction	mito	rpl2	496	1
+reconstruction	mito	rpl2	498	1
+reconstruction	mito	rpl2	504	1
+reconstruction	mito	rpl2	506	3
+reconstruction	mito	rpl2	510	1
+reconstruction	mito	rpl2	513	3
+reconstruction	mito	rpl2	515	1
+reconstruction	mito	rpl2	516	1
+reconstruction	mito	rpl2	517	1
+reconstruction	mito	rpl2	518	1
+reconstruction	mito	rpl2	519	3
+reconstruction	mito	rpl2	523	1
+reconstruction	mito	rpl2	525	1
+reconstruction	mito	rpl2	527	4
+reconstruction	mito	rpl2	529	5
+reconstruction	mito	rpl2	533	5
+reconstruction	mito	rpl2	538	1
+reconstruction	mito	rpl2	540	1
+reconstruction	mito	rpl2	543	1
+reconstruction	mito	rpl2	544	12
+reconstruction	mito	rpl2	545	1
+reconstruction	mito	rpl2	546	2
+reconstruction	mito	rpl2	551	21
+reconstruction	mito	rpl2	552	1
+reconstruction	mito	rpl2	553	1
+reconstruction	mito	rpl2	562	1
+reconstruction	mito	rpl2	563	1
+reconstruction	mito	rpl2	567	1
+reconstruction	mito	rpl2	571	1
+reconstruction	mito	rpl2	574	1
+reconstruction	mito	rpl2	576	4
+reconstruction	mito	rpl2	578	1
+reconstruction	mito	rpl2	582	9
+reconstruction	mito	rpl2	583	1
+reconstruction	mito	rps10	1	7
+reconstruction	mito	rps10	2	4
+reconstruction	mito	rps10	15	2
+reconstruction	mito	rps10	16	4
+reconstruction	mito	rps10	19	1
+reconstruction	mito	rps10	21	2
+reconstruction	mito	rps10	22	21
+reconstruction	mito	rps10	33	1
+reconstruction	mito	rps10	40	1
+reconstruction	mito	rps10	43	1
+reconstruction	mito	rps10	50	2
+reconstruction	mito	rps10	57	1
+reconstruction	mito	rps10	61	3
+reconstruction	mito	rps10	67	1
+reconstruction	mito	rps10	89	1
+reconstruction	mito	rps10	115	1
+reconstruction	mito	rps3	26	6
+reconstruction	mito	rps3	550	2
+reconstruction	mito	rps3	551	49
+reconstruction	mito	rps3	552	7
+reconstruction	mito	rps3	553	9
+reconstruction	mito	rps3	554	2
+reconstruction	pltd	clpP	1	1
+reconstruction	pltd	clpP	5	2
+reconstruction	pltd	clpP	11	1
+reconstruction	pltd	clpP	18	1
+reconstruction	pltd	clpP	20	1
+reconstruction	pltd	clpP	22	9
+reconstruction	pltd	clpP	24	9
+reconstruction	pltd	clpP	26	1
+reconstruction	pltd	clpP	62	2
+reconstruction	pltd	clpP	66	1
+reconstruction	pltd	clpP	72	1
+reconstruction	pltd	clpP	79	2
+reconstruction	pltd	clpP	81	1
+reconstruction	pltd	clpP	92	2
+reconstruction	pltd	clpP	121	1
+reconstruction	pltd	clpP	150	1
+reconstruction	pltd	clpP	157	3
+reconstruction	pltd	clpP	161	7
+reconstruction	pltd	clpP	195	2
+reconstruction	pltd	ndhA	7	1
+reconstruction	pltd	ndhA	16	1
+reconstruction	pltd	ndhA	66	1
+reconstruction	pltd	ndhA	85	1
+reconstruction	pltd	ndhA	93	1
+reconstruction	pltd	ndhA	112	1
+reconstruction	pltd	ndhA	127	1
+reconstruction	pltd	ndhA	143	1
+reconstruction	pltd	ndhA	159	1
+reconstruction	pltd	ndhA	186	1
+reconstruction	pltd	ndhA	223	1
+reconstruction	pltd	ndhA	253	1
+reconstruction	pltd	ndhA	338	1
+reconstruction	pltd	ndhA	342	1
+reconstruction	pltd	ndhA	346	1
+reconstruction	pltd	ndhA	350	1
+reconstruction	pltd	ndhB	12	2
+reconstruction	pltd	ndhB	14	1
+reconstruction	pltd	ndhB	16	4
+reconstruction	pltd	ndhB	17	1
+reconstruction	pltd	ndhB	22	2
+reconstruction	pltd	ndhB	30	1
+reconstruction	pltd	ndhB	37	2
+reconstruction	pltd	ndhB	51	2
+reconstruction	pltd	ndhB	83	1
+reconstruction	pltd	ndhB	95	2
+reconstruction	pltd	ndhB	123	1
+reconstruction	pltd	ndhB	125	3
+reconstruction	pltd	ndhB	153	3
+reconstruction	pltd	ndhB	162	1
+reconstruction	pltd	ndhB	164	2
+reconstruction	pltd	ndhB	165	3
+reconstruction	pltd	ndhB	166	1
+reconstruction	pltd	ndhB	188	1
+reconstruction	pltd	ndhB	279	1
+reconstruction	pltd	ndhB	282	1
+reconstruction	pltd	ndhB	290	1
+reconstruction	pltd	ndhB	313	1
+reconstruction	pltd	ndhB	334	3
+reconstruction	pltd	ndhB	382	1
+reconstruction	pltd	ndhB	413	1
+reconstruction	pltd	ndhB	430	3
+reconstruction	pltd	ndhB	442	1
+reconstruction	pltd	ndhB	446	3
+reconstruction	pltd	rpl2	1	22
+reconstruction	pltd	rpl2	69	1
+reconstruction	pltd	rpl2	134	1
+reconstruction	pltd	rpl2	136	2
+reconstruction	pltd	rpl2	170	2
+reconstruction	pltd	rpl2	198	1
+reconstruction	pltd	rpl2	233	2
+reconstruction	pltd	rpl2	242	1
+reconstruction	pltd	rpoC1	1	1
+reconstruction	pltd	rpoC1	683	1
+reconstruction	pltd	rpoC1	684	3
+reconstruction	pltd	rpoC1	685	7
+reconstruction	pltd	rpoC1	686	2
+reconstruction	pltd	rps12	31	2
+reconstruction	pltd	rps12	32	46
+reconstruction	pltd	rps12	33	1
+reconstruction	pltd	rps12	34	73
+reconstruction	pltd	rps12	35	5
+reconstruction	pltd	rps12	36	1
+reconstruction	pltd	rps12	37	1
+reconstruction	pltd	rps12	38	3
+reconstruction	pltd	rps12	40	3
+reconstruction	pltd	rps12	41	1
+reconstruction	pltd	rps16	1	29
+reconstruction	pltd	rps16	15	39
+reconstruction	pltd	rps16	16	5
+reconstruction	pltd	rps16	17	2
+reconstruction	pltd	rps16	25	1
+reconstruction	pltd	rps16	32	1
+reconstruction	pltd	rps16	34	2
+reconstruction	pltd	rps16	35	1
+reconstruction	pltd	rps16	36	2
+reconstruction	pltd	rps16	37	1
+reconstruction	pltd	rps16	44	4
+reconstruction	pltd	rps16	47	4
+reconstruction	pltd	rps16	48	1
+reconstruction	pltd	rps16	51	1
+reconstruction	pltd	rps16	59	1
+reconstruction	pltd	rps16	62	1
+reconstruction	pltd	rps16	73	3
+reconstruction	pltd	rps16	74	1
+reconstruction	pltd	rps16	76	2
+reconstruction	pltd	rps16	77	4
+reconstruction	pltd	rps16	78	2
+reconstruction	pltd	rps16	79	1
+reconstruction	pltd	rps16	82	3

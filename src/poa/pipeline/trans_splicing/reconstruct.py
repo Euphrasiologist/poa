@@ -16,10 +16,21 @@ moss ones (nad1 3 exons, not 5). A gene with no template in the species'
 lineage (moss rps10, lost from moss mitogenomes) isn't reconstructed.
 Without lineage.tsv, or with --lineage, one lineage is used for all.
 
+Plastid genes with introns (reference_genes.PLASTID_SPLICED: atpF, clpP,
+ndhA, ndhB, rpl2, rpoC1, rps12, rps16, ycf3) are reconstructed the same
+way from one template set built from 13 RefSeq plastomes across land
+plants (reference/plastid/).
+
+With transsplice >= 0.3.0 the exons and the joined CDS may change reading
+frame (--frameshift-penalty), and each frameshift is a row of
+reconstructed_frameshifts.tsv: exon slot, the skipped bases' genomic
+start/end, n_bases (1 or 2) and the whole-gene profile column.
+
 Output: analysis/trans_splicing/results/reconstructed_genes.tsv
         analysis/trans_splicing/results/reconstructed_exons.tsv
         analysis/trans_splicing/results/reconstructed_junctions.tsv
         analysis/trans_splicing/results/reconstructed_edits.tsv
+        analysis/trans_splicing/results/reconstructed_frameshifts.tsv
 
 Library use: reconstruct(root, ...) - everything passed in, StageError on
 failure. src/01_reconstruct.py is the command-line wrapper (main() here).
@@ -29,7 +40,9 @@ from __future__ import annotations
 
 import argparse
 import logging
+import math
 import os
+import re
 import subprocess
 from dataclasses import dataclass
 from pathlib import Path
@@ -42,7 +55,8 @@ from poa.pipeline.common import lineage as lin
 from poa.pipeline.common import species_discovery as sd
 from poa.pipeline.common.errors import StageError
 from poa.pipeline.common.tools import cargo_tool
-from poa.pipeline.trans_splicing.reference_genes import GENES
+from poa.pipeline.editing.scan import add_recurrence
+from poa.pipeline.trans_splicing.reference_genes import GENES, PLASTID_SPLICED, reference_dir
 from poa.pipeline.common.log import setup_logging
 
 log = logging.getLogger(__name__)
@@ -51,7 +65,19 @@ DEFAULT_THREADS = 4
 DEFAULT_MERGE_DISTANCE = 5000
 DEFAULT_JUNCTION_DISTANCE_THRESHOLD = 10000
 DEFAULT_EXON_FLANK = 60
-OUT_NAMES = ["reconstructed_genes", "reconstructed_exons", "reconstructed_junctions", "reconstructed_edits"]
+OUT_NAMES = [
+    "reconstructed_genes",
+    "reconstructed_exons",
+    "reconstructed_junctions",
+    "reconstructed_edits",
+    "reconstructed_frameshifts",
+]
+ORGANELLES = ("mito", "pltd")
+# transsplice's cost of a frame change inside a gene (as editing's orfedit)
+DEFAULT_FRAMESHIFT_PENALTY = 20.0
+FRAMESHIFT_COLUMNS = [
+    "species", "organelle", "gene", "slot", "contig", "start", "end", "n_bases", "profile_column", "window_start", "window_end"
+]  # fmt: skip
 
 
 @dataclass(frozen=True)
@@ -60,28 +86,53 @@ class ReconstructResult:
 
 
 def build_manifest(
-    root: Path, gene_calls: pd.DataFrame, species_filter: set | None, lineage_of: dict[str, str], default_lineage: str
+    root: Path,
+    gene_calls: pd.DataFrame,
+    species_filter: set | None,
+    lineage_of: dict[str, str],
+    default_lineage: str,
+    organelles: list[str] | tuple[str, ...] = ("mito",),
 ) -> list[dict]:
+    """organelles: mito genes (GENES) take their species' lineage's
+    templates, plastid ones (PLASTID_SPLICED) the one plastid set."""
     rows = []
     templates = {}
     for name in lin.LINEAGES:
         profiles_dir = lin.trans_splicing_reference(PIPELINE_DIR, name) / "profiles"
         templates[name] = {g: profiles_dir / g for g in GENES if (profiles_dir / g / "whole_gene.pssm").exists()}
+    plastid_dir = reference_dir(PIPELINE_DIR, "pltd") / "profiles"
+    plastid = {g: plastid_dir / g for g in PLASTID_SPLICED if (plastid_dir / g / "whole_gene.pssm").exists()}
     missing = set(GENES) - set(templates[lin.DEFAULT_LINEAGE])
+    if "pltd" in organelles:
+        missing |= {f"pltd {g}" for g in set(PLASTID_SPLICED) - set(plastid)}
     if missing:
         log.warning(f"no template for {sorted(missing)} - run trans_splicing/src/00_build_exon_profiles.py first")
 
-    sub = gene_calls[(gene_calls["organelle"] == "mito") & (gene_calls["gene"].isin(GENES))]
-    data_root = sd.repo_data_root(root, "mito")
+    for organelle in organelles:
+        genes = PLASTID_SPLICED if organelle == "pltd" else GENES
+        sub = gene_calls[(gene_calls["organelle"] == organelle) & (gene_calls["gene"].isin(genes))]
+        data_root = sd.repo_data_root(root, organelle)
+        if not data_root.is_dir():
+            continue
+        rows += manifest_rows(sub, organelle, data_root, species_filter, lambda species, gene: (
+            plastid.get(gene)
+            if organelle == "pltd"
+            else templates[lineage_of.get(species, default_lineage)].get(gene)
+        ))
+    return rows
+
+
+def manifest_rows(sub: pd.DataFrame, organelle: str, data_root: Path, species_filter: set | None, template_of) -> list:
+    rows = []
     fasta_cache: dict[str, str | None] = {}
     for row in sub.itertuples():
         if species_filter is not None and row.species not in species_filter:
             continue
-        template = templates[lineage_of.get(row.species, default_lineage)].get(row.gene)
+        template = template_of(row.species, row.gene)
         if template is None:
             continue
         if row.species not in fasta_cache:
-            r = sd.resolve_species(data_root / row.species, "mito")
+            r = sd.resolve_species(data_root / row.species, organelle)
             fasta_cache[row.species] = r.ctg_fasta if r.status == "ok" else None
         fasta_path = fasta_cache[row.species]
         if fasta_path is None:
@@ -89,7 +140,7 @@ def build_manifest(
         rows.append(
             {
                 "species": row.species,
-                "organelle": "mito",
+                "organelle": organelle,
                 "gene": row.gene,
                 "fasta": fasta_path,
                 "template_dir": str(template),
@@ -100,6 +151,13 @@ def build_manifest(
             }
         )
     return rows
+
+
+def supports_frameshifts(transsplice: str) -> bool:
+    """transsplice >= 0.3.0 (frame changes, --frameshifts-out)."""
+    out = subprocess.run([transsplice, "--version"], capture_output=True, text=True).stdout
+    m = re.search(r"(\d+)\.(\d+)\.(\d+)", out)
+    return m is not None and tuple(map(int, m.groups())) >= (0, 3, 0)
 
 
 def write_manifest(rows: list[dict], path: Path) -> None:
@@ -121,8 +179,11 @@ def reconstruct(
     junction_distance_threshold: int = DEFAULT_JUNCTION_DISTANCE_THRESHOLD,
     exon_flank: int = DEFAULT_EXON_FLANK,
     lineage: str = "auto",
+    organelles: list[str] | tuple[str, ...] = ORGANELLES,
+    frameshift_penalty: float = DEFAULT_FRAMESHIFT_PENALTY,
 ) -> ReconstructResult:
-    """Reconstruct the spliced mito genes under data root `root`.
+    """Reconstruct the spliced genes under data root `root` (mito GENES,
+    plastid PLASTID_SPLICED, for `organelles`).
 
     gene_calls: a gene_calls.tsv-shaped table (default: the data root's
     denovo_annotation/results/gene_calls.tsv). species: only these species,
@@ -153,7 +214,7 @@ def reconstruct(
         lineage_of = {}
     default_lineage = lin.DEFAULT_LINEAGE if lineage == "auto" else lineage
 
-    rows = build_manifest(root, calls, species, lineage_of, default_lineage)
+    rows = build_manifest(root, calls, species, lineage_of, default_lineage, organelles)
     if not rows:
         raise StageError("empty manifest - nothing to reconstruct")
 
@@ -192,10 +253,27 @@ def reconstruct(
         "--exon-flank",
         str(exon_flank),
     ]
+    if math.isfinite(frameshift_penalty) and not supports_frameshifts(transsplice):
+        log.warning(f"reconstruct: {transsplice} is older than 0.3.0 - no frameshift calls")
+        frameshift_penalty = math.inf
+    if math.isfinite(frameshift_penalty):
+        cmd += [
+            "--frameshift-penalty",
+            str(frameshift_penalty),
+            "--frameshifts-out",
+            str(work_outs["reconstructed_frameshifts"]),
+        ]
+    else:
+        pd.DataFrame(columns=FRAMESHIFT_COLUMNS).to_csv(work_outs["reconstructed_frameshifts"], sep="\t", index=False)
     proc = subprocess.run(cmd)
     if proc.returncode != 0:
         raise StageError(f"transsplice scan-batch failed (exit {proc.returncode})")
 
+    shifts = pd.read_csv(work_outs["reconstructed_frameshifts"], sep="\t")
+    lineages = {sp: lineage_of.get(sp, default_lineage) for sp in shifts["species"].unique()}
+    add_recurrence(shifts, lineages, source="reconstruction").to_csv(
+        work_outs["reconstructed_frameshifts"], sep="\t", index=False
+    )
     tables = {name: results_dir / f"{name}.tsv" for name in OUT_NAMES}
     for name in OUT_NAMES:
         io_utils.merge_species_scoped_tsv(tables[name], work_outs[name], species)

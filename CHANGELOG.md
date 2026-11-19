@@ -2,21 +2,54 @@
 
 ## Unreleased
 
-- Frameshifts: with orfedit >= 0.2.0, the editing correction allows a
-  change of reading frame inside a single-exon gene and reports where it
-  is - `tables/frameshifts.tsv` (the skipped bases' coordinates, 1- or
-  2-base type, profile column), a `frameshift` child of the gene's CDS in
-  the GFF, and `n_frameshifts`/`n_new_frameshifts`/`frameshifted_genes` in
-  the QC table, printed at the end of `poa run`. Each frameshift carries
-  `dtol_assemblies`, how many DToL assemblies have one at the same place
-  in the same gene (`editing/reference/frameshifts_dtol.tsv`): mito rpl16
-  has one in 239 of 979 mito assemblies, so that's the gene, while one
-  seen nowhere else is the first thing to check against the reads. On the
-  DToL dataset, 1-bp indels planted in 900 genes are found in 83% (94% of
-  plastid genes, 72% of mito), 99.9% with the right type, and every gene
-  without a frameshift is corrected exactly as before. With orfedit 0.1.0
-  there are no frameshift calls (a warning says so); `scan_editing
-  --frameshift-penalty inf` turns them off.
+- Frameshifts: every protein-coding gene poa corrects is aligned allowing
+  a change of reading frame, and each change is reported - single-exon
+  genes through orfedit >= 0.2.0 (`tables/frameshifts.tsv`), spliced ones
+  through transsplice >= 0.3.0 (`tables/reconstructed_frameshifts.tsv`,
+  naming the exon) - with the skipped bases' coordinates, 1- or 2-base
+  type, a `window` the change could equally well sit in (a homopolymer
+  run, say), and `dtol_assemblies`, how many DToL assemblies have one at
+  the same place in the same gene (`editing/reference/frameshifts_dtol.tsv`,
+  built without the 54 assemblies resolved by gfatk before 0.6.3). Also a
+  `frameshift` child of the gene's CDS in the GFF, and
+  `n_frameshifts`/`n_new_frameshifts`/`frameshifted_genes` in the QC
+  table, printed at the end of `poa run`. Frame-change penalty 20, no
+  filters. On 1-bp indels planted in the coding sequence of real DToL
+  genes: single-exon genes 92% found (96% plastid, 88% mito), 99% with the
+  right type, and genes without a frameshift corrected exactly as with
+  frame changes off; mito spliced genes 84% (652 of 778); plastid spliced
+  genes 92% when the indel is in the copy reconstructed. Known weak
+  points, in the README: calls in spliced genes are common and mostly
+  recurrent (18% of DToL mito reconstructions; ccmFc 61%), plastid rps12
+  and rps16 calls follow from a misplaced tiny exon, and 6% of mito
+  spliced genes without a frameshift have an exon boundary placed
+  differently from frame changes off. With older orfedit/transsplice
+  there are no frameshift calls (a warning says so);
+  `--frameshift-penalty inf` turns them off.
+- transsplice 0.3.0 aligns the joined exons in frame 0 only, which changes
+  results with frame changes off too: on the 8,993 DToL mito spliced
+  genes 528 differ from 0.2.1, nearly all nad5, 174 of which become
+  complete and none stop being complete.
+- `00_build_exon_profiles.py` takes `--exclude ACC`, `--out-dir` and
+  `--slot-pseudocount` (exon-slot profiles scored against the whole
+  protein's composition; off by default, so the shipped templates are
+  unchanged). The default slot profiles are wrong for very short exons -
+  a residue the exon lacks scores as a match in every column - which is
+  why no exon of 30 bp or less is placed right on the 24 RefSeq genomes
+  the templates come from; held out, `--slot-pseudocount 2` takes all
+  exons from 65% to 74% placed within 3 bp.
+- Plastid spliced genes (atpF, clpP, ndhA, ndhB, rpl2, rpoC1, rps12, rps16,
+  ycf3) are reconstructed by transsplice like the mito ones, from exon
+  templates built from 13 RefSeq plastomes across land plants
+  (`trans_splicing/reference/plastid/`; `00a_fetch_references.py
+  --organelle pltd`, `00_build_exon_profiles.py --organelle pltd`), and
+  replace the raw multi-exon models in the plastid GFF when complete (73%
+  of DToL plastid rps12, 87-100% for the rest). On Arabidopsis, seven come
+  out identical or nearly identical (0.99-1.00) to RefSeq; rps16 (0.85) and rps12 (0.94)
+  have a misplaced tiny exon, as transsplice's tiny-exon limitation.
+  One copy per gene is reconstructed, so the second inverted-repeat copy
+  of ndhB, rpl2 and rps12 isn't checked for frameshifts separately (in a
+  graph assembly both copies come from one unitig).
 - Circular contigs: a gene running through the start of a circular contig
   (an oatk contig not marked `circular=false`, or a finished, linearised
   organelle FASTA) was called as two partial genes, one at each end.
@@ -49,6 +82,11 @@
   from 0.837 to 1.000 (rps12 0.57 -> 1.00, atp9 0.51 -> 1.00). The 7
   existing profiles, the plastid annotation and the moss lineage call are
   unchanged.
+- gfatk 0.6.2 (environment.yml, install.sh, recipe). `poa run` only uses
+  `gfatk stats`, which is unchanged; 0.6.2 fixes `gfatk resolve` walking
+  junctions the graph has no link for. `linearize/06_reannotate_promoted.py`
+  reads each circuit's walk from its contig header (`path=`, gfatk >= 0.6),
+  falling back to the resolve log for older outputs.
 - `00b_build_lineage_profiles.py` takes `--lineage angiosperm`, and
   `--exclude ACC` / `--out-dir` for held-out validation.
 - Editing correction covers every substantial mito copy of a gene, not just

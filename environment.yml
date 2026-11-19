@@ -41,7 +41,7 @@ dependencies:
   - graphaligner=1.0.20
 
   # this project's own tools
-  - gfatk=0.6.1
+  - gfatk=0.6.2
   - orfedit=0.1.0
   - transsplice=0.2.1
 
