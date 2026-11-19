@@ -18,8 +18,39 @@
   transcriptomes. Edit tables gain an `edit` column (`C>U`/`U>C`) and the
   GFF's `sequence_alteration` features say `edited_from=T;edited_to=C`
   for the reverse ones. In a dataset run, species recorded as fern in
-  `lineage.tsv` go through transsplice as a batch of their own. Fern
-  exon templates are still to do.
+  `lineage.tsv` go through transsplice as a batch of their own.
+- Fern exon templates (`trans_splicing/reference/lineages/fern/`), used
+  for spliced mito genes with `--lineage fern`: from seven annotated
+  leptosporangiate fern mitogenomes (`FERN_MITOGENOMES`: three
+  Woodwardia, Blechnopsis, Dryopteris, Osmunda, and Haplopteris's nine
+  chromosomes; none RefSeq, and Dryopteris drops out because its
+  annotation does not match its sequence). nad1, nad4, nad5 and nad7 have
+  four exons, nad2 five, rps3 three, cox2 and rpl2 two, rps10 one; no
+  ccmFc; every intron cis. Reference proteins are checked against their
+  genomes allowing U-to-C as well as C-to-U edits (78 of 91 loci pass),
+  and slot profiles are cut from the annotated, edited proteins, since a
+  fern exon's own translation has stop codons in it. Whole-gene profile
+  columns that at least 80% of the DToL fern reconstructions leave
+  unaligned are dropped (`whole_gene_mask.tsv`, `column_mask.py`;
+  `00_build_exon_profiles.py --no-mask` builds without): 94 columns over
+  seven genes, most in nad5 and nad2. On 29 DToL fern assemblies, against
+  the angiosperm templates with stop read-through on: complete spliced
+  mito genes 149 -> 231 of 248 (rpl2 0 -> 28, rps10 1 -> 29, rps3
+  0 -> 26), genes aligned over 99% of their profile 80 -> 109 (62 before
+  masking); planted 1-bp indels found 74% (77% on the angiosperm
+  templates, different planted sets). nad7 still aligns end to end in
+  only 8 of 29 (27 on the angiosperm template): its first 22 columns come
+  from the Woodwardia and Blechnopsis annotations and fall just short of
+  the masking rule. Horsetails and lycophytes do worse on these templates
+  and stay on the default. Single-exon genes still use the angiosperm
+  editing profiles.
+- Planted-indel recall, re-measured after the exon-placement and
+  reverse-editing work (`build/recall`, 54 gfatk assemblies left out):
+  mito spliced genes 88.2% -> 88.0% of 768 with other calls in the same
+  genes 143 -> 75; plastid spliced 74.5% -> 77.2% of 894; single-exon
+  93.3% of 1,500, unchanged. With `--lineage fern` (stop read-through off
+  -> on, angiosperm templates): fern mito spliced 45% -> 77%, fern mito
+  single-exon 39% -> 46%.
 - Exon placement in spliced genes, and gene ends. Checked on the 24
   RefSeq genomes the exon templates come from, each with its own genome
   held out of the templates, 89% of 477 exons now have both ends within

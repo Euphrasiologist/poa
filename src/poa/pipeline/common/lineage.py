@@ -16,9 +16,10 @@ fewer than MIN_SHARED_GENES genes scored both ways, stays angiosperm - the
 references everything else in poa was validated on. The result is
 analysis/editing/results/lineage.tsv, which trans_splicing reads.
 
-"fern" is a lineage of a different kind: it has no references of its own
-yet (it uses the angiosperm ones) and is never chosen automatically, only
-with --lineage fern. What it changes is the editing model. Ferns edit U to
+"fern" is a lineage of a different kind: it is never chosen automatically,
+only with --lineage fern; it has exon templates of its own
+(trans_splicing/reference/lineages/fern/) but borrows the angiosperm
+editing profiles; and it changes the editing model. Ferns edit U to
 C as well as C to U, and a fern organelle gene has genomic in-frame stop
 codons that editing turns into Gln or Arg - about nine per mitochondrial
 gene in Polypodiales. With the lineage set, orfedit and transsplice may

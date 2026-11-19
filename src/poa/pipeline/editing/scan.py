@@ -260,14 +260,18 @@ FRAMESHIFT_REFERENCE = PIPELINE_DIR / "editing" / "reference" / "frameshifts_dto
 RECURRENCE_WINDOW = 5  # profile columns
 
 
-def add_recurrence(shifts: pd.DataFrame, lineages: dict[str, str], source: str = "editing") -> pd.DataFrame:
+def add_recurrence(
+    shifts: pd.DataFrame, lineages: dict[str, str], source: str = "editing", reference_of=lin.reference
+) -> pd.DataFrame:
     """Add dtol_assemblies: how many DToL assemblies have a frameshift in
     the same gene within RECURRENCE_WINDOW profile columns - many means a
     shared feature of the gene (a pseudogene, an alternative frame), none
     a frameshift of this assembly's own. Empty for a mito gene aligned to
     another lineage's profile, whose columns the reference doesn't use.
     source: "editing" (orfedit's profiles) or "reconstruction"
-    (transsplice's whole-gene profiles), which number columns differently."""
+    (transsplice's whole-gene profiles), which number columns differently.
+    reference_of: lineage -> the lineage whose profiles its genes were
+    aligned to (for reconstruction, its exon templates')."""
     shifts = shifts.copy()
     if not FRAMESHIFT_REFERENCE.exists() or shifts.empty:
         shifts["dtol_assemblies"] = pd.Series(dtype=object)
@@ -277,7 +281,7 @@ def add_recurrence(shifts: pd.DataFrame, lineages: dict[str, str], source: str =
     by_gene = {k: g for k, g in ref.groupby(["organelle", "gene"])}
     out = []
     for r in shifts.itertuples():
-        if r.organelle == "mito" and lin.reference(lineages.get(r.species, lin.DEFAULT_LINEAGE)) != lin.DEFAULT_LINEAGE:
+        if r.organelle == "mito" and reference_of(lineages.get(r.species, lin.DEFAULT_LINEAGE)) != lin.DEFAULT_LINEAGE:
             out.append("")
             continue
         g = by_gene.get((r.organelle, r.gene))

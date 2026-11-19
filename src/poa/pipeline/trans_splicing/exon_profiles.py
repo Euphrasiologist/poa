@@ -57,8 +57,9 @@ from poa import PIPELINE_DIR
 from poa.pipeline.common import lineage as lin
 from poa.pipeline.common.pssm import align_and_build, composition, translate, read_fasta, write_profile
 from poa.pipeline.common.tools import cargo_tool
-from poa.pipeline.trans_splicing.reference_genes import GENES, PLASTID_SPLICED, reference_dir
+from poa.pipeline.trans_splicing.reference_genes import GENES, LINEAGE_MITOGENOMES, PLASTID_SPLICED, reference_dir
 from poa.pipeline.common.log import setup_logging
+from poa.pipeline.trans_splicing import column_mask
 
 log = logging.getLogger(__name__)
 
@@ -145,7 +146,13 @@ def build_and_write_profile(
 
 
 def compute_min_self_score(
-    gene: str, slot: int, dna_seqs: dict[str, str], profile_path: Path, work_dir: Path, orfedit: str
+    gene: str,
+    slot: int,
+    dna_seqs: dict[str, str],
+    profile_path: Path,
+    work_dir: Path,
+    orfedit: str,
+    stop_edit_penalty: float | None = None,
 ) -> float | None:
     """Score every training sequence for this slot back against the profile
     just built from it, via a real `orfedit scan-batch` call (same code
@@ -191,6 +198,9 @@ def compute_min_self_score(
             "1",
             "--flank",
             "0",
+            # a lineage that edits U to C (fern): score its exons as they
+            # will be scored when found, in-frame stops read through
+            *(["--stop-edit-penalty", str(stop_edit_penalty)] if stop_edit_penalty is not None else []),
         ],
         capture_output=True,
         text=True,
@@ -215,6 +225,7 @@ def build_exon_profiles(
     out_dir: Path | None = None,
     slot_pseudocount: float | None = SLOT_PSEUDOCOUNT,
     slots_only: bool = False,
+    use_mask: bool = True,
 ) -> Path:
     """(Re)build `lineage`'s exon-slot and whole-gene templates in the
     package's reference directory, from its raw/ exon sets. genes: only
@@ -224,8 +235,12 @@ def build_exon_profiles(
     (default: the current directory). slots_only: leave an existing
     whole_gene.pssm alone (the exon slots still score against the RefSeq
     proteins' composition). Returns the profiles directory."""
-    if lineage not in lin.LINEAGES:
-        raise ValueError(f"lineage must be one of {lin.LINEAGES}, not {lineage!r}")
+    if lineage not in LINEAGE_MITOGENOMES:
+        raise ValueError(f"lineage must be one of {sorted(LINEAGE_MITOGENOMES)}, not {lineage!r}")
+    # Lineages that edit U to C (fern): the genome's own translation of an
+    # exon has stop codons where the protein has Gln or Arg, so slot
+    # profiles are cut from the annotated (edited) protein instead.
+    stop_edit = lin.stop_edit_penalty(lineage) if organelle == "mito" else None
     genes = list(genes or (PLASTID_SPLICED if organelle == "pltd" else GENES))
     orfedit = cargo_tool("orfedit")
     ref_dir = reference_dir(PIPELINE_DIR, organelle, lineage)
@@ -241,6 +256,7 @@ def build_exon_profiles(
 
     raw = load_all_raw_data(raw_dir)
     junctions = load_junctions(raw_dir)
+    mask = column_mask.load_mask(lineage) if use_mask and organelle == "mito" else {}
 
     for gene in genes:
         loci = [key for key in raw if key[1] == gene and key[0] not in exclude]
@@ -259,7 +275,11 @@ def build_exon_profiles(
             if "refseq" in raw[key]:
                 whole_seqs[f"{acc}_{locus}"] = raw[key]["refseq"]
         if not (slots_only and (gene_dir / "whole_gene.pssm").exists()):
-            build_and_write_profile(whole_seqs, gene_dir / "whole_gene.pssm", f"{gene}.whole_gene", work_dir)
+            built = build_and_write_profile(whole_seqs, gene_dir / "whole_gene.pssm", f"{gene}.whole_gene", work_dir)
+            # columns the lineage's own species don't have (column_mask.py)
+            if built and mask.get(gene):
+                n = column_mask.apply_mask(gene_dir / "whole_gene.pssm", mask[gene])
+                log.info(f"{gene}: dropped {n} masked whole-gene column(s)")
         # exon slots score against the whole protein's composition, not
         # their own few residues' (see pssm.build_profile)
         slot_background = composition(whole_seqs.values()) if slot_pseudocount is not None else None
@@ -289,6 +309,18 @@ def build_exon_profiles(
                 cum += length
             frames[key] = per
 
+        # the annotated protein's residues for each slot's whole codons
+        slot_proteins: dict[int, dict[str, str]] = {n: {} for n in range(1, k + 1)}
+        if stop_edit is not None:
+            for key, per in frames.items():
+                acc, _, locus = key
+                protein, cum = raw[key].get("refseq", ""), 0
+                for n in range(1, k + 1):
+                    lead, trail = per[n]
+                    first, n_codons = (cum + lead) // 3, (len(raw[key][n]) - lead - trail) // 3
+                    slot_proteins[n][f"{acc}_{locus}"] = protein[first : first + n_codons]
+                    cum += len(raw[key][n])
+
         for slot in range(1, k + 1):
             dna_seqs = {}
             for key in included:
@@ -310,7 +342,10 @@ def build_exon_profiles(
             if len(dna_seqs) < 2:
                 log.warning(f"{gene} exon{slot}: only {len(dna_seqs)} sequences - skipping")
                 continue
-            protein_seqs = {name: translate(seq).rstrip("*") for name, seq in dna_seqs.items()}
+            if stop_edit is None:
+                protein_seqs = {name: translate(seq).rstrip("*") for name, seq in dna_seqs.items()}
+            else:
+                protein_seqs = slot_proteins[slot]
             profile_path = gene_dir / f"exon{slot}.pssm"
             # intron-side ends only (pssm.build_profile's trim_ends), and
             # only with the new profiles: None rebuilds the old ones as
@@ -320,7 +355,7 @@ def build_exon_profiles(
                 protein_seqs, profile_path, f"{gene}.exon{slot}", work_dir, slot_background, slot_pseudocount, trim
             ):
                 continue
-            min_score = compute_min_self_score(gene, slot, dna_seqs, profile_path, work_dir, orfedit)
+            min_score = compute_min_self_score(gene, slot, dna_seqs, profile_path, work_dir, orfedit, stop_edit)
             if min_score is None:
                 log.warning(f"{gene} exon{slot}: could not compute min_self_score - skipping")
                 continue
@@ -349,10 +384,16 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument(
         "--lineage",
         default=lin.DEFAULT_LINEAGE,
-        choices=lin.LINEAGES,
+        choices=sorted(LINEAGE_MITOGENOMES),
         help="which lineage's references to build from (default: %(default)s)",
     )
     ap.add_argument("--organelle", default="mito", choices=["mito", "pltd"], help="pltd: the plastid templates")
+    ap.add_argument(
+        "--no-mask",
+        action="store_true",
+        help="keep every whole-gene profile column, ignoring the lineage's whole_gene_mask.tsv "
+        "(column_mask.py; do this before deriving a new mask)",
+    )
     ap.add_argument("--exclude", nargs="+", default=[], metavar="ACC", help="leave these accessions out (held-out tests)")
     ap.add_argument("--out-dir", type=Path, default=None, help="write the templates here, not into the package")
     ap.add_argument(
@@ -379,5 +420,6 @@ def main(argv: list[str] | None = None) -> int:
         args.out_dir,
         args.slot_pseudocount,
         args.slots_only,
+        not args.no_mask,
     )
     return 0

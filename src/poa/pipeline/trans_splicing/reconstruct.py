@@ -56,7 +56,7 @@ from poa.pipeline.common import species_discovery as sd
 from poa.pipeline.common.errors import StageError
 from poa.pipeline.common.tools import cargo_tool
 from poa.pipeline.editing.scan import add_recurrence, supports_option
-from poa.pipeline.trans_splicing.reference_genes import GENES, PLASTID_SPLICED, reference_dir
+from poa.pipeline.trans_splicing.reference_genes import GENES, LINEAGE_MITOGENOMES, PLASTID_SPLICED, reference_dir
 from poa.pipeline.common.log import setup_logging
 
 log = logging.getLogger(__name__)
@@ -85,6 +85,14 @@ class ReconstructResult:
     tables: dict[str, Path]  # OUT_NAMES -> results/<name>.tsv
 
 
+def template_lineage(name: str) -> str:
+    """The lineage whose exon templates `name` uses: its own if it has any
+    (fern has, though it borrows the angiosperm editing profiles), else
+    those of the lineage it borrows from."""
+    own = lin.trans_splicing_reference(PIPELINE_DIR, name) / "profiles"
+    return name if name in LINEAGE_MITOGENOMES and any(own.glob("*/whole_gene.pssm")) else lin.reference(name)
+
+
 def build_manifest(
     root: Path,
     gene_calls: pd.DataFrame,
@@ -97,7 +105,9 @@ def build_manifest(
     templates, plastid ones (PLASTID_SPLICED) the one plastid set."""
     rows = []
     templates = {}
-    for name in lin.LINEAGES:
+    # every lineage with reference genomes; one that borrows another's
+    # references (fern, for editing) still has its own exon templates
+    for name in LINEAGE_MITOGENOMES:
         profiles_dir = lin.trans_splicing_reference(PIPELINE_DIR, name) / "profiles"
         templates[name] = {g: profiles_dir / g for g in GENES if (profiles_dir / g / "whole_gene.pssm").exists()}
     plastid_dir = reference_dir(PIPELINE_DIR, "pltd") / "profiles"
@@ -117,7 +127,7 @@ def build_manifest(
         rows += manifest_rows(sub, organelle, data_root, species_filter, lambda species, gene: (
             plastid.get(gene)
             if organelle == "pltd"
-            else templates[lin.reference(lineage_of.get(species, default_lineage))].get(gene)
+            else templates[template_lineage(lineage_of.get(species, default_lineage))].get(gene)
         ))
     return rows
 
@@ -294,7 +304,7 @@ def reconstruct(
 
     shifts = pd.read_csv(work_outs["reconstructed_frameshifts"], sep="\t")
     lineages = {sp: lineage_of.get(sp, default_lineage) for sp in shifts["species"].unique()}
-    add_recurrence(shifts, lineages, source="reconstruction").to_csv(
+    add_recurrence(shifts, lineages, source="reconstruction", reference_of=template_lineage).to_csv(
         work_outs["reconstructed_frameshifts"], sep="\t", index=False
     )
     tables = {name: results_dir / f"{name}.tsv" for name in OUT_NAMES}

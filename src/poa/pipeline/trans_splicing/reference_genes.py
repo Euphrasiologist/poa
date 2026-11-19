@@ -105,4 +105,24 @@ MOSS_MITOGENOMES = {
     "NC_031212.1": "Brachythecium rivulare",
 }
 
-LINEAGE_MITOGENOMES = {"angiosperm": REFERENCE_MITOGENOMES, "moss": MOSS_MITOGENOMES}
+# Leptosporangiate fern mitogenomes with annotation. None is RefSeq: five
+# Polypodiales (the three Woodwardia, Blechnopsis and Dryopteris single
+# circles are assembler output nobody has validated), Osmunda, and
+# Haplopteris ensiformis, the one fern mitogenome with a tested structure
+# (nine circular chromosomes, one accession each) and an RNA-seq editome.
+# Fern genes differ from the angiosperm templates in exon count - nad1 4
+# exons, nad5 4 or 5, rps3 3, rps10 1, no ccmFc - and none of their group
+# II introns is trans-spliced. Their annotated proteins are the edited
+# ones in both directions (U-to-C as well as C-to-U), which
+# fetch_references allows for when it checks them against the genome.
+FERN_MITOGENOMES = {
+    "MW732172.1": "Dryopteris crassirhizoma",
+    "PV999925.1": "Woodwardia japonica",
+    "PV999926.1": "Woodwardia unigemmata",
+    "PV999927.1": "Woodwardia prolifera",
+    "PQ143019.1": "Blechnopsis orientalis",
+    "PQ202832.1": "Osmunda japonica",
+    **{f"OM8675{n}.1": "Haplopteris ensiformis" for n in range(45, 54)},
+}
+
+LINEAGE_MITOGENOMES = {"angiosperm": REFERENCE_MITOGENOMES, "moss": MOSS_MITOGENOMES, "fern": FERN_MITOGENOMES}

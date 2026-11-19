@@ -97,7 +97,8 @@ def fetch_references(lineage: str = lin.DEFAULT_LINEAGE, force: bool = False, or
             if gene is None or ((acc, gene) in done and not force):
                 continue
             parts, exons = cds_exons(rec, f)
-            ok, note = verify("".join(exons), f.qualifiers["translation"][0])
+            reverse = organelle == "mito" and lin.stop_edit_penalty(lineage) is not None
+            ok, note = verify("".join(exons), f.qualifiers["translation"][0], reverse)
             locus = f.qualifiers.get("locus_tag", [f"{gene}_{seen.get(gene, 0) + 1}"])[0]
             seen[gene] = seen.get(gene, 0) + 1
             n_ok += ok

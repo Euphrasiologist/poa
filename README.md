@@ -261,10 +261,13 @@ lycophytes still use the angiosperm references. See
 is never picked automatically. These lineages edit U to C as well as C to
 U, and their organelle genes have genomic in-frame stop codons that
 editing turns into Gln or Arg - about nine per mitochondrial gene in
-Polypodiales. The fern lineage uses the angiosperm references (there are
-no fern ones yet) and lets orfedit and transsplice read such stops
-through, at the cost of a C-to-U edit; it needs builds of both with
-`--stop-edit-penalty`. On 30 DToL fern assemblies, single-exon mito gene
+Polypodiales. The fern lineage lets orfedit and transsplice read such
+stops through, at the cost of a C-to-U edit; it needs builds of both with
+`--stop-edit-penalty`. Spliced genes use fern exon templates
+(`lineages/fern/`, from seven annotated leptosporangiate fern
+mitogenomes): nad1, nad4, nad5 and nad7 have four exons in ferns, rps3
+three, rps10 one, and there is no ccmFc. Single-exon genes still use the
+angiosperm editing profiles. On 30 DToL fern assemblies, single-exon mito gene
 copies aligned over 99% of their profile go from 152 to 292 of 702 and
 their frameshift calls from 277 to 113; spliced mito genes aligned that
 well from 0 to 80 of 249. U-to-C edits are marked `U>C` in the `edit`
@@ -272,9 +275,14 @@ column of the edit tables and `edited_from=T;edited_to=C` in the GFF.
 Without it, treat a fern's proteins and frameshift calls as unreliable:
 each unread stop is a skipped column, an apparent frame change or an
 early end. Horsetails, clubmosses and *Selaginella* do not edit this way
-and belong on the default. Fern exon structures still differ from the
-angiosperm templates (rps10 has one exon, rps3 three, nad1 four), so
-those genes stay poor until there are fern templates.
+and belong on the default: on the fern templates fewer of their genes
+align end to end. On 29 DToL fern assemblies the fern templates take
+complete spliced mito genes from 149 of 249 to 231 of 248 (rpl2 0 to
+28 of 28, rps10 1 to 29 of 29, rps3 0 to 26 of 28). The fern references
+are thin - none is RefSeq, and four of the seven species are assemblies
+nobody has validated - so whole-gene profile columns that at least 80%
+of those fern reconstructions leave unaligned are dropped
+(`lineages/fern/whole_gene_mask.tsv`, `trans_splicing/column_mask.py`).
 
 ### Stage by stage, on a whole dataset
 

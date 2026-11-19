@@ -108,6 +108,49 @@ class SplitRuns(unittest.TestCase):
         self.assertEqual(set(table["decided_by"]), {"forced"})
 
 
+class FernReferences(unittest.TestCase):
+    def test_verify_allows_reverse_edits_only_when_asked(self):
+        from poa.pipeline.common.refseq_mito import editing_explains, verify
+
+        # ATG AAA TAA GTT: the annotated protein reads the TAA as Gln
+        dna, protein = "ATGAAATAAGTT", "MKQV"
+        self.assertFalse(verify(dna, protein)[0])
+        ok, note = verify(dna, protein, reverse=True)
+        self.assertTrue(ok, note)
+        self.assertTrue(editing_explains("TGA", "R", reverse=True))
+        self.assertFalse(editing_explains("TGA", "R"))
+        # C-to-U still works either way, and nothing else is explained
+        self.assertTrue(editing_explains("CCA", "L"))
+        self.assertFalse(editing_explains("AAA", "E", reverse=True))
+
+    def test_column_mask(self):
+        from poa.pipeline.trans_splicing import column_mask as cm
+
+        # column 0 unaligned in all, column 3 in 4 of 5 (80%), column 5 in 3 of 5
+        proteins = ["-KV-F-", "-KV-F-", "-KV-F-", "-KV-FA", "-KVLFA"]
+        self.assertEqual(cm.unsupported_columns(proteins), [0, 3])
+        self.assertEqual(cm.unsupported_columns([]), [])
+        tmp = Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, tmp)
+        pssm = tmp / "whole_gene.pssm"
+        pssm.write_text("A\tR\n" + "".join(f"{i}.0\t0.0\n" for i in range(6)))
+        self.assertEqual(cm.apply_mask(pssm, {0, 3}), 2)
+        self.assertEqual([line.split("\t")[0] for line in pssm.read_text().splitlines()[1:]], ["1.0", "2.0", "4.0", "5.0"])
+
+    def test_fern_templates_are_bundled_and_used(self):
+        from poa.pipeline.trans_splicing import reconstruct
+        from poa.pipeline.trans_splicing.reference_genes import LINEAGE_MITOGENOMES
+
+        self.assertIn("fern", LINEAGE_MITOGENOMES)
+        profiles = lin.trans_splicing_reference(PIPELINE, "fern") / "profiles"
+        self.assertTrue((profiles / "rps10" / "exon1.pssm").exists())
+        self.assertFalse((profiles / "rps10" / "exon2.pssm").exists())  # one exon in ferns
+        self.assertFalse((profiles / "ccmFc").exists())  # lost from fern mitogenomes
+        # fern: its own exon templates, the angiosperm editing profiles
+        self.assertEqual(reconstruct.template_lineage("fern"), "fern")
+        self.assertEqual(lin.reference("fern"), lin.DEFAULT_LINEAGE)
+
+
 class Load(unittest.TestCase):
     def test_missing_and_present(self):
         root = Path(tempfile.mkdtemp())

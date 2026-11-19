@@ -32,20 +32,24 @@ def fetch(acc: str, cache_dir: Path) -> Path:
     return path
 
 
-def editing_explains(genomic_codon: str, edited_aa: str) -> bool:
-    """Can C->T changes at some subset of the codon's C positions give edited_aa?"""
-    cs = [i for i, b in enumerate(genomic_codon) if b == "C"]
+def editing_explains(genomic_codon: str, edited_aa: str, reverse: bool = False) -> bool:
+    """Can C->T changes at some subset of the codon's C positions give
+    edited_aa? reverse: T->C changes count too (U-to-C editing: ferns,
+    quillworts, hornworts), so a genomic stop codon can be Gln or Arg."""
+    flip = {"C": "T", "T": "C"} if reverse else {"C": "T"}
+    cs = [i for i, b in enumerate(genomic_codon) if b in flip]
     for k in range(1, len(cs) + 1):
         for subset in itertools.combinations(cs, k):
             c = list(genomic_codon)
             for i in subset:
-                c[i] = "T"
+                c[i] = flip[c[i]]
             if str(Seq("".join(c)).translate()) == edited_aa:
                 return True
     return False
 
 
-def verify(dna: str, refseq_protein: str) -> tuple[bool, str]:
+def verify(dna: str, refseq_protein: str, reverse: bool = False) -> tuple[bool, str]:
+    """reverse: U-to-C edits may explain a difference too (see editing_explains)."""
     dna = dna.upper()
     codons = [dna[i : i + 3] for i in range(0, len(dna) - len(dna) % 3, 3)]
     naive = str(Seq("".join(codons)).translate())
@@ -60,13 +64,15 @@ def verify(dna: str, refseq_protein: str) -> tuple[bool, str]:
     for i, (a, b) in enumerate(zip(naive_core, refseq_protein)):
         if a == b:
             continue
-        if editing_explains(codons[i], b) or (i == 0 and b == "M"):  # ACG->AUG starts included
+        if editing_explains(codons[i], b, reverse) or (i == 0 and b == "M"):  # ACG->AUG starts included
             edited += 1
         else:
             unexplained += 1
     if unexplained:
-        return False, f"UNRESOLVED {unexplained} residue(s) not explained by C-to-U editing"
-    return True, f"naive vs RefSeq differ only at {edited} C-to-U editing-consistent site(s)"
+        kind = "C-to-U or U-to-C" if reverse else "C-to-U"
+        return False, f"UNRESOLVED {unexplained} residue(s) not explained by {kind} editing"
+    kind = "editing-consistent (either direction)" if reverse else "C-to-U editing-consistent"
+    return True, f"naive vs RefSeq differ only at {edited} {kind} site(s)"
 
 
 def cds_exons(rec, feature) -> tuple[list, list[str]]:
