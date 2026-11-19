@@ -71,11 +71,15 @@ log = logging.getLogger(__name__)
 # divergent species' exon by a fifth to two-fifths, so at 0.5 ferns and
 # lycophytes (on the angiosperm templates) lost most of their exons - 117
 # complete mito genes in 29 DToL assemblies fell to 27 - and angiosperms
-# lost some too. At 0.25: 125, and 6,900 complete in the other 926
-# assemblies against 6,590; held out on the 24 RefSeq genomes placement is
-# the same from 0.5 down to 0.075 (426 of 477 exons right). Negative
-# self-scores (tiny exons) are kept as-is.
-FLOOR_FRACTION = 0.25
+# lost some too. Lower is better as far down as tried: complete mito genes
+# in 955 assemblies 6,617 at 0.5, 7,025 at 0.25, 7,277 at 0.15, 7,552 at
+# 0.075 (7,620 at 0.025), genes with a frameshift call 1,159, 1,039, 818,
+# 779 (789); plastid and moss likewise, with no complete gene lost; and
+# held out on the 24 RefSeq genomes placement is the same throughout (426
+# of 477 exons right). The cost is a few more short exons placed that
+# resemble no reference exon (plastid clpP exon 1: 111 of 1,108, against
+# 64 of 1,061 at 0.25). Negative self-scores (tiny exons) are kept as-is.
+FLOOR_FRACTION = 0.075
 
 # Exon-slot profiles score against the whole protein's composition, with
 # this many pseudo-observations per column shared out in proportion to it

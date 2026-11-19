@@ -186,13 +186,13 @@ assembly, nearly all in partial copies or recurring in other assemblies;
 orfedit/transsplice there are no frameshift calls (a warning says so).
 
 Read frameshifts in spliced genes with care. In the DToL mitochondria
-12% of reconstructed genes carry one (ccmFc 49%, rpl2 27%, nad5 16%, nad7
-6%), most at a handful of positions shared by hundreds of assemblies
+9% of reconstructed genes carry one (ccmFc 29%, rpl2 26%, nad5 16%, nad7
+7%), most at a handful of positions shared by hundreds of assemblies
 (ccmFc profile column 470 in 193, nad1 column 132 in 184, nad5 column 248 in 143)
 - so a high `dtol_assemblies` there says the gene differs from the
 template at that point in that lineage, not that the assembly is wrong.
-In plastids about 1% of reconstructed genes have one (rps16 3%,
-clpP 3%).
+In plastids fewer than 1% of reconstructed genes have one (rps16 3%,
+clpP 1%).
 
 ### Exon placement
 

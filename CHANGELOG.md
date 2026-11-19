@@ -37,24 +37,27 @@
   RefSeq profile; none before). Their `whole_gene_score`s are lower for
   it (nad5 median 2,607 -> 1,663). Refine again only from reconstructions
   made with this version.
-  Slot floors are a quarter of the lowest reference self-score
+  Slot floors are 0.075 of the lowest reference self-score
   (`FLOOR_FRACTION`; half before): the new profiles are sharper, and at
   half, ferns and lycophytes, which run on the angiosperm templates, lost
   most of their exons (117 complete mito genes in 29 assemblies fell to
-  27; 125 at a quarter). Held-out placement is the same at either.
+  27). Lower was better at every value tried down to 0.075, with held-out
+  placement unchanged; the cost is a few more short exons placed that
+  resemble no reference exon.
   On the DToL assemblies (transsplice alone, angiosperm templates,
   the 54 assemblies re-resolved with gfatk 0.6.3 left out):
-  complete mito genes 5,957 -> 6,925 of 8,566 (cox2 +353, nad4 +302,
-  nad1 +205, rpl2 +102; rps10 -95, in angiosperms placements unlike any
-  reference exon, in ferns unexplained), plastid 9,373 -> 9,792 of 9,954
-  (rps12 +303, clpP +47, rps16 +27); nad5 exon 3 like a reference
-  exon in 861 of 927 (0 of 775), nad1 exon 4 928 of 928 (79 of 834),
-  plastid rps12 exon 3 970 of 1,139 (0 of 837), rps16 exon 1 816 of 818
-  (2 of 777). Genes with a frameshift call: mito 1,521 -> 1,004 (nad1
-  215 -> 12, rpl2 292 -> 178, ccmFc 568 -> 457, rps10 53 -> 16; nad7
-  37 -> 56), plastid 362 -> 98 (rps12 136 -> 0, rps16 106 -> 27). On the
-  174 moss assemblies with the moss templates: 1,552 of 1,566 genes
-  complete (1,550), 24 with a frameshift call (165). `frameshifts_dtol.tsv`'s reconstruction
+  complete mito genes 5,957 -> 7,423 of 8,566 (cox2 +401, nad4 +302,
+  ccmFc +275, rps3 +238, nad1 +205, rpl2 +113; rps10 -94, in angiosperms
+  placements unlike any reference exon, in ferns because their rps10 has
+  one exon), plastid 9,373 -> 9,868 of 9,954 (rps12 +303, clpP +105,
+  rps16 +41); nad5 exon 3 like a reference exon in 861 of 927 (0 of 775),
+  nad1 exon 4 928 of 928 (79 of 834), plastid rps12 exon 3 973 of 1,139
+  (0 of 837), rps16 exon 1 812 of 852 (2 of 777). Genes with a frameshift
+  call: mito 1,521 -> 762 (ccmFc 568 -> 268, nad1 215 -> 12, rpl2 292 ->
+  171, cox2 118 -> 5; nad7 37 -> 65), plastid 362 -> 74 (rps12 136 -> 0,
+  rps16 106 -> 23). On the 174 moss assemblies with the moss templates:
+  1,555 of 1,566 genes complete (1,550), 24 with a frameshift call (165).
+  `frameshifts_dtol.tsv`'s reconstruction
   rows are rebuilt from these runs. On Arabidopsis (smoke test): nad1
   0.936 -> 0.997 identical to RefSeq, nad5 0.990 -> 0.997, cox2 and rpl2
   reconstructed (were raw), plastid rps16 0.85 -> 0.99, rps12 0.94 ->
@@ -77,7 +80,7 @@
   frame changes off; mito spliced genes 84% (652 of 778); plastid spliced
   genes 92% when the indel is in the copy reconstructed. Known weak
   point, in the README: calls in spliced genes are common and mostly
-  recurrent (12% of DToL mito reconstructions; ccmFc 49%). With older orfedit/transsplice
+  recurrent (9% of DToL mito reconstructions; ccmFc 29%). With older orfedit/transsplice
   there are no frameshift calls (a warning says so);
   `--frameshift-penalty inf` turns them off.
 - transsplice 0.3.0 aligns the joined exons in frame 0 only, which changes
