@@ -1,0 +1,52 @@
+LOCUS       PQ554552                 583 bp    DNA     linear   PLN 12-JAN-2025
+DEFINITION  Azolla rubra Rpl6 (rpl6) gene, complete cds; mitochondrial.
+ACCESSION   PQ554552
+VERSION     PQ554552.1
+KEYWORDS    .
+SOURCE      mitochondrion Azolla rubra
+  ORGANISM  Azolla rubra
+            Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta;
+            Polypodiopsida; Polypodiidae; Salviniales; Salviniaceae; Azolla.
+REFERENCE   1  (bases 1 to 583)
+  AUTHORS   Kwok van der Giezen,F.M. and Small,I.D.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (08-OCT-2024) School of Molecular Sciences, The
+            University of Western Australia, Bayliss Buliding, 35 Stirling
+            Highway, Crawley, WA 6009, Australia
+COMMENT     ##Assembly-Data-START##
+            Assembly Method       :: SPAdes v. 3.12.0; Geneious Prime v. 2023
+            Assembly Name         :: Azolla rubra mitochondrion
+            Sequencing Technology :: Illumina
+            ##Assembly-Data-END##
+FEATURES             Location/Qualifiers
+     source          1..583
+                     /organism="Azolla rubra"
+                     /organelle="mitochondrion"
+                     /mol_type="genomic DNA"
+                     /db_xref="taxon:45988"
+                     /tissue_type="Whole plant"
+                     /geo_loc_name="Australia"
+                     /collected_by="Farley M. Kwok van der Giezen"
+     gene            126..425
+                     /gene="rpl6"
+     CDS             126..425
+                     /gene="rpl6"
+                     /exception="RNA editing"
+                     /codon_start=1
+                     /product="Rpl6"
+                     /protein_id="XMD96957.1"
+                     /translation="MEAQSVCFLQIIGYKASTNPQGSVLDLKLGFSHEIRLQVTPSVR
+                     VFCLKHNIICCTGTDPRKVTQFAASVKNCKPPEVYKGRGIKYRNEIIRRKQGEKK"
+ORIGIN      
+        1 cgcaaagcgt cgacaaagaa agcagctacc ttttcattat tatactgtaa tcccagcgca
+       61 aacaaaaaaa ctgccatgaa tatcgagaac ggaacaagaa gccacaacga aatcaagtca
+      121 agtctacgga agcttaatcc gtttgttctt cgtaaacaat tggatacaaa gtcagtacta
+      181 acccataagg ctctgtttca gattcaaaac tagggttcag ctatgagatt tgactctagg
+      241 tcacgccttc ggtttgtgtt ttccgcttga aacataatat cactcgttgt accggaacgg
+      301 atccctgaaa agttacttaa tccgctgtta gcgtcaaaaa ttgtaaaccc cctgaagttc
+      361 ataaaggaag aggtataaaa tattgaaatg aaattatacg tagaaaacaa ggagaaaaga
+      421 aacaaatcgc gtcatatatt ccaggaacca aatcagtttc caataaataa gtcagacttg
+      481 cctcaaccta aatctccgga actggaccca aaaaagccac ttgggtttgt gattaatcag
+      541 gtcccggcga taacactaag gttagtaatc tgactcggca cta
+//
+

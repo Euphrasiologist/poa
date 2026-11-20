@@ -1,0 +1,51 @@
+LOCUS       PQ554638                 536 bp    DNA     linear   PLN 12-JAN-2025
+DEFINITION  Marsilea mutica Rps19 (rps19) gene, complete cds; mitochondrial.
+ACCESSION   PQ554638
+VERSION     PQ554638.1
+KEYWORDS    .
+SOURCE      mitochondrion Marsilea mutica
+  ORGANISM  Marsilea mutica
+            Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta;
+            Polypodiopsida; Polypodiidae; Salviniales; Marsileaceae; Marsilea.
+REFERENCE   1  (bases 1 to 536)
+  AUTHORS   Kwok van der Giezen,F.M. and Small,I.D.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (08-OCT-2024) School of Molecular Sciences, The
+            University of Western Australia, Bayliss Buliding, 35 Stirling
+            Highway, Crawley, WA 6009, Australia
+COMMENT     ##Assembly-Data-START##
+            Assembly Method       :: SPAdes v. 3.2; Geneious Prime v. 2023
+            Assembly Name         :: Marsilea mutica mitochondrion
+            Sequencing Technology :: Illumina
+            ##Assembly-Data-END##
+FEATURES             Location/Qualifiers
+     source          1..536
+                     /organism="Marsilea mutica"
+                     /organelle="mitochondrion"
+                     /mol_type="genomic DNA"
+                     /db_xref="taxon:167748"
+                     /tissue_type="Frond"
+                     /geo_loc_name="Australia"
+                     /collected_by="Catherine Colas des Francs-Small"
+     gene            119..367
+                     /gene="rps19"
+     CDS             119..367
+                     /gene="rps19"
+                     /exception="RNA editing"
+                     /codon_start=1
+                     /product="Rps19"
+                     /protein_id="XMD97043.1"
+                     /translation="MARSVWKGPFVDACLLRKTKKIRGKIWSRRSFILPKFDGCYAQI
+                     HNGRSFIRLKVTKEKVGHKFGEFASTRKASRTTKIKPR"
+ORIGIN      
+        1 ttattcttat ggaggaggcg aaggacgcac gaaaggaggt agaccttcag tgtcaccttg
+       61 gggaaagccc accaaatgtg gatttcgagc aatagtgagg aaacgcagaa attagtttat
+      121 ggcatgatct gtatggaaag gcccttttgt tgatgcttgc ttgtcgagaa agacgaaaaa
+      181 gatcaggggg aaaattcggt catgtagatc tttcatttcg cctaaatttg atggttgcta
+      241 tgcataaatt cataacgggc gatcttttat tcgtttgaag gttacaaaag aaaaggttgg
+      301 tcataaattt ggagagtttg cttctatatg aaaggcctcg agaacaacca agatcaagcc
+      361 gagataggag gtacggtaat aggatacggc acgaaaggta aatccgattt cagtcagact
+      421 taatccgaac tatcattcag attcaagtcg gtttagtgag ggcgaccgcg gagtcaccga
+      481 atgaattgcc tgccgcatgt cggtcggggc attgcagatg tccgcaacga gacgga
+//
+

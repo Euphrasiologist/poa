@@ -1,0 +1,60 @@
+LOCUS       PQ554642                 862 bp    DNA     linear   PLN 12-JAN-2025
+DEFINITION  Salvinia molesta Atp4 (atp4) gene, complete cds; mitochondrial.
+ACCESSION   PQ554642
+VERSION     PQ554642.1
+KEYWORDS    .
+SOURCE      mitochondrion Salvinia molesta
+  ORGANISM  Salvinia molesta
+            Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta;
+            Polypodiopsida; Polypodiidae; Salviniales; Salviniaceae; Salvinia.
+REFERENCE   1  (bases 1 to 862)
+  AUTHORS   Kwok van der Giezen,F.M. and Small,I.D.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (08-OCT-2024) School of Molecular Sciences, The
+            University of Western Australia, Bayliss Buliding, 35 Stirling
+            Highway, Crawley, WA 6009, Australia
+COMMENT     ##Assembly-Data-START##
+            Assembly Method       :: SPAdes v. 3.2; Geneious Prime v. 2023
+            Assembly Name         :: Salvinia molesta mitochondrion
+            Sequencing Technology :: Illumina
+            ##Assembly-Data-END##
+FEATURES             Location/Qualifiers
+     source          1..862
+                     /organism="Salvinia molesta"
+                     /organelle="mitochondrion"
+                     /mol_type="genomic DNA"
+                     /db_xref="taxon:167732"
+                     /tissue_type="Whole plant"
+                     /dev_stage="Primary phase"
+                     /geo_loc_name="Australia"
+                     /collected_by="Farley M. Kwok van der Giezen"
+     gene            155..721
+                     /gene="atp4"
+     CDS             155..721
+                     /gene="atp4"
+                     /exception="RNA editing"
+                     /codon_start=1
+                     /product="Atp4"
+                     /protein_id="XMD97047.1"
+                     /translation="MRELILFAILIFSVLSSERIIIYNEEILVAVCLVGFVFFSQNTL
+                     SDIFRATFRAKSEAIQTDLQHFLSSQEALWSEPEERHELLLLSLRSSTQMIAESFFNG
+                     TVERCALLYEQTVQALLCQEMELQLKALLAIREHSRLREQDEIVSCFRSSVSDEFGGF
+                     SSSSSGTKHQSTLIQSSVVFLEGGKGGF"
+ORIGIN      
+        1 gcgagcgtgc actacctccc gacctaactt actcccgccg ccgggcacga gtccagaaat
+       61 gctggtggcg cccgccatgc ttgcctgccg gccaataaac tgccatgaat atcgagaaca
+      121 gacaaggaag agcaacagaa tataagtacg atttacgcgc gaattgattt tatttgctat
+      181 ttcaatttct agcgttttga gtttggaatg aataataatc tataatgagg aaatattagt
+      241 agctgttcgt ctagtgggtt ttgtttccct cagtcaaaac actctaagtg acattttcag
+      301 agcgactttt agggcaaaaa gcgaagctat ttaaacagat ttatagcatt ttcccagttc
+      361 ctaggaagct ctgtggtctg agcccgagga atggcatgaa ttactattac tcagtctgcg
+      421 tttaagtacg taaatgattg cggaatcctt tttcaatggg atagtggagc gtcgcgcatt
+      481 gtcgtacgaa taaacagtat aagcctcgct gtgttaagaa atggaacttt agttgaaagc
+      541 accgttagcc atttgagagc attctcgcct ctgagaataa gacgagatag tgagtcgttc
+      601 ccgctctcca gtcagtgacg aatttggcgg cttttccagc agcagcagtg gaacgaaaca
+      661 tcagtccaca ctgatctaac cgagcgtggt tttcttagaa ggagggaaag ggggattcca
+      721 ggagttagct gacacttcca aaggagggga ggaaagcgac ttgttgaaga acctttaact
+      781 cccatgcata tggaggagag agaaaaaggg aaaaaaccga acagacttag aagtcgttga
+      841 aaggaatatt tgagcatgat tc
+//
+

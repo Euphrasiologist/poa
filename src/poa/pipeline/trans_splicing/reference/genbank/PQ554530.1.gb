@@ -1,0 +1,100 @@
+LOCUS       PQ554530                2941 bp    DNA     linear   PLN 12-JAN-2025
+DEFINITION  Azolla rubra Atp1 (atp1) gene, complete cds; mitochondrial.
+ACCESSION   PQ554530
+VERSION     PQ554530.1
+KEYWORDS    .
+SOURCE      mitochondrion Azolla rubra
+  ORGANISM  Azolla rubra
+            Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta;
+            Polypodiopsida; Polypodiidae; Salviniales; Salviniaceae; Azolla.
+REFERENCE   1  (bases 1 to 2941)
+  AUTHORS   Kwok van der Giezen,F.M. and Small,I.D.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (08-OCT-2024) School of Molecular Sciences, The
+            University of Western Australia, Bayliss Buliding, 35 Stirling
+            Highway, Crawley, WA 6009, Australia
+COMMENT     ##Assembly-Data-START##
+            Assembly Method       :: SPAdes v. 3.12.0; Geneious Prime v. 2023
+            Assembly Name         :: Azolla rubra mitochondrion
+            Sequencing Technology :: Illumina
+            ##Assembly-Data-END##
+FEATURES             Location/Qualifiers
+     source          1..2941
+                     /organism="Azolla rubra"
+                     /organelle="mitochondrion"
+                     /mol_type="genomic DNA"
+                     /db_xref="taxon:45988"
+                     /tissue_type="Whole plant"
+                     /geo_loc_name="Australia"
+                     /collected_by="Farley M. Kwok van der Giezen"
+     gene            223..2717
+                     /gene="atp1"
+     CDS             join(223..592,1531..2717)
+                     /gene="atp1"
+                     /exception="RNA editing"
+                     /codon_start=1
+                     /product="Atp1"
+                     /protein_id="XMD96935.1"
+                     /translation="MRLFKARATEQLSTILEERITNYYTKLPVDEIGRVVSVGDGIAR
+                     VYGLNKIQAGEMVEFASGVKGMALNLENENVGIVIFGSDTAIKEGDMVKRTGSIVDVP
+                     VGKAMLGRVVDALGVPIDGKGALSAVERRRVEVKAPGIIARKSVHEPMQTGLKAVDSL
+                     VPIGRGQRELIIGDRQTGKTAIAIDTILNQKLINAQGTSDSEKLFCVYVAIGQKRSTV
+                     AQLVKILSEAGALEYSIIVAATASDPAPLQFLAPYSGCAMGEFFRDHGMHALIIYDDL
+                     SKQSVAYRQMSLLLRRPPGREAFPGDVFYLHSRLLERAAKRSDQTGAGSLTALPVIET
+                     QAGDVSAYIPTNVISITDGQIFLETELFYRGVRPAINVGLSVSRVGSAAQLKAMKALC
+                     GTLKLELAQYREVAAFAQFGSDLDPATQYLLHRGARLTEVLKQPQYSPIPIERQIVVI
+                     FAAVNGFLDQIPLTQIAQYEKELLDKIKPHILEGIKEQKLLSEEVQKNLATFCQKIAS
+                     SLSSVTTGSV"
+ORIGIN      
+        1 cttcattcac ccagtctatt ctgtcaaaac ttactttctt tataatgcaa accaacactg
+       61 ggggaaggtc cgatccctcc cctctatatc aatgacatgg ttcacctcgt cgtgaggtta
+      121 cttccctttc ccatctcttt cttgctagga actgccatga atgcaggaga ctgccctggg
+      181 tataaagtgc cgaggaaagg gattcgacgg aagagaaagg gaacgagatt gtttaaagct
+      241 agagcaacgg aataaccatc tactatctcg gaagaaagaa ttaccaacta tcacaccaaa
+      301 ttgccagtgg atgagatcgg ttgagtggta tcggttgggg atggaattgc acgtgtttat
+      361 ggatcgaaca agattcaagc aggagaaatg gtagaattcg ccagcggtgt gaaaggaatg
+      421 gcttcgaatt ctgagaatga gaatgtagga attgttatat ccggtagtga taccgccatt
+      481 aaagaaggag atatggtcaa gcgcactgga tctattgtgg acgttcttgt aggaaaggcc
+      541 atgccgggtt gtgtagttga tgcgttagga gtactcattg atggaaaagg tggggcggcc
+      601 gttagatcat ctgcggtcga aaaaggttgc atacaggcat gagactaacc agaacccgcg
+      661 aagggaggcc gagaccatag catgtcgcaa aagaaagcac gattgaaggc aaagcggacg
+      721 aatgaaaatc atcgtgcagc ccggtagttt ggtgaaagat gaggccgaaa gcagcaaatc
+      781 ggagtctttt tcgggtgacc atgccctatt cgttcgttcg ttcgacgtgt tgccagatag
+      841 acgcggatat gctccctgcc tgctataggc acattatggt caggcccgat tgagtgccac
+      901 ttctcccgcc cgtaaacgaa agtttacagc aagcatgaga gcggattacc tatctattct
+      961 attggggacg gaagactgaa cgacatcccg gcaagcaagc aagcaagcaa gcaagcaagc
+     1021 aagcaagcaa gcaagcaagc aaagtgggac ctttcaactc ttatcttatt atggtcccaa
+     1081 ccatccgcag gtaaaaccgg cgagatcttc ggcgggagga aagccccgga aagaagtcag
+     1141 agggcccata ccacctgcct accctcctaa ggcggaaccg gcacttggtg aatgccaagt
+     1201 agaaaacggg aaggagccta tgcatttgtc atgcccggag ttcgaaacag aataacgaaa
+     1261 aggcaagcaa gttttacctg acttaactga aaagccattt tcctctctgc aaactccagg
+     1321 agagagtgga cttcaggaaa tcacaaagtg ggtccccaag gaggaaagga ggagggaact
+     1381 tgtgaggaag tttccaccct cctttcggcc tctggggtta aacaagaccc agataaagtc
+     1441 aagttagaga gccgtgtaat gggcgactat tccgcacggt tcggagagca caactacgat
+     1501 cacttctcct cggcagaagc ttgactctat ctttgagcgc ggtagaatga agacgtgtag
+     1561 aagtcaaagt ctctgggatt attgcacgta aatctgtcca cgaacctatg taaacagggt
+     1621 taaaagcggt ggatagccta gtccctatag gtcgtggtca acgggaactg ataatcggcg
+     1681 accgacaaac tggaaagact gctatagcta ttgataccat tctgaactag aaaccaatca
+     1741 acgcataggg caccttcgat agtgaaaaat tgtttcgcgt gtacgtagtg attggataaa
+     1801 aacgttcaac cgtggcataa tcggttaaga ttcccccgga agccggtgct ctggaatatc
+     1861 tcattattgt tgtagtcacg gcttcggatt ctgctctcct gtaattcccg gcactacatc
+     1921 ctggtcgtgc tacgggagag tcttctagag atcatggaat gcacgcatta atcatctatg
+     1981 acgatcccag taagtaatca gtggcatatt gataaatgtc attatcgcca cgttgactac
+     2041 taggttgtga ggtttccctc ggagatgtct tctattcata tctctgttca tcggaaagag
+     2101 ccgccaaaag gttagactag actggtgtag gtagctcgat tgcttcactc gtcattgaaa
+     2161 tataagctgg agacgtttct gtttatactc ttatcaatgt cattctcatt acagatggat
+     2221 aaatcctccc ggaaactgaa cctctctatc gcggagtttg gctcgttatt aacgtaggat
+     2281 tactcgttag ttgtgttggg tctgccgctt agccgaaagc tatgaaagca cttcgtggca
+     2341 ccttaaaatt ggagccggca taacatcgtg aagttgccgc ttctgcgtaa tttgggtcag
+     2401 acctcgatcc cgctatttag tattcgccat attgcggcgc taggcttacc gaggtactta
+     2461 aataactata atatcccctg atccctatcg aatgacagat tgtagttatc ctcgcggcgg
+     2521 tcaatgggtt cccggactag atccctttga catagatcgc ttaatatgag aaggaactcc
+     2581 ccgacaaaat caaaccacac atacttgagg gtatcaagga gtaaaagcta ttgagtgaag
+     2641 aggtgtagaa aaatccggct acgttccgct aaaaaattgc cagttctcta tcatcagtaa
+     2701 caactggttc agtctagttc aagagatggg gaaggaggcc ccctcacgta attactaagg
+     2761 agaccctccc ttttgtttgt aggagcgtta ggcgggtgag cggataacgg cgggaattga
+     2821 acaagccgat agatcaccgc cacctaacct ataggtggtt tgcgggaatt ggcccagtta
+     2881 cctcctatag aaatgctttg tttgtttgtc ttttggtagg gacagtcatt acgcgtagct
+     2941 t
+//
+

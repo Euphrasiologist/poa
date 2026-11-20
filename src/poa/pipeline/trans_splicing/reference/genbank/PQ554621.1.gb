@@ -1,0 +1,60 @@
+LOCUS       PQ554621                 960 bp    DNA     linear   PLN 12-JAN-2025
+DEFINITION  Marsilea mutica Nad6 (nad6) gene, complete cds; mitochondrial.
+ACCESSION   PQ554621
+VERSION     PQ554621.1
+KEYWORDS    .
+SOURCE      mitochondrion Marsilea mutica
+  ORGANISM  Marsilea mutica
+            Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta;
+            Polypodiopsida; Polypodiidae; Salviniales; Marsileaceae; Marsilea.
+REFERENCE   1  (bases 1 to 960)
+  AUTHORS   Kwok van der Giezen,F.M. and Small,I.D.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (08-OCT-2024) School of Molecular Sciences, The
+            University of Western Australia, Bayliss Buliding, 35 Stirling
+            Highway, Crawley, WA 6009, Australia
+COMMENT     ##Assembly-Data-START##
+            Assembly Method       :: SPAdes v. 3.2; Geneious Prime v. 2023
+            Assembly Name         :: Marsilea mutica mitochondrion
+            Sequencing Technology :: Illumina
+            ##Assembly-Data-END##
+FEATURES             Location/Qualifiers
+     source          1..960
+                     /organism="Marsilea mutica"
+                     /organelle="mitochondrion"
+                     /mol_type="genomic DNA"
+                     /db_xref="taxon:167748"
+                     /tissue_type="Frond"
+                     /geo_loc_name="Australia"
+                     /collected_by="Catherine Colas des Francs-Small"
+     gene            175..789
+                     /gene="nad6"
+     CDS             175..789
+                     /gene="nad6"
+                     /exception="RNA editing"
+                     /codon_start=1
+                     /product="Nad6"
+                     /protein_id="XMD97026.1"
+                     /translation="MLLFDVFSGMALVSAVMVIRAKNPVHSVLFFIFVFCNTSGLLLL
+                     LGLDFFAMIFLVVYIGAIAVLFLFVVMMLDIKIAEIHENVLRYLPVGGTIGLIFWLEI
+                     FVILDNDYIPILPTDLNTTYLRYTVYAERIQSWTNLETLGNLLYTNYLVLFLVSSLIL
+                     LVAMIGAIMLTMHKTTKVKRQDVFRQNAIDFRRTIGKIRESKQI"
+ORIGIN      
+        1 ttcgcaatca aagtttccac aattccattt tcgggtgcac aggatctcgt atctcgtagt
+       61 gaagaatacc aggtgcacta ggagcttcca tatctcgtca ttgccaaatc agtcgaatcc
+      121 ggcgcagaga caaactgcca ctaatataga ataggagaga gaaacaagaa aaccatgcta
+      181 cttcttgatg tttttccggg catggcttta gtctctgctg ttacggtcat acgtgctaaa
+      241 aactccgtcc attccgttct ctcttttatc cccgtttcct gtaacacctc aggtttacct
+      301 cccttgtcag gtcccgactt ctctgctatg atcctcttag tggttcatat aggcgcgatt
+      361 gctgtgtcac ttccatttgt agtgatgatg ccagatacca aaatagcgga aatccacgag
+      421 aatgtattgc gctacttacc agtaggtggt actattggac tgatttcctg gtcggaaatc
+      481 tttgtcattc tagacaatga ttacattcca atactaccaa ccgatttgaa tacaacctat
+      541 ctgagatata cggtttatgc tgagagaata caaagttgga ctaatttgga aacattaggc
+      601 aatttacttt ataccaacta tccggttccg ttcccggtgt ctagtccgat ttcatcagta
+      661 gccatgatcg gggctataat gccaactatg cataaaacca ctaaggtcaa gagacaggat
+      721 gtgttccggc agaatgctat agattttcgg aggaccatcg gaaagatacg cgagagtaag
+      781 caaatacaaa gtcttgctgc caaaggctgc tgccaaagcc tcattttttc cggtctccac
+      841 ccttccatgg gtactggttt agtctctgca ccgactttca tagatatcgg gggccaatac
+      901 ccgaatgttc atagcgtgcc acccatctga taaatatgtt ttactcaata gcgggtttgg
+//
+

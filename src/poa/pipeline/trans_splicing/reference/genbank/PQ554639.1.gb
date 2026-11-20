@@ -1,0 +1,69 @@
+LOCUS       PQ554639                1532 bp    DNA     linear   PLN 12-JAN-2025
+DEFINITION  Marsilea mutica Sdh3 (sdh3) gene, complete cds; mitochondrial.
+ACCESSION   PQ554639
+VERSION     PQ554639.1
+KEYWORDS    .
+SOURCE      mitochondrion Marsilea mutica
+  ORGANISM  Marsilea mutica
+            Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta;
+            Polypodiopsida; Polypodiidae; Salviniales; Marsileaceae; Marsilea.
+REFERENCE   1  (bases 1 to 1532)
+  AUTHORS   Kwok van der Giezen,F.M. and Small,I.D.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (08-OCT-2024) School of Molecular Sciences, The
+            University of Western Australia, Bayliss Buliding, 35 Stirling
+            Highway, Crawley, WA 6009, Australia
+COMMENT     ##Assembly-Data-START##
+            Assembly Method       :: SPAdes v. 3.2; Geneious Prime v. 2023
+            Assembly Name         :: Marsilea mutica mitochondrion
+            Sequencing Technology :: Illumina
+            ##Assembly-Data-END##
+FEATURES             Location/Qualifiers
+     source          1..1532
+                     /organism="Marsilea mutica"
+                     /organelle="mitochondrion"
+                     /mol_type="genomic DNA"
+                     /db_xref="taxon:167748"
+                     /tissue_type="Frond"
+                     /geo_loc_name="Australia"
+                     /collected_by="Catherine Colas des Francs-Small"
+     gene            154..549
+                     /gene="sdh3"
+     CDS             154..549
+                     /gene="sdh3"
+                     /exception="RNA editing"
+                     /codon_start=1
+                     /product="Sdh3"
+                     /protein_id="XMD97044.1"
+                     /translation="MQIDRPLSPHITIYKPQLTSTLSIFHRISGAFLATVLFVGIFTL
+                     KVGHLSLTFENCYQYAFFIANYSYWFVLGLVNFTFLALSYHMSNGVRHLWWDLGFVLD
+                     LSQVYTSGILMLFCAASLAILNFMRIFLW"
+ORIGIN      
+        1 aagcggtgaa atggacggac ttgaaccttt gacgctatga gcccctaaca aactgttata
+       61 aatatcaaga acagacctcg cgttggcaaa gccaacgcaa gtccctctaa tgaatgctag
+      121 ggcattctcg cctctcgaat caaagccaac agaatgtaaa ttgatcgacc gttaccactt
+      181 cacattacca tttataagcc atagcttact tcgaccctcc ctattttcca tagaattccc
+      241 ggggctttcc tagccactgt gttgttcgtt ggtatcttta ccctgaaggt tggtcatctt
+      301 agcctcactt tcgagaatcg ttactaatac gctttcttta tcgcaaacta ctcttattgg
+      361 tttgtcctgg gcttagtaaa ttttactttc ttagctttgt cttattacat gagtaatggg
+      421 gtttgccatc catggtggga ttcgggtctt gttccagatc tatcttaagt gtatacttcc
+      481 ggaatcccga tgttatttcg tgccgcctct ttggccatcc cgaatcctat gcgaatcttt
+      541 ctatggtgag cgcggggagc gagccaactc cctcgggcga cattcgttcg agacatcatt
+      601 tcagcgaact aaacctagtt gttcgggtag caacccttat aggtttgggt atttcctcaa
+      661 aaactagaac ggttgggggt tccatcgcgc gcgggagaat atcggtcctt ttaccaaatt
+      721 tgttacggga atttacaacg aaagaattga tgctaaaaag gatggagacc tggttatgac
+      781 caaactacat aagttgacca tgaactcact atacggtaga ttcggcataa aaccagaaag
+      841 cagcattaca gaaatttgtg atgaagaaaa gctcgataaa ttactatcta aatacaaatt
+      901 tgctcgggtg ggctaagatg atgctgaatc ttggcatcgg cccatcaaca aaaagagaaa
+      961 tcgttcttaa caactatggc ctgtgggtag acaccaagcc attgaagatt gataatttag
+     1021 gtaagcctgc aagagacaaa cagcaaactg tatcggcaga tactacaaga gaagacaaac
+     1081 ccgcaagaaa gaaagaataa attgtgcaag cggaggagca caagcctaga atagagaaag
+     1141 aatcgttttc gggatttaat aggaaaatgg aagaagtaat acgggcagaa ctaagaacag
+     1201 agcgtgaaga actccttgaa gagttaaggg ctaagcgctc ttcgcgtaag aagttagaag
+     1261 agacactaga aaaagtcctt gaagagctac gggtcgaacg ctccacgcga gaaaagctag
+     1321 agcgcgataa gtggctggaa gaagtacggg cagaacgcga acgattgaag caagaccgtt
+     1381 atgcgttgga gaagctcaag gaagaaataa gactggaacg tgaacaacta aaagaagagt
+     1441 tgcagagcaa ttcagcggcc aaccccaaag acggcggggt aggttgtgcc taccactcct
+     1501 caatagcctt agtataggcc ccgggcagtc cg
+//
+

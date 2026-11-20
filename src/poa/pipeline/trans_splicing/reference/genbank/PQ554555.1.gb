@@ -1,0 +1,65 @@
+LOCUS       PQ554555                1081 bp    DNA     linear   PLN 12-JAN-2025
+DEFINITION  Azolla rubra Rps2 (rps2) gene, complete cds; mitochondrial.
+ACCESSION   PQ554555
+VERSION     PQ554555.1
+KEYWORDS    .
+SOURCE      mitochondrion Azolla rubra
+  ORGANISM  Azolla rubra
+            Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta;
+            Polypodiopsida; Polypodiidae; Salviniales; Salviniaceae; Azolla.
+REFERENCE   1  (bases 1 to 1081)
+  AUTHORS   Kwok van der Giezen,F.M. and Small,I.D.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (08-OCT-2024) School of Molecular Sciences, The
+            University of Western Australia, Bayliss Buliding, 35 Stirling
+            Highway, Crawley, WA 6009, Australia
+COMMENT     ##Assembly-Data-START##
+            Assembly Method       :: SPAdes v. 3.12.0; Geneious Prime v. 2023
+            Assembly Name         :: Azolla rubra mitochondrion
+            Sequencing Technology :: Illumina
+            ##Assembly-Data-END##
+FEATURES             Location/Qualifiers
+     source          1..1081
+                     /organism="Azolla rubra"
+                     /organelle="mitochondrion"
+                     /mol_type="genomic DNA"
+                     /db_xref="taxon:45988"
+                     /tissue_type="Whole plant"
+                     /geo_loc_name="Australia"
+                     /collected_by="Farley M. Kwok van der Giezen"
+     gene            64..894
+                     /gene="rps2"
+     CDS             64..894
+                     /gene="rps2"
+                     /exception="RNA editing"
+                     /codon_start=1
+                     /product="Rps2"
+                     /protein_id="XMD96960.1"
+                     /translation="MACSPLEQFAIVPLVPKWIHRFRTSKKESILCVALPYEMEKGKK
+                     EYYSKKEKKVIFQRLLNTSAHLGYQGPPTPYYQRYLYGFRRGRAIIDLEKTLLFLKIA
+                     CNAIGSIIRKEGHLLLVNTDPLYDDTMKKMARRTNQSYINSKWIGGFLTNWEHMKHEE
+                     RFKYSSTWRHSSPRFLKMQRYFEGLITRQIPDSLVILNARKDFIAIFEANRLRIPIVS
+                     LVDSTLLEGLHRLVTYPIPVNNDSVWFTNLFCQLVTKTVIHSKKARELSRKASKIRKI
+                     "
+ORIGIN      
+        1 taaacagcca tgattataaa gaaccaatct cagattttta tgaaaccctg cctgaacttt
+       61 atcatggctt gcagtccact tgaataattt gctactgttc tatcagtttt caaacggata
+      121 catagatttt gaacatcgaa gaaagaaagc atattatgcg ccgctctacc gtatgaaatg
+      181 gaaaaaggaa agaaagagta ttattccaaa aaggaaaaga aagtcatttt ttaaagatta
+      241 ccgaatacaa gcgcacattc gggctattag ggacccccaa ctccatatta ttaaagatat
+      301 ttatacggat ttagacgcgg aagggctatt attgatttgg aaaaaacact tttattcttg
+      361 aagattgctt gtaatgcgat tggatctatc attcgtaagg agggccattt attgttggtg
+      421 aatattgatc ttttgtacga tgacacaatg aaaaaaatgg cgagaaggac caattaaagt
+      481 catatcaatt ccaaatggat tggtggtttc ttaatcaatt gggaacatat gaaacatgaa
+      541 gaacgcttta agtattcatc cacgtggcgg cattctagtc tacgtttttt aaagatgtaa
+      601 agatatttcg aaggactgat aacatgctaa atttcagata gtttagttat accgaatgca
+      661 cgtaaagatt tcatagctat atttgaagct aattgatcat gaatatttat tgcattcctg
+      721 gtggattcta ctctcctaga gggattacat aggttagtta tttatctcat tctggtaaat
+      781 aatgattccg tgtggttcac aaatccattt tgctaattgg tcacgaaaat agtcattcat
+      841 tcgaaaaagg cttgagaacc cagcagaaaa gccagtaaaa taaggaaaat tcaaaaaaga
+      901 aaaaagaata cccactagaa aggatgctag ttgctgtctc tcacctcttc agttcagagc
+      961 ggcaccagaa atcaagcaag aaccagtatt attcgtcacc ttactatgcg tccctttgcc
+     1021 attctttgcg atggcgaaag cggctccaga tgagaaaaag agcccagcac agccctggaa
+     1081 t
+//
+

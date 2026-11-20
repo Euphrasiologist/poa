@@ -1,0 +1,63 @@
+LOCUS       PQ554592                 983 bp    DNA     linear   PLN 12-JAN-2025
+DEFINITION  Azolla pinnata Rps2 (rps2) gene, complete cds; mitochondrial.
+ACCESSION   PQ554592
+VERSION     PQ554592.1
+KEYWORDS    .
+SOURCE      mitochondrion Azolla pinnata
+  ORGANISM  Azolla pinnata
+            Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta;
+            Polypodiopsida; Polypodiidae; Salviniales; Salviniaceae; Azolla.
+REFERENCE   1  (bases 1 to 983)
+  AUTHORS   Kwok van der Giezen,F.M. and Small,I.D.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (08-OCT-2024) School of Molecular Sciences, The
+            University of Western Australia, Bayliss Buliding, 35 Stirling
+            Highway, Crawley, WA 6009, Australia
+COMMENT     ##Assembly-Data-START##
+            Assembly Method       :: SPAdes v. 3.2.0; Geneious Prime v. 2023
+            Assembly Name         :: Azolla pinnata mitochondrion
+            Sequencing Technology :: Illumina
+            ##Assembly-Data-END##
+FEATURES             Location/Qualifiers
+     source          1..983
+                     /organism="Azolla pinnata"
+                     /organelle="mitochondrion"
+                     /mol_type="genomic DNA"
+                     /db_xref="taxon:99433"
+                     /tissue_type="Whole plant"
+                     /geo_loc_name="Australia"
+                     /collected_by="Farley M. Kwok van der Giezen"
+     gene            39..869
+                     /gene="rps2"
+     CDS             39..869
+                     /gene="rps2"
+                     /exception="RNA editing"
+                     /codon_start=1
+                     /product="Rps2"
+                     /protein_id="XMD96997.1"
+                     /translation="MACSPLEQFAIVPLVPKWIHRFRTSKKESILCAALPYEMEKGKK
+                     EYYSKKEKKVIFQRLLNTSAHLGYQGPPTPYYQRYLYGFRRGRAIIDLEKTLLFLKIA
+                     CNAIGSIIRKEGHLLLVNTDPLYDDTMKKMARRTNQSYINSKWIGGFLTNWEHMKHEE
+                     RFKYSSTWRHSSPRFLKMQRYFEGLITRQIPDSLVILNARKDFIAIFEANRLRIPIVS
+                     LVDSTLLEGLHRLVTYPIPVNNDSVWFTNLFCQLVTKTVIHSKKARELSRKASKIRKI
+                     "
+ORIGIN      
+        1 tcactacgat ttttatgaaa ccctgcctga actttctcat ggcttgcagt ccacttgaat
+       61 aatttgctac tgttctatca gttttcaaac ggatacatag attttgaaca tcgaagaaag
+      121 aaagcatatt atgcgccgct ctaccgtatg aaatggaaaa aggaaagaaa gagtattatt
+      181 ccaaaaagga aaagaaagtc attttttaaa gattaccgaa tacaagcgca cattcgggct
+      241 attagggacc cccaactcca tattattaaa gatatttata cggatttaga cgcggaaggg
+      301 ctattattga tttggaaaaa acacttttat tcttgaagat tgcttgtaat gcgattggat
+      361 ctatcattcg taaggagggc catttattgt tggtgaatat tgatcttttg tacgatgaca
+      421 caatgaaaaa aatggcgaga aggaccaatt aaagtcatat caattccaaa tggattggtg
+      481 gtttcttaat caattgggaa catatgaaac atgaagaacg ctttaagtat tcatccacgt
+      541 ggcggcattc tagtctacgt tttttaaaga tgtaaagata tttcgaagga ctgataacat
+      601 gctaaatttc agatagttta gttataccga atgcacgtaa agatttcata gctatatttg
+      661 aagctaattg atcatgaata tttattgcat tcctggtgga ttctactctc ctagagggat
+      721 tacataggtt agttatttat ctcattctgg taaataatga ttccgtgtgg ttcacaaatc
+      781 cattttgcta attggtcacg aaaatagtca ttcattcgaa aaaggcttga gaacccagca
+      841 gaaaagccag taaaataagg aaaattcaaa aaagacaaaa gaatacccac tagaaaggat
+      901 gctagttgct gtctctcacc tcttcagagc ggcaccagaa atcaagaacc agtattattc
+      961 gtcaccttac tatgcgtccc ttt
+//
+

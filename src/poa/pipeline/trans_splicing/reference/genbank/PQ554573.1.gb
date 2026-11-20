@@ -1,0 +1,96 @@
+LOCUS       PQ554573                2779 bp    DNA     linear   PLN 12-JAN-2025
+DEFINITION  Azolla pinnata Cox1 (cox1) gene, complete cds; mitochondrial.
+ACCESSION   PQ554573
+VERSION     PQ554573.1
+KEYWORDS    .
+SOURCE      mitochondrion Azolla pinnata
+  ORGANISM  Azolla pinnata
+            Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta;
+            Polypodiopsida; Polypodiidae; Salviniales; Salviniaceae; Azolla.
+REFERENCE   1  (bases 1 to 2779)
+  AUTHORS   Kwok van der Giezen,F.M. and Small,I.D.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (08-OCT-2024) School of Molecular Sciences, The
+            University of Western Australia, Bayliss Buliding, 35 Stirling
+            Highway, Crawley, WA 6009, Australia
+COMMENT     ##Assembly-Data-START##
+            Assembly Method       :: SPAdes v. 3.2.0; Geneious Prime v. 2023
+            Assembly Name         :: Azolla pinnata mitochondrion
+            Sequencing Technology :: Illumina
+            ##Assembly-Data-END##
+FEATURES             Location/Qualifiers
+     source          1..2779
+                     /organism="Azolla pinnata"
+                     /organelle="mitochondrion"
+                     /mol_type="genomic DNA"
+                     /db_xref="taxon:99433"
+                     /tissue_type="Whole plant"
+                     /geo_loc_name="Australia"
+                     /collected_by="Farley M. Kwok van der Giezen"
+     gene            87..2637
+                     /gene="cox1"
+     CDS             join(87..391,1458..2637)
+                     /gene="cox1"
+                     /exception="RNA editing"
+                     /codon_start=1
+                     /product="Cox1"
+                     /protein_id="XMD96978.1"
+                     /translation="MGTCLSVLIRMELAQPGHQILGGNHQLYNVLITAHAFLMIFFLV
+                     MPAMIGGFGNWFVPILIGAPDMAFPRLNNISFWLLPPSLLLLLSSALVEVGSGTGWTV
+                     YPPLSSITSHSGGAVDLAIFSLHLSGVSSILGSINFITTILNMRGPGMTMHRLPLFVW
+                     SVLVTAFLLLLSLPVLAGAITMLLTDRNFNTTFFDPAGGGDPILYQHLFWFFGHPEVY
+                     ILILPGFGIISHIVSTFSRKPVFGYLGMVYAMISIGVLGFIVWAHHMFTVGLDVDTRA
+                     YFTAATMIIAVPTGIKVFSWIATMWGGSIQYKTPMLFAVGFIFLFTIGGLTGIVLANS
+                     GIDVALHDTYYVVAHFHYVLSMGAVFALFAGFYYWIGKMSGLQYPETLGQIHFWITFF
+                     GVNLTFFPMHFLGLSGMPRRIPDYPDAYVGWNALSSFGSYVSVLGILCFFVVVFKTLS
+                     SGNKCAPSPWAGEQNSTTLEWMVQSPPAFHTFGELPAIRETSLK"
+ORIGIN      
+        1 accgtttcgt gtaaagatgg ctattttcta cgaactacaa agatataggt actctacact
+       61 caatctttgg tgtcacggct ggagtaatgg gcacacgcct cttagtacta atctgtatgg
+      121 aatcagcata acccggccat taaattcctg gtggaaatca ttaaccttat aatgtgttaa
+      181 taatcgctta cgcttcttta acgacatccc ttccggttac gctggcgatg acaggtggat
+      241 tcggtaaccg gttcgttctg attcttacag gtgcacctga cacggcattt ctatgattaa
+      301 ataatattct atttcggttg tcgtcatctt tgctgttgct ttcatcaagt ttagcctcag
+      361 tagaggtggg tagtggcact gggtggacgg ttaaaaaggc cgtgccctgt ggagacatag
+      421 ggaacagtaa ttccgctcga tgcaggaacg tcctcgctac agaaaaaaag gctaagccgg
+      481 gccgcaggcc ttcaacaaaa tccaaactgc tatatgcaaa aacctttccc acaaggggac
+      541 aacctgcctg ggagggcgaa tcttccctcc catcagagac tcaatgcgga atatctatca
+      601 ctctgcggat agcttgtggg tgtgagctgc ttcagcaggc agcatcgtgc tctaagacgc
+      661 gagtacaacc tgagtctccc tattgcttgc ccaaggcaaa tacaatctac agatccttta
+      721 ctacgtcagg aagatgctta atgtaaggtc tgtcaatgcg gcgcataaga tcatgggagt
+      781 gtatcagatc gaaagatgct agctttttct tatatttggt caatatccat acttgattag
+      841 taagcatttc tattgcgagg gagttcgtaa agcccatcag gtattaaaag atccaaagca
+      901 gcagcagctc tcaatagggc acaagtgcta catccgtaaa gattcaaggg gtgctactct
+      961 tctagagact tgtgtcaatc tcggaggtat ggccgctgac cttgatcggc ttaccggctt
+     1021 tatagaggca gagagacctc atacaggaag ggcagaaaac aacaacggcg cttcccggtt
+     1081 ggccgaagat aggcctttct caggggctat gggacgaagg ccacatattc ttactcagcc
+     1141 ttcatgctga agccgcttct tttctttctt gcttgcgcgc ccttattgat tcaagactgt
+     1201 ctacagtggg acagtgcttg gtacaagtta gctcttctaa agcgattcag aggtataaaa
+     1261 tcactagagc tgaagctccg gtcaagggcc atccgccata agaataatcg ggaaaagttc
+     1321 gagtagacct gcctgaggga ttctctaaag gaaaggcttc atgacaggat gatagataaa
+     1381 ggtacagtcc gatccataca gagacatatg gcgtatagca ttaggcaaac acaacctgag
+     1441 gctatttaac atatgtgcta tccccctctg agtagtataa ccagtcattc cggaggagct
+     1501 gttgatttag ccacttctag tctctaccta tcaggtgttt tctttatttt aggtttcatt
+     1561 aattttataa ccattatcct taacacgcgc ggacccggaa tgaccatgca tagattatcc
+     1621 ctatccgttc ggttcgtttc agtgacagca ttcctacctt taccacctcc tctcgtaccg
+     1681 gcgggtgcaa ttaccatgtc atcaaccgat tgaaactcta atatcatctc ttctgaccct
+     1741 gctggaggag gggaccctat cttatactag catccttctc ggctccccgg ttatctagag
+     1801 gttcatactt ttattccgtc aggacttggt atcattagtt atatcgtctc cactctcccc
+     1861 agaaaacctg tcttcggtta ttcaggcacg gtgtatgcca tgatcagtat tggagttcct
+     1921 ggatttactg ctcgggctta ttatacgtct actgtaggct cagacgtgga tacacgtgcc
+     1981 tacttcacgg cggccatcat gattattgtc gtgcttattg gaatcaaggt tcctagtcgg
+     2041 attgccatca tgtggggagg ctcaatataa tacaaaacac tcatgtcatt tgcagtaggg
+     2101 tctacttttc cgtttactat aggaggactt actggtatag tctcggctaa tttcgggata
+     2161 gacgttgctc tatatgatac ttatcacgtg gctgcatatt cctatcatgc atttcttacg
+     2221 ggagctgttt ctgctttatt cgtagggttc tactaccgga taggtaaaat gcctggtctt
+     2281 taatacctag agacttcggg ttaaatttat ctttggatta ctttccttgg agcgaatctg
+     2341 actctctctc tcacgcatct cccaggtcct tcgggcatgc catgttgcat ccctgattat
+     2401 ccagatgctt acgtcggacg gaatgcctca agtagtttcg gcccttatgt tctcgtaccg
+     2461 gggatccctc gttcttttgt agtagttttc aaaacttcga gcagtgggaa caagtgtgct
+     2521 ctaagtcctc gggctggtga atagaattca accacattcg aatggatggt ataaagccct
+     2581 ccagcttttc atacttttgg agaactttca gctatcaggg aaaccagtct taagcaaccg
+     2641 gaaccaccga atggaacatg cctgattcct cgagattttt cgccgcttgt aaccttgccc
+     2701 ttagctgtca gttctggtta cgcaaatcac tttggcgttc agccgcgtac catcatcggg
+     2761 tcctccccaa tgataagct
+//
+

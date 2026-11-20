@@ -1,0 +1,55 @@
+LOCUS       PQ554595                 704 bp    DNA     linear   PLN 12-JAN-2025
+DEFINITION  Azolla pinnata Rps7 (rps7) gene, complete cds; mitochondrial.
+ACCESSION   PQ554595
+VERSION     PQ554595.1
+KEYWORDS    .
+SOURCE      mitochondrion Azolla pinnata
+  ORGANISM  Azolla pinnata
+            Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta;
+            Polypodiopsida; Polypodiidae; Salviniales; Salviniaceae; Azolla.
+REFERENCE   1  (bases 1 to 704)
+  AUTHORS   Kwok van der Giezen,F.M. and Small,I.D.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (08-OCT-2024) School of Molecular Sciences, The
+            University of Western Australia, Bayliss Buliding, 35 Stirling
+            Highway, Crawley, WA 6009, Australia
+COMMENT     ##Assembly-Data-START##
+            Assembly Method       :: SPAdes v. 3.2.0; Geneious Prime v. 2023
+            Assembly Name         :: Azolla pinnata mitochondrion
+            Sequencing Technology :: Illumina
+            ##Assembly-Data-END##
+FEATURES             Location/Qualifiers
+     source          1..704
+                     /organism="Azolla pinnata"
+                     /organelle="mitochondrion"
+                     /mol_type="genomic DNA"
+                     /db_xref="taxon:99433"
+                     /tissue_type="Whole plant"
+                     /geo_loc_name="Australia"
+                     /collected_by="Farley M. Kwok van der Giezen"
+     gene            115..516
+                     /gene="rps7"
+     CDS             115..516
+                     /gene="rps7"
+                     /exception="RNA editing"
+                     /codon_start=1
+                     /product="Rps7"
+                     /protein_id="XMD97000.1"
+                     /translation="MIDGKRTKSRVIVSQTFSRLSRIEPDVHVITLLANAIENVKPTC
+                     EIKKVRIAGTTRNVPKIIAKERQETLALRWIMEAAVKRRTMSRNSQSLDQCLSAEILD
+                     AYQRKGNVRKRRDDLHKLAEANRSFAHYRWW"
+ORIGIN      
+        1 agacccaagg gaggccgtga aggaagcaca tacagctgct cggagagatt aagctacatc
+       61 tggggagtgg ataataaaca aaaaagatta atcaagaaat tagtccactt ttgtatgatt
+      121 gatggtaaaa gaacaaaatc tcgtgttatt gtttcctaaa cttcttctcg tctttcctga
+      181 actgaacccg atgttcatgt tatcacactc ctggctaacg ccatagagaa tgtcaagcct
+      241 actcgcgaaa tcaagaaagt gagaatcgca gggactactc gtaatgtact caagattatt
+      301 gccaaagaac gttaagaaac cttagctttt cgtcggatca tggaagcagc tgtcaaatga
+      361 cgtactatga gcagaaatag ccagagcttg gattaatgtt catctgctga gataccggat
+      421 gcttatcaaa gaaagggaaa tgttcgtaaa agaagggatg atcttcataa accggcagag
+      481 gccaatagaa gtttcgcgca ttataggtgg cggtgaacca ttgaaaacat gtaatgagct
+      541 ggggtcaaga gctgttagac actttagcag cacacaccct acatcgcaga atcgagtaat
+      601 tggtaatcca tcgttcgaat gcttaatgat tctaatattg acaatgagac ctgccaaaaa
+      661 acaagaaagc gagaattcga ttctggtgtg aatttggtgc tacg
+//
+

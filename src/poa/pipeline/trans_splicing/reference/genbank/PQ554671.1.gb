@@ -1,0 +1,58 @@
+LOCUS       PQ554671                 811 bp    DNA     linear   PLN 12-JAN-2025
+DEFINITION  Salvinia molesta Rps11 (rps11) gene, complete cds; mitochondrial.
+ACCESSION   PQ554671
+VERSION     PQ554671.1
+KEYWORDS    .
+SOURCE      mitochondrion Salvinia molesta
+  ORGANISM  Salvinia molesta
+            Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta;
+            Polypodiopsida; Polypodiidae; Salviniales; Salviniaceae; Salvinia.
+REFERENCE   1  (bases 1 to 811)
+  AUTHORS   Kwok van der Giezen,F.M. and Small,I.D.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (08-OCT-2024) School of Molecular Sciences, The
+            University of Western Australia, Bayliss Buliding, 35 Stirling
+            Highway, Crawley, WA 6009, Australia
+COMMENT     ##Assembly-Data-START##
+            Assembly Method       :: SPAdes v. 3.2; Geneious Prime v. 2023
+            Assembly Name         :: Salvinia molesta mitochondrion
+            Sequencing Technology :: Illumina
+            ##Assembly-Data-END##
+FEATURES             Location/Qualifiers
+     source          1..811
+                     /organism="Salvinia molesta"
+                     /organelle="mitochondrion"
+                     /mol_type="genomic DNA"
+                     /db_xref="taxon:167732"
+                     /tissue_type="Whole plant"
+                     /dev_stage="Primary phase"
+                     /geo_loc_name="Australia"
+                     /collected_by="Farley M. Kwok van der Giezen"
+     gene            252..683
+                     /gene="rps11"
+     CDS             252..683
+                     /gene="rps11"
+                     /exception="RNA editing"
+                     /codon_start=1
+                     /product="Rps11"
+                     /protein_id="XMD97076.1"
+                     /translation="MQKQPSEHQQQQPRRQQKWGKHHQKLRKHHGIAHIQSTFSNTFI
+                     TITNCKGDERTGSSSGCSRGFKGSRRSDKYAAQATAERVAQAATQLEIRSVEVKIRGI
+                     GLARKGFLLKSLKEGGLVITRIHDVTPMPHNGCRPPKKRRV"
+ORIGIN      
+        1 ttaaagagag aaatttagta atatatcaaa tgattaatta atatcagccg ttaccgcgga
+       61 ttccgtcaca aagcaggatt gccattacgt ggttaatgaa cctacagcaa tgttaagatc
+      121 tgtcgcaagt caagaaaagt ttcaatcaat caacgaaaga agaataattc gtttttcatt
+      181 cacaaaaatg ggagagggca agacgccagg aagaaaacga aaccgaagga atagaaatga
+      241 agaatacaat tatgtaaaag cagccttctg aacactagta atagtagccg cgccgctaac
+      301 agaaatgggg aaaacaccac taaaagccaa gaaagcacca cggtattgcc catacttaac
+      361 caacttttag taatactttc attatcataa taaattgcaa gggagatgaa agaacagggt
+      421 cctcctcagg ttgttcaaga gggtttaagg gtttccgtcg ctcggacaag tatgcagctt
+      481 aagcaactgc ggaacgtgtc gcgtaagctg ccacttaacc cgaaattagg tcagttgaag
+      541 tgaaaataag aggaattggt cttgtaagaa agggattttc gccgaaaagt tcaaaagagg
+      601 gaggtcctgt tactatcaga attcacgacg taatcccaat gctacataat ggatgctgac
+      661 ctcctaaaaa acgtcgtgtc taaataccac catagagcta tttgtctcta ctcaccaacg
+      721 tcagaaggtt tggattggtc cggaagccca gcaggtcgtg gaaggcttgg ctcgagcaag
+      781 gcgaaggtcc tcatttacga cacgtaaatg g
+//
+

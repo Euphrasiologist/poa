@@ -1,0 +1,58 @@
+LOCUS       PQ554554                 814 bp    DNA     linear   PLN 12-JAN-2025
+DEFINITION  Azolla rubra Rps1 (rps1) gene, complete cds; mitochondrial.
+ACCESSION   PQ554554
+VERSION     PQ554554.1
+KEYWORDS    .
+SOURCE      mitochondrion Azolla rubra
+  ORGANISM  Azolla rubra
+            Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta;
+            Polypodiopsida; Polypodiidae; Salviniales; Salviniaceae; Azolla.
+REFERENCE   1  (bases 1 to 814)
+  AUTHORS   Kwok van der Giezen,F.M. and Small,I.D.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (08-OCT-2024) School of Molecular Sciences, The
+            University of Western Australia, Bayliss Buliding, 35 Stirling
+            Highway, Crawley, WA 6009, Australia
+COMMENT     ##Assembly-Data-START##
+            Assembly Method       :: SPAdes v. 3.12.0; Geneious Prime v. 2023
+            Assembly Name         :: Azolla rubra mitochondrion
+            Sequencing Technology :: Illumina
+            ##Assembly-Data-END##
+FEATURES             Location/Qualifiers
+     source          1..814
+                     /organism="Azolla rubra"
+                     /organelle="mitochondrion"
+                     /mol_type="genomic DNA"
+                     /db_xref="taxon:45988"
+                     /tissue_type="Whole plant"
+                     /geo_loc_name="Australia"
+                     /collected_by="Farley M. Kwok van der Giezen"
+     gene            116..712
+                     /gene="rps1"
+     CDS             116..712
+                     /gene="rps1"
+                     /exception="RNA editing"
+                     /codon_start=1
+                     /product="Rps1"
+                     /protein_id="XMD96959.1"
+                     /translation="MILVNTGLKTPVILLKHEVTARAPITKQAKFNFVGIEDLNLEKV
+                     EELCEPKIILPEPRKPEIILPKPLNKKIVWIELTKIWRDRDKVKGLIFNSMKGGYAVA
+                     IAGFVAFLPRSLFRKNESERFYKKNKFYKSRKFRFYKNKSRSGKFGNKGLKFRRSRNE
+                     TSRRSRTFRILNMNLIKRNIVVKEEIRAALVSEKKKHH"
+ORIGIN      
+        1 tagtcccact ttactacgtg aaggcgctct ataatattca gtgaaaccat tataatacag
+       61 ggacaaaagt catgatgggg acagaggttt aatcaaactg ttacacccgc agaatatgat
+      121 cttggtgaat acaggactga aaactcctgt aatcctttta aaacatgaag tgacagcaag
+      181 agcgccaatc accaagtaag caaagtttaa ttctgttggg atcgaagatt cgaatctgga
+      241 aaaagtggaa gagcttcgtg aaccaaaaat tattttgcca gaaccacgta aaccggaaat
+      301 tattttgtca aaaccattga acaagaaaat agttcggatt gaactaacca agatttggcg
+      361 tgaccgcgac aaggtcaaag ggttgatttt caatttaatg aagggtgggt atgccgcagt
+      421 tactgcaggg ttcgtggctt tccttttcag gagtcccttt cgcaaaaatg agagtgagag
+      481 gttccacaaa aagaataaat tttacaaaag tagaaaattt aggttccaca agaataaaag
+      541 cagaagtggg aaatttggaa acaaaggtct aaagtttcgc agaagcagaa atgagacatt
+      601 ctgcagaagt aggacatcca gaattctgaa cacgaaccca ataaagcgta atattgcggt
+      661 aaaagaagag attcgtgctg cgctagtttc agaaaagaaa aagcaccatt gaatcgaaag
+      721 ccgcccccta accagcagtc tcttcctaag caccaacagc agcaagaaat agtttattta
+      781 catgagtaag aaactgacgt atttcccgct tccg
+//
+

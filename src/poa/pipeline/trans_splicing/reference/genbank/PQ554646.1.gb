@@ -1,0 +1,73 @@
+LOCUS       PQ554646                1424 bp    DNA     linear   PLN 12-JAN-2025
+DEFINITION  Salvinia molesta Cob (cob) gene, complete cds; mitochondrial.
+ACCESSION   PQ554646
+VERSION     PQ554646.1
+KEYWORDS    .
+SOURCE      mitochondrion Salvinia molesta
+  ORGANISM  Salvinia molesta
+            Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta;
+            Polypodiopsida; Polypodiidae; Salviniales; Salviniaceae; Salvinia.
+REFERENCE   1  (bases 1 to 1424)
+  AUTHORS   Kwok van der Giezen,F.M. and Small,I.D.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (08-OCT-2024) School of Molecular Sciences, The
+            University of Western Australia, Bayliss Buliding, 35 Stirling
+            Highway, Crawley, WA 6009, Australia
+COMMENT     ##Assembly-Data-START##
+            Assembly Method       :: SPAdes v. 3.2; Geneious Prime v. 2023
+            Assembly Name         :: Salvinia molesta mitochondrion
+            Sequencing Technology :: Illumina
+            ##Assembly-Data-END##
+FEATURES             Location/Qualifiers
+     source          1..1424
+                     /organism="Salvinia molesta"
+                     /organelle="mitochondrion"
+                     /mol_type="genomic DNA"
+                     /db_xref="taxon:167732"
+                     /tissue_type="Whole plant"
+                     /dev_stage="Primary phase"
+                     /geo_loc_name="Australia"
+                     /collected_by="Farley M. Kwok van der Giezen"
+     gene            98..1303
+                     /gene="cob"
+     CDS             98..1303
+                     /gene="cob"
+                     /exception="RNA editing"
+                     /codon_start=1
+                     /product="Cob"
+                     /protein_id="XMD97051.1"
+                     /translation="MARRLSILKQPLFSILNQHLIDYPTPSNISYWWGFGSLAGLCLV
+                     IQIITGVFLAMHYTPHVDLAFNSVEHIMRDVKGGWLLRYMHANGASMFFTVVYIHIFR
+                     GLYYGSYTSPREFIWCLGVVILLLMIVTAFIGYVLPWGQMSFWGATVITSLASAVPIV
+                     GDTIVTWLWGGFSVDNATLNRFFSLHYLLPFVIAGASLIHLAALHQYGSNNPLGINSS
+                     VDKIAFYPYLYVKDLVGWVAFAIFFSIWLFYAPNVLGHPDNYMPANPMSTPAHIVPEW
+                     YFLPIYAILRSIPNKLGGVAAIGLVFVSLLALPFLNTSAVRSSSFRLIYQRMFWLLLA
+                     DCLLLGWIGCQPVEAPYVTIGQMASVVFFSYFAITPILGQIEARLIMNADDATIGRHP
+                     AMPVYYPFR"
+ORIGIN      
+        1 gagtcaggcc ccatcaaggc agatgcatga tgaacgcttt tcggggccgc acgcagaagg
+       61 aaaaacacag aatgaaccga atactactat tactatcatg gccaggtgac ttccaattct
+      121 taaatagcct ttattttcta tacttaacta gcattcgata gatcatctaa ttctgagcaa
+      181 tataagtcat cggtgggggt ttggtttgtt agccggtctt cgtccagtca tttagatcat
+      241 tatcggcgtc ttttcagcta tgtattatac acctcatgtc gatctggctc tcaacagcgt
+      301 agaacacatt atgagagatg tgaagggagg ctggttgctt tgttacatgt atgccaatgg
+      361 ggccagtatg ttcttcactg cagttcatat ctatattttc tgcggtccgt atcatggaag
+      421 ctatatcagt ctcagagaat tcattcggtg tctcggagtt gtcacccttc tatcaacgat
+      481 cgttaccgct ttcacaggcc atgtactctt ccggggttaa atgagctttc ggggagctat
+      541 agtaattacc agctcagcta gtgtcgtatt tatagtagga gataccatag tcactcggct
+      601 ttggggtggt ttctccgtag acaatgccac cctaaatcgt ttctccagtc tttatcactc
+      661 actcctcttc gtaattgcag gcgctagtcc tatctatccg gctgcgttat attaatacgg
+      721 atccaacaat ccattgggca taaattcttc tgtggataaa attgcttttc atctctatct
+      781 ttacgccaag gatttggtgg gtcgggtagc atttgccatt ttcttctcca tccggctctt
+      841 ctatgcacct aatgtcttgg gatactccga caattatatg cctgcgaatc cgatgttcac
+      901 tctggcttat attgtattag aatggtatcc cttatcaatc tatgctattc cgtgaagtat
+      961 cctcaacaaa ttaggaggag tggccgctac aggaccagtt tttgtgtcat cactggcccc
+     1021 acttttcctt aacacttccg cagtacggag tttaagtttt tgactaattt actaaagaat
+     1081 gtttcggttg cttttggccg attgcttact tttaggttgg attggatgtt aaccagtgga
+     1141 ggcaccgcac gttactattg gataaatggc ttttgtagtg ttttcctctt attccgctat
+     1201 cacgcccatt cttggccaaa tagaagccag attaataatg aatgccgacg atgccacgat
+     1261 aggtcggcac ttcgctatgc cagtttatta cccgttccgc taggccgcgg gatattttct
+     1321 aataaagaac aggattgagc cttctagtac ttgttgtgaa ctaactctta gtacttgttg
+     1381 tgaaggtttt aatgaggaat ataataatat tattgaaaat tgag
+//
+

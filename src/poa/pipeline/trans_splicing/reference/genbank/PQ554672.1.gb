@@ -1,0 +1,55 @@
+LOCUS       PQ554672                 659 bp    DNA     linear   PLN 12-JAN-2025
+DEFINITION  Salvinia molesta Rps12 (rps12) gene, complete cds; mitochondrial.
+ACCESSION   PQ554672
+VERSION     PQ554672.1
+KEYWORDS    .
+SOURCE      mitochondrion Salvinia molesta
+  ORGANISM  Salvinia molesta
+            Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta;
+            Polypodiopsida; Polypodiidae; Salviniales; Salviniaceae; Salvinia.
+REFERENCE   1  (bases 1 to 659)
+  AUTHORS   Kwok van der Giezen,F.M. and Small,I.D.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (08-OCT-2024) School of Molecular Sciences, The
+            University of Western Australia, Bayliss Buliding, 35 Stirling
+            Highway, Crawley, WA 6009, Australia
+COMMENT     ##Assembly-Data-START##
+            Assembly Method       :: SPAdes v. 3.2; Geneious Prime v. 2023
+            Assembly Name         :: Salvinia molesta mitochondrion
+            Sequencing Technology :: Illumina
+            ##Assembly-Data-END##
+FEATURES             Location/Qualifiers
+     source          1..659
+                     /organism="Salvinia molesta"
+                     /organelle="mitochondrion"
+                     /mol_type="genomic DNA"
+                     /db_xref="taxon:167732"
+                     /tissue_type="Whole plant"
+                     /dev_stage="Primary phase"
+                     /geo_loc_name="Australia"
+                     /collected_by="Farley M. Kwok van der Giezen"
+     gene            141..521
+                     /gene="rps12"
+     CDS             141..521
+                     /gene="rps12"
+                     /exception="RNA editing"
+                     /codon_start=1
+                     /product="Rps12"
+                     /protein_id="XMD97077.1"
+                     /translation="MPTINQLLRHCRRAKRHKTRTRALNQCPQKFGVCLRVSTRTPKK
+                     PNSALRKIAKVRLSNRRNIIAYIPGEGHNLQEHSAVMVRGGRVKDLPGVNYHCIRGVK
+                     DLQGIPDRRRGRSKYGTEKPKNSI"
+ORIGIN      
+        1 tgcttgacct aaacgattta ccgccaaccg aaaggtaatc gttcggttat gtcaaggggt
+       61 gagtgctgtg tcaagcgggc agatgcatga tgaacgcttt tcggggccgc acgcagaagg
+      121 aaaaacacag attgcgaaat acgccaacca taaattaatt gcttcgtcat tgtagaaggg
+      181 caaaacgtca caaaacatgt acttgagctt cgaattaatg tctctaaaag tttggggtac
+      241 gcccgcgtgt ttcgacaaga acactaaaaa aacctaatct ggctttatgc aagatagcca
+      301 aggcacgttc aagcaattga aggaatatca ttgctcacat ctttggcgag ggttataatt
+      361 cataggagca tcctgcggtt acggctagag gaggtagagt gaaagattcg ttaggtgtga
+      421 attatcatcg tattcgagga gttaaagatt cgtagggaat cccggattga agatgaggca
+      481 gactaaaaca tggtacagag aaacctaaga attcgatacg aatggaaagg tcaaatcagg
+      541 gaatggttgc ttttctcgct catcgccgtc aggccggttt catttttcgg gaagactttc
+      601 agaatgaccg gcggaaactt ttggaacgga aagccatccg cttcgatccc attgcaaat
+//
+

@@ -1,0 +1,60 @@
+LOCUS       PQ554577                 970 bp    DNA     linear   PLN 12-JAN-2025
+DEFINITION  Azolla pinnata MttB (mttB) gene, complete cds; mitochondrial.
+ACCESSION   PQ554577
+VERSION     PQ554577.1
+KEYWORDS    .
+SOURCE      mitochondrion Azolla pinnata
+  ORGANISM  Azolla pinnata
+            Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta;
+            Polypodiopsida; Polypodiidae; Salviniales; Salviniaceae; Azolla.
+REFERENCE   1  (bases 1 to 970)
+  AUTHORS   Kwok van der Giezen,F.M. and Small,I.D.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (08-OCT-2024) School of Molecular Sciences, The
+            University of Western Australia, Bayliss Buliding, 35 Stirling
+            Highway, Crawley, WA 6009, Australia
+COMMENT     ##Assembly-Data-START##
+            Assembly Method       :: SPAdes v. 3.2.0; Geneious Prime v. 2023
+            Assembly Name         :: Azolla pinnata mitochondrion
+            Sequencing Technology :: Illumina
+            ##Assembly-Data-END##
+FEATURES             Location/Qualifiers
+     source          1..970
+                     /organism="Azolla pinnata"
+                     /organelle="mitochondrion"
+                     /mol_type="genomic DNA"
+                     /db_xref="taxon:99433"
+                     /tissue_type="Whole plant"
+                     /geo_loc_name="Australia"
+                     /collected_by="Farley M. Kwok van der Giezen"
+     gene            93..467
+                     /gene="mttB"
+     CDS             93..467
+                     /gene="mttB"
+                     /exception="RNA editing"
+                     /codon_start=1
+                     /product="MttB"
+                     /protein_id="XMD96982.1"
+                     /translation="MRHFVLKTIMEELKIRVSWILICFGLTWLTSYLFLEELIFLLAK
+                     PLLYSDLFFICTRLTEALSTYVITSLISCLYFAFPCMIYQIWCFLIPSCYERQRKEYE
+                     KLFYLSGFCLLLFFFATFVWVVP"
+ORIGIN      
+        1 gcacgttggg gtaaagtttt ttatggaaga tcactatctg tatattacgg tagtaataca
+       61 cgaatactga acaaaaccga ttaatcagtc agatgagaca tttcgtttca aaaacaatta
+      121 tggaagaacc aaaaatttgc gtttcttgga tattgattcg cttcggtttg atacggctca
+      181 cgctctatcc gttcttggaa gagcccattc cttcattagc taaactttcg ccctattcag
+      241 actcgtttcc tattcgtaca tgattgatag aggccttgag cacatatgtt attacacttt
+      301 caatatcatg tccctatttt gctttttctt gtacgactca ttaaattcgg tgctctttga
+      361 tccttagttg ctatgaaagg taaaggaaag aatatgaaaa attgttttac tcaagtggtt
+      421 tttgcctttt atcatctttc cccgctactt ctgtttgggt agtttccaat gttcggcacc
+      481 tctctcaccg tccaagtacc acatccacta atttgcctac gaccaagtca caatctaaga
+      541 cttctgacta cataatgtca actgttcgta ccttgtccat ttcgctaacg cgcccttaag
+      601 ttttggtaat ggttatctgt ttgccagaac caaaagctat ttctttgaga acctgtctaa
+      661 acaattgtcg tattttgagg gttcgttcgc tttccatagc agctctgttc acattttcag
+      721 atatctggtg ttaaattgtc ggtcgtttac ctttctatgt tctaatcgag ttaaccatct
+      781 tcgtagcctt gattatgcca acttatagga agcaattatc tagataggta ggcgcttccc
+      841 tatgaaaaca acctagcgag aatggttttt tatctaatat aggcggcccc aggccgcccc
+      901 cttcccgtgt atcgataaat aatagaaggc tctattaggc attacagcgc agggcccaaa
+      961 aaagcaggct
+//
+

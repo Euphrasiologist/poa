@@ -1,0 +1,78 @@
+LOCUS       PQ554648                1888 bp    DNA     linear   PLN 12-JAN-2025
+DEFINITION  Salvinia molesta Cox2 (cox2) gene, complete cds; mitochondrial.
+ACCESSION   PQ554648
+VERSION     PQ554648.1
+KEYWORDS    .
+SOURCE      mitochondrion Salvinia molesta
+  ORGANISM  Salvinia molesta
+            Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta;
+            Polypodiopsida; Polypodiidae; Salviniales; Salviniaceae; Salvinia.
+REFERENCE   1  (bases 1 to 1888)
+  AUTHORS   Kwok van der Giezen,F.M. and Small,I.D.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (08-OCT-2024) School of Molecular Sciences, The
+            University of Western Australia, Bayliss Buliding, 35 Stirling
+            Highway, Crawley, WA 6009, Australia
+COMMENT     ##Assembly-Data-START##
+            Assembly Method       :: SPAdes v. 3.2; Geneious Prime v. 2023
+            Assembly Name         :: Salvinia molesta mitochondrion
+            Sequencing Technology :: Illumina
+            ##Assembly-Data-END##
+FEATURES             Location/Qualifiers
+     source          1..1888
+                     /organism="Salvinia molesta"
+                     /organelle="mitochondrion"
+                     /mol_type="genomic DNA"
+                     /db_xref="taxon:167732"
+                     /tissue_type="Whole plant"
+                     /dev_stage="Primary phase"
+                     /geo_loc_name="Australia"
+                     /collected_by="Farley M. Kwok van der Giezen"
+     gene            80..1797
+                     /gene="cox2"
+     CDS             join(80..485,1421..1797)
+                     /gene="cox2"
+                     /exception="RNA editing"
+                     /codon_start=1
+                     /product="Cox2"
+                     /protein_id="XMD97053.1"
+                     /translation="MGTRLLVISRTLFWQLFVPIAFCDAAEPWQLGFQDAATPMMQGI
+                     IDLHHDILVFLIIILIFVLWMLVRTLWHFHYRRNPIPERMVHGTTIEIIWTILPSFVL
+                     MFIAIPSFALLYSMDQVVDPAITIKAIGHQWYWTYEYSDYNSSDEQSLTFDSYMISED
+                     DLELGQLRLLEVDNRVVVPAKTYLRMIITSADVLHSWAVPSLGVKCDAVPGRLNQTSI
+                     FIQREGVYYGQCSEICGTNHAFMPIVVEVVSKNDYLEWVSGQ"
+ORIGIN      
+        1 tggaggagag agaaaaaggg aaaaaaccga acagacttag aagtcgttga aaggaatatt
+       61 tgagcatgat tctttcgtaa tgggcacacg cctcttagtg atttcgagaa cccttttttg
+      121 gtagctattc gtcccgattg ctcctcgtga cgccgcagaa ccttggtaat tgggatttta
+      181 ggacgcagcc atacctatga tgtaaggaat aattgactca catcacgata ttccggtcct
+      241 cttaatcatc attctgatct tcgtactacg gatgttggtc cgcactttat ggcatttcca
+      301 ttatcgaaga aaccccattc ctgaaagaat ggttcacgga actactacag agattatttg
+      361 gaccattctt ctcagtttcg ttctgatgtt tattgttata ctatctttcg ctttatcata
+      421 ttcgacggac taggtggtag atctagccat tatcatcaaa gctattggac attaacggta
+      481 tcggagtgcg ccctttgacg aaggtgatgg aagtgcaaca aaacgcaccg gactacctct
+      541 acagtccaca aagtatctgg cttaccaaat gagagacgag aatcgaggga aattctcgtc
+      601 tgacgtcggg agactcaaga gactagagcg tgccagaaac gggaagttga ggtgctacct
+      661 atgcattgag aaggctcccc tagccaatga gaagcctatg gttccattct cggagtcgtt
+      721 ggaggtacgc attcccgctt ccagtatagg caatgtacag gaaatggatg ctcagcttgc
+      781 gatgttcaat gacggcgctg aagtaataag tctatcggca ccacagctag tggcatacaa
+      841 cttcggacct aacgggcctg accccgtcat ctctggaatg ggggattccc gacgtgttgg
+      901 caggtggtta caaaactacc agaggaggag cgaggccgaa ggttgactgt tcctgctctg
+      961 ccttcctcgg gtacggaggt cccacagtag gtaacagcga gcacaagcac tttaccgaag
+     1021 gggaccagcg cttatactca accctttttt tgggtcgggt ctcaactgct cgcagtaagg
+     1081 aacgttgcga aattccaatc tggtggaaac tcaaagatca cagagaattg accgtaaatg
+     1141 aaaatgtaag tattatttca ggtaagacat attagtctcc ttgtttgaaa agcgaaaaag
+     1201 actaggatca tggcttgatt gaacgggaaa cagactccta gcttgccagg aatatcatcg
+     1261 ttcgatccgc cgacccctga aagactcgag aaggacctag cgaaataaca gtatactctt
+     1321 caagtgttaa taggcgtgga gagctgtctg cagggaaact tgcaagtaca gtttggaggg
+     1381 aggcgaatga acctaaagaa gggctggccg ccgacccaac cttatgagta ttcagactat
+     1441 aacagttccg atgaatagtc attaactttt gacagttata tgatttcgga ggatgatctg
+     1501 gaattaggtt aatcacgtct accagaagtg gacaattgag tagttgtact agccaagact
+     1561 tatttatgta tgattataac tttggctgat gtactttata gtcgggctgt acctttccca
+     1621 ggtgctaaat gtgatgctgt acccggttgt tcgaatcaga cttccatttt tacataatga
+     1681 gagggagttt accatggcta gcgcagcgag atctgtggaa ctaattatgc gtttacgcct
+     1741 actgtcgtgg aagttgtttc taagaatgat tatctggagt gggtatccgg tcagtaaaca
+     1801 gtaatgcaat catcaataac gaaagaatca tgctcaaata ttcctttcaa cgacttctaa
+     1861 gtctgttcgg ttttttccct ttttctct
+//
+

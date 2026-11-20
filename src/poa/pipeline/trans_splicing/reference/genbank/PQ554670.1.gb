@@ -1,0 +1,52 @@
+LOCUS       PQ554670                 436 bp    DNA     linear   PLN 12-JAN-2025
+DEFINITION  Salvinia molesta Rps10 (rps10) gene, complete cds; mitochondrial.
+ACCESSION   PQ554670
+VERSION     PQ554670.1
+KEYWORDS    .
+SOURCE      mitochondrion Salvinia molesta
+  ORGANISM  Salvinia molesta
+            Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta;
+            Polypodiopsida; Polypodiidae; Salviniales; Salviniaceae; Salvinia.
+REFERENCE   1  (bases 1 to 436)
+  AUTHORS   Kwok van der Giezen,F.M. and Small,I.D.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (08-OCT-2024) School of Molecular Sciences, The
+            University of Western Australia, Bayliss Buliding, 35 Stirling
+            Highway, Crawley, WA 6009, Australia
+COMMENT     ##Assembly-Data-START##
+            Assembly Method       :: SPAdes v. 3.2; Geneious Prime v. 2023
+            Assembly Name         :: Salvinia molesta mitochondrion
+            Sequencing Technology :: Illumina
+            ##Assembly-Data-END##
+FEATURES             Location/Qualifiers
+     source          1..436
+                     /organism="Salvinia molesta"
+                     /organelle="mitochondrion"
+                     /mol_type="genomic DNA"
+                     /db_xref="taxon:167732"
+                     /tissue_type="Whole plant"
+                     /dev_stage="Primary phase"
+                     /geo_loc_name="Australia"
+                     /collected_by="Farley M. Kwok van der Giezen"
+     gene            74..382
+                     /gene="rps10"
+     CDS             74..382
+                     /gene="rps10"
+                     /exception="RNA editing"
+                     /codon_start=1
+                     /product="Rps10"
+                     /protein_id="XMD97075.1"
+                     /translation="MTAKVCIMIKSFEKLPTGHPHNTCQIGLPRKRILYTVLRSPHID
+                     KKSREQFEMGIHKQLLVIETETHKLREKLLWLKFHHPLGVQLKILFHYQTGLELIAKL
+                     "
+ORIGIN      
+        1 atgaatacaa gaaagaagaa actaatgata gtgacatgat caacaaaaag agaaaaccac
+       61 cctttacttc ggaacgactg ccaaggtatg cattatgatt aaacctctcg agaaaccacc
+      121 aacggggcat ccgcataaca catgctagat tgggttgcct agaaaatgaa tctcgtatac
+      181 agtgctgtga ttactttata ttgataaaaa gtctagagaa caatctgaaa tgggaataca
+      241 taaataattg ccggtcatag aaacggaaac acataaattg tgcgaaaagt cgcttcggtt
+      301 gaaattccac cacccactcg gagtttaatt gaaaattcca tttcattatt aaactggttt
+      361 agagttgatt gtcaaactct agtcaggtca gaagaaaaat acagcggaat tacaccagcc
+      421 agtttgcaca agcaaa
+//
+

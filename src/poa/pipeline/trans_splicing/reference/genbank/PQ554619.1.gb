@@ -1,0 +1,70 @@
+LOCUS       PQ554619                1674 bp    DNA     linear   PLN 12-JAN-2025
+DEFINITION  Marsilea mutica Nad4L (nad4L) gene, complete cds; mitochondrial.
+ACCESSION   PQ554619
+VERSION     PQ554619.1
+KEYWORDS    .
+SOURCE      mitochondrion Marsilea mutica
+  ORGANISM  Marsilea mutica
+            Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta;
+            Polypodiopsida; Polypodiidae; Salviniales; Marsileaceae; Marsilea.
+REFERENCE   1  (bases 1 to 1674)
+  AUTHORS   Kwok van der Giezen,F.M. and Small,I.D.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (08-OCT-2024) School of Molecular Sciences, The
+            University of Western Australia, Bayliss Buliding, 35 Stirling
+            Highway, Crawley, WA 6009, Australia
+COMMENT     ##Assembly-Data-START##
+            Assembly Method       :: SPAdes v. 3.2; Geneious Prime v. 2023
+            Assembly Name         :: Marsilea mutica mitochondrion
+            Sequencing Technology :: Illumina
+            ##Assembly-Data-END##
+FEATURES             Location/Qualifiers
+     source          1..1674
+                     /organism="Marsilea mutica"
+                     /organelle="mitochondrion"
+                     /mol_type="genomic DNA"
+                     /db_xref="taxon:167748"
+                     /tissue_type="Frond"
+                     /geo_loc_name="Australia"
+                     /collected_by="Catherine Colas des Francs-Small"
+     gene            260..562
+                     /gene="nad4L"
+     CDS             260..562
+                     /gene="nad4L"
+                     /exception="RNA editing"
+                     /codon_start=1
+                     /product="Nad4L"
+                     /protein_id="XMD97024.1"
+                     /translation="MDLVKYLTFSMILFLLGIWGILLNRRNIIIMLMSIELMLLAVNL
+                     NFLVFSVYLDDMMGQLFALLVLTVAAAESAIGLAILVVTFRIRGTIAVEFLNCMKG"
+ORIGIN      
+        1 gaatgctttg cccttgttca gggctggcgg gttcttcctt tcaaccgaac ctgcatcatg
+       61 cttcggtcac ttttcgctat agtggtatat ggggttactc gccctccctt cactttttga
+      121 acggccatga ttataaagaa ccaatgctct tcgctatagt ggtatatggg gttactcgcc
+      181 ctcccttcac tttttgaacg gccatgatta taaagaacca atgctcagat ttttatgaaa
+      241 cgaagaaaga ctctttctta cggatctggt caaatatttg acattttcca tgattctctc
+      301 tcttttaggt attcggggaa ttctctcgaa tagaagaaat attactatta tgccgacgct
+      361 aattgagtca atgccattgg ctgtcaattt gaactttctg gtatttcctg tctattcgga
+      421 tgatatgatg ggttaatcac tcgcttcact agtgttaacg gtggcagttg cggaatccgc
+      481 aattgggctg gccattccgg tggtaacttt tcgaattcgc gggaccattg ccgtggaatt
+      541 tcctaatcgc acgaagggtc gagcgccatt aaacccgttg cacttcgttt ttcctccttg
+      601 aatgcgaggt ataccttggc attaagggag gtatgattcg aatctctctt tcgaaattca
+      661 gcggatttac tgaaatcaaa cgcttttttc attcggccac ttcccgcttc gactttccga
+      721 gccaagatta gggtttattt tgatacatga acccgtcaaa agccccttac cctttctgtt
+      781 actttatatg agtatacgga agaggctctg gaaaagatcc ctcgattcct atactccccg
+      841 cgcggggccg cctgtcccct ccccagggtc atcccctggg gtggagtctc tcgttactta
+      901 cagttatatg tctgagcgat caggcgctgg ttaccaggct aatagcctgt attgcttttt
+      961 tagtacgctt taaccaccgt aggctatatt gtctaccatt tctggaccac ttcggttcga
+     1021 agtccattga tccgcggttc gctagaactg aagtgtgttc gaagtctgtt gacttgaggc
+     1081 cccgctgtgt gtttgaagtc gtctacatat cccattggtt cgatgcttct tagcattact
+     1141 gtacgaagtt tcaactcaag actagttggg gaatctggtg tagctgctgt ggctgcaggt
+     1201 attgtaaatt ttccgtggag aaggagcata tgctattgta gcagtggtag tgaaactgga
+     1261 gatccaggcc ctgtggatga cttattacaa cctaagcatt gtgcaagttc ttcgctgcct
+     1321 aagcctaata acacactatt aatacgattt attgcaccgt aaagaatgaa gagagattga
+     1381 aatccggcaa cgatgattgt aaaggtttat tcggttgtgg tttctgggaa agtattggta
+     1441 tcaatcgcta ggaagcacag gaaagatatt ggcgctgata tagaatagat ctaaccgaat
+     1501 gtctagcaat gtcagcggca gccatgaagg tgtttagaac tcactaccac ggaaatactt
+     1561 accatatata tcgtccccag cccgatcaag cgttattcat ccggcaagga tagtatggcg
+     1621 gtcacgccga cgtataaagg cctataggca aaaacctgta ttattacgat aaaa
+//
+

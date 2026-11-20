@@ -1,0 +1,64 @@
+LOCUS       PQ554584                1187 bp    DNA     linear   PLN 12-JAN-2025
+DEFINITION  Azolla pinnata Nad6 (nad6) gene, complete cds; mitochondrial.
+ACCESSION   PQ554584
+VERSION     PQ554584.1
+KEYWORDS    .
+SOURCE      mitochondrion Azolla pinnata
+  ORGANISM  Azolla pinnata
+            Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta;
+            Polypodiopsida; Polypodiidae; Salviniales; Salviniaceae; Azolla.
+REFERENCE   1  (bases 1 to 1187)
+  AUTHORS   Kwok van der Giezen,F.M. and Small,I.D.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (08-OCT-2024) School of Molecular Sciences, The
+            University of Western Australia, Bayliss Buliding, 35 Stirling
+            Highway, Crawley, WA 6009, Australia
+COMMENT     ##Assembly-Data-START##
+            Assembly Method       :: SPAdes v. 3.2.0; Geneious Prime v. 2023
+            Assembly Name         :: Azolla pinnata mitochondrion
+            Sequencing Technology :: Illumina
+            ##Assembly-Data-END##
+FEATURES             Location/Qualifiers
+     source          1..1187
+                     /organism="Azolla pinnata"
+                     /organelle="mitochondrion"
+                     /mol_type="genomic DNA"
+                     /db_xref="taxon:99433"
+                     /tissue_type="Whole plant"
+                     /geo_loc_name="Australia"
+                     /collected_by="Farley M. Kwok van der Giezen"
+     gene            265..879
+                     /gene="nad6"
+     CDS             265..879
+                     /gene="nad6"
+                     /exception="RNA editing"
+                     /codon_start=1
+                     /product="Nad6"
+                     /protein_id="XMD96989.1"
+                     /translation="MLLFDVFSGMALVSAVMVIRAKNPVHSVLFFIFVFCNTSGLLLL
+                     LGLDFFAMIFLVVYIGAIAVLFLFVVMMLDIKIAEIHENILRYLPVGGTIGLIFWLEI
+                     FVILDNDYIPILPTNLNTTYLRYTVYAERIQSWTNLETLGNLLYTNYLVLFLVSSLIL
+                     LVAMIGAIVLTMHKTAKVKRQDVFQQNAIDFRKTIGKIRENKQI"
+ORIGIN      
+        1 tacttttagc ctgttctttt tctgtagcac tagaagtttc catattagac gtcggcttct
+       61 cgtttgtttc cagaatgtaa ttatcttcat cgtcatcttc tgctttccac aattctcttt
+      121 tttttgggtg ggtgcacggg ttccctcttg tattttgtag tgaagaatac caggtgcact
+      181 aggagcttcc acatctcgtc attgccaaga tggggtcgga caaactgcca ctaatacaga
+      241 atgagagaaa ggaacaataa aaccatgcta ctccttgatg tttttccggg catggcttta
+      301 gtctctgctg ttacggtcat acgtgctaaa aactccgtcc attccgttct ctttttcatc
+      361 ctcgttttct gcaacacttt aggtttacct ctcttgtcag gtcccgactt ctctgctatg
+      421 atcctcttag tggtttatac aggcgcgatt gctgtgtcac ttccatttgt agtgatgatg
+      481 ccagatataa aaatagcgga aatccacgag aatatattgc gctatttatc agtaggtggt
+      541 actattggac tgatttcctg gttggaaatc tttgtcattc tagacaatga ttacattcca
+      601 atactaccaa ccaatttgaa tacaacctat ctgagatata cggtttatgc tgaaagaata
+      661 taaagttgga ctaatttgga aacatcaggc aatttacttt ataccaacta tctggttttg
+      721 ttcccggtgt ctagtctgat tttattagta gccatgatcg gggctatagt accaactatg
+      781 cataaaactg ctaaggtcaa gagacaggat gtgttccagc agaatgctat agattttcgg
+      841 aagaccatcg gaaagatacg cgagaataaa caaatacaaa gtcttgctgc caaaccaaag
+      901 gctgctgcca aagcctcatt ctttccggtc tccaccataa cttcttccaa gggtactggt
+      961 tcagtctccg cactaacttt catagatatc gggggccaat acccgaatgt tcatagtgtg
+     1021 tcgcccattt tctttctttt tctatactca acaacaaggt gacatgaaaa aagaggtggc
+     1081 gtaggctgct ttaaattaaa accttagctt tgcagctgct gttttcaacc atcagacctt
+     1141 ttacaagtaa gcaagcaagc aagaggttca aacccacaga aagcagc
+//
+

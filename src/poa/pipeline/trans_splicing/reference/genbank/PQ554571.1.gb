@@ -1,0 +1,49 @@
+LOCUS       PQ554571                 420 bp    DNA     linear   PLN 12-JAN-2025
+DEFINITION  Azolla pinnata Atp9 (atp9) gene, complete cds; mitochondrial.
+ACCESSION   PQ554571
+VERSION     PQ554571.1
+KEYWORDS    .
+SOURCE      mitochondrion Azolla pinnata
+  ORGANISM  Azolla pinnata
+            Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta;
+            Polypodiopsida; Polypodiidae; Salviniales; Salviniaceae; Azolla.
+REFERENCE   1  (bases 1 to 420)
+  AUTHORS   Kwok van der Giezen,F.M. and Small,I.D.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (08-OCT-2024) School of Molecular Sciences, The
+            University of Western Australia, Bayliss Buliding, 35 Stirling
+            Highway, Crawley, WA 6009, Australia
+COMMENT     ##Assembly-Data-START##
+            Assembly Method       :: SPAdes v. 3.2.0; Geneious Prime v. 2023
+            Assembly Name         :: Azolla pinnata mitochondrion
+            Sequencing Technology :: Illumina
+            ##Assembly-Data-END##
+FEATURES             Location/Qualifiers
+     source          1..420
+                     /organism="Azolla pinnata"
+                     /organelle="mitochondrion"
+                     /mol_type="genomic DNA"
+                     /db_xref="taxon:99433"
+                     /tissue_type="Whole plant"
+                     /geo_loc_name="Australia"
+                     /collected_by="Farley M. Kwok van der Giezen"
+     gene            85..309
+                     /gene="atp9"
+     CDS             85..309
+                     /gene="atp9"
+                     /exception="RNA editing"
+                     /codon_start=1
+                     /product="Atp9"
+                     /protein_id="XMD96976.1"
+                     /translation="MLEGAKLIGAGAATIALAGAAVGIGNVFSSLITSVARNPSLAKQ
+                     LFGYAILGFALTEAIALFALMMAFLILFVF"
+ORIGIN      
+        1 atgaaccgcc gccgccttgt aagtgaccct tggcagcgca ttatagtctc tctcgtgacc
+       61 ctaacagaca cccaatagtt agttacgcta gaaggtgcga aattaattgg agtaggagcg
+      121 gctatcattg cctcagcggg agcagtagca ggtactggaa acgtatctag tccttcgaca
+      181 acctttgtgg cgtgaaatct cttattagcc aaataatcat tcggttatgt tactccaggc
+      241 tttgccttaa cagaagttat cgtcccgtct gcttcgacga tggccttttc aacatcattc
+      301 gtatctcgag aaaacaaaca aaggagaaca aataggttgt acctacgtac gggatggggg
+      361 gcttgatgaa tcccccattt ccaggggaaa tagctcagtt ggttagagtg ctggtttgtc
+//
+

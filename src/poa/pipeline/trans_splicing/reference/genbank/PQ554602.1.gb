@@ -1,0 +1,57 @@
+LOCUS       PQ554602                 797 bp    DNA     linear   PLN 12-JAN-2025
+DEFINITION  Azolla pinnata Sdh3 (sdh3) gene, complete cds; mitochondrial.
+ACCESSION   PQ554602
+VERSION     PQ554602.1
+KEYWORDS    .
+SOURCE      mitochondrion Azolla pinnata
+  ORGANISM  Azolla pinnata
+            Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta;
+            Polypodiopsida; Polypodiidae; Salviniales; Salviniaceae; Azolla.
+REFERENCE   1  (bases 1 to 797)
+  AUTHORS   Kwok van der Giezen,F.M. and Small,I.D.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (08-OCT-2024) School of Molecular Sciences, The
+            University of Western Australia, Bayliss Buliding, 35 Stirling
+            Highway, Crawley, WA 6009, Australia
+COMMENT     ##Assembly-Data-START##
+            Assembly Method       :: SPAdes v. 3.2.0; Geneious Prime v. 2023
+            Assembly Name         :: Azolla pinnata mitochondrion
+            Sequencing Technology :: Illumina
+            ##Assembly-Data-END##
+FEATURES             Location/Qualifiers
+     source          1..797
+                     /organism="Azolla pinnata"
+                     /organelle="mitochondrion"
+                     /mol_type="genomic DNA"
+                     /db_xref="taxon:99433"
+                     /tissue_type="Whole plant"
+                     /geo_loc_name="Australia"
+                     /collected_by="Farley M. Kwok van der Giezen"
+     gene            188..583
+                     /gene="sdh3"
+     CDS             188..583
+                     /gene="sdh3"
+                     /exception="RNA editing"
+                     /codon_start=1
+                     /product="Sdh3"
+                     /protein_id="XMD97007.1"
+                     /translation="MQIDRPLSPHITIYKPQLTSTLSIFHRISGAFLATVLFVGIFSL
+                     KVGHLSLTFENCYQCAFFIVNYSYWFVLGLVNFAFLALSYHMSNGVRHLWWDLGFVLD
+                     LSQVYTSGILMLFCAAFLAFLKFIRFSLS"
+ORIGIN      
+        1 cgtctaggac caccaactag tagtgcccaa gaagaagcgg tgaaatggac ggacttgaac
+       61 gacgctatga gcccctaaca aactgttata aatatcaaga acagacctcg tgttggcaaa
+      121 gaaagccaac gcaagtccct ctaatggatg ctagggcatt ctcgcccctc gaatcaaagc
+      181 caacagaatg taaattgatt gaccgttact acttcatatt accattcata agccatagct
+      241 tactttgacc ctccctatct tctatagaat tcccggggct ttcctagcca ctgtgttgtt
+      301 tgttggtatc tttcccttga aggttggtca tctcagcctc actttcgaga atcgttacta
+      361 atgcgctttc tttattgtaa actactctta ttggtttgtt ccgggcttag tcaattttgc
+      421 tttcttagct ttgtcttatt acatgagtaa tggggtttgc cacttatggt gggattcggg
+      481 tcttgttcta gatctatctt aagtgtatac tttcggaatc ccgatgttat ttcgtgccgc
+      541 ttttttggcc ttcctgaagc ctatccgatt ttctttatcg tgagcacggg gagcgagcca
+      601 actccctcgg gcgacattcg ttcgagacat catttcggcg aactaaacct agttgttaaa
+      661 gcgagactgg caagtggttg ggggcatgaa ttctttgttc cgcataaaga aattccaagg
+      721 acggatcaaa tgccaggaaa caaatcctga gtttgcttgc cgatggccgt tccgctcccg
+      781 gttagttatt tctttct
+//
+

@@ -37,13 +37,23 @@ MIN_UNALIGNED = 0.8
 MIN_GENES = 5
 
 
-def mask_path(lineage: str) -> Path:
+EDITING_MASK_NAME = "profile_mask.tsv"
+# an editing copy counts towards its gene's mask only if it is a
+# substantial one: aligned over at least this share of the profile
+MIN_COPY_ALIGNED = 0.5
+
+
+def mask_path(lineage: str, editing: bool = False) -> Path:
+    """The lineage's whole-gene template mask, or (editing) the mask for
+    its single-exon editing profiles."""
+    if editing:
+        return lin.editing_profiles(PIPELINE_DIR, lineage) / EDITING_MASK_NAME
     return lin.trans_splicing_reference(PIPELINE_DIR, lineage) / MASK_NAME
 
 
-def load_mask(lineage: str) -> dict[str, set[int]]:
-    """{gene: 0-based columns of the unmasked whole-gene profile to drop}"""
-    path = mask_path(lineage)
+def load_mask(lineage: str, editing: bool = False) -> dict[str, set[int]]:
+    """{gene: 0-based columns of the unmasked profile to drop}"""
+    path = mask_path(lineage, editing)
     mask: dict[str, set[int]] = {}
     if path.exists():
         with open(path) as fh:
@@ -69,18 +79,29 @@ def unsupported_columns(proteins: list[str], min_unaligned: float = MIN_UNALIGNE
     return [i for i in range(len(proteins[0])) if sum(p[i] == "-" for p in proteins) >= min_unaligned * n]
 
 
-def write_mask(genes_tsv: Path, lineage: str, species: str | None = None) -> Path:
+def write_mask(genes_tsv: Path, lineage: str, species: str | None = None, editing: bool = False) -> Path:
+    """editing: genes_tsv is an orfedit gene-calls table (edited_gene_calls
+    or orfedit's own, gene possibly labelled gene|contig:start-end) made
+    with the lineage's unmasked editing profiles."""
     by_gene: dict[str, list[str]] = {}
     with open(genes_tsv) as fh:
         for row in csv.DictReader(fh, delimiter="\t"):
-            if row["complete"].lower() != "true" or (species and not re.search(species, row["species"])):
+            if species and not re.search(species, row["species"]):
                 continue
-            by_gene.setdefault(row["gene"], []).append(row["protein"])
-    out = mask_path(lineage)
+            if editing:
+                if row.get("organelle", "mito") != "mito":
+                    continue
+                if int(row["n_columns_aligned"]) < MIN_COPY_ALIGNED * int(row["n_columns_total"]):
+                    continue
+            elif row["complete"].lower() != "true":
+                continue
+            by_gene.setdefault(row["gene"].split("|")[0], []).append(row["protein"])
+    out = mask_path(lineage, editing)
     with open(out, "w") as fh:
         fh.write(
-            f"# whole-gene profile columns (0-based, of the unmasked build) that at least {MIN_UNALIGNED:.0%} of\n"
-            f"# complete reconstructions leave unaligned; exon_profiles drops them. See column_mask.py.\n"
+            f"# profile columns (0-based, of the unmasked build) that at least {MIN_UNALIGNED:.0%} of\n"
+            f"# {'substantial gene copies' if editing else 'complete reconstructions'} leave unaligned; "
+            f"dropped when the profiles are built. See column_mask.py.\n"
             "gene\tcolumn\tn_genes\tn_unaligned\n"
         )
         for gene in sorted(by_gene):
@@ -97,9 +118,14 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("genes_tsv", help="transsplice genes table from a run on the unmasked templates")
     ap.add_argument("--lineage", required=True)
     ap.add_argument("--species", default=None, help="only species matching this regular expression")
+    ap.add_argument(
+        "--editing",
+        action="store_true",
+        help="genes_tsv is an orfedit gene-calls table: mask the lineage's single-exon editing profiles",
+    )
     args = ap.parse_args(argv)
-    out = write_mask(Path(args.genes_tsv), args.lineage, args.species)
-    mask = load_mask(args.lineage)
+    out = write_mask(Path(args.genes_tsv), args.lineage, args.species, args.editing)
+    mask = load_mask(args.lineage, args.editing)
     print(f"{out}: " + ", ".join(f"{g} {len(c)}" for g, c in sorted(mask.items())))
     return 0
 

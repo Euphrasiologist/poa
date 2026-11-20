@@ -1,0 +1,71 @@
+LOCUS       PQ554668                1436 bp    DNA     linear   PLN 12-JAN-2025
+DEFINITION  Salvinia molesta Rps4 (rps4) gene, complete cds; mitochondrial.
+ACCESSION   PQ554668
+VERSION     PQ554668.1
+KEYWORDS    .
+SOURCE      mitochondrion Salvinia molesta
+  ORGANISM  Salvinia molesta
+            Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta;
+            Polypodiopsida; Polypodiidae; Salviniales; Salviniaceae; Salvinia.
+REFERENCE   1  (bases 1 to 1436)
+  AUTHORS   Kwok van der Giezen,F.M. and Small,I.D.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (08-OCT-2024) School of Molecular Sciences, The
+            University of Western Australia, Bayliss Buliding, 35 Stirling
+            Highway, Crawley, WA 6009, Australia
+COMMENT     ##Assembly-Data-START##
+            Assembly Method       :: SPAdes v. 3.2; Geneious Prime v. 2023
+            Assembly Name         :: Salvinia molesta mitochondrion
+            Sequencing Technology :: Illumina
+            ##Assembly-Data-END##
+FEATURES             Location/Qualifiers
+     source          1..1436
+                     /organism="Salvinia molesta"
+                     /organelle="mitochondrion"
+                     /mol_type="genomic DNA"
+                     /db_xref="taxon:167732"
+                     /tissue_type="Whole plant"
+                     /dev_stage="Primary phase"
+                     /geo_loc_name="Australia"
+                     /collected_by="Farley M. Kwok van der Giezen"
+     gene            277..1140
+                     /gene="rps4"
+     CDS             277..1140
+                     /gene="rps4"
+                     /exception="RNA editing"
+                     /codon_start=1
+                     /product="Rps4"
+                     /protein_id="XMD97073.1"
+                     /translation="MRENVWHKKLNPRKRALIWEWGFPFIRKERLLTKSWKRGKSGNL
+                     ADLILGFSSSRKELRKRPFERRKSEDFSEKLHASRKLSLFYGLPMKGKIQRLEPLLKT
+                     IKEKHINLLPFLEKRLDVILVRISFCEHILQARQLINHKHIYVNSKVVNIPGFTVSCG
+                     DLISIKEASRDLTKLNIVQCRGKKERIRKSIEQLKQRKRSLLRPLFYPFIHKDSSYYP
+                     FSHKGYWIPEKYPLFRKKTSLFSFHCLDYYYPHYLEVEYEKLNVVVFSEPHHNYLKLP
+                     YKNKIERHCLP"
+ORIGIN      
+        1 atccgacgcg ggtcccgtcc attctcccat ttggcaccct ctcatgatgt atcactcttg
+       61 gcatgcccac ggaaactccg ggtaggcgcg aattcttcca gtctatgccg ccgccctatc
+      121 gtatagtccg ttacatatat aggtgaatgc tcgcgggaaa cagcggccgg cgttctctgc
+      181 ccaagcacta tgaacaaact gccatgagta ccgaggacgg aaagataatg gacagaaaca
+      241 gatatgttgg catcaggatc caaaattcgt cgttagatga gagaaaacgt ttggcataaa
+      301 aaactcaatc cgagaaagag agcccttatt cgggagtggg gatttccctt tatttgaaaa
+      361 gagaggcttt tgacaaaatc gtggaaaaga gggaaatctg ggaatctggc cgacctaatt
+      421 ctggggttct cctcttcccg aaaggagctc cggaaaagac cattcgaaag atgaaaatct
+      481 gaagatttct ctgaaaaatc acatgcttcg tgaaagtcgt ccctttctta cggattaccc
+      541 atgaaaggaa agatatagag gctcgaacca ttactaaaaa ctattaaaga gaaacacatc
+      601 aatcttttac cctttctaga aaaaagattg gacgttattc cggtttgcat tcccttttgc
+      661 gaacatattc tccaagccag atagccaata aatcataaac atatttatgc caatcccaaa
+      721 gtagtcaata ttctcggttc cacggtaccc tgcggtgatc ttacacccat taaagaagct
+      781 tcttgagatc ttaccaaact aaacatagtg taatgcagag gaaaaaaaga atgaattaga
+      841 aaatcgatag aataactgaa ataaagaaaa tgatctcttt caaggcctct ctcctatctc
+      901 ttcattcata aagattcttc ctattatcct tccagtcaca aaggttattg gatacctgag
+      961 aagtatcctc ttttctgaaa aaaaacttct cttttttctt ttcattgtct agactattac
+     1021 tacccacatt atctggaggt tgagtatgaa aaacctaatg ttgtggtatt ccccgaacct
+     1081 caccataatt atctgaaact ttcctataag aataaaatag agagacactg tcttccccaa
+     1141 aacagaaaaa aaaagtagct cgaatagatc ttgtaaatca ttggcggagc aatttcattg
+     1201 ctaactccta ttgttccctc tcaatacata tgtgatcagt actgtgtatg tgatatttca
+     1261 attcacacac aatagattat ttgcctcaat cgccggcaag gcggctattc gcctcaaacg
+     1321 ccgccggcga ggcaaacgcc ggccggccgc tttgcgcctg ccgtgaacac atggcgttca
+     1381 gagagaaatt agtctaggtc actcagagct ggaatcggtc aagtgccctt cccctg
+//
+

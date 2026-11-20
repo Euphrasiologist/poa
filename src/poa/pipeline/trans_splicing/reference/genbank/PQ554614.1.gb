@@ -1,0 +1,87 @@
+LOCUS       PQ554614                2635 bp    DNA     linear   PLN 12-JAN-2025
+DEFINITION  Marsilea mutica TatC (tatC) gene, complete cds; mitochondrial.
+ACCESSION   PQ554614
+VERSION     PQ554614.1
+KEYWORDS    .
+SOURCE      mitochondrion Marsilea mutica
+  ORGANISM  Marsilea mutica
+            Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta;
+            Polypodiopsida; Polypodiidae; Salviniales; Marsileaceae; Marsilea.
+REFERENCE   1  (bases 1 to 2635)
+  AUTHORS   Kwok van der Giezen,F.M. and Small,I.D.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (08-OCT-2024) School of Molecular Sciences, The
+            University of Western Australia, Bayliss Buliding, 35 Stirling
+            Highway, Crawley, WA 6009, Australia
+COMMENT     ##Assembly-Data-START##
+            Assembly Method       :: SPAdes v. 3.2; Geneious Prime v. 2023
+            Assembly Name         :: Marsilea mutica mitochondrion
+            Sequencing Technology :: Illumina
+            ##Assembly-Data-END##
+FEATURES             Location/Qualifiers
+     source          1..2635
+                     /organism="Marsilea mutica"
+                     /organelle="mitochondrion"
+                     /mol_type="genomic DNA"
+                     /db_xref="taxon:167748"
+                     /tissue_type="Frond"
+                     /geo_loc_name="Australia"
+                     /collected_by="Catherine Colas des Francs-Small"
+     gene            146..517
+                     /gene="tatC"
+     CDS             146..517
+                     /gene="tatC"
+                     /exception="RNA editing"
+                     /codon_start=1
+                     /product="TatC"
+                     /protein_id="XMD97019.1"
+                     /translation="MRHSGLKTIMEELKIRVSWILICFGLTWLTSYLFSEELIFLLAK
+                     PLLYSDLFFICTRLTEALSTYVIISSISCLYFAFLCMIYQIWCFLIPSCYEGQRKECE
+                     RLFYLSGFCFFLFFFATFVWVV"
+ORIGIN      
+        1 aagcggtgaa atggacggac ttgaaccttt gacgctatga gcccctaaca aactgttata
+       61 aatatcaaga acagaccaga agatcactat ctgtgtatta cggtagtgat atgcaaatac
+      121 tgaacaaaac cgatcgatca gtcagatgag gcattccggt ttaaaaacaa ttatggaaga
+      181 accaaaaatt tgcgtttctt ggatattgat tcgctttggt ttgatacggc tcacgcccca
+      241 tccgttcccg gaagagccca ttccttcatt agctaaacct ttgccctatt cagactcgtt
+      301 tcctacttgt acacgattga cagaggcctc gagcacatat gttattacat cttcaatatc
+      361 acgtccctat tccgcttttc ttcgtacgat ccattaaatc cggcgctctt tgatccttag
+      421 tcgctatgaa gggtaaagga aagaatgtga aagattgttt tactcaagtg gttttcgccc
+      481 cttcttgtcc ttcttcgcca cttctgtttg ggtagttctc aatgctcggc acctctttca
+      541 ccgcccaagt accacaccca ctaatttgcc cacaatcaag tcacaatcta agacttctga
+      601 ctacataatg tcaaccgttc gtaccttgtc cattttgtca acgcgccctc aagtcccggt
+      661 aatggttatc cgtttgccag aaccaaaagc tatttctttg agaacctgtc taaacaatcg
+      721 tcgtattttg agggttcgtc cgccttccat agcagctctg ttcacatctc cagatatctg
+      781 gtgttaaatt gtcggtcgtt taccctccta cgttctaatc gagttaacca tcttcgtagc
+      841 cttgatcatg ccaacttata ggaagcaatt atctggatag gtaggcccaa gcttccctat
+      901 gaaaacctag tgaaaatagt cttttaccta acataggcgg ccccaggccg ccccccctcc
+      961 cgtgtattga gaaatgatag aaggctctat taggcactac gatgtagggc ccaaagaagc
+     1021 gggctcaaag tcaattttat ctgataatag aggtaacaac atggataaac aacaaactaa
+     1081 caagccttcg ccttctaatc tccagtgcaa cctcgaccca cctcttccgg cagcgatcta
+     1141 aaacccatga aagaggaccc gaacttgagt ggtgagataa ggtggcgcaa ctggaagctg
+     1201 cagaaactaa aaggtagtgc aggctatctt cgtctgtgct ttcaagcaga caactatgtt
+     1261 gtctgcagga cagacagccg gaagtatcaa gcacgcgcta gcacttcttc cggcagcgga
+     1321 acgcttatca aaccaccgcc gccgccctgc agctaacgct atctagagac ttccggaacg
+     1381 attgaaagct acagaaaagc catagaggag ctggacttga agtgtgaagg gaggcttacc
+     1441 gtgaagatca cgcccggcaa tctatctgtc tacctcttcc cgcgaggcct tcggattgcc
+     1501 agtgccaatc cgcttcagtc tttcgtcttt gactattgta ttccgtaacc cttttaaccg
+     1561 cttctttgac gatttttacg attgcggtac ggagctcagc ttcgatatat cacttgctgg
+     1621 cagttccgcc tgaaccgaag cttaccgcgt catggtgtca agctattcag attccctttc
+     1681 caaggccgag gttgcactag aaggcttcaa agcagcacgg aatcacgtat ggcaatctat
+     1741 ctgccgcgaa gccttcgatt caccacctcg aacctttaat tcgtgactga aagctcccgt
+     1801 gcgtaatcgg gcttctttct tccgccgcgc tacaccgaat cctgtgcaca gaacagtcaa
+     1861 agatgcctcc tgcactttaa agtgatctag aggcaacgaa agagagatta gaaggtgcga
+     1921 gcaactcagc tatcagtccc gggcaaatga tatagtcatc aacctatccg ggtggtgaat
+     1981 cgtgttatgc ccaatctgta gtcgggtagc ttctttgaat atttcataga ttgctgacgg
+     2041 agcctcggtt cagtgctagc ttcggccagt accatcttgc tgggcaacta gcattctaat
+     2101 tcccgcggaa ctggtttacc gcgtggatca cgcacgtcaa tctatctgct gcttctcgcg
+     2161 gttcttacac caacaactta gcttagcgga atctcggttc gactcctttt cagttagctt
+     2221 tgaccacaga ttggacgtaa catgattcca ccgcaaagca gcaccgcata cctcttccga
+     2281 cagctcaccg catacttctt ccggcagcgg aacggcaagc gatctcgaga ctttgcatac
+     2341 ggcagcggaa cgaatcctcg agcaagcgct agcaatcgcc gagaccttgc atacttcttc
+     2401 ttctggcaag cgcaagcgat ctcgagggtt tgcatacttc ttccggaacg aatccccaag
+     2461 caaatgcgag cgatctaaag cccctggaag gagttgaaag ctacgaagaa gaacaagaac
+     2521 tgagtagtga cttggaatgg gccttggcag caaagtacga aaggaggctt tagccttcta
+     2581 ctccaccaaa agcactgata agtcgaagtc ttctttccac gaagcaatca atggc
+//
+

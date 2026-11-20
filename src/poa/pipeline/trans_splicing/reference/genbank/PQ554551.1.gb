@@ -1,0 +1,60 @@
+LOCUS       PQ554551                 922 bp    DNA     linear   PLN 12-JAN-2025
+DEFINITION  Azolla rubra Rpl5 (rpl5) gene, complete cds; mitochondrial.
+ACCESSION   PQ554551
+VERSION     PQ554551.1
+KEYWORDS    .
+SOURCE      mitochondrion Azolla rubra
+  ORGANISM  Azolla rubra
+            Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta;
+            Polypodiopsida; Polypodiidae; Salviniales; Salviniaceae; Azolla.
+REFERENCE   1  (bases 1 to 922)
+  AUTHORS   Kwok van der Giezen,F.M. and Small,I.D.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (08-OCT-2024) School of Molecular Sciences, The
+            University of Western Australia, Bayliss Buliding, 35 Stirling
+            Highway, Crawley, WA 6009, Australia
+COMMENT     ##Assembly-Data-START##
+            Assembly Method       :: SPAdes v. 3.12.0; Geneious Prime v. 2023
+            Assembly Name         :: Azolla rubra mitochondrion
+            Sequencing Technology :: Illumina
+            ##Assembly-Data-END##
+FEATURES             Location/Qualifiers
+     source          1..922
+                     /organism="Azolla rubra"
+                     /organelle="mitochondrion"
+                     /mol_type="genomic DNA"
+                     /db_xref="taxon:45988"
+                     /tissue_type="Whole plant"
+                     /geo_loc_name="Australia"
+                     /collected_by="Farley M. Kwok van der Giezen"
+     gene            149..721
+                     /gene="rpl5"
+     CDS             149..721
+                     /gene="rpl5"
+                     /exception="RNA editing"
+                     /codon_start=1
+                     /product="Rpl5"
+                     /protein_id="XMD96956.1"
+                     /translation="MFTPSILRFHYRNVLCQDFPLKFDYTHVLEVPRLCKTILVLGAP
+                     SNSLESVKLAIENLCGQKCIKMRSGALTKKSFQFNKFLLSQESERKAHVTHLAQSVLR
+                     GHIMYKFLEKLSMIISPHHPVEIRRNSIEFHFSMATTFLLKEFPQLKENFEIFAHLRE
+                     FKVIIITSANTEGETYLLWSGFKKSAGKAK"
+ORIGIN      
+        1 agcgggcggc taacgtttct tttctttaac gcccttccgt tccgttcact acgcgagcgg
+       61 agtgataaga gcccgctcgt gaggcgaata gcaaaaagtg cttccatttc taccttagtt
+      121 tctgcacgaa aagacacaca gcttgcctac gttcactcca agtatactcc gttttcatta
+      181 cagaaacgta ttatgctaag atttcccatc aaaatctgat tatacccatg ttctggaagt
+      241 ttttagattg tgtaaaacca ttttagttct aggggcaccc tccaactcac ttgaaagtgt
+      301 caaattagct acagagaatc ctcgtggtta aaaacgcata aagacgtgaa gtggagcttt
+      361 gaccaaaaaa ttgttttaat ttaacaaatc tttactaagc taagagtcag agagaaaagc
+      421 gtacgtcact cacttagcat agagcgtttt gtgagggcac attatgtaca aacttttgga
+      481 gaaactcagt atgattatct ccccctatta cctagtcgaa atatgaagaa actctattga
+      541 attccatttc tcaatggcca caactttctt gtcaaaggaa cttccgtaat tgaaagagaa
+      601 ttctgagact cttgcgcatc tttgagagtt caaagtaatt atcatcactt cagccaacac
+      661 agaaggggag acttatttct catggagcgg ctttaagaaa agtgcaggga aggcaaagtg
+      721 aaatatgatg accagggcta tatttaattc tgcatatatt actcctacaa ttgcacgcaa
+      781 cgtctttgga aaacaaatag gttgtaccag gatgggggct taatgaatgg ttggataagt
+      841 gaaggcaccg cacgttacta ttgaataaat ggtgaataaa tggcttctgt agtgttttta
+      901 tcttcaggta atggaatgta ta
+//
+

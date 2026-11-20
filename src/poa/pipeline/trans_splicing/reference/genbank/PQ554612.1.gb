@@ -1,0 +1,69 @@
+LOCUS       PQ554612                1440 bp    DNA     linear   PLN 12-JAN-2025
+DEFINITION  Marsilea mutica Cox3 (cox3) gene, complete cds; mitochondrial.
+ACCESSION   PQ554612
+VERSION     PQ554612.1
+KEYWORDS    .
+SOURCE      mitochondrion Marsilea mutica
+  ORGANISM  Marsilea mutica
+            Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta;
+            Polypodiopsida; Polypodiidae; Salviniales; Marsileaceae; Marsilea.
+REFERENCE   1  (bases 1 to 1440)
+  AUTHORS   Kwok van der Giezen,F.M. and Small,I.D.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (08-OCT-2024) School of Molecular Sciences, The
+            University of Western Australia, Bayliss Buliding, 35 Stirling
+            Highway, Crawley, WA 6009, Australia
+COMMENT     ##Assembly-Data-START##
+            Assembly Method       :: SPAdes v. 3.2; Geneious Prime v. 2023
+            Assembly Name         :: Marsilea mutica mitochondrion
+            Sequencing Technology :: Illumina
+            ##Assembly-Data-END##
+FEATURES             Location/Qualifiers
+     source          1..1440
+                     /organism="Marsilea mutica"
+                     /organelle="mitochondrion"
+                     /mol_type="genomic DNA"
+                     /db_xref="taxon:167748"
+                     /tissue_type="Frond"
+                     /geo_loc_name="Australia"
+                     /collected_by="Catherine Colas des Francs-Small"
+     gene            197..895
+                     /gene="cox3"
+     CDS             197..895
+                     /gene="cox3"
+                     /exception="RNA editing"
+                     /codon_start=1
+                     /product="Cox3"
+                     /protein_id="XMD97017.1"
+                     /translation="MYMHSFAGDGILLTLGLGLILYTMFLWWRDVTRESTYEGRHTKV
+                     VQLGLRYGFLLFIVSEVMFFLAFFWAFFHSSLAPAVEIGAIWPPKGVEVLNPWGIPFL
+                     NTLILLFSGAAVTWTHHAILAGLKQQAVYALVATVWLALVFTGLQGMEYYEAPFTISD
+                     GIYGSTFFLATGFHGFHVIIGTIFLTICGIRQYKGHFSPSHHFGFEAAAWYWHFVDVV
+                     WLFLFVSIYWWGGL"
+ORIGIN      
+        1 tgtatttgca gtagggttta tttctcctac attgattata gcagccaaga ctcttttatg
+       61 tacaaaccgt ttcgtgtgga ttcattaaat aaataacaca agtgtctccc aagagcatcc
+      121 ctatcattta gtggatccaa gtccatggcc tctcctgggg tcactcggag ccttagcaag
+      181 caccattggt gctgttatgt acatgcattc attcgcagga gacggaacac tcctcacttt
+      241 gggcctagga ttgatcctat acaccatgtt tctacggtgg cgcgatgtta catgtgaatc
+      301 tacttacgaa ggacgtcaca ccaaagtggt ataattaggg cttcgctacg gttttctctt
+      361 gtccatcgtc tcggaggtta tgtttcttct agcctttttt tgggctttct ttcattcctc
+      421 cttggcaccc gcggtagaga tcggagctat tcggcccccc aaaggagttg aggtgttaaa
+      481 cccctgggga atcccttttc taaatactct tattcttcct ttctccggag ctgccgtgac
+      541 ttggactcat tacgccatac tcgcaggttt gaaataataa gcggttcacg ctttagtagc
+      601 tatcgttcgg ctggctccgg ttcccaccgg gctttaggga atggaatatt acgaagcact
+      661 ttttaccatt tccgacggta tttatggttt caccctcttc tcagccaccg ggttttatgg
+      721 gtcctacgtc actacaggga ccattctctc gacgatacgc ggtattcgtt aatataaagg
+      781 tcattttagt ccttcgcatc acttcggctt cgaagcagct gctcggtacc ggcattccgt
+      841 ggacgtggtt cggtcatttc catctgtccc tatctattgg tgggggggtt tgtgataagg
+      901 tatgggcctt gcccttcccc aagcggaatg cgggtcaatg gaaactcgac tggttgaaaa
+      961 gcctgacggc gggccagccc cgaaggtggg cttataacat caagggcggg gatccgtttg
+     1021 ggactcaacg aatcacctcc aaaggttcag gggtcgaata cctaacgata gagtcgggtt
+     1081 caggttctac tctccgttat ctatcagcac tggtccaccc catctgatac atcaccgttc
+     1141 catcatcatc cattcctcct gtttcccatt taccgccctc tcccatttcc cccatctccg
+     1201 gccagaagta gagacatttc tgtccaggag acgagggacc aaggatcaat ggccacttcg
+     1261 tgttaggtca tctcggtcgt tagcttggaa tccgcctccc gatcctcttg gaaagggagg
+     1321 gatgtttccc cggtatcgtt ctctctcgtc agcagtgcta aggtgacctc tcagaccgtt
+     1381 cccttgttcc gcagattctc tgagttccga gaggtaaccc tcttggaatt agctcgactt
+//
+

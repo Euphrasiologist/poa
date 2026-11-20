@@ -266,8 +266,10 @@ stops through, at the cost of a C-to-U edit; it needs builds of both with
 `--stop-edit-penalty`. Spliced genes use fern exon templates
 (`lineages/fern/`, from seven annotated leptosporangiate fern
 mitogenomes): nad1, nad4, nad5 and nad7 have four exons in ferns, rps3
-three, rps10 one, and there is no ccmFc. Single-exon genes still use the
-angiosperm editing profiles. On 30 DToL fern assemblies, single-exon mito gene
+three, rps10 one, and there is no ccmFc. Twenty-two single-exon mito
+genes use fern editing profiles (`editing/reference/lineages/fern/`),
+built from the five ferns whose annotated proteins are the edited ones
+(see below); the rest use the angiosperm profiles. On 30 DToL fern assemblies, single-exon mito gene
 copies aligned over 99% of their profile go from 152 to 292 of 702 and
 their frameshift calls from 277 to 113; spliced mito genes aligned that
 well from 0 to 80 of 249. U-to-C edits are marked `U>C` in the `edit`
@@ -283,6 +285,33 @@ are thin - none is RefSeq, and four of the seven species are assemblies
 nobody has validated - so whole-gene profile columns that at least 80%
 of those fern reconstructions leave unaligned are dropped
 (`lineages/fern/whole_gene_mask.tsv`, `trans_splicing/column_mask.py`).
+
+The fern editing profiles come from *Haplopteris ensiformis* and four
+Salviniales (*Azolla rubra*, *A. pinnata*, *Marsilea mutica*, *Salvinia
+molesta*; Kwok van der Giezen et al. 2025), the only ferns whose
+deposited proteins carry their full RNA-seq editome; the other fern
+records have only the stop codons edited out, and profiles from those
+found a fifth of the real C-to-U edits. Each species counts once per
+gene, however many records its genome is in. Held out in turn and scored
+against their own editomes, the five show what to expect:
+
+| held out | angiosperm profiles: C-to-U found / calls right | fern profiles |
+|---|---|---|
+| *Haplopteris* | 47% / 49% | 40% / 60% |
+| *Marsilea* | 53% / 66% | 40% / 90% |
+| *Salvinia* | 56% / 68% | 41% / 94% |
+| both *Azolla* | 60% / 71% | 29% / 90% |
+
+Stop read-throughs are found 85-100% of the time on either. So with
+`--lineage fern` a C-to-U call is usually right but well under half of
+the real ones are called (the held-out profiles rest on three or four
+species; the bundled ones on five), and the corrected protein is a
+partial correction. On the 29 DToL ferns (538 copies of 18 of the profiled
+genes, those with copies there), copies aligned over 99% of their profile
+go from 231 with the angiosperm profiles to 412, frameshift calls from
+46 to 44, C-to-U calls per copy from 11.0 to 7.3, and planted 1-bp
+indels found from 43% to 61%. matR and nad9 stay on the angiosperm
+profiles, where they did better.
 
 ### Stage by stage, on a whole dataset
 

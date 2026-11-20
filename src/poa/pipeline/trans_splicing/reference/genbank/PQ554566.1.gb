@@ -1,0 +1,53 @@
+LOCUS       PQ554566                 620 bp    DNA     linear   PLN 12-JAN-2025
+DEFINITION  Azolla rubra Sdh4 (sdh4) gene, complete cds; mitochondrial.
+ACCESSION   PQ554566
+VERSION     PQ554566.1
+KEYWORDS    .
+SOURCE      mitochondrion Azolla rubra
+  ORGANISM  Azolla rubra
+            Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta;
+            Polypodiopsida; Polypodiidae; Salviniales; Salviniaceae; Azolla.
+REFERENCE   1  (bases 1 to 620)
+  AUTHORS   Kwok van der Giezen,F.M. and Small,I.D.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (08-OCT-2024) School of Molecular Sciences, The
+            University of Western Australia, Bayliss Buliding, 35 Stirling
+            Highway, Crawley, WA 6009, Australia
+COMMENT     ##Assembly-Data-START##
+            Assembly Method       :: SPAdes v. 3.12.0; Geneious Prime v. 2023
+            Assembly Name         :: Azolla rubra mitochondrion
+            Sequencing Technology :: Illumina
+            ##Assembly-Data-END##
+FEATURES             Location/Qualifiers
+     source          1..620
+                     /organism="Azolla rubra"
+                     /organelle="mitochondrion"
+                     /mol_type="genomic DNA"
+                     /db_xref="taxon:45988"
+                     /tissue_type="Whole plant"
+                     /geo_loc_name="Australia"
+                     /collected_by="Farley M. Kwok van der Giezen"
+     gene            155..418
+                     /gene="sdh4"
+     CDS             155..418
+                     /gene="sdh4"
+                     /exception="RNA editing"
+                     /codon_start=1
+                     /product="Sdh4"
+                     /protein_id="XMD96971.1"
+                     /translation="MEARRETLNYWLIQRSTAACLVLILLITNVSTLILFNLLLFWHI
+                     HVGMEEILADYVHHEVIRNWILILPRIFLLVAIKDFCLFFVLY"
+ORIGIN      
+        1 tccagcactt ctgttctgct gggaaataat ctatcatttc cgggctccgc tccaattttc
+       61 actttatgtc ctaaatttct caattctttt ccctttctca tgcgtgaaaa cgagcgaaaa
+      121 tgaatgaaca aataatattt ctaatgcaga agcaacggaa gctcgtagag aaaccttaaa
+      181 ttattggctc acttaaagaa gtactgcagc ccgtttagtc ctaattcttc tcataaccaa
+      241 tgttttcact ttgatttcgt tcaatctcct gttatttcgg tacattcacg tgggaatgga
+      301 agagattccg gcagatcatg ttcaccatga agtcatatga aatcggatct cgattctccc
+      361 tagaatcttc ctattagttg ccatcaaaga cttttgcttg ttttccgttc tttatcaatt
+      421 ggttatttca aagggtggcc taaggtcacc ccccttaaat gaaatgagag tcccgcctct
+      481 cttcatttaa gcgggaaaaa cgggaaaggg agcagccaat atgcttcaac attcgaagat
+      541 aaagagcgca gattggccaa aaggaaagta agcaacgtaa aataccttgc ccctgaacta
+      601 cgagtagcac tcgctctgtc
+//
+

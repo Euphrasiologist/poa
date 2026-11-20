@@ -151,6 +151,29 @@ class FernReferences(unittest.TestCase):
         self.assertEqual(lin.reference("fern"), lin.DEFAULT_LINEAGE)
 
 
+class FernEditingProfiles(unittest.TestCase):
+    def test_bundled_and_gated(self):
+        from poa.pipeline.editing import lineage_profiles as lp
+
+        mito = lin.editing_profiles(PIPELINE, "fern") / "mito"
+        have = {p.stem for p in mito.glob("*.pssm")}
+        self.assertIn("rps4", have)
+        self.assertIn("atp4", have)
+        # left out: their fern profiles did worse than the angiosperm ones
+        self.assertFalse({"matR", "nad9"} & have)
+        self.assertFalse({"matR", "nad9"} & set(lp.LINEAGE_GENES["fern"]))
+        # multi-exon in ferns, so no single-locus profile
+        self.assertFalse({"atp1", "cox1", "rps14"} & have)
+        self.assertEqual(lp.LINEAGE_MIN_SEQUENCES["fern"], 4)
+
+    def test_one_per_species(self):
+        from poa.pipeline.editing import lineage_profiles as lp
+
+        proteins = {"nad3": {"A1": "MK", "A2": "MK", "A3": "ML", "B1": "MK"}}
+        species = {"A1": "a", "A2": "a", "A3": "a", "B1": "b"}
+        self.assertEqual(list(lp.one_per_species(proteins, species)["nad3"]), ["A1", "A3", "B1"])
+
+
 class Load(unittest.TestCase):
     def test_missing_and_present(self):
         root = Path(tempfile.mkdtemp())

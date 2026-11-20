@@ -1,0 +1,59 @@
+LOCUS       PQ554569                 835 bp    DNA     linear   PLN 12-JAN-2025
+DEFINITION  Azolla pinnata Atp6 (atp6) gene, complete cds; mitochondrial.
+ACCESSION   PQ554569
+VERSION     PQ554569.1
+KEYWORDS    .
+SOURCE      mitochondrion Azolla pinnata
+  ORGANISM  Azolla pinnata
+            Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta;
+            Polypodiopsida; Polypodiidae; Salviniales; Salviniaceae; Azolla.
+REFERENCE   1  (bases 1 to 835)
+  AUTHORS   Kwok van der Giezen,F.M. and Small,I.D.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (08-OCT-2024) School of Molecular Sciences, The
+            University of Western Australia, Bayliss Buliding, 35 Stirling
+            Highway, Crawley, WA 6009, Australia
+COMMENT     ##Assembly-Data-START##
+            Assembly Method       :: SPAdes v. 3.2.0; Geneious Prime v. 2023
+            Assembly Name         :: Azolla pinnata mitochondrion
+            Sequencing Technology :: Illumina
+            ##Assembly-Data-END##
+FEATURES             Location/Qualifiers
+     source          1..835
+                     /organism="Azolla pinnata"
+                     /organelle="mitochondrion"
+                     /mol_type="genomic DNA"
+                     /db_xref="taxon:99433"
+                     /tissue_type="Whole plant"
+                     /geo_loc_name="Australia"
+                     /collected_by="Farley M. Kwok van der Giezen"
+     gene            30..782
+                     /gene="atp6"
+     CDS             30..782
+                     /gene="atp6"
+                     /exception="RNA editing"
+                     /codon_start=1
+                     /product="Atp6"
+                     /protein_id="XMD96974.1"
+                     /translation="MAYSPLEQFAIIPLIPIHIGNLYLSFTNSSLFMLLTTSLILLLV
+                     HLVTSNGGHLVPNAWQSLVEMIYDFVLNLVNEQISGVSKQQFFPLIFVTFTFLLFCNL
+                     QGMVPYSFTVTSHFIITLGLSFSLFFGITVVGFQTHGLHFFSFLLPPGVPLPLAPFLV
+                     LLELISYCFRALSLGIRLFANMMAGHSLVKILSGFAWTMLSMRGILLLAHLAPLLIVF
+                     ALTGLELGVAILQAYVFTILICIYLNDAINLH"
+ORIGIN      
+        1 catgttggaa caaaaccctt caattcatca cggcttacag tctaccggaa taacctgcca
+       61 ttattctatc gatttccatc catataggaa atccgtatct tttatttatc aattcctctc
+      121 catctatgtc acccactacc agtttaatcc cgctcctagt tcacttggtg acctcgaatg
+      181 gaggacactt agtactgaat gcttggtaat ccctagtgga gatgacttat gatttcgtgc
+      241 ccaatctagt gaacgaataa attagtggcg tttcgaaata atagtcttct ctcccgatcc
+      301 tcgttacttt tacctttcca ttatttcgta atttgtaagg tatggtactt tatagtttta
+      361 tggtaataag tcattctatt attattttgg gttctctatt ctctctttct cttggaacta
+      421 tcgtagtggg gtcttaaaca catgggcctc atcctttcag tctcttatta ctgccgggtg
+      481 tacctccacc gttagcgcct ttcccagtat tttcggagtt aatcctctat cgttttcgtg
+      541 cactaagctt aggaatatgt ttatttgcta atatgatggc tggttatagt tcagtcaaga
+      601 tttcgagtgg ctttgctcgg accatgctat ccatgagggg tatcttgcta ttagcacatc
+      661 tcgctcttct ttcgatcgta tttgcatcaa ctggtttaga atcaggtgta gttattttat
+      721 aagcttatgt ccctataatc ccgattcgta ttcatttgaa tgatgcaata aaccttcatt
+      781 gacatggaaa gagaaacggt ttggtttcgt caccaaaccg ttcttttcta tattg
+//
+

@@ -1,0 +1,61 @@
+LOCUS       PQ554662                 919 bp    DNA     linear   PLN 12-JAN-2025
+DEFINITION  Salvinia molesta Rpl5 (rpl5) gene, complete cds; mitochondrial.
+ACCESSION   PQ554662
+VERSION     PQ554662.1
+KEYWORDS    .
+SOURCE      mitochondrion Salvinia molesta
+  ORGANISM  Salvinia molesta
+            Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta;
+            Polypodiopsida; Polypodiidae; Salviniales; Salviniaceae; Salvinia.
+REFERENCE   1  (bases 1 to 919)
+  AUTHORS   Kwok van der Giezen,F.M. and Small,I.D.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (08-OCT-2024) School of Molecular Sciences, The
+            University of Western Australia, Bayliss Buliding, 35 Stirling
+            Highway, Crawley, WA 6009, Australia
+COMMENT     ##Assembly-Data-START##
+            Assembly Method       :: SPAdes v. 3.2; Geneious Prime v. 2023
+            Assembly Name         :: Salvinia molesta mitochondrion
+            Sequencing Technology :: Illumina
+            ##Assembly-Data-END##
+FEATURES             Location/Qualifiers
+     source          1..919
+                     /organism="Salvinia molesta"
+                     /organelle="mitochondrion"
+                     /mol_type="genomic DNA"
+                     /db_xref="taxon:167732"
+                     /tissue_type="Whole plant"
+                     /dev_stage="Primary phase"
+                     /geo_loc_name="Australia"
+                     /collected_by="Farley M. Kwok van der Giezen"
+     gene            158..730
+                     /gene="rpl5"
+     CDS             158..730
+                     /gene="rpl5"
+                     /exception="RNA editing"
+                     /codon_start=1
+                     /product="Rpl5"
+                     /protein_id="XMD97067.1"
+                     /translation="MFTPSILRFHYRNVLCQDFLLKFDYTHVLEVPRLCKTILVLGAP
+                     SNSLESVKLAIENLCGQKCIKTRSGALTKKSFQFNKFLLSQESERKAHVTHLAQSVLR
+                     GHIMYKFLEKLSMIISPHHPVEIRRNSIEFHFSMATTFLLKEFPQLKENFEIFAHLRE
+                     FKVIIITSANTEGETYLLWSGFKKSAGKAK"
+ORIGIN      
+        1 ttaggaaatg gaagagcggg cggctaacgt ttctttaacg cccttccgtt ccgttcacta
+       61 cgcgagcgga gtgataagag cccgctcgtg aggcgaatag caaaaagtgc ttccatttct
+      121 accttagttt ctgcacgaaa agacacacag cttgcctacg ttcactccaa gtatactccg
+      181 ttttcattac agaaacgtat tatgccaaga tttcccatca aaatctgatt atacccatgt
+      241 tctggaagtt tttagattgt gtaaaaccat tttagttcta ggggcaccct ccaactcact
+      301 tgaaagtgtc aaattagcta cagagaatcc tcgtggttaa aaacgcataa agacgtgaag
+      361 tggagctttg accaaaaaat tgttttaatt taacaaatct ttactaagct aagagtcaga
+      421 gagaaaagcg tacgtcactc acttagcata gagcgttttg tgagggcaca ttatgtacaa
+      481 acttttggag aaactcagta tgattatctc cccctattac ctagtcgaaa tatgaagaaa
+      541 ctctattgaa ttccatttct caatggccac aactttcttg tcaaaggaac ttccgtaatt
+      601 gaaagagaat tctgagactc ttgcgcatct ttgagagttc aaagtaatta tcatcacttc
+      661 agccaacaca gaaggggaga cttatttctc atggagcggc tttaagaaaa gtgcagggaa
+      721 ggcaaagtga aatatgatga ccagggctat attgaattct gcatatatta ctcctacaat
+      781 caattgcacg caacgtcttt ggaaaacaaa taggttggat gggggcttga tgaatggttg
+      841 gataggtgaa ggcaccgcac gttactattg aataaatggt gaataaatgg cttctgtagt
+      901 gtttttctct tcaggtaat
+//
+

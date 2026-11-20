@@ -1,0 +1,51 @@
+LOCUS       PQ554603                 494 bp    DNA     linear   PLN 12-JAN-2025
+DEFINITION  Azolla pinnata Sdh4 (sdh4) gene, complete cds; mitochondrial.
+ACCESSION   PQ554603
+VERSION     PQ554603.1
+KEYWORDS    .
+SOURCE      mitochondrion Azolla pinnata
+  ORGANISM  Azolla pinnata
+            Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta;
+            Polypodiopsida; Polypodiidae; Salviniales; Salviniaceae; Azolla.
+REFERENCE   1  (bases 1 to 494)
+  AUTHORS   Kwok van der Giezen,F.M. and Small,I.D.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (08-OCT-2024) School of Molecular Sciences, The
+            University of Western Australia, Bayliss Buliding, 35 Stirling
+            Highway, Crawley, WA 6009, Australia
+COMMENT     ##Assembly-Data-START##
+            Assembly Method       :: SPAdes v. 3.2.0; Geneious Prime v. 2023
+            Assembly Name         :: Azolla pinnata mitochondrion
+            Sequencing Technology :: Illumina
+            ##Assembly-Data-END##
+FEATURES             Location/Qualifiers
+     source          1..494
+                     /organism="Azolla pinnata"
+                     /organelle="mitochondrion"
+                     /mol_type="genomic DNA"
+                     /db_xref="taxon:99433"
+                     /tissue_type="Whole plant"
+                     /geo_loc_name="Australia"
+                     /collected_by="Farley M. Kwok van der Giezen"
+     gene            150..413
+                     /gene="sdh4"
+     CDS             150..413
+                     /gene="sdh4"
+                     /exception="RNA editing"
+                     /codon_start=1
+                     /product="Sdh4"
+                     /protein_id="XMD97008.1"
+                     /translation="MEARRETLNYWLIQRSTAACLVLILLITNVSTLILFNLLLFWHI
+                     HVGMEEILADYVHHEVIRNWILILLRIFLLVAIKDFCLFFVLY"
+ORIGIN      
+        1 cacttctgtt ctgctgggaa ataatctatc atttccgggc tccgctccaa ttttcacttt
+       61 atgtcctaaa tttatcaatt cttttccctt tctcatgcgt gaaaacgagc gaaaatgaat
+      121 gaacaaataa tatttctaat gcagaagcaa cggaagctcg tagagaaacc ttaaattatt
+      181 ggctcactta aagaagtact gcagcccgtt tagtcctaat tcttctcata accaatgttt
+      241 tcactttgat ttcgttcaat ctcctgttat ttcggtacat tcacgtggga atggaagaga
+      301 ttctggcaga tcatgttcac catgaagtca tatgaaatcg gatctcgatt ctccctagaa
+      361 tcttcctatt agttgccatc aaagactttt gcttgttttc cgttctttat caattggtta
+      421 tttcaaaggg tggcctaacc taacctaagg tcacccccct taaatgaaat gagagtcccg
+      481 cctctcttca ttta
+//
+

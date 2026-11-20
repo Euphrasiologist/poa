@@ -1,0 +1,66 @@
+LOCUS       PQ554625                1294 bp    DNA     linear   PLN 12-JAN-2025
+DEFINITION  Marsilea mutica Rpl5 (rpl5) gene, complete cds; mitochondrial.
+ACCESSION   PQ554625
+VERSION     PQ554625.1
+KEYWORDS    .
+SOURCE      mitochondrion Marsilea mutica
+  ORGANISM  Marsilea mutica
+            Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta;
+            Polypodiopsida; Polypodiidae; Salviniales; Marsileaceae; Marsilea.
+REFERENCE   1  (bases 1 to 1294)
+  AUTHORS   Kwok van der Giezen,F.M. and Small,I.D.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (08-OCT-2024) School of Molecular Sciences, The
+            University of Western Australia, Bayliss Buliding, 35 Stirling
+            Highway, Crawley, WA 6009, Australia
+COMMENT     ##Assembly-Data-START##
+            Assembly Method       :: SPAdes v. 3.2; Geneious Prime v. 2023
+            Assembly Name         :: Marsilea mutica mitochondrion
+            Sequencing Technology :: Illumina
+            ##Assembly-Data-END##
+FEATURES             Location/Qualifiers
+     source          1..1294
+                     /organism="Marsilea mutica"
+                     /organelle="mitochondrion"
+                     /mol_type="genomic DNA"
+                     /db_xref="taxon:167748"
+                     /tissue_type="Frond"
+                     /geo_loc_name="Australia"
+                     /collected_by="Catherine Colas des Francs-Small"
+     gene            309..884
+                     /gene="rpl5"
+     CDS             309..884
+                     /gene="rpl5"
+                     /exception="RNA editing"
+                     /codon_start=1
+                     /product="Rpl5"
+                     /protein_id="XMD97030.1"
+                     /translation="MFTPSILRFHYRNVLCQDFLLKFDYTHVLEVPRLCKIILVLGAP
+                     SNSLESVKLAIENLCGQKCIKMRSGALTKKSFQFNKAFLLSQESERKAHVTCLAQSVL
+                     RGHIMYKFLEKLGMIISPHYPVEIRTNSIEFHFSMATTFLLKEFPQLKENFEIFAHLR
+                     EFKVIIVTSANTEEETYSLWSGFKRSAEKTK"
+ORIGIN      
+        1 catctctgga ataggggatc cccgacgcgt tggcagcagt ggttacaaaa ctaccggaga
+       61 aggagcgagg ccgaagggaa aaggccgaag actttctata taggcttgct ttgtcaagta
+      121 gggcagagta ggcccgccct tttggggctc cctgcttcgg aagagcgggc ggccaacgtt
+      181 tctttaacgc ccttccgttc cgttcactac gcgagcggag cgataagagc ccgctcgtga
+      241 ggcgaataga aaaaaaagtg cttccatttc tgccttagtt tctgcacgaa aagacacgca
+      301 gcttgcctac gttcactcca agtatactcc gttttcatta cagaaacgta ttatgttaag
+      361 attttccatc aaaatctgat tatactcatg ttccggaagt tcttagattg tgcaaaacca
+      421 ttttggttct aggggcaccc tctaattcac ttgagagtgt caaattagct acagagaatc
+      481 ctcgtggtta gaaacgcata aagatgtgaa gtggagcttt gaccaaaaaa tcgttttaat
+      541 ttaacaaagc ctttttactg agctaagagt cagagagaaa agcgtatgtc actcgcttag
+      601 catagagcgt ttcgtgaggg cacattacgt acaaactttt ggagaaactc ggtatgatta
+      661 tctcccccta ttacccagtc gaaatatgaa taaactctat tgaattccat ttctcaatgg
+      721 ccacaacctt cttgtcaaag gaacttccgt aattgaaaga gaattttgag actcctgcgc
+      781 atctttgaga gttcaaagta attatcgtca cttcagccaa cacagaggag gagacttatt
+      841 cctcatggag tggctttaag agaagtgcag agaagacgaa gtgagatatg atgaccaggg
+      901 ctatattgaa ttctgcatat attacttcta caattgcacg caacgccttc agagaacgaa
+      961 taggttgtac cgcagagatg ggggcttgat gaatggttgg attggatgtt aacgagtggg
+     1021 ggcacctaag ttactattgg ataaatggct tctgtagtgt ttttctcttc aggtaatgga
+     1081 atgtatacgt cggggcgggg tccgccctcc cccacgcccg ggacgtagga tgatccgcct
+     1141 tgccgatggc tgttccgcct acggttatta gcgagagcca gtaaccaacc aagagatcat
+     1201 caacaggttt catttccgcc tctttgcaca agtagaaaac caccttatca ctcagcaatg
+     1261 tgcattggtt gctatccgag caattagggt tggg
+//
+

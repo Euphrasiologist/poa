@@ -1,0 +1,51 @@
+LOCUS       PQ554596                 443 bp    DNA     linear   PLN 12-JAN-2025
+DEFINITION  Azolla pinnata Rps10 (rps10) gene, complete cds; mitochondrial.
+ACCESSION   PQ554596
+VERSION     PQ554596.1
+KEYWORDS    .
+SOURCE      mitochondrion Azolla pinnata
+  ORGANISM  Azolla pinnata
+            Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta;
+            Polypodiopsida; Polypodiidae; Salviniales; Salviniaceae; Azolla.
+REFERENCE   1  (bases 1 to 443)
+  AUTHORS   Kwok van der Giezen,F.M. and Small,I.D.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (08-OCT-2024) School of Molecular Sciences, The
+            University of Western Australia, Bayliss Buliding, 35 Stirling
+            Highway, Crawley, WA 6009, Australia
+COMMENT     ##Assembly-Data-START##
+            Assembly Method       :: SPAdes v. 3.2.0; Geneious Prime v. 2023
+            Assembly Name         :: Azolla pinnata mitochondrion
+            Sequencing Technology :: Illumina
+            ##Assembly-Data-END##
+FEATURES             Location/Qualifiers
+     source          1..443
+                     /organism="Azolla pinnata"
+                     /organelle="mitochondrion"
+                     /mol_type="genomic DNA"
+                     /db_xref="taxon:99433"
+                     /tissue_type="Whole plant"
+                     /geo_loc_name="Australia"
+                     /collected_by="Farley M. Kwok van der Giezen"
+     gene            63..371
+                     /gene="rps10"
+     CDS             63..371
+                     /gene="rps10"
+                     /exception="RNA editing"
+                     /codon_start=1
+                     /product="Rps10"
+                     /protein_id="XMD97001.1"
+                     /translation="MTAKVCIMIKSFEKLPTGHPHNTCQIGLPRKRILYTVLRSPHID
+                     KKSREQFEMGIHKQLLVIETETHKLREKLLWLKFHHPLGVQLKILFHYQTGLELIAKL
+                     "
+ORIGIN      
+        1 aaagaagaaa ctaatgatag tggcataatc aacaaaaaga gaaaaccacc ctttacttcg
+       61 gaacgactgc caaggtatgc attatgatta aatctctcga gaaaccacca acagggcatc
+      121 cgcataacac atgctagatt gggttgccta gaaaatgaat ctcgtataca gtgctgtgat
+      181 tactttatat tgataaaaag tctagagaac aatctgaaat gggaatacat aaataattgc
+      241 cggtcataga aacggaaaca cataaattgt gcgaaaagtc gcttcggttg aaattccacc
+      301 acccactcgg agtttaattg aaaattccat ttcattatta aactggttta gagttgattg
+      361 tcaaactcta gtcaggaagt caggtcagaa gaaaaataca gcggaattac accgcttata
+      421 gtttgcacaa gcaaatccgg aca
+//
+

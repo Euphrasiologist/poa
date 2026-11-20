@@ -1,0 +1,53 @@
+LOCUS       PQ554543                 558 bp    DNA     linear   PLN 12-JAN-2025
+DEFINITION  Azolla rubra Nad3 (nad3) gene, complete cds; mitochondrial.
+ACCESSION   PQ554543
+VERSION     PQ554543.1
+KEYWORDS    .
+SOURCE      mitochondrion Azolla rubra
+  ORGANISM  Azolla rubra
+            Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta;
+            Polypodiopsida; Polypodiidae; Salviniales; Salviniaceae; Azolla.
+REFERENCE   1  (bases 1 to 558)
+  AUTHORS   Kwok van der Giezen,F.M. and Small,I.D.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (08-OCT-2024) School of Molecular Sciences, The
+            University of Western Australia, Bayliss Buliding, 35 Stirling
+            Highway, Crawley, WA 6009, Australia
+COMMENT     ##Assembly-Data-START##
+            Assembly Method       :: SPAdes v. 3.12.0; Geneious Prime v. 2023
+            Assembly Name         :: Azolla rubra mitochondrion
+            Sequencing Technology :: Illumina
+            ##Assembly-Data-END##
+FEATURES             Location/Qualifiers
+     source          1..558
+                     /organism="Azolla rubra"
+                     /organelle="mitochondrion"
+                     /mol_type="genomic DNA"
+                     /db_xref="taxon:45988"
+                     /tissue_type="Whole plant"
+                     /geo_loc_name="Australia"
+                     /collected_by="Farley M. Kwok van der Giezen"
+     gene            73..462
+                     /gene="nad3"
+     CDS             73..462
+                     /gene="nad3"
+                     /exception="RNA editing"
+                     /codon_start=1
+                     /product="Nad3"
+                     /protein_id="XMD96948.1"
+                     /translation="MPFFSVNTFLPISEFAPISLYLVISLLLSLILIGASFAFASKGS
+                     AYPDKLSAYECGFDPFGDARSRFDIRFYLVSLLFIIFDLEVTFLFPWAVSLNKIGWFG
+                     FWSMMVFVWILTIGFLYEWKKGALDWE"
+ORIGIN      
+        1 agttatgaat acaagaaaga agaaaccgca accgcagccc tggatgattc ttcctgaagt
+       61 aagttctaaa gaatgccatt cttttccgta aatacttttc ttctcatttt cgaatttgcc
+      121 cctatttctt tctacctagt catcagtttg ctaccttccc tgatcccaat tggtgctttt
+      181 ttcgcatttg ctttgaaagg ttcggcctat ccggataaat tgtcagctca cgaacgcggt
+      241 tctgacctac ttggtgatgt cagaagtcgt tttgatacat gaccttattc ggtctcccct
+      301 tcatttatta tcttcgattc ggaagtgacc ctctcgtttc cccgggcagt atcctcgaac
+      361 aagattggtt ggtttggatt tcggtctatg atggtgtttg tacggattcc gaccattgga
+      421 tctcttcatg aatggaaaaa gggcgctctg gactgggagt aaccgacact gaagagtcag
+      481 gccccatcaa ggcagatgca tgatgaacgc ttttcggggc cgcacgcaga aggaaaaaca
+      541 cagaatgaac cgaatact
+//
+

@@ -1,0 +1,52 @@
+LOCUS       PQ554599                 537 bp    DNA     linear   PLN 12-JAN-2025
+DEFINITION  Azolla pinnata Rps13 (rps13) gene, complete cds; mitochondrial.
+ACCESSION   PQ554599
+VERSION     PQ554599.1
+KEYWORDS    .
+SOURCE      mitochondrion Azolla pinnata
+  ORGANISM  Azolla pinnata
+            Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta;
+            Polypodiopsida; Polypodiidae; Salviniales; Salviniaceae; Azolla.
+REFERENCE   1  (bases 1 to 537)
+  AUTHORS   Kwok van der Giezen,F.M. and Small,I.D.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (08-OCT-2024) School of Molecular Sciences, The
+            University of Western Australia, Bayliss Buliding, 35 Stirling
+            Highway, Crawley, WA 6009, Australia
+COMMENT     ##Assembly-Data-START##
+            Assembly Method       :: SPAdes v. 3.2.0; Geneious Prime v. 2023
+            Assembly Name         :: Azolla pinnata mitochondrion
+            Sequencing Technology :: Illumina
+            ##Assembly-Data-END##
+FEATURES             Location/Qualifiers
+     source          1..537
+                     /organism="Azolla pinnata"
+                     /organelle="mitochondrion"
+                     /mol_type="genomic DNA"
+                     /db_xref="taxon:99433"
+                     /tissue_type="Whole plant"
+                     /geo_loc_name="Australia"
+                     /collected_by="Farley M. Kwok van der Giezen"
+     gene            41..484
+                     /gene="rps13"
+     CDS             41..484
+                     /gene="rps13"
+                     /exception="RNA editing"
+                     /codon_start=1
+                     /product="Rps13"
+                     /protein_id="XMD97004.1"
+                     /translation="VSYILGTKLVSNKQVRLALTQIFGIGPKKATWVCDQSGLGDNTK
+                     VSNLTRHQIDQISIIVRRNNFLVDSELKREIQQYIKRSINISCYRGFRHKAGLPLRGQ
+                     RTHSNAKTCRKSRKVLTNQRKKNNSFFIHKNERRQDARKKTKPKE"
+ORIGIN      
+        1 tgaaattata cgtagaaaac aaggagaaaa gaaacaaatc gcgtcatata ttccaggaac
+       61 caaatcagtt tccaataaat aagtcagact tgcctcaacc taaatctccg gaactggacc
+      121 caaaaaagcc acttgggttt gtgattaatc aggtcccggc gataacacta aggttagtaa
+      181 tctgactcgg cactaaattg accagattag cataatagta cgttgaaaca atttcctagt
+      241 tgattcggaa ttaaagagag aaatttagta atatatcaaa tgattaatta atatcagccg
+      301 ttaccgcgga ttccgtcaca aagcaggatt gccattacgt ggttaatgaa cctacagcaa
+      361 tgttaagatc tgtcgcaagt caagaaaagt ttcaatcaat caacgaaaga agaataattc
+      421 gtttttcatt cacaaaaatg agagaaggca agacgccagg aagaaaacga aaccgaagga
+      481 atagaaatga agaatacaat tatgtaaaag cagccttctg aacactagta atagtag
+//
+

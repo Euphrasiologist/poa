@@ -1,0 +1,64 @@
+LOCUS       PQ554645                1237 bp    DNA     linear   PLN 12-JAN-2025
+DEFINITION  Salvinia molesta Atp9 (atp9) gene, complete cds; mitochondrial.
+ACCESSION   PQ554645
+VERSION     PQ554645.1
+KEYWORDS    .
+SOURCE      mitochondrion Salvinia molesta
+  ORGANISM  Salvinia molesta
+            Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta;
+            Polypodiopsida; Polypodiidae; Salviniales; Salviniaceae; Salvinia.
+REFERENCE   1  (bases 1 to 1237)
+  AUTHORS   Kwok van der Giezen,F.M. and Small,I.D.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (08-OCT-2024) School of Molecular Sciences, The
+            University of Western Australia, Bayliss Buliding, 35 Stirling
+            Highway, Crawley, WA 6009, Australia
+COMMENT     ##Assembly-Data-START##
+            Assembly Method       :: SPAdes v. 3.2; Geneious Prime v. 2023
+            Assembly Name         :: Salvinia molesta mitochondrion
+            Sequencing Technology :: Illumina
+            ##Assembly-Data-END##
+FEATURES             Location/Qualifiers
+     source          1..1237
+                     /organism="Salvinia molesta"
+                     /organelle="mitochondrion"
+                     /mol_type="genomic DNA"
+                     /db_xref="taxon:167732"
+                     /tissue_type="Whole plant"
+                     /dev_stage="Primary phase"
+                     /geo_loc_name="Australia"
+                     /collected_by="Farley M. Kwok van der Giezen"
+     gene            554..778
+                     /gene="atp9"
+     CDS             554..778
+                     /gene="atp9"
+                     /exception="RNA editing"
+                     /codon_start=1
+                     /product="Atp9"
+                     /protein_id="XMD97050.1"
+                     /translation="MLEGAKLMGAGAATIALAGAAVGIGNVFSSLITSVARNPSLAKQ
+                     LFGYAILGFALTEAIALFALMMAFLILFVF"
+ORIGIN      
+        1 caatctcttg aggtccccac taccatggag aaaaaaagga tcgcaagata aaccatttat
+       61 ttacataaat gcttcgccgc ccggaatgca gatccgcgat ctcgagttaa cctttcagaa
+      121 agagatcggc gctcgtccca tttacgacac tatcatgagg accttcagtc gcaaaccgaa
+      181 gccaaaagtg gagaactaga atggaaatcg acatgttgaa cgatgaacag gctagagaaa
+      241 gtgcaaagag agattcagcc gaactagcct gcgtaaaaag aaagagaaac cctgcctgaa
+      301 ggtagagcca aggaacctcc gtaaagcagc aaaagggaag caatgcggac tgcctattta
+      361 ctcaatttcc agatgttccc gtcacctgtt atttggagtc gatagccaat tctgccaggg
+      421 acaactattt cacccgcaaa ccaatgcctt aagccgctca gtcatacctc cggctccccg
+      481 ccgccttgta agtgaccctt ggcagcgcat tatagtctct ctcgtgaccc taacagacac
+      541 ccaatagtta gttacgctag aaggtgcgaa attaatggga gtaggagcgg ctatcattgc
+      601 ctcagcggga gcagtagcag gtactggaaa cgtatctagt ccttcgacaa cctttgtggc
+      661 gtgaaatttc ttattagcca aataatcatt cggttatgtt attccaggct ttgccttaac
+      721 agaagttatc gtcccgtctg cttcgacgat ggccttttca acatcattcg tatctcgaga
+      781 aaacaaacaa aggagaacaa ataggttgta ccatagggat gggggcttga tgaatccccc
+      841 atttccaggg gaaatagctc agttggttag agtgctggtt tgtcacgcca gaagtcgcgg
+      901 gttcgagccc cgttttcccc gttagcatca tgccaagttt tctcaagtcg gagttgatga
+      961 tattgatgga aaagaagccc gaccacctct gcccatttac gacactatca tgaggacctc
+     1021 cgagtagagc atgtagcgga aaaaccaacc ttgtcagtct ctaccctgct tttacacagg
+     1081 ctatgccttt tctcgtttag cgtagtgttc aaacattagt ttaggtcatt tagagcccat
+     1141 tctgtggcgg ttggctcatt ctttgcccct ccgtgctgct gcttaaagcc tttatgcttc
+     1201 cctcaattaa tcgatttgtg ccactttacc acctttc
+//
+

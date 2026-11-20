@@ -1,0 +1,62 @@
+LOCUS       PQ554660                 949 bp    DNA     linear   PLN 12-JAN-2025
+DEFINITION  Salvinia molesta Nad9 (nad9) gene, complete cds; mitochondrial.
+ACCESSION   PQ554660
+VERSION     PQ554660.1
+KEYWORDS    .
+SOURCE      mitochondrion Salvinia molesta
+  ORGANISM  Salvinia molesta
+            Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta;
+            Polypodiopsida; Polypodiidae; Salviniales; Salviniaceae; Salvinia.
+REFERENCE   1  (bases 1 to 949)
+  AUTHORS   Kwok van der Giezen,F.M. and Small,I.D.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (08-OCT-2024) School of Molecular Sciences, The
+            University of Western Australia, Bayliss Buliding, 35 Stirling
+            Highway, Crawley, WA 6009, Australia
+COMMENT     ##Assembly-Data-START##
+            Assembly Method       :: SPAdes v. 3.2; Geneious Prime v. 2023
+            Assembly Name         :: Salvinia molesta mitochondrion
+            Sequencing Technology :: Illumina
+            ##Assembly-Data-END##
+FEATURES             Location/Qualifiers
+     source          1..949
+                     /organism="Salvinia molesta"
+                     /organelle="mitochondrion"
+                     /mol_type="genomic DNA"
+                     /db_xref="taxon:167732"
+                     /tissue_type="Whole plant"
+                     /dev_stage="Primary phase"
+                     /geo_loc_name="Australia"
+                     /collected_by="Farley M. Kwok van der Giezen"
+     gene            172..912
+                     /gene="nad9"
+     CDS             172..912
+                     /gene="nad9"
+                     /exception="RNA editing"
+                     /codon_start=1
+                     /product="Nad9"
+                     /protein_id="XMD97065.1"
+                     /translation="MACSPLKQFAIVPLVPKWIHRFRTSKEESILCATPDYLFQFLWF
+                     LRYHTNTRFGILIDICGVDYPSQKRRFGVVYNLLSIRYNSRIRVRIGVDEITPVSSVI
+                     SIFPSAGWWEREVWDMFGLYFSNHPDLRRILTDYGFEGHPLRKDFPLSGYVEVRYDDS
+                     EKRVVSEPMEMVQESRYFDLASPWRLMPPRSRSFCNFASPWRLTPPRSFSTNRRGGSE
+                     ALRIRNQFIVNRRAVGIKKERIGACWPK"
+ORIGIN      
+        1 ggctgccggg atacggcggc ggaatctcac tcatgaccgg cctcgacgcg gtttcgctca
+       61 aggtcctcat gatagtgtcg taaatggaaa ggtttcagcc ctccgattaa acagccatga
+      121 ttataaagaa tcaatgctca gatttttatg aaaccctgcc tgaactttct catggcttgc
+      181 agtccactta aataatttgc tactgttcta tcagttttca aacggataca tagattttga
+      241 acatcgaagg aagaaagcat attatgcgcc actccggact atccatttta attcctgtgg
+      301 ttttcgaggt atcatatcaa tatacgtctt ggaattccga tcgatactcg cggagttgac
+      361 tatccttctc aaaaatgaag attcggagta gtctataact caccaagcat ttgatataac
+      421 ccacgcattc gtgtacgaat tggtgtagat gaaatcactt ctgcaagttt ggtaatcagt
+      481 atatccctat cagccggccg gtgggagcga gaagtgcggg atacgtctgg tttacattct
+      541 cctaattatc ctgatttacg ccgtacatta actgattacg gtttcgaggg tcatttatta
+      601 tgaaaagact tcctcttaag tggatacgtg gaagtacgtc acgatgatct ggagaaatgt
+      661 gtggttcctg aactgatgga gatggttcaa gaatcttgct attctgattc ggccagtcct
+      721 tggcgactaa tgccgcccag atccagatcc ttttgtaatt ttgccagtcc ttggcgacta
+      781 acgccgccca gatcttttag tactaaccgc cgaggcggct cggaagccct ccgaatccga
+      841 aatcagttca ttgtaaaccg acgagcggtc gggataaaga aagaaagaat aggtgcatgc
+      901 tggcccaagt aggcacttcg ggatgggggc ttgatgaatc ccccatccc
+//
+

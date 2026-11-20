@@ -466,6 +466,17 @@ def scan(
             if lrows:
                 runs[name] = run_orfedit(orfedit, lrows, name, work_dir, **opts)
 
+    # A forced lineage that borrows the default references but has some
+    # editing profiles of its own (fern): its genes with such a profile are
+    # corrected against it, the rest against the default ones as above.
+    own_run = None
+    own_dir = lin.editing_profiles(PIPELINE_DIR, lineage)
+    if "mito" in organelles and lineage in lin.BORROWS and any((own_dir / "mito").glob("*.pssm")):
+        lrows = build_manifest(root, calls, ["mito"], species, own_dir)
+        if lrows:
+            own_run = run_orfedit(orfedit, lrows, lineage, work_dir, stop_edit_penalty=stop, **opts)
+            log.info(f"scan_editing: {len(set(own_run[0]['gene']))} mito genes use {lineage} profiles")
+
     forced = None if lineage == "auto" else lineage
     lineage_table = assign_lineages({k: run[0] for k, run in runs.items()}, forced)
     lineages = dict(zip(lineage_table["species"], lineage_table["lineage"]))
@@ -476,9 +487,17 @@ def scan(
     work_shifts_out = work_dir / "frameshifts.new.tsv"
     for i, out in enumerate((work_gene_calls_out, work_edits_out, work_shifts_out)):
         parts = [keep_lineage(run[i], lineages, name) for name, run in runs.items()]
+        if own_run is not None:
+            covered = set(own_run[0]["gene"])
+            parts = [p[~((p["organelle"] == "mito") & p["gene"].isin(covered))] for p in parts]
         table = pd.concat(parts, ignore_index=True)
         if out == work_shifts_out:
             table = add_recurrence(table, lineages)
+        if own_run is not None:
+            # (no DToL recurrence for these: the reference counts frameshifts
+            # by the default profiles' columns)
+            own = own_run[i].assign(dtol_assemblies="") if out == work_shifts_out else own_run[i]
+            table = pd.concat([table, own], ignore_index=True)
         table.to_csv(out, sep="\t", index=False)
     work_lineage_out = work_dir / "lineage.new.tsv"
     lineage_table.to_csv(work_lineage_out, sep="\t", index=False)

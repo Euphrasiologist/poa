@@ -1,0 +1,63 @@
+LOCUS       PQ554540                1187 bp    DNA     linear   PLN 12-JAN-2025
+DEFINITION  Azolla rubra MttB (mttB) gene, complete cds; mitochondrial.
+ACCESSION   PQ554540
+VERSION     PQ554540.1
+KEYWORDS    .
+SOURCE      mitochondrion Azolla rubra
+  ORGANISM  Azolla rubra
+            Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta;
+            Polypodiopsida; Polypodiidae; Salviniales; Salviniaceae; Azolla.
+REFERENCE   1  (bases 1 to 1187)
+  AUTHORS   Kwok van der Giezen,F.M. and Small,I.D.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (08-OCT-2024) School of Molecular Sciences, The
+            University of Western Australia, Bayliss Buliding, 35 Stirling
+            Highway, Crawley, WA 6009, Australia
+COMMENT     ##Assembly-Data-START##
+            Assembly Method       :: SPAdes v. 3.12.0; Geneious Prime v. 2023
+            Assembly Name         :: Azolla rubra mitochondrion
+            Sequencing Technology :: Illumina
+            ##Assembly-Data-END##
+FEATURES             Location/Qualifiers
+     source          1..1187
+                     /organism="Azolla rubra"
+                     /organelle="mitochondrion"
+                     /mol_type="genomic DNA"
+                     /db_xref="taxon:45988"
+                     /tissue_type="Whole plant"
+                     /geo_loc_name="Australia"
+                     /collected_by="Farley M. Kwok van der Giezen"
+     gene            234..611
+                     /gene="mttB"
+     CDS             234..611
+                     /gene="mttB"
+                     /exception="RNA editing"
+                     /codon_start=1
+                     /product="MttB"
+                     /protein_id="XMD96945.1"
+                     /translation="MRHFVLKKIMEELKIRVSWILICFGLTWLTSYLFLEELIFLLAK
+                     PLLYSDLFFICTRLTEALSTYVITSLISCLYFAFPCMTYQIWCFLIPSCYERQRKEYE
+                     KLFYLSGFCLLLFFFATFVWVVPN"
+ORIGIN      
+        1 cggttcgact cagatagata cattctgata gaagtagacg gaaacccaat cgacaaaggg
+       61 aagtggttta tcgacaggaa gactgtcgat aaactggaag aagacagatg gtttttctag
+      121 ctgaaaacta tctatcacgc cgcacgttgg ggtcaagttt tttatggaag atcactatct
+      181 gtatattacg gtagtaatac acgaatactg aacaaaaccg attaatcagt cagatgagac
+      241 atttcgtttc aaaaaaaatt atggaagaac caaaaatttg cgtttcttgg atattgattc
+      301 gcttcggttt gatacggctc acgctctatc cgttcttgga agagcccatt ccttcattag
+      361 ctaaactttc gccctattca gactcgtttc ctattcgtac atgattgata gaggccttga
+      421 gcacatatgt tattacactt tcaatatcat gtccctattt tgctttttct tgtacgactc
+      481 attaaattcg gtgctctttg atccttagtt gctatgaaag gtaaaggaaa gaatatgaaa
+      541 aattgtttta ctcaagtggt ttttgccttt tatcatcttt ccccgctact tctgtttggg
+      601 tagtttccaa tgttcggcac ctctctcacc gtccaagtac cacatccact aatttgccta
+      661 cgaccaagtc acaatctaag acttctgact acataatgtc aactgttcgt accttgtcca
+      721 tttcgctaac gcgcccttaa gttttggtaa tggttatctg tttgccagaa ccaaaagcta
+      781 tttctttgag aacctgtcta aacaattgtc gtattttgag ggttcgttcg ctttccatag
+      841 cagctctgtt cacattttca gatatctggt gttaaattgt cggtcgttta cctttctatg
+      901 ttctaatcga gttaaccatc ttcgtagcct tgattatgcc aacttatagg aagcaattat
+      961 ctagataggt aggcgcttcc ctatgaaaac aacctagcga gaatggtttt ttatctaata
+     1021 taggcggccc caggccgccc ccttcccgtg tatcgataaa taatagaagg ctctattagg
+     1081 cattacagcg cagggccgca ggctcaaagt cagccttatc caataatacg gcggataaca
+     1141 acgtgcatga accgcgaact aacacttatg agggggacaa tccggag
+//
+

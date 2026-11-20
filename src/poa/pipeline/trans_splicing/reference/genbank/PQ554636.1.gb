@@ -1,0 +1,54 @@
+LOCUS       PQ554636                 618 bp    DNA     linear   PLN 12-JAN-2025
+DEFINITION  Marsilea mutica Rps13 (rps13) gene, complete cds; mitochondrial.
+ACCESSION   PQ554636
+VERSION     PQ554636.1
+KEYWORDS    .
+SOURCE      mitochondrion Marsilea mutica
+  ORGANISM  Marsilea mutica
+            Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta;
+            Polypodiopsida; Polypodiidae; Salviniales; Marsileaceae; Marsilea.
+REFERENCE   1  (bases 1 to 618)
+  AUTHORS   Kwok van der Giezen,F.M. and Small,I.D.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (08-OCT-2024) School of Molecular Sciences, The
+            University of Western Australia, Bayliss Buliding, 35 Stirling
+            Highway, Crawley, WA 6009, Australia
+COMMENT     ##Assembly-Data-START##
+            Assembly Method       :: SPAdes v. 3.2; Geneious Prime v. 2023
+            Assembly Name         :: Marsilea mutica mitochondrion
+            Sequencing Technology :: Illumina
+            ##Assembly-Data-END##
+FEATURES             Location/Qualifiers
+     source          1..618
+                     /organism="Marsilea mutica"
+                     /organelle="mitochondrion"
+                     /mol_type="genomic DNA"
+                     /db_xref="taxon:167748"
+                     /tissue_type="Frond"
+                     /geo_loc_name="Australia"
+                     /collected_by="Catherine Colas des Francs-Small"
+     gene            94..540
+                     /gene="rps13"
+     CDS             94..540
+                     /gene="rps13"
+                     /exception="RNA editing"
+                     /codon_start=1
+                     /product="Rps13"
+                     /protein_id="XMD97041.1"
+                     /translation="VSYILGTKLVSNKQVRLALTQIFGIGPKKATWVCDQLGLGDNTK
+                     VSNLTRHQIDRISTIVRRNNFLVDSELKREIQQYIKRLINISCYRGFRHEAGLPLRGQ
+                     RTHSNAKTCRKSRKVLTNQRKKKNNSRLFIRKNEGRQDAGKKTKSR"
+ORIGIN      
+        1 aaaagttgta aaccccccga agtttataaa ggaagaggta taaagtattg aaatgagatt
+       61 atacgtagaa aacagggaga aaagaaacaa atcgcgtcat atattccagg aaccaaatca
+      121 gtttccaata aataagtcag acttgcctca acctaaatct ttggaattgg acccaaaaaa
+      181 gccacttggg tttgtgatta atcaggtctc ggtgataaca ctaaggttag taatccgact
+      241 cggcactaaa ttgaccggat tagcacaata gtacgtcgaa acaatttcct agttgattcg
+      301 gaattaaaga gagaaattta gcaatatatc aaatgattaa ttaatatcag ccgttaccgc
+      361 ggattctgcc atgaagcagg attgtcatta tgtggttaat gaacctacag caatgctaag
+      421 acctgtcgca agtcaagaaa agtttcgatc aatcaacgga agaagaagaa taattcgcgc
+      481 tttttcattc gcaagaatga gggaagataa gacgccggga agaaaacgaa accgagatga
+      541 tggaaatgaa gaatacaatt atgcaaaagc agccttctaa gcactaatag tagtagctgc
+      601 gccgccaacg gaaatggg
+//
+

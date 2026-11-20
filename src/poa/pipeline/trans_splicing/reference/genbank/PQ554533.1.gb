@@ -1,0 +1,57 @@
+LOCUS       PQ554533                 762 bp    DNA     linear   PLN 12-JAN-2025
+DEFINITION  Azolla rubra Atp8 (atp8) gene, complete cds; mitochondrial.
+ACCESSION   PQ554533
+VERSION     PQ554533.1
+KEYWORDS    .
+SOURCE      mitochondrion Azolla rubra
+  ORGANISM  Azolla rubra
+            Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta;
+            Polypodiopsida; Polypodiidae; Salviniales; Salviniaceae; Azolla.
+REFERENCE   1  (bases 1 to 762)
+  AUTHORS   Kwok van der Giezen,F.M. and Small,I.D.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (08-OCT-2024) School of Molecular Sciences, The
+            University of Western Australia, Bayliss Buliding, 35 Stirling
+            Highway, Crawley, WA 6009, Australia
+COMMENT     ##Assembly-Data-START##
+            Assembly Method       :: SPAdes v. 3.12.0; Geneious Prime v. 2023
+            Assembly Name         :: Azolla rubra mitochondrion
+            Sequencing Technology :: Illumina
+            ##Assembly-Data-END##
+FEATURES             Location/Qualifiers
+     source          1..762
+                     /organism="Azolla rubra"
+                     /organelle="mitochondrion"
+                     /mol_type="genomic DNA"
+                     /db_xref="taxon:45988"
+                     /tissue_type="Whole plant"
+                     /geo_loc_name="Australia"
+                     /collected_by="Farley M. Kwok van der Giezen"
+     gene            145..657
+                     /gene="atp8"
+     CDS             145..657
+                     /gene="atp8"
+                     /exception="RNA editing"
+                     /codon_start=1
+                     /product="Atp8"
+                     /protein_id="XMD96938.1"
+                     /translation="MPQLDRFTYFTQFGWLCVFYSTFYVVLYKDGLPKISRILKLRKQ
+                     LSHDGIKRGKSSIQEEQDVVLKECFDTSVSFLYSSVFGASQWLHKMVKTLKTLGLLET
+                     NTSYTCSLGEISFSRVLKEQTIDTFFFNEGSPSHSHSPFSLAFSCYTVAVAVLNPFIM
+                     LRGQESTEVK"
+ORIGIN      
+        1 aaacacttct aggcttttca gttaagtcag gtaaaacttg cttgcctttt ccccgaaaaa
+       61 gcaatagaaa aaagttatga atacaagaaa gaagaaaccg caaccgcagc cctggatgat
+      121 tcttcctgaa gtaagttcta aagaatgccc taaccagatt gatttatcca tttcacgtaa
+      181 ttcggtcggt tacgtgtttt tcatagcacc tttcatgtcg tgccacataa agatggatta
+      241 cctaaaatca gttgaattcc taaatcatga aaacaacttt cacacgacgg catcaaacgg
+      301 ggcaaatcat ccatctagga agaacaggat gtggttccca aagaatgctt tgacaccagt
+      361 gtttccttcc tgtactccag tgttttcgga gcatcctaat ggttacacaa aatggtcaaa
+      421 accttaaaga ctttgggatt attagaaacg aatacttccc acacgtgttc tctaggagag
+      481 attagtctcc cgcgagtgcc taaagaatag acaatcgaca ctttcttttt caacgaaggg
+      541 agtccttcac attcccatag ccctttctct ctagctttct cttgctatac cgtcgccgtt
+      601 gctgttctca accctttcat aatgttacgc gggcaggaga gcactgaggt aaagtaacgg
+      661 acgagggggc actatgatgg gtggaagggg cgggccggtg attttcaaga gcggatacgg
+      721 aaggagaaag gatgcgactc ctctcctgcg tcgtccattc ga
+//
+

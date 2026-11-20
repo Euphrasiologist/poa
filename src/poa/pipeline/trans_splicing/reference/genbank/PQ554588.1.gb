@@ -1,0 +1,57 @@
+LOCUS       PQ554588                 741 bp    DNA     linear   PLN 12-JAN-2025
+DEFINITION  Azolla pinnata Rpl5 (rpl5) gene, complete cds; mitochondrial.
+ACCESSION   PQ554588
+VERSION     PQ554588.1
+KEYWORDS    .
+SOURCE      mitochondrion Azolla pinnata
+  ORGANISM  Azolla pinnata
+            Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta;
+            Polypodiopsida; Polypodiidae; Salviniales; Salviniaceae; Azolla.
+REFERENCE   1  (bases 1 to 741)
+  AUTHORS   Kwok van der Giezen,F.M. and Small,I.D.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (08-OCT-2024) School of Molecular Sciences, The
+            University of Western Australia, Bayliss Buliding, 35 Stirling
+            Highway, Crawley, WA 6009, Australia
+COMMENT     ##Assembly-Data-START##
+            Assembly Method       :: SPAdes v. 3.2.0; Geneious Prime v. 2023
+            Assembly Name         :: Azolla pinnata mitochondrion
+            Sequencing Technology :: Illumina
+            ##Assembly-Data-END##
+FEATURES             Location/Qualifiers
+     source          1..741
+                     /organism="Azolla pinnata"
+                     /organelle="mitochondrion"
+                     /mol_type="genomic DNA"
+                     /db_xref="taxon:99433"
+                     /tissue_type="Whole plant"
+                     /geo_loc_name="Australia"
+                     /collected_by="Farley M. Kwok van der Giezen"
+     gene            83..655
+                     /gene="rpl5"
+     CDS             83..655
+                     /gene="rpl5"
+                     /exception="RNA editing"
+                     /codon_start=1
+                     /product="Rpl5"
+                     /protein_id="XMD96993.1"
+                     /translation="MFTPSILRFHYRNVLCQDFPLKFDYTHVLEVPRLCKTILVLGAP
+                     SNLLESVKLAIENLCGQKCIKTRSGALTKKSFQFNKFLLSQESERKAHVTHLAQSVLR
+                     GHIMYKFLEKLSMIISPHHPVEIRRNSIEFHFSMATTFLLKEFPQLKENFEIFAHLRE
+                     FKVIIITSANTEGETYLLWSGFNKSAGKAK"
+ORIGIN      
+        1 aagagcccgc tcgtgaggcg aatagcaaaa agtgcttcca tttctacctt agtttctgca
+       61 cgaaaagaca cacagcttgc ctacgttcac tccaagtata ctccgttttc attacagaaa
+      121 cgtattatgc taagatttcc catcaaaatc tgattatacc catgttctgg aagtttttag
+      181 attgtgtaaa accattttag ttctaggggc accctccaac tcacttgaaa gtgtcaaatt
+      241 agctacagag aatcctcgtg gttaaaaacg cataaagacg tgaagtggag ctttgaccaa
+      301 aaaattgttt taatttaaca aatctttact aagctaagag tcagagagaa aagcgtacgt
+      361 cactcactta gcatagagcg ttttgtgagg gcacattatg tacaaacttt tggagaaact
+      421 cagtatgatt atctccccct attacctagt cgaaatatga agaaactcta ttgaattcca
+      481 tttctcaatg gccacaactt tcttgtcaaa ggaacttccg taattgaaag agaattctga
+      541 gactcttgcg catctttgag agttcaaagt aattatcatc acttcagcca acacagaagg
+      601 ggagacttat ttctcatgga gcggctttaa taaaagtgca gggaaggcaa agtgaaatat
+      661 gatgaccagg gcgggctata ttgaattctg catatattac tcctacaatt gcacgcaacg
+      721 tctttggaaa acaaataggt t
+//
+

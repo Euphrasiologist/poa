@@ -1,0 +1,74 @@
+LOCUS       PQ554572                1483 bp    DNA     linear   PLN 12-JAN-2025
+DEFINITION  Azolla pinnata Cob (cob) gene, complete cds; mitochondrial.
+ACCESSION   PQ554572
+VERSION     PQ554572.1
+KEYWORDS    .
+SOURCE      mitochondrion Azolla pinnata
+  ORGANISM  Azolla pinnata
+            Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta;
+            Polypodiopsida; Polypodiidae; Salviniales; Salviniaceae; Azolla.
+REFERENCE   1  (bases 1 to 1483)
+  AUTHORS   Kwok van der Giezen,F.M. and Small,I.D.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (08-OCT-2024) School of Molecular Sciences, The
+            University of Western Australia, Bayliss Buliding, 35 Stirling
+            Highway, Crawley, WA 6009, Australia
+COMMENT     ##Assembly-Data-START##
+            Assembly Method       :: SPAdes v. 3.2.0; Geneious Prime v. 2023
+            Assembly Name         :: Azolla pinnata mitochondrion
+            Sequencing Technology :: Illumina
+            ##Assembly-Data-END##
+FEATURES             Location/Qualifiers
+     source          1..1483
+                     /organism="Azolla pinnata"
+                     /organelle="mitochondrion"
+                     /mol_type="genomic DNA"
+                     /db_xref="taxon:99433"
+                     /tissue_type="Whole plant"
+                     /geo_loc_name="Australia"
+                     /collected_by="Farley M. Kwok van der Giezen"
+     gene            96..1457
+                     /gene="cob"
+     CDS             96..1457
+                     /gene="cob"
+                     /exception="RNA editing"
+                     /codon_start=1
+                     /product="Cob"
+                     /protein_id="XMD96977.1"
+                     /translation="MARRLSILKQPLFSILNQHLIDYPTPSNISYWWGFGSLAGLCLV
+                     IQIITGVFLAMHYTPHVDLAFNSVEHIMRDVKGGWLLRYMHANGASMFFTVVYIHIFR
+                     GLYYGSYISPREFIWCLGVVILLLMIVTAFIGYVLPWGQMSFWGATVITSLASAVPIV
+                     GDTIVTWLWGGFSVDNATLNRFFSLHYLLPFVIAGASLIHLAALHQYGSNNPLGINSS
+                     VDKIAFYPYLYVKDLVGWVAFAIFFSIWLFYAPNVLGHPDNYMPANPMSTPAHIVPEW
+                     YFLPIYAILRSIPNKLGGVAAIGLVFVSLLALPFLNTSAVRSSSFRLIHQRMFWLLLA
+                     DCLLLGWIGCQPVEAPYVTIGQMASVVFFFYFAITPILGQIEARLIMNADDATIGRHP
+                     AMPVYYPSQPEKRTANIRKEIKAATLIDKLGYFLIKNRIEPSSTCCELTFSTCCEGGL
+                     NEE"
+ORIGIN      
+        1 gccccatcaa ggcagatgca tgatgaacgc ttttcttttc ggggccgcac gcagaaggaa
+       61 aaacacagaa tgaaccgaat actactatta ctatcatggc caggtgactt ccaattctta
+      121 aatagccttt attttctata cttaactagc attcgataga tcatctaatt ctgagcaata
+      181 taagtcatcg gtgggggttt ggtttgttag ccggtcttcg tccagtcatt tagatcatta
+      241 tcggcgtctt ttcagctatg tattatacac ctcatgtcga tctggctctc aacagcgtag
+      301 aacacattat gagagatgtg aagggaggct ggttgctttg ttacatgtat gccaatgggg
+      361 ccagtatgtt cttcactgca gttcatatct atattttctg cggtccgtat catggaagct
+      421 atatcagtct cagagaattc attcggtgtc tcggagttgt cacccttcta tcaacgatcg
+      481 ttaccgcttt cacaggccat gtactcttcc ggggttaaat gagctttcgg ggagctatag
+      541 taactaccag ctcagctagt gtcgtattta tagtaggaga taccatagtc actcggcttt
+      601 ggggtggttt ctccgtagac aatgccaccc taaatcgttt ctccagtcct tatcactcac
+      661 tccttttcgt aattgcaggc gctagtccta tctatccggc tgcgttatat taatacggat
+      721 tcaacaatcc attgggcata aattcttctg tggataaaat tgcttttcat ctctatcttt
+      781 acgccaagga tttggtgggt cgggtagcat ttgccatttt cttctccatc cggctcttct
+      841 atgcacctaa tgtcttggga tactccgaca attatatgcc tgcgaatccg atgttcactc
+      901 tggcttatat tgtattagaa tggtatccct tatcaatcta tgctattccg tgaagtatcc
+      961 tcaacaaatt aggaggagtg gccgctacag gaccagtttt tgtgtcatca ctggccccac
+     1021 ttttccttaa cacttccgca gtacggagtt taagttcttg actaatttac taaagaatgt
+     1081 ttcggttgcc tttggccgat tgcttacttt taggttggat tggatgttaa ccagtggagg
+     1141 caccgcacgt tactattgga taaatggctt ttgtagtgtt ttcctcttat tctgctatca
+     1201 cgcccattct tggccaaata gaagccagat taataatgaa tgccgacgat gccacgatag
+     1261 gtcggcactt cgctatgcca gtttattacc ccagccagcc agaaaagcgc accgctaata
+     1321 taagaaaaga aataaaggcc gcaacgctta tagataaact gggatatttt ctaataaaga
+     1381 acaggattga gccttctagt acttgttgtg aactaacttt tagtacttgt tgtgaaggtg
+     1441 gtttgaatga ggaatagaat aatattattg aaaacaattt aga
+//
+

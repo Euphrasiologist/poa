@@ -1,0 +1,3 @@
+# profile columns (0-based, of the unmasked build) that at least 80% of
+# substantial gene copies leave unaligned; dropped when the profiles are built. See column_mask.py.
+gene	column	n_genes	n_unaligned

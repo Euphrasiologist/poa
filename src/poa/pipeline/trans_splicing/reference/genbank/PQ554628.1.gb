@@ -1,0 +1,59 @@
+LOCUS       PQ554628                 821 bp    DNA     linear   PLN 12-JAN-2025
+DEFINITION  Marsilea mutica Rps1 (rps1) gene, complete cds; mitochondrial.
+ACCESSION   PQ554628
+VERSION     PQ554628.1
+KEYWORDS    .
+SOURCE      mitochondrion Marsilea mutica
+  ORGANISM  Marsilea mutica
+            Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta;
+            Polypodiopsida; Polypodiidae; Salviniales; Marsileaceae; Marsilea.
+REFERENCE   1  (bases 1 to 821)
+  AUTHORS   Kwok van der Giezen,F.M. and Small,I.D.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (08-OCT-2024) School of Molecular Sciences, The
+            University of Western Australia, Bayliss Buliding, 35 Stirling
+            Highway, Crawley, WA 6009, Australia
+COMMENT     ##Assembly-Data-START##
+            Assembly Method       :: SPAdes v. 3.2; Geneious Prime v. 2023
+            Assembly Name         :: Marsilea mutica mitochondrion
+            Sequencing Technology :: Illumina
+            ##Assembly-Data-END##
+FEATURES             Location/Qualifiers
+     source          1..821
+                     /organism="Marsilea mutica"
+                     /organelle="mitochondrion"
+                     /mol_type="genomic DNA"
+                     /db_xref="taxon:167748"
+                     /tissue_type="Frond"
+                     /geo_loc_name="Australia"
+                     /collected_by="Catherine Colas des Francs-Small"
+     gene            98..754
+                     /gene="rps1"
+     CDS             98..754
+                     /gene="rps1"
+                     /exception="RNA editing"
+                     /codon_start=1
+                     /product="Rps1"
+                     /protein_id="XMD97033.1"
+                     /translation="MILVNTGLKTPVILLKHEVTAGVPITKQARFNFVGIEDLNLEKV
+                     EELCEPRIILPDPRKPEIILPKPLNKKIVWIELTKIWRDRDKVKGLIFNSMKGGYAVA
+                     IAGFVAFLPRSLFRKSESEKFYKKRKFYKNRKFRFCRNRSGNGKFGNKGLRFCRSRNG
+                     TPRRSRTFRILNMNPIKRNIVVKEEIHAALVSERKKHYQIESRPLTSSLFPSTNSGKK
+                     "
+ORIGIN      
+        1 tgaaggcgct ctataacatt cggtgaaacc atcataatac gaggacaaaa gtcatgatgg
+       61 ggacaggggt ttaatcaaac tgttacaccc acagaatatg atcttggtga atacaggact
+      121 gaaaactcct gtaatccttc taaaacatga agtgacagcg ggagtaccaa tcaccaagca
+      181 agcaaggttt aattttgttg gaatcgaaga ttcgaatctg gaaaaagtgg aagagcttcg
+      241 tgaaccaaga attattttgc cagacccacg taaaccggaa attattttgt caaaaccatt
+      301 gaacaagaaa atagttcgga ttgaaccaac caagatttgg cgtgaccgtg acaaggtcaa
+      361 agggttgatt ttcaatccaa tgaagggtgg gtatgctgca gttaccgcag ggttcgtggc
+      421 ttccccttcc aggagtccct ttcgcaaaag tgaaagtgag aagttccaca aaaagaggaa
+      481 attttacaaa aatagaaagt ttaggttccg caggaataga agcggaaatg ggaaattcgg
+      541 aaacaaaggt ctaaggtttc gcagaagcag aaatgggaca ccccgcagga gtaggacatc
+      601 cagaattccg aacacgaacc caataaagcg taatattgcg gtaaaagaag agattcatgc
+      661 tgcgctggtt tcggaaagga aaaagcacta tcaaatcgaa agccgccccc taaccagcag
+      721 tctctttccg agcaccaaca gcggcaagaa atagtctatt tacatgagta agaaaccgac
+      781 gtatttccat cggtcgcttc cgtttcgtat atcagttatt t
+//
+

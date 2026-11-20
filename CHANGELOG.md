@@ -19,6 +19,23 @@
   GFF's `sequence_alteration` features say `edited_from=T;edited_to=C`
   for the reverse ones. In a dataset run, species recorded as fern in
   `lineage.tsv` go through transsplice as a batch of their own.
+- Fern editing profiles (`editing/reference/lineages/fern/mito/`, 22
+  single-exon mito genes), used with `--lineage fern` in place of the
+  angiosperm ones: from the five ferns whose deposited proteins carry
+  their RNA-seq editome (`FERN_EDITED_MITOGENOMES`: Haplopteris
+  ensiformis and the per-gene records of Azolla rubra, A. pinnata,
+  Marsilea mutica and Salvinia molesta), one protein per species and
+  gene (`lineage_profiles.one_per_species`). On 538 single-exon mito
+  copies in 29 DToL ferns, against the angiosperm profiles with stop
+  read-through: aligned over 99% of the profile 231 -> 412, frameshift
+  calls 46 -> 44, planted 1-bp indels found 43% -> 61%, C-to-U calls per
+  copy 11.0 -> 7.3. Cross-validated on the five species' own editomes
+  (each held out): 29-41% of real C-to-U edits found with 60-94% of
+  calls right, against 47-60% and 49-71% on the angiosperm profiles;
+  stop read-throughs found 85-100% on both. matR and nad9 are left on
+  the angiosperm profiles. `column_mask.py --editing` can mask editing
+  profile columns the dataset's ferns lack; none reached the 80%
+  threshold, so `profile_mask.tsv` is empty.
 - Fern exon templates (`trans_splicing/reference/lineages/fern/`), used
   for spliced mito genes with `--lineage fern`: from seven annotated
   leptosporangiate fern mitogenomes (`FERN_MITOGENOMES`: three

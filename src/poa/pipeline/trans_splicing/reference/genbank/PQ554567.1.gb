@@ -1,0 +1,97 @@
+LOCUS       PQ554567                2788 bp    DNA     linear   PLN 12-JAN-2025
+DEFINITION  Azolla pinnata Atp1 (atp1) gene, complete cds; mitochondrial.
+ACCESSION   PQ554567
+VERSION     PQ554567.1
+KEYWORDS    .
+SOURCE      mitochondrion Azolla pinnata
+  ORGANISM  Azolla pinnata
+            Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta;
+            Polypodiopsida; Polypodiidae; Salviniales; Salviniaceae; Azolla.
+REFERENCE   1  (bases 1 to 2788)
+  AUTHORS   Kwok van der Giezen,F.M. and Small,I.D.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (08-OCT-2024) School of Molecular Sciences, The
+            University of Western Australia, Bayliss Buliding, 35 Stirling
+            Highway, Crawley, WA 6009, Australia
+COMMENT     ##Assembly-Data-START##
+            Assembly Method       :: SPAdes v. 3.2.0; Geneious Prime v. 2023
+            Assembly Name         :: Azolla pinnata mitochondrion
+            Sequencing Technology :: Illumina
+            ##Assembly-Data-END##
+FEATURES             Location/Qualifiers
+     source          1..2788
+                     /organism="Azolla pinnata"
+                     /organelle="mitochondrion"
+                     /mol_type="genomic DNA"
+                     /db_xref="taxon:99433"
+                     /tissue_type="Whole plant"
+                     /geo_loc_name="Australia"
+                     /collected_by="Farley M. Kwok van der Giezen"
+     gene            131..2651
+                     /gene="atp1"
+     CDS             join(131..500,1465..2651)
+                     /gene="atp1"
+                     /exception="RNA editing"
+                     /codon_start=1
+                     /product="Atp1"
+                     /protein_id="XMD96972.1"
+                     /translation="MRLFKARATEQLSTILEERITNYYTKLPVDEIGRVVSVGDGIAR
+                     VYGLNKIQAGEMVEFASGVKGMALNLENENVGIVIFGSDTAIKEGDMVKRTGSIVDVP
+                     VGKAMLGRVVDALGVPIDGKGALSAVERRRVEVKAPGIIARKSVHEPMQTGLKAVDSL
+                     VPIGRGQRELIIGDRQTGKTAIAIDTILNQKLINAQGTSDSEKLFCVYVAIGQKRSTV
+                     AQLVKILSEAGALEYSIIVAATASDPAPLQFLAPYSGCAMGEFFRDHGMHALIIYDDL
+                     SKQSVAYRQMSLLLRRPPGREAFPGDVFYLHSRLLERAAKRSDQTGAGSLTALPVIET
+                     QAGDVSAYIPTNVISITDGQIFLETELFYRGVRPAINVGLSVSRVGSAAQLKAMKALC
+                     GTLKLELAQYREVAAFAQFGSDLDPATQYLLHRGARLTEVLKQPQYSPIPIERQIVVI
+                     FAAVNGFLDQIPLTQIAQYEKELLDKIKPHILEGIKEQKLLSEEVQKNLATFCQKIAS
+                     SLSSVTTGSV"
+ORIGIN      
+        1 tgacatggtt cacctcgtcg tgaggttact tccctttccc atctctttct tgctaggaac
+       61 tgccatgaat gcaggagact gccctgggta taaagtgccg aggaaaggga ttcgacggaa
+      121 gagaaaggga acgagattgt ttaaagctag agcaacggaa taaccatcta ctatctcgga
+      181 agaaagaatt accaactatc acaccaaatt gccagtggat gagatcggtt gagtggtatc
+      241 ggttggggat ggaattgcac gtgtttatgg atcgaacaag attcaagcag gagaaatggt
+      301 agaattcgcc agcggtgtga aaggaatggc ttcgaattct gagaatgaga atgtaggaat
+      361 tgttatatcc ggtagtgata ccgccattaa agaaggagat atggtcaagc gcactggatc
+      421 tattgtggac gttcttgtag gaaaggccat gccgggttgt gtagttgatg cgttaggagt
+      481 actcattgat ggaaaaggtg gggcggccgt tagatcatct gcggtcgaaa aaggttgcat
+      541 acaggcatga gactaaccag aacccgcgaa gggaggccga gaccatagca tgtcgcaaaa
+      601 gaaagcacga ttgaaggcaa agcggacgaa tgaaaatcat cgtgcagccc ggtagtttgg
+      661 tgaaagatga ggccgaaagc agcaaatcgg agtctttttc gggtgaccat gccctattcg
+      721 ttcgttcgac gtgttgccag atagacgcgg atatgctccc tgcctgctat aggcacatta
+      781 tggtcaggcc cgattgagtg ccacttctcc cgcccgtaaa cgaaagttta cagcaagcat
+      841 gagagcggat tacctatcta ttctattggg gacggaagac tgaacgacat cccggcaagc
+      901 aagcaagcaa gcaagcaagc aagcaagcaa gcaagcaagc aagcaagcaa gcaagcaagc
+      961 aagcaaagtg ggacctttca actcttatct tattatggtc ccaaccatcc gcaggtaaaa
+     1021 ccggcgagat cttcggcggg aggaaagccc cggaaagaag tcagagggcc cataccacct
+     1081 gcctaccctc ctaaggcgga accggcactt ggtgaatgcc aagtagaaaa cgggaaggag
+     1141 cctatgcatt tgtcatgccc ggagttcgaa acagaataac gaaaaggcaa gcaagtttta
+     1201 cctgacttaa ctgaaaagcc attttcctct ctgcaaactc caggagagag tggacttcag
+     1261 gaaatcacaa agcgcgtttc ccagggtccc caaggaggaa aggaggaggg aacttgtgag
+     1321 gaagtttcca ccctcctttc ggcctctggg gttaaacaag acccagataa agtcaagtta
+     1381 gagagccgtg taatgggcga ctattccgca cggttcggag agcacaacta cgatcacttc
+     1441 tcctcggcag aagcttgact ctatctttga gcgcggtaga atgaagacgt gtagaagtca
+     1501 aagtctctgg gattattgca cgtaaatctg tccacgaacc tatgtaaaca gggttaaaag
+     1561 cggtggatag cctagtccct ataggtcgtg gtcaacggga actgataatc ggcgaccgac
+     1621 aaactggaaa gactgctata gctattgata ccattctgaa ctagaaacca atcaacgcat
+     1681 agggcacctt cgatagtgaa aaattgtttc gcgtgtacgt agtgattgga taaaaacgtt
+     1741 caaccgtggc ataatcggtt aagattcccc cggaagccgg tgctctggaa tatctcatta
+     1801 ttgttgtagt cacggcttcg gattctgctc tcctgtaatt cccggcacta catcctggtc
+     1861 gtgctacggg agagtcttct agagatcatg gaatgcacgc attaatcatc tatgacgatc
+     1921 ccagtaagta atcagtggca tattgataaa tgtcattatc gccacgttga ctactaggtt
+     1981 gtgaggtttc cctcggagat gtcttctatt catatctctg ttcatcggaa agagccgcca
+     2041 aaaggttaga ctagactggt gtaggtagct cgattgcttc actcgtcatt gaaatataag
+     2101 ctggagacgt ttctgtttat actcttatca atgtcattct cattacagat ggataaatcc
+     2161 tcccggaaac tgaacctctc tatcgcggag tttggctcgt tattaacgta ggattactcg
+     2221 ttagttgtgt tgggtctgcc gcttagccga aagctatgaa agcacttcgt ggcaccttaa
+     2281 aattggagcc ggcataacat cgtgaagttg ccgcttctgc gtaatttggg tcagacctcg
+     2341 atcccgctat ttagtattcg ccatattgcg gcgctaggct taccgaggta cttaaataac
+     2401 tataatatcc cctgatccct atcgaatgac agattgtagt tatcctcgcg gcggtcaatg
+     2461 ggttcccgga ctagatccct ttgacataga tcgcttaata tgagaaggaa ctccccgaca
+     2521 aaatcaaacc acacatactt gagggtatca aggagtaaaa gctattgagt gaagaggtgt
+     2581 agaaaaatcc ggctacgttc cgctaaaaaa ttgccagttc tctatcatca gtaacaactg
+     2641 gttcagtcta gttcaagaga tggggaagga ggccccctca cgtaattact aaggagaccc
+     2701 tcccttttgt ttgtaggagc tcccgttagg cgggtgagcg gataacggcg ggaattgaac
+     2761 aagccgatag atcaccgcca cctaacct
+//
+

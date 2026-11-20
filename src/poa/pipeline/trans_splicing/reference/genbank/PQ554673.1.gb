@@ -1,0 +1,54 @@
+LOCUS       PQ554673                 573 bp    DNA     linear   PLN 12-JAN-2025
+DEFINITION  Salvinia molesta Rps13 (rps13) gene, complete cds; mitochondrial.
+ACCESSION   PQ554673
+VERSION     PQ554673.1
+KEYWORDS    .
+SOURCE      mitochondrion Salvinia molesta
+  ORGANISM  Salvinia molesta
+            Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta;
+            Polypodiopsida; Polypodiidae; Salviniales; Salviniaceae; Salvinia.
+REFERENCE   1  (bases 1 to 573)
+  AUTHORS   Kwok van der Giezen,F.M. and Small,I.D.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (08-OCT-2024) School of Molecular Sciences, The
+            University of Western Australia, Bayliss Buliding, 35 Stirling
+            Highway, Crawley, WA 6009, Australia
+COMMENT     ##Assembly-Data-START##
+            Assembly Method       :: SPAdes v. 3.2; Geneious Prime v. 2023
+            Assembly Name         :: Salvinia molesta mitochondrion
+            Sequencing Technology :: Illumina
+            ##Assembly-Data-END##
+FEATURES             Location/Qualifiers
+     source          1..573
+                     /organism="Salvinia molesta"
+                     /organelle="mitochondrion"
+                     /mol_type="genomic DNA"
+                     /db_xref="taxon:167732"
+                     /tissue_type="Whole plant"
+                     /dev_stage="Primary phase"
+                     /geo_loc_name="Australia"
+                     /collected_by="Farley M. Kwok van der Giezen"
+     gene            69..512
+                     /gene="rps13"
+     CDS             69..512
+                     /gene="rps13"
+                     /exception="RNA editing"
+                     /codon_start=1
+                     /product="Rps13"
+                     /protein_id="XMD97078.1"
+                     /translation="VSYILGTKLVSNKQVRLALTQIFGIGPKKATWVCDQLGLGDNIK
+                     VSNLTRHQIDQISIIVRRNNFLVDSELKREIQQYIKRLINISCYRGFRHKAGLPLRGQ
+                     RTHSNAKTCRKSRKVSTNQRKKNNSFFIHKNGRGQDARKKTKPKE"
+ORIGIN      
+        1 ataaaggaag aggtataaaa tattgaaatg aaattctacg tagaaaacaa ggagaaaaga
+       61 aacaaatcgc gtcatatatt ccaggaacca aatcagtttc caataaataa gtcagacttg
+      121 cctcaaccta aatcttcgga actggaccca aaaaagccac ttgggtttgt gattaatcag
+      181 gtcccggcga taacactaag gttagtaatc cgactcggca ctaaattgac cagattagca
+      241 taatagtacg ttgaaacaat ttcctagttg attcggaatt aaagagagaa atttagtaat
+      301 atatcaaatg attaattaat atcagccgtt accgcggatt ccgtcacaaa gcaggattgc
+      361 cattacgtgg ttaatgaacc tacagcaatg ttaagatctg tcgcaagtca agaaaagttt
+      421 caatcaatca acgaaagaag aataattcgt ttttcattca caaaaatggg agagggcaag
+      481 acgccaggaa gaaaacgaaa ccgaaggaat agaaatgaag aatacaatta tgtaaaagca
+      541 gccttctgaa cactagtaat agtagccgcg ccg
+//
+

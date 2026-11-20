@@ -1,0 +1,71 @@
+LOCUS       PQ554643                1492 bp    DNA     linear   PLN 12-JAN-2025
+DEFINITION  Salvinia molesta Atp6 (atp6) gene, complete cds; mitochondrial.
+ACCESSION   PQ554643
+VERSION     PQ554643.1
+KEYWORDS    .
+SOURCE      mitochondrion Salvinia molesta
+  ORGANISM  Salvinia molesta
+            Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta;
+            Polypodiopsida; Polypodiidae; Salviniales; Salviniaceae; Salvinia.
+REFERENCE   1  (bases 1 to 1492)
+  AUTHORS   Kwok van der Giezen,F.M. and Small,I.D.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (08-OCT-2024) School of Molecular Sciences, The
+            University of Western Australia, Bayliss Buliding, 35 Stirling
+            Highway, Crawley, WA 6009, Australia
+COMMENT     ##Assembly-Data-START##
+            Assembly Method       :: SPAdes v. 3.2; Geneious Prime v. 2023
+            Assembly Name         :: Salvinia molesta mitochondrion
+            Sequencing Technology :: Illumina
+            ##Assembly-Data-END##
+FEATURES             Location/Qualifiers
+     source          1..1492
+                     /organism="Salvinia molesta"
+                     /organelle="mitochondrion"
+                     /mol_type="genomic DNA"
+                     /db_xref="taxon:167732"
+                     /tissue_type="Whole plant"
+                     /dev_stage="Primary phase"
+                     /geo_loc_name="Australia"
+                     /collected_by="Farley M. Kwok van der Giezen"
+     gene            378..1130
+                     /gene="atp6"
+     CDS             378..1130
+                     /gene="atp6"
+                     /exception="RNA editing"
+                     /codon_start=1
+                     /product="Atp6"
+                     /protein_id="XMD97048.1"
+                     /translation="MAYSPLEQFAIIPLIPIHIGNLYLSFTNSSLFMLLTTSLILLLV
+                     HLVTSNGGHLVPNAWQSLVEMIYDFVLNLVNEQISGVSKQQFFPLIFVTFTFLLFCNL
+                     QGMVPYSFTVTSHFIITLGLSFSLFFGITVVGFQTHGLHFFSFLLPPGVPLPLAPFLV
+                     LLELISYCFRALSLGIRLFANMMAGHSLVKILSGFAWTMLSMRGILLLAHLAPLSIVF
+                     ALTGLELGVAILQAYVFTILICIYLNDAINLH"
+ORIGIN      
+        1 tctcgaaggc ggcgcagtag tagcatctag gtgtgcaaat gttgtagcgg gggctaggtc
+       61 agtcagatca tccgcttgaa tggaagttat tgatctggaa ttatttccta tagagtagag
+      121 acctggccgg ccgggccagt tgataaccca cggcattcta cctgcagaga cttctgattc
+      181 cgccgcctgg gcgaagcgga agatgttgtc aatgaagaaa ggctcgttga catctcggtc
+      241 ggaaatattc tgccattgtt ggggctaggt tgagccaact ctcatacgag ctcttcaaca
+      301 gagctagtcc gaaaaattga taaacgttaa gaacaaccct ctttcatgca tgttggaaca
+      361 aaacccttca attcatcacg gcttacagtc taccggaata acctgccatt attctatcga
+      421 tttccatcca tataggaaat ccgtatcttt tatttatcaa ttcctctcca tctatgtcac
+      481 ccactaccag tttaatcccg ctcctagttc acttggtgac ctcgaacgga ggacacttag
+      541 tactgaacgc ttggtaatcc ctagtggaga tgacttatga tttcgtgccc aatccagtga
+      601 acgaataaat tagtggcgtt tcgaaataat agtcttctct cccgatcctc gttactttta
+      661 cctttccatt atttcgtaat ttgtaaggta tggtacttta tagttttatg gtaataagtc
+      721 attctattat tattttgggt tctctattct ctctttctct tggaactatc gtagtggggt
+      781 cttaaacaca tgggcctcat cctttcagtc tcttattact gccgggtgta cctccaccgt
+      841 tagcgccttt cccagtattt tcggagttaa tcctctatcg ttttcgtgca ctaagcctag
+      901 gaatatgttt atttgctaat atgatggctg gttatagttc agtcaagatt tcgagtggct
+      961 ttgctcggac catgctatcc atgaggggta tcttgctatt agcacatctc gctcttcttt
+     1021 cgatcgtatt tgcatcaact ggtttagaat caggtgtagt tatcttataa gcttatgtcc
+     1081 ctataatccc gattcgtatt catttgaatg atgcaataaa ccttcattga catggaaaga
+     1141 gaaacggttt ggtttcgtca ccaaaccgtt cttttctata ttgccaacaa acaaatctgc
+     1201 cacgcttagc ttattggttc gttgcaacgc cgtctgccgt tacgtatcgc accttacatt
+     1261 acatggtggt tgattttttg gtaaataatt tgagtaagtt tcatcatcat acctttttta
+     1321 tttgatttga ggcggtcact ttacctacat tggtaaatga tttttgtcct tatactctaa
+     1381 cctgtacaat tattgtattg aaaggtggta tctcacattc tcttaaatgc taagcaaaga
+     1441 ataggtttgt aatcaaggtc ctcatttacg acactatcat gggaaatatg ac
+//
+

@@ -1,0 +1,61 @@
+LOCUS       PQ554676                 999 bp    DNA     linear   PLN 12-JAN-2025
+DEFINITION  Salvinia molesta Sdh3 (sdh3) gene, complete cds; mitochondrial.
+ACCESSION   PQ554676
+VERSION     PQ554676.1
+KEYWORDS    .
+SOURCE      mitochondrion Salvinia molesta
+  ORGANISM  Salvinia molesta
+            Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta;
+            Polypodiopsida; Polypodiidae; Salviniales; Salviniaceae; Salvinia.
+REFERENCE   1  (bases 1 to 999)
+  AUTHORS   Kwok van der Giezen,F.M. and Small,I.D.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (08-OCT-2024) School of Molecular Sciences, The
+            University of Western Australia, Bayliss Buliding, 35 Stirling
+            Highway, Crawley, WA 6009, Australia
+COMMENT     ##Assembly-Data-START##
+            Assembly Method       :: SPAdes v. 3.2; Geneious Prime v. 2023
+            Assembly Name         :: Salvinia molesta mitochondrion
+            Sequencing Technology :: Illumina
+            ##Assembly-Data-END##
+FEATURES             Location/Qualifiers
+     source          1..999
+                     /organism="Salvinia molesta"
+                     /organelle="mitochondrion"
+                     /mol_type="genomic DNA"
+                     /db_xref="taxon:167732"
+                     /tissue_type="Whole plant"
+                     /dev_stage="Primary phase"
+                     /geo_loc_name="Australia"
+                     /collected_by="Farley M. Kwok van der Giezen"
+     gene            254..649
+                     /gene="sdh3"
+     CDS             254..649
+                     /gene="sdh3"
+                     /exception="RNA editing"
+                     /codon_start=1
+                     /product="Sdh3"
+                     /protein_id="XMD97081.1"
+                     /translation="MQIDRPLSPHITIYKPQLTSTLSIFHRISGAFLATVLFVGIFSL
+                     KVGHLSLTFENCYQCAFFIANYSYWFVLGLVNFAFLALSYHMSNGVRHLWWDLGFVLD
+                     LSQVYTSGILMLFCAAFLAFLKFIRFSLS"
+ORIGIN      
+        1 tcacaaggac aaatcttcat gccgaaaagc ggagcgaaac tgatggataa tcaccatcac
+       61 ttcgtctagg accaccaact agtagtgccc aagaagaagc ggtgaaatgg acggactttc
+      121 acctttgacg ctatgagccc ctaacaaaca aactgttata aatatcaaga acagacctcg
+      181 tgttggcaaa gccaacgcaa gtccctctaa tggatgctag ggcattctcg cccctcgaat
+      241 caaagccaac agaatgtaaa ttgattgacc gttactactt catattacca ttcataagcc
+      301 atagcttact ttgaccctct ctatcttcta tagaattccc ggggctttcc tagccaccgt
+      361 gttgtttgtt ggtatctttc ccttgaaggt tggtcatctc agcctcactt tcgagaatcg
+      421 ttactaatgc gctttcttta tcgcaaacta ctcttattgg tttgttccgg gcttagtaaa
+      481 ttttgctttc ttagctttgt cttattacat gagtaatggg gtttgccact tatggtggga
+      541 ttcgggtctt gttctagatc tatcttaggt gtatactttc ggaatcctga tgttatttcg
+      601 tgccgctttt ttggccttcc tgaagcctat ccgattttct ctatcgtgag cacggggagc
+      661 gagccaactc ccatttacgt gtcgtaaatg aggacctcgg gcgacattcg ttcgagacat
+      721 caatcatttc ggcgaactaa acctagttgt tagagcgaga ctggcaagtg gttgggggca
+      781 tgaattcttt gttccgcata aagaaattcc aaggacagat caaatgccag gaaacaaatc
+      841 ctgagtttgc ggccggccgg cggcgggaaa tcacaaagaa gttccgcgct gaacctcatg
+      901 atagtgtcgt aaatggggac gcggctccca gagaccttgc aagcaacact gctcgcccgt
+      961 agcaatgccg ccgaattaca cttttcaaag ctcgctcta
+//
+

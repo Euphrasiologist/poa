@@ -1,0 +1,65 @@
+LOCUS       PQ554649                1082 bp    DNA     linear   PLN 12-JAN-2025
+DEFINITION  Salvinia molesta Cox3 (cox3) gene, complete cds; mitochondrial.
+ACCESSION   PQ554649
+VERSION     PQ554649.1
+KEYWORDS    .
+SOURCE      mitochondrion Salvinia molesta
+  ORGANISM  Salvinia molesta
+            Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta;
+            Polypodiopsida; Polypodiidae; Salviniales; Salviniaceae; Salvinia.
+REFERENCE   1  (bases 1 to 1082)
+  AUTHORS   Kwok van der Giezen,F.M. and Small,I.D.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (08-OCT-2024) School of Molecular Sciences, The
+            University of Western Australia, Bayliss Buliding, 35 Stirling
+            Highway, Crawley, WA 6009, Australia
+COMMENT     ##Assembly-Data-START##
+            Assembly Method       :: SPAdes v. 3.2; Geneious Prime v. 2023
+            Assembly Name         :: Salvinia molesta mitochondrion
+            Sequencing Technology :: Illumina
+            ##Assembly-Data-END##
+FEATURES             Location/Qualifiers
+     source          1..1082
+                     /organism="Salvinia molesta"
+                     /organelle="mitochondrion"
+                     /mol_type="genomic DNA"
+                     /db_xref="taxon:167732"
+                     /tissue_type="Whole plant"
+                     /dev_stage="Primary phase"
+                     /geo_loc_name="Australia"
+                     /collected_by="Farley M. Kwok van der Giezen"
+     gene            197..895
+                     /gene="cox3"
+     CDS             197..895
+                     /gene="cox3"
+                     /exception="RNA editing"
+                     /codon_start=1
+                     /product="Cox3"
+                     /protein_id="XMD97054.1"
+                     /translation="MYMHSFAGDGTLLTLGLSLILYTMFVWWRDVTRESTYEGRHTKV
+                     VQLGLRYGFLLFIVSEVMFFLAFFWAFFHSSLAPAVEIGAIWPPKGVEVLNPWGIPFL
+                     NTLILLSSGAAVTWAHHAILAGFKQQAVHALVATVWLALVFTGLQGMEYYEAPFTISD
+                     GIYGSTFFLATGFHGFHVIIGTIFLTICGIRQYIGHFSPSHHFGFEAAAWYWHFVDVV
+                     WLFLFVSIYWWGGL"
+ORIGIN      
+        1 tgtatttgca ataggattca tctcccttac attgattata gtagccaaga ctctttcatg
+       61 tacaaaccgt ttcgtgtgaa ttcattaaat aaataacacg agtgtctcct aagagcatcc
+      121 ctatcatccg gtggattcaa gtccatggtc tctcctgggg ttactcggag ccttagcaag
+      181 caccatcggt gctgttatgt atatgcattc attcgcggga gacggaacac tcctcacttt
+      241 aggcctaagc ttgatcttat acaccatgtt tgtatggcgg cgcgatgtta catgtgaatt
+      301 tacttacgaa ggacgtcata ccaaagtggt ataattaggg cttcgctacg gttttctctt
+      361 gtttatcgtc tcggaggtta tgtctcttct agcctttttt tgggctttct cttatttatc
+      421 tttggcaccc gcggtagaga tcggagctat tcggcccccc aaaggagttg aggttttaaa
+      481 tccctgggga atcccttttc taaataccct tattctcctt tcctctggag ctgccgtgac
+      541 ttgggctcat catgccatac tcgcaggttt caaataataa gcggttcacg ctttagtagc
+      601 tatcgttcgg ctggctccag ttcccaccgg gctttaggga atggaatatt acgaagcact
+      661 cttcatcatt tccgacggta tttatggttt tactttcctc ttagccatcg ggtcttatgg
+      721 gtcctacgtc actacaggga ccattctctc gacgatacgc ggtatttgtt aatatatagg
+      781 tcattttagt ccttcgcatc acttcggctt cgaagcagct gctcggtacc ggcattctgt
+      841 ggacgtggtt cggtcatttc catctgtccc tatctattgg tgggggggct tatgacaaca
+      901 aggtatgggc cttgcccttt ccccaagcag aatgcaggtc aatgaaactt gactggttga
+      961 aaagcctgac gttgtggggg cgggccagct ttggaggtgg gcttataaca tcaagggcag
+     1021 gggatccggt tggggctcga cgaatcacct agttgtcttc cttttatgat tctatacggt
+     1081 gc
+//
+

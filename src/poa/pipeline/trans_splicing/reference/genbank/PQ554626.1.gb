@@ -1,0 +1,52 @@
+LOCUS       PQ554626                 553 bp    DNA     linear   PLN 12-JAN-2025
+DEFINITION  Marsilea mutica Rpl6 (rpl6) gene, complete cds; mitochondrial.
+ACCESSION   PQ554626
+VERSION     PQ554626.1
+KEYWORDS    .
+SOURCE      mitochondrion Marsilea mutica
+  ORGANISM  Marsilea mutica
+            Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta;
+            Polypodiopsida; Polypodiidae; Salviniales; Marsileaceae; Marsilea.
+REFERENCE   1  (bases 1 to 553)
+  AUTHORS   Kwok van der Giezen,F.M. and Small,I.D.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (08-OCT-2024) School of Molecular Sciences, The
+            University of Western Australia, Bayliss Buliding, 35 Stirling
+            Highway, Crawley, WA 6009, Australia
+COMMENT     ##Assembly-Data-START##
+            Assembly Method       :: SPAdes v. 3.2; Geneious Prime v. 2023
+            Assembly Name         :: Marsilea mutica mitochondrion
+            Sequencing Technology :: Illumina
+            ##Assembly-Data-END##
+FEATURES             Location/Qualifiers
+     source          1..553
+                     /organism="Marsilea mutica"
+                     /organelle="mitochondrion"
+                     /mol_type="genomic DNA"
+                     /db_xref="taxon:167748"
+                     /tissue_type="Frond"
+                     /geo_loc_name="Australia"
+                     /collected_by="Catherine Colas des Francs-Small"
+     gene            142..441
+                     /gene="rpl6"
+     CDS             142..441
+                     /gene="rpl6"
+                     /exception="RNA editing"
+                     /codon_start=1
+                     /product="Rpl6"
+                     /protein_id="XMD97031.1"
+                     /translation="MEAQSVCFLQIIGYKASTNPQGSVLDLKLGFSHEIRLRVTPSVR
+                     VFCLKHNIICCTGTDPRKVTQFAASVKSCKPPEVYKGRGIKYRNEIIRRKQGEKK"
+ORIGIN      
+        1 ggaacctgta tgtagaaggc atacataggc ggctgggtcg tgtgacccgg acaaagttga
+       61 ggtcttcccg caagcaagca aaaaaactgc catgaatatc gagaacggaa cgagaagcca
+      121 caacgaaatc aagtcaagtc tatggaagct taatccgttt gttcttcgta aacaattgga
+      181 tacaaagtca gtactaatcc gtaaggctct gtttcagatt caaaactagg gttcagccat
+      241 gagatttgac tccgggtcac gccttcggtt cgtgttttcc gctcgaagca taatatcact
+      301 cgtcgtaccg gaacggatcc ctgaaaagtt acttaatccg ctgttagcgt caaaagttgt
+      361 aaaccccccg aagtttataa aggaagaggt ataaagtatt gaaatgagat tatacgtaga
+      421 aaacagggag aaaagaaaca aatcgcgtca tatattccag gaaccaaatc agtttccaat
+      481 aaataagtca gacttgcctc aacctaaatc tttggaattg gacccaaaaa agccacttgg
+      541 gtttgtgatt aat
+//
+

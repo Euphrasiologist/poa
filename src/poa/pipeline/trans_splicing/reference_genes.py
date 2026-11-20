@@ -125,4 +125,26 @@ FERN_MITOGENOMES = {
     **{f"OM8675{n}.1": "Haplopteris ensiformis" for n in range(45, 54)},
 }
 
+# Ferns whose annotated proteins are the fully edited ones, from RNA-seq:
+# Haplopteris (above) and four Salviniales whose mitochondrial genes are
+# deposited one record per gene, 37 each (Kwok van der Giezen et al. 2025,
+# Mol Biol Evol 42:msaf241). Each carries about 860 C-to-U and 440-780
+# U-to-C edits; the other fern records' proteins have the stop-removing
+# edits and nothing else. Editing profiles are built from these alone
+# (editing/lineage_profiles.py): a profile from unedited proteins gives
+# orfedit nothing to correct towards.
+SALVINIALES_GENE_RECORDS = {
+    "Azolla rubra": range(554530, 554567),
+    "Azolla pinnata": range(554567, 554604),
+    "Marsilea mutica": range(554604, 554641),
+    "Salvinia molesta": range(554641, 554678),
+}
+FERN_EDITED_MITOGENOMES = {
+    **{acc: name for acc, name in FERN_MITOGENOMES.items() if name == "Haplopteris ensiformis"},
+    **{f"PQ{n}.1": name for name, numbers in SALVINIALES_GENE_RECORDS.items() for n in numbers},
+}
+
 LINEAGE_MITOGENOMES = {"angiosperm": REFERENCE_MITOGENOMES, "moss": MOSS_MITOGENOMES, "fern": FERN_MITOGENOMES}
+# the genomes a lineage's editing profiles come from, where they are not
+# all of LINEAGE_MITOGENOMES
+LINEAGE_EDITED_MITOGENOMES = {"fern": FERN_EDITED_MITOGENOMES}

@@ -1,0 +1,57 @@
+LOCUS       PQ554590                 798 bp    DNA     linear   PLN 12-JAN-2025
+DEFINITION  Azolla pinnata Rpl16 (rpl16) gene, complete cds; mitochondrial.
+ACCESSION   PQ554590
+VERSION     PQ554590.1
+KEYWORDS    .
+SOURCE      mitochondrion Azolla pinnata
+  ORGANISM  Azolla pinnata
+            Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta;
+            Polypodiopsida; Polypodiidae; Salviniales; Salviniaceae; Azolla.
+REFERENCE   1  (bases 1 to 798)
+  AUTHORS   Kwok van der Giezen,F.M. and Small,I.D.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (08-OCT-2024) School of Molecular Sciences, The
+            University of Western Australia, Bayliss Buliding, 35 Stirling
+            Highway, Crawley, WA 6009, Australia
+COMMENT     ##Assembly-Data-START##
+            Assembly Method       :: SPAdes v. 3.2.0; Geneious Prime v. 2023
+            Assembly Name         :: Azolla pinnata mitochondrion
+            Sequencing Technology :: Illumina
+            ##Assembly-Data-END##
+FEATURES             Location/Qualifiers
+     source          1..798
+                     /organism="Azolla pinnata"
+                     /organelle="mitochondrion"
+                     /mol_type="genomic DNA"
+                     /db_xref="taxon:99433"
+                     /tissue_type="Whole plant"
+                     /geo_loc_name="Australia"
+                     /collected_by="Farley M. Kwok van der Giezen"
+     gene            223..630
+                     /gene="rpl16"
+     CDS             223..630
+                     /gene="rpl16"
+                     /exception="RNA editing"
+                     /codon_start=1
+                     /product="Rpl16"
+                     /protein_id="XMD96995.1"
+                     /translation="MLYPKRTKFRKCQKGKCKGCRTDGTRLSFGKYGIKSCSAGRIPY
+                     QTIEAARRAISRHFQRNGRIWVRIFADIPITRKPTEVRMGKGKGNPSGWMARVVTGQI
+                     LFEMDGVSLSNAREAATLAAHRLCVSTKFVQWS"
+ORIGIN      
+        1 aatgtgtgaa gggaatctgt atttgtcgtc caggttgatc gaatggtgca gaaatagctc
+       61 aaactgaatg tatgaaatat ggttcaatat ccttacatgt atcttctgat tatattgatt
+      121 acgcaagagc agaaatattc actcgttatg ggatcccggg cgtcaaggtg tggattctgt
+      181 attccaaaca tgtttcaaag aacaagaagg gactcaattc ggatgctata tctaaaacgt
+      241 acaaagtttt ggaaatgtta aaagggcaaa tgtaaaggtt gcagaacgga cggtacatga
+      301 cttagtttcg gaaaatatgg cattaaaagc tgttcagcgg gtcgtattct atattaaacc
+      361 attgaagcag cgcgtcgcgc tacaagcaga catttctaga gaaatggtcg aatatgggta
+      421 agaatcttcg cagatattcc cattacccgt aagcccacag aagtgagaat gggaaaggga
+      481 aagggaaacc cttcaggttg gatggctcgt gtggtgacgg gatagatctt atccgaaacg
+      541 gatggtgtga gtttgttaaa tgtttgagaa gctgcaacat tagcagcgca tagaccacgt
+      601 gtgtcaacca agtttgttca atggtcgtaa ttacagtgta aggagaagaa ctgcccgcag
+      661 gaacgcttcg cttcgcgaag gaagtgggcg cccaggaaag gaaagcctat tcctcaaata
+      721 gttcccctca ttaagaataa aaccattgcc aattgatcca gaattgattc gacagaatga
+      781 gatgtatgtt tggcttaa
+//
+

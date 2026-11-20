@@ -1,0 +1,72 @@
+LOCUS       PQ554607                1633 bp    DNA     linear   PLN 12-JAN-2025
+DEFINITION  Marsilea mutica Atp8 (atp8) gene, complete cds; mitochondrial.
+ACCESSION   PQ554607
+VERSION     PQ554607.1
+KEYWORDS    .
+SOURCE      mitochondrion Marsilea mutica
+  ORGANISM  Marsilea mutica
+            Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta;
+            Polypodiopsida; Polypodiidae; Salviniales; Marsileaceae; Marsilea.
+REFERENCE   1  (bases 1 to 1633)
+  AUTHORS   Kwok van der Giezen,F.M. and Small,I.D.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (08-OCT-2024) School of Molecular Sciences, The
+            University of Western Australia, Bayliss Buliding, 35 Stirling
+            Highway, Crawley, WA 6009, Australia
+COMMENT     ##Assembly-Data-START##
+            Assembly Method       :: SPAdes v. 3.2; Geneious Prime v. 2023
+            Assembly Name         :: Marsilea mutica mitochondrion
+            Sequencing Technology :: Illumina
+            ##Assembly-Data-END##
+FEATURES             Location/Qualifiers
+     source          1..1633
+                     /organism="Marsilea mutica"
+                     /organelle="mitochondrion"
+                     /mol_type="genomic DNA"
+                     /db_xref="taxon:167748"
+                     /tissue_type="Frond"
+                     /geo_loc_name="Australia"
+                     /collected_by="Catherine Colas des Francs-Small"
+     gene            124..636
+                     /gene="atp8"
+     CDS             124..636
+                     /gene="atp8"
+                     /exception="RNA editing"
+                     /codon_start=1
+                     /product="Atp8"
+                     /protein_id="XMD97012.1"
+                     /translation="MPQLDRFTYFTQFGWLCVFYSTFYVVLYKDGLPKISRILKLRKQ
+                     LSHDGIGRGKSSIQEEQDVVLKECFDTSVSFLYSSVFGASQWLHKIVKTLKTLGLLEM
+                     NTSYTCSLGEISFSRVLKEQTIDTFFFNEGSPSYSHSPSSSVFPCHTVAVAVLNPLVM
+                     LRGQESTEVK"
+ORIGIN      
+        1 ggcatggtca cccgaaaaag actccgattt gccagctttc ggagggaaaa aggttatgga
+       61 tacgagaaag aagaaaccgc aaccgcagcc ctggatgatt tttcctgaag taagttctaa
+      121 agaatgccct aaccagattg atttatctat ttcacgtaat tcggtcggtt acgtgttttt
+      181 catagcacct tccatgtcgt gccacataaa gatggattac ctaaaatcag ttgaattcct
+      241 aaatcatgaa aacaactttc gcacgacggc atcggacggg gcaaatcatc catctaggaa
+      301 gaacaggatg tggttcccaa agaatgcttt gacaccagtg tttccttcct gtactctagc
+      361 gttttcggag catcctaatg gttacacaaa atagtcaaaa ccttaaagac tttgggattg
+      421 ttagaaacga atacttctca cacgtgtcct ctaggagaga ttagtctctt atgagtgcct
+      481 aaagaataga caatcgacac tttctttttc aacgaaggga gtccttcata ttcccatagc
+      541 cctttttctt cagttttccc ttgccatacc gtcgccgttg ctgttctcaa ccctcttgta
+      601 atgttacgcg ggcaagagag cactgaggtg aagtaacgga cggaggggca ctatggcggg
+      661 tggaaggggc gggccagtga ttaccaggag cggatacgga aggagggagg atgcgacttc
+      721 tgcgtcgtcc attcgaaatg atcgtttggt cttggaaagt gtaggaggga tttcgctaaa
+      781 tcccaggcta gatgatgagg aaagaagggt tcaatactcc aacaccccga gaagcatgca
+      841 acgtttaaga cccgtaaaat ctctcactag ctaaacaatc gttcggtcat gtctcattcc
+      901 atcagtcttt cacgatccga ttctggttct atctgctcta ggggtggccc acagcacagg
+      961 tcctgcaagg ggtcgccccc catggtttca tagcttttga gactcgattc aaaagcagaa
+     1021 ggaaaggcaa agccacggca ggttcggtcc gccggaacgg gggtccgact ggcatggcct
+     1081 gcggaaactg aaccgatcca ttctatcatc gaaatgtttg ttctgtgccg gcacttaacc
+     1141 cttggcagtt tccgcacggg gccggttcgg ttatcagctc tggggggaat tgatgggttg
+     1201 acttgacccg gctcatcaat ccccgcttgg tgcagtaaga gttagtgcaa aggatcttca
+     1261 gaggtaggca agacaagata agttccgcca cgtttacagt aatggggaat cgaccgaagg
+     1321 tcaaagccag aactgtgcag tgcaggcaaa ctggctattc agttctcaac cccattcttt
+     1381 tcgttgtcga aggatctgga taacaacccg tctttcctcc tataactcag atagaactta
+     1441 tggattactt tgctctttgg tagaaattga atgaccggaa agggaccctc tttgccttcc
+     1501 gcctaagccg cgcaagaaga gctcgaagcc aatcccgggg aacagtgaag cgggtatttc
+     1561 tgtccaggtg cgggtagtcc gcatcttcac agacatgtct atttcaccga gtctttctcc
+     1621 gagacagtgc cca
+//
+

@@ -1,0 +1,51 @@
+LOCUS       PQ554677                 440 bp    DNA     linear   PLN 12-JAN-2025
+DEFINITION  Salvinia molesta Sdh4 (sdh4) gene, complete cds; mitochondrial.
+ACCESSION   PQ554677
+VERSION     PQ554677.1
+KEYWORDS    .
+SOURCE      mitochondrion Salvinia molesta
+  ORGANISM  Salvinia molesta
+            Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta;
+            Polypodiopsida; Polypodiidae; Salviniales; Salviniaceae; Salvinia.
+REFERENCE   1  (bases 1 to 440)
+  AUTHORS   Kwok van der Giezen,F.M. and Small,I.D.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (08-OCT-2024) School of Molecular Sciences, The
+            University of Western Australia, Bayliss Buliding, 35 Stirling
+            Highway, Crawley, WA 6009, Australia
+COMMENT     ##Assembly-Data-START##
+            Assembly Method       :: SPAdes v. 3.2; Geneious Prime v. 2023
+            Assembly Name         :: Salvinia molesta mitochondrion
+            Sequencing Technology :: Illumina
+            ##Assembly-Data-END##
+FEATURES             Location/Qualifiers
+     source          1..440
+                     /organism="Salvinia molesta"
+                     /organelle="mitochondrion"
+                     /mol_type="genomic DNA"
+                     /db_xref="taxon:167732"
+                     /tissue_type="Whole plant"
+                     /dev_stage="Primary phase"
+                     /geo_loc_name="Australia"
+                     /collected_by="Farley M. Kwok van der Giezen"
+     gene            88..351
+                     /gene="sdh4"
+     CDS             88..351
+                     /gene="sdh4"
+                     /exception="RNA editing"
+                     /codon_start=1
+                     /product="Sdh4"
+                     /protein_id="XMD97082.1"
+                     /translation="MEARRETLNYWLIQRSTAACLVLILLITNVFTLILFNLLLFRHI
+                     HVGMEEILADYVHHEVIRNWILILLRIFLLVAIKDFCLFFVLY"
+ORIGIN      
+        1 gtcctaaatt tctcaattct tttccctttc tcatgcgtga aaacgagcga aaatgaatga
+       61 acaaataata tttctaatgc agaagcaacg gaagctcgta gagaaacctt aaattattgg
+      121 ctcacttaaa gaagtactgc agcccgttta gtcctaattc ttctcataac caatgttttc
+      181 actttgattt cgttcaatct cctgttattt cggtacattc acgtgggaat ggaagagatt
+      241 ccggcagatc atgttcacca tgaagtcata tgaaatcgga tctcgattct ccctagaatc
+      301 ttcctattag ttgccatcaa agacttttgc ttgttttccg ttctttatca atcggttctt
+      361 tctccgggtg gcctaaccta aggtcacccc ccatttacga cacgtaaatg aggacctccg
+      421 ggtagcacct atttcagaac
+//
+

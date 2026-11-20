@@ -1,0 +1,58 @@
+LOCUS       PQ554591                 784 bp    DNA     linear   PLN 12-JAN-2025
+DEFINITION  Azolla pinnata Rps1 (rps1) gene, complete cds; mitochondrial.
+ACCESSION   PQ554591
+VERSION     PQ554591.1
+KEYWORDS    .
+SOURCE      mitochondrion Azolla pinnata
+  ORGANISM  Azolla pinnata
+            Eukaryota; Viridiplantae; Streptophyta; Embryophyta; Tracheophyta;
+            Polypodiopsida; Polypodiidae; Salviniales; Salviniaceae; Azolla.
+REFERENCE   1  (bases 1 to 784)
+  AUTHORS   Kwok van der Giezen,F.M. and Small,I.D.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (08-OCT-2024) School of Molecular Sciences, The
+            University of Western Australia, Bayliss Buliding, 35 Stirling
+            Highway, Crawley, WA 6009, Australia
+COMMENT     ##Assembly-Data-START##
+            Assembly Method       :: SPAdes v. 3.2.0; Geneious Prime v. 2023
+            Assembly Name         :: Azolla pinnata mitochondrion
+            Sequencing Technology :: Illumina
+            ##Assembly-Data-END##
+FEATURES             Location/Qualifiers
+     source          1..784
+                     /organism="Azolla pinnata"
+                     /organelle="mitochondrion"
+                     /mol_type="genomic DNA"
+                     /db_xref="taxon:99433"
+                     /tissue_type="Whole plant"
+                     /geo_loc_name="Australia"
+                     /collected_by="Farley M. Kwok van der Giezen"
+     gene            95..700
+                     /gene="rps1"
+     CDS             95..700
+                     /gene="rps1"
+                     /exception="RNA editing"
+                     /codon_start=1
+                     /product="Rps1"
+                     /protein_id="XMD96996.1"
+                     /translation="MILVNTGLKTPVILFKHEVTARAPITKQAKFHFVGIEDLNLEKV
+                     EELCEPKILLPEPRKPEIILPKPLNKKIVWIELTKIWRDRDKVKGLIFNSMKGGYAVA
+                     IAGFVAFLPRSLFRKNESERFYKKKKFDKSRKFRFYKNKSRSGKFGNKGLKFCRSRNE
+                     TSRRSRTFRILNMNPIKRNIVVKEEIRAACASFRKEKAPLN"
+ORIGIN      
+        1 aggcgctcta taatattcag tgaaaccatt ataatacagg gacaaaagtc atgatgggga
+       61 cagaggttta atcaaactgt tacacccgca gaatatgatc ttggtgaata caggactgaa
+      121 aactcctgta atccttttca aacatgaagt gacagcaaga gcgccaatca ccaagtaagc
+      181 aaagtttcat tctgttggga tcgaagattc gaatctggaa aaagtggaag agcttcgtga
+      241 accaaaaatt cttttgccag aaccacgtaa accggaaatt attttgtcaa aaccattgaa
+      301 caagaaaata gttcggattg aactaaccaa gatttggcgt gaccgcgaca aggtcaaagg
+      361 gttgattttc aatttcatga agggtgggta tgccgcagtt actgcagggt tcgtggcttt
+      421 ccttttcagg agtccctttc gcaaaaatga gagtgagagg ttccacaaaa agaagaaatt
+      481 tgacaaaagt agaaaattta ggttccacaa gaataaaagc agaagtggga aatttggaaa
+      541 caaaggtcta aagtttcgca gaagcagaaa tgagacattc tgcagaagta ggacatccag
+      601 aattctgaac acgaacccaa taaagcgtaa tattgcggta aaagaagaga ttcgtgctgc
+      661 gtgcgctagt ttcagaaaag aaaaagcacc attgaatcga aagccgcccc ctaaccagca
+      721 gtctcttcct aagcaccaac agcagcaaga aatagtttat ttacatgagt aagaaactga
+      781 cgta
+//
+
