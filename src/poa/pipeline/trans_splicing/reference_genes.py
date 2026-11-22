@@ -144,6 +144,14 @@ FERN_EDITED_MITOGENOMES = {
     **{f"PQ{n}.1": name for name, numbers in SALVINIALES_GENE_RECORDS.items() for n in numbers},
 }
 
+# The fern records whose annotated proteins are not the edited ones (only
+# their stop codons are edited out). They stay fetched, as a record of the
+# exon structures, but are left out of the fern exon templates: with them
+# in, each edited position's profile column is split between the edited
+# and the unedited residue, and transsplice found 9% of the C-to-U edits
+# RNA-seq shows in 11 DToL ferns' spliced genes, against 83% without.
+FERN_UNEDITED_MITOGENOMES = tuple(acc for acc, name in FERN_MITOGENOMES.items() if name != "Haplopteris ensiformis")
+LINEAGE_UNEDITED_MITOGENOMES = {"fern": FERN_UNEDITED_MITOGENOMES}
 LINEAGE_MITOGENOMES = {"angiosperm": REFERENCE_MITOGENOMES, "moss": MOSS_MITOGENOMES, "fern": FERN_MITOGENOMES}
 # the genomes a lineage's editing profiles come from, where they are not
 # all of LINEAGE_MITOGENOMES

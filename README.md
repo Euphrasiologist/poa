@@ -261,57 +261,56 @@ lycophytes still use the angiosperm references. See
 is never picked automatically. These lineages edit U to C as well as C to
 U, and their organelle genes have genomic in-frame stop codons that
 editing turns into Gln or Arg - about nine per mitochondrial gene in
-Polypodiales. The fern lineage lets orfedit and transsplice read such
-stops through, at the cost of a C-to-U edit; it needs builds of both with
-`--stop-edit-penalty`. Spliced genes use fern exon templates
-(`lineages/fern/`, from seven annotated leptosporangiate fern
-mitogenomes): nad1, nad4, nad5 and nad7 have four exons in ferns, rps3
-three, rps10 one, and there is no ccmFc. Twenty-two single-exon mito
-genes use fern editing profiles (`editing/reference/lineages/fern/`),
-built from the five ferns whose annotated proteins are the edited ones
-(see below); the rest use the angiosperm profiles. On 30 DToL fern assemblies, single-exon mito gene
-copies aligned over 99% of their profile go from 152 to 292 of 702 and
-their frameshift calls from 277 to 113; spliced mito genes aligned that
-well from 0 to 80 of 249. U-to-C edits are marked `U>C` in the `edit`
-column of the edit tables and `edited_from=T;edited_to=C` in the GFF.
-Without it, treat a fern's proteins and frameshift calls as unreliable:
-each unread stop is a skipped column, an apparent frame change or an
-early end. Horsetails, clubmosses and *Selaginella* do not edit this way
-and belong on the default: on the fern templates fewer of their genes
-align end to end. On 29 DToL fern assemblies the fern templates take
-complete spliced mito genes from 149 of 249 to 231 of 248 (rpl2 0 to
-28 of 28, rps10 1 to 29 of 29, rps3 0 to 26 of 28). The fern references
-are thin - none is RefSeq, and four of the seven species are assemblies
-nobody has validated - so whole-gene profile columns that at least 80%
-of those fern reconstructions leave unaligned are dropped
-(`lineages/fern/whole_gene_mask.tsv`, `trans_splicing/column_mask.py`).
+Polypodiales. Without the lineage set, treat a fern's proteins and
+frameshift calls as unreliable: each unread stop is a skipped column, an
+apparent frame change or an early end. Horsetails, clubmosses and
+*Selaginella* do not edit this way and belong on the default.
 
-The fern editing profiles come from *Haplopteris ensiformis* and four
-Salviniales (*Azolla rubra*, *A. pinnata*, *Marsilea mutica*, *Salvinia
-molesta*; Kwok van der Giezen et al. 2025), the only ferns whose
-deposited proteins carry their full RNA-seq editome; the other fern
-records have only the stop codons edited out, and profiles from those
-found a fifth of the real C-to-U edits. Each species counts once per
-gene, however many records its genome is in. Held out in turn and scored
-against their own editomes, the five show what to expect:
+With it, orfedit and transsplice read such stops through at the cost of a
+C-to-U edit, and mitochondrial genes are corrected against fern
+references: exon templates for the spliced genes (nad1, nad4, nad5 and
+nad7 have four exons in ferns, rps3 three, rps10 one, and there is no
+ccmFc) and editing profiles for 22 single-exon genes. On those fern
+references other U-to-C edits are called too, at a cost of 5; plastid
+genes and the mitochondrial genes still on angiosperm profiles (matR and
+nad9 among them) get stop read-through only. It needs builds of orfedit
+and transsplice with `--stop-edit-penalty` and `--reverse-edit-penalty`.
+U-to-C edits are marked `U>C` in the `edit` column of the edit tables and
+`edited_from=T;edited_to=C` in the GFF.
 
-| held out | angiosperm profiles: C-to-U found / calls right | fern profiles |
+The fern references are built from edited proteins only. Few ferns have a
+deposited mitochondrial editome (*Haplopteris ensiformis* and four
+Salviniales; Kwok van der Giezen et al. 2025), so most come from eleven
+Darwin Tree of Life ferns - nine Polypodiales in six genera, *Azolla
+filiculoides* - whose own RNA-seq was mapped to their assemblies and the
+editing it shows applied to their genes (`lineages/fern/raw_rna/` and
+`editing/reference/lineages/fern/rna_proteins.fasta`; each has a README
+with the species, runs and method). The six GenBank ferns whose proteins
+only have their stop codons edited out are not used for profiles: with
+them in the exon templates, transsplice found 9% of the C-to-U edits the
+RNA shows.
+
+Scored against that RNA, with each genus held out of the references in
+turn (found = share of the RNA's edits called, right = share of calls
+the RNA confirms; an RNA edit is one in at least 20% of reads):
+
+| | C-to-U found / right | U-to-C found / right |
 |---|---|---|
-| *Haplopteris* | 47% / 49% | 40% / 60% |
-| *Marsilea* | 53% / 66% | 40% / 90% |
-| *Salvinia* | 56% / 68% | 41% / 94% |
-| both *Azolla* | 60% / 71% | 29% / 90% |
+| single-exon genes, angiosperm profiles | 46% / 70% | 45% / 89% |
+| single-exon genes, fern profiles | 80% / 96% | 88% / 97% |
+| spliced genes, fern templates | 82% / 97% | 92% / 96% |
 
-Stop read-throughs are found 85-100% of the time on either. So with
-`--lineage fern` a C-to-U call is usually right but well under half of
-the real ones are called (the held-out profiles rest on three or four
-species; the bundled ones on five), and the corrected protein is a
-partial correction. On the 29 DToL ferns (538 copies of 18 of the profiled
-genes, those with copies there), copies aligned over 99% of their profile
-go from 231 with the angiosperm profiles to 412, frameshift calls from
-46 to 44, C-to-U calls per copy from 11.0 to 7.3, and planted 1-bp
-indels found from 43% to 61%. matR and nad9 stay on the angiosperm
-profiles, where they did better.
+On the 18 DToL ferns that supplied no RNA, spliced mitochondrial genes
+aligned over 99% of their template go from 74 to 137 of 159 against the
+previous fern templates, and genes with a frameshift call from 29 to 7;
+they get as many edit calls per gene as the eleven that did. Planted 1-bp
+indels are found in 82% of spliced genes and in all 60 planted single-exon
+ones. What the RNA also shows is not right yet: of 144 exon junctions
+with intron-spanning reads, 116 are placed where the reads put them and
+the rest 1-4 bp off (mostly nad2, and nad5 around its 22 bp exon); and 13
+of 89 spliced genes still run past a stop codon that is never edited (11
+of them nad1, by two codons). Fern plastid genes use the plastid
+templates every lineage shares.
 
 ### Stage by stage, on a whole dataset
 

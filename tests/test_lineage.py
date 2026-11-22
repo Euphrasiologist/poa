@@ -89,6 +89,10 @@ class SplitRuns(unittest.TestCase):
         self.assertIn("fern", lin.CHOICES)
         self.assertNotIn("fern", lin.LINEAGES)
         self.assertEqual(lin.stop_edit_penalty("fern"), 2.5)
+        # other U-to-C edits: fern only, and only on its own references
+        self.assertEqual(lin.reverse_edit_penalty("fern"), 5.0)
+        self.assertIsNone(lin.reverse_edit_penalty("angiosperm"))
+        self.assertIsNone(lin.reverse_edit_penalty("moss"))
         self.assertIsNone(lin.stop_edit_penalty("angiosperm"))
         self.assertIsNone(lin.stop_edit_penalty("moss"))
         self.assertEqual(lin.choose(scores(100, 900))[0], "moss")  # auto never says fern
@@ -165,6 +169,31 @@ class FernEditingProfiles(unittest.TestCase):
         # multi-exon in ferns, so no single-locus profile
         self.assertFalse({"atp1", "cox1", "rps14"} & have)
         self.assertEqual(lp.LINEAGE_MIN_SEQUENCES["fern"], 4)
+
+    def test_rna_references(self):
+        """the RNA-edited DToL loci and proteins are bundled and read; the
+        GenBank ferns with unedited proteins are left out of the templates"""
+        from poa.pipeline.editing import lineage_profiles as lp
+        from poa.pipeline.trans_splicing import exon_profiles as ep
+        from poa.pipeline.trans_splicing import reference_genes as rg
+
+        proteins = lp.rna_proteins("fern")
+        self.assertIn("RNA_Onoclea_sensibilis", proteins["nad3"])
+        self.assertNotIn("RNA_Onoclea_sensibilis", lp.rna_proteins("fern", ("RNA_Onoclea_sensibilis",))["nad3"])
+        self.assertEqual(lp.rna_proteins("moss"), {})
+        self.assertEqual(lp.LINEAGE_PSEUDOCOUNT["fern"], 2.0)
+
+        ref = lin.trans_splicing_reference(PIPELINE, "fern")
+        dirs = ep.raw_dirs(ref)
+        self.assertEqual([d.name for d in dirs], ["raw", ep.RNA_RAW_NAME])
+        raw, junctions = ep.load_all_raw_data(*dirs), ep.load_junctions(*dirs)
+        key = ("RNA_Onoclea_sensibilis", "rps3", "rps3_1")
+        self.assertEqual(junctions[key]["n_exons"], 3)
+        self.assertEqual(sorted(k for k in raw[key] if k != "refseq"), [1, 2, 3])
+        self.assertNotIn("*", raw[key]["refseq"])
+        self.assertIn("MW732172.1", rg.LINEAGE_UNEDITED_MITOGENOMES["fern"])
+        self.assertFalse(any(a.startswith("OM8675") for a in rg.LINEAGE_UNEDITED_MITOGENOMES["fern"]))
+        self.assertEqual(ep.LINEAGE_GAP_THRESHOLD["fern"], 0.5)
 
     def test_one_per_species(self):
         from poa.pipeline.editing import lineage_profiles as lp

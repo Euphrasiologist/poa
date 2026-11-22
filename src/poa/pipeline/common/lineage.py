@@ -17,16 +17,18 @@ references everything else in poa was validated on. The result is
 analysis/editing/results/lineage.tsv, which trans_splicing reads.
 
 "fern" is a lineage of a different kind: it is never chosen automatically,
-only with --lineage fern; it has exon templates of its own
-(trans_splicing/reference/lineages/fern/) but borrows the angiosperm
-editing profiles; and it changes the editing model. Ferns edit U to
-C as well as C to U, and a fern organelle gene has genomic in-frame stop
-codons that editing turns into Gln or Arg - about nine per mitochondrial
-gene in Polypodiales. With the lineage set, orfedit and transsplice may
-read such a stop through at STOP_EDIT_PENALTY (orfedit >= 0.2.0 and
-transsplice >= 0.3.0 with --stop-edit-penalty). It is for ferns proper,
-quillworts (Isoetes) and hornworts; horsetails, clubmosses and Selaginella
-do not edit this way and should stay on the default.
+only with --lineage fern, and it changes the editing model. Ferns edit U
+to C as well as C to U, and a fern organelle gene has genomic in-frame
+stop codons that editing turns into Gln or Arg - about nine per
+mitochondrial gene in Polypodiales. With the lineage set, orfedit and
+transsplice may read such a stop through at STOP_EDIT_PENALTY. It has
+exon templates of its own (trans_splicing/reference/lineages/fern/) and
+editing profiles for the single-exon mito genes its references cover
+(editing/reference/lineages/fern/), on which other U-to-C edits are
+called too, at REVERSE_EDIT_PENALTY; the genes it has no profile for, and
+its plastid genes, borrow the angiosperm references. It is for ferns
+proper, quillworts (Isoetes) and hornworts; horsetails, clubmosses and
+Selaginella do not edit this way and should stay on the default.
 """
 
 from __future__ import annotations
@@ -49,6 +51,13 @@ CHOICES = ("auto", *LINEAGES, *BORROWS)
 # in fern transcriptomes); 4 and 6 lose alignments, and allowing other
 # U-to-C edits as well (at 8 or 12) changes nothing for ferns.
 STOP_EDIT_PENALTY = {"fern": 2.5}
+# Cost of any other U-to-C edit (one that changes an amino acid, not a
+# stop), for a lineage's mitochondrial genes aligned to its own profiles
+# and exon templates only. Never for genes still on the borrowed
+# (angiosperm) references or for plastid genes: against profiles that are
+# not the lineage's own edited proteins a U-to-C edit is too easy to call
+# (2.1 false ones per angiosperm mito gene at a cost of 2.5).
+REVERSE_EDIT_PENALTY = {"fern": 5.0}
 # Calibrated on the 956-species mito dataset (ToL-ID clades as truth). Every
 # moss has all 5 moss-profiled genes (atp4 ccmB ccmC mttB rps14) and wins by
 # 88-150 per gene; dicots and monocots lose by 57-430, liverworts by -25 to
@@ -71,6 +80,12 @@ def reference(lineage: str) -> str:
 def stop_edit_penalty(lineage: str) -> float | None:
     """Cost of a stop read-through for `lineage`, or None if it has none."""
     return STOP_EDIT_PENALTY.get(lineage)
+
+
+def reverse_edit_penalty(lineage: str) -> float | None:
+    """Cost of any other U-to-C edit for `lineage`'s mito genes on its own
+    profiles and templates, or None if it calls none."""
+    return REVERSE_EDIT_PENALTY.get(lineage)
 
 
 def table_path(analysis_dir: Path) -> Path:

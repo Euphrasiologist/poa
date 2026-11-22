@@ -1,0 +1,254 @@
+accession	gene	locus_tag	exon_num	n_exons	start	end	strand	junction_to_next	gap_bp	notes
+RNA_Asplenium_scolopendrium	cox2	cox2_1	1	2	149379	149766	+	cis		Asplenium_scolopendrium: RNA-seq edited
+RNA_Asplenium_scolopendrium	cox2	cox2_1	2	2	150754	151130	+			Asplenium_scolopendrium: RNA-seq edited
+RNA_Asplenium_scolopendrium	nad1	nad1_1	1	4	301755	302042	+	cis		Asplenium_scolopendrium: RNA-seq edited
+RNA_Asplenium_scolopendrium	nad1	nad1_1	2	4	303138	303273	+	cis		Asplenium_scolopendrium: RNA-seq edited
+RNA_Asplenium_scolopendrium	nad1	nad1_1	3	4	304712	305045	+	cis		Asplenium_scolopendrium: RNA-seq edited
+RNA_Asplenium_scolopendrium	nad1	nad1_1	4	4	138868	139126	-			Asplenium_scolopendrium: RNA-seq edited
+RNA_Asplenium_scolopendrium	nad2	nad2_1	1	5	334808	335077	-	cis		Asplenium_scolopendrium: RNA-seq edited
+RNA_Asplenium_scolopendrium	nad2	nad2_1	2	5	332937	333322	-	cis		Asplenium_scolopendrium: RNA-seq edited
+RNA_Asplenium_scolopendrium	nad2	nad2_1	3	5	330497	330663	-	cis		Asplenium_scolopendrium: RNA-seq edited
+RNA_Asplenium_scolopendrium	nad2	nad2_1	4	5	328838	329408	-	cis		Asplenium_scolopendrium: RNA-seq edited
+RNA_Asplenium_scolopendrium	nad2	nad2_1	5	5	327436	327436	-			Asplenium_scolopendrium: RNA-seq edited
+RNA_Asplenium_scolopendrium	nad4	nad4_1	1	4	172999	173446	+	cis		Asplenium_scolopendrium: RNA-seq edited
+RNA_Asplenium_scolopendrium	nad4	nad4_1	2	4	175192	175707	+	cis		Asplenium_scolopendrium: RNA-seq edited
+RNA_Asplenium_scolopendrium	nad4	nad4_1	3	4	177757	178179	+	cis		Asplenium_scolopendrium: RNA-seq edited
+RNA_Asplenium_scolopendrium	nad4	nad4_1	4	4	180580	180668	+			Asplenium_scolopendrium: RNA-seq edited
+RNA_Asplenium_scolopendrium	nad5	nad5_1	1	4	257852	258086	+	cis		Asplenium_scolopendrium: RNA-seq edited
+RNA_Asplenium_scolopendrium	nad5	nad5_1	2	4	259361	260373	+	cis		Asplenium_scolopendrium: RNA-seq edited
+RNA_Asplenium_scolopendrium	nad5	nad5_1	3	4	261318	261530	+	cis		Asplenium_scolopendrium: RNA-seq edited
+RNA_Asplenium_scolopendrium	nad5	nad5_1	4	4	263354	263827	+			Asplenium_scolopendrium: RNA-seq edited
+RNA_Asplenium_scolopendrium	nad7	nad7_1	1	4	246952	247124	-	cis		Asplenium_scolopendrium: RNA-seq edited
+RNA_Asplenium_scolopendrium	nad7	nad7_1	2	4	245844	245912	-	cis		Asplenium_scolopendrium: RNA-seq edited
+RNA_Asplenium_scolopendrium	nad7	nad7_1	3	4	244324	244790	-	cis		Asplenium_scolopendrium: RNA-seq edited
+RNA_Asplenium_scolopendrium	nad7	nad7_1	4	4	14708	15213	+			Asplenium_scolopendrium: RNA-seq edited
+RNA_Asplenium_scolopendrium	rpl2	rpl2_1	1	2	9615	10136	-	cis		Asplenium_scolopendrium: RNA-seq edited
+RNA_Asplenium_scolopendrium	rpl2	rpl2_1	2	2	8235	8885	-			Asplenium_scolopendrium: RNA-seq edited
+RNA_Asplenium_scolopendrium	rps3	rps3_1	1	3	7883	7964	-	cis		Asplenium_scolopendrium: RNA-seq edited
+RNA_Asplenium_scolopendrium	rps3	rps3_1	2	3	6384	6559	-	cis		Asplenium_scolopendrium: RNA-seq edited
+RNA_Asplenium_scolopendrium	rps3	rps3_1	3	3	4398	5297	-			Asplenium_scolopendrium: RNA-seq edited
+RNA_Asplenium_trichomanes	cox2	cox2_1	1	2	150788	151175	-	cis		Asplenium_trichomanes: RNA-seq edited
+RNA_Asplenium_trichomanes	cox2	cox2_1	2	2	149424	149800	-			Asplenium_trichomanes: RNA-seq edited
+RNA_Asplenium_trichomanes	nad1	nad1_1	1	4	27936	28223	+	cis		Asplenium_trichomanes: RNA-seq edited
+RNA_Asplenium_trichomanes	nad1	nad1_1	2	4	29280	29415	+	cis		Asplenium_trichomanes: RNA-seq edited
+RNA_Asplenium_trichomanes	nad1	nad1_1	3	4	30853	31186	+	cis		Asplenium_trichomanes: RNA-seq edited
+RNA_Asplenium_trichomanes	nad1	nad1_1	4	4	21012	21270	-			Asplenium_trichomanes: RNA-seq edited
+RNA_Asplenium_trichomanes	nad4	nad4_1	1	4	178774	179221	-	cis		Asplenium_trichomanes: RNA-seq edited
+RNA_Asplenium_trichomanes	nad4	nad4_1	2	4	176535	177050	-	cis		Asplenium_trichomanes: RNA-seq edited
+RNA_Asplenium_trichomanes	nad4	nad4_1	3	4	174063	174485	-	cis		Asplenium_trichomanes: RNA-seq edited
+RNA_Asplenium_trichomanes	nad4	nad4_1	4	4	165330	165418	+			Asplenium_trichomanes: RNA-seq edited
+RNA_Asplenium_trichomanes	nad5	nad5_1	1	4	114499	114733	-	cis		Asplenium_trichomanes: RNA-seq edited
+RNA_Asplenium_trichomanes	nad5	nad5_1	2	4	155154	156166	+	cis		Asplenium_trichomanes: RNA-seq edited
+RNA_Asplenium_trichomanes	nad5	nad5_1	3	4	157106	157318	+	cis		Asplenium_trichomanes: RNA-seq edited
+RNA_Asplenium_trichomanes	nad5	nad5_1	4	4	159135	159608	+			Asplenium_trichomanes: RNA-seq edited
+RNA_Asplenium_trichomanes	nad7	nad7_1	1	4	118090	118262	+	cis		Asplenium_trichomanes: RNA-seq edited
+RNA_Asplenium_trichomanes	nad7	nad7_1	2	4	119309	119377	+	cis		Asplenium_trichomanes: RNA-seq edited
+RNA_Asplenium_trichomanes	nad7	nad7_1	3	4	121601	122067	-	cis		Asplenium_trichomanes: RNA-seq edited
+RNA_Asplenium_trichomanes	nad7	nad7_1	4	4	120060	120565	-			Asplenium_trichomanes: RNA-seq edited
+RNA_Asplenium_trichomanes	rpl2	rpl2_1	1	2	225261	225782	+	cis		Asplenium_trichomanes: RNA-seq edited
+RNA_Asplenium_trichomanes	rpl2	rpl2_1	2	2	226512	227162	+			Asplenium_trichomanes: RNA-seq edited
+RNA_Asplenium_trichomanes	rps10	rps10_1	1	1	257661	257969	-			Asplenium_trichomanes: RNA-seq edited
+RNA_Asplenium_trichomanes	rps3	rps3_1	1	3	227433	227514	+	cis		Asplenium_trichomanes: RNA-seq edited
+RNA_Asplenium_trichomanes	rps3	rps3_1	2	3	228830	229005	+	cis		Asplenium_trichomanes: RNA-seq edited
+RNA_Asplenium_trichomanes	rps3	rps3_1	3	3	230084	230983	+			Asplenium_trichomanes: RNA-seq edited
+RNA_Asplenium_viride	cox2	cox2_1	1	2	103072	103459	-	cis		Asplenium_viride: RNA-seq edited
+RNA_Asplenium_viride	cox2	cox2_1	2	2	101708	102084	-			Asplenium_viride: RNA-seq edited
+RNA_Asplenium_viride	nad2	nad2_1	1	5	127008	127277	+	cis		Asplenium_viride: RNA-seq edited
+RNA_Asplenium_viride	nad2	nad2_1	2	5	128768	129153	+	cis		Asplenium_viride: RNA-seq edited
+RNA_Asplenium_viride	nad2	nad2_1	3	5	131498	131664	+	cis		Asplenium_viride: RNA-seq edited
+RNA_Asplenium_viride	nad2	nad2_1	4	5	132753	133325	+	cis		Asplenium_viride: RNA-seq edited
+RNA_Asplenium_viride	nad2	nad2_1	5	5	80377	80564	-			Asplenium_viride: RNA-seq edited
+RNA_Asplenium_viride	nad4	nad4_1	1	4	186218	186665	-	cis		Asplenium_viride: RNA-seq edited
+RNA_Asplenium_viride	nad4	nad4_1	2	4	183988	184503	-	cis		Asplenium_viride: RNA-seq edited
+RNA_Asplenium_viride	nad4	nad4_1	3	4	181523	181945	-	cis		Asplenium_viride: RNA-seq edited
+RNA_Asplenium_viride	nad4	nad4_1	4	4	179034	179122	-			Asplenium_viride: RNA-seq edited
+RNA_Asplenium_viride	nad5	nad5_1	1	4	105580	105814	+	cis		Asplenium_viride: RNA-seq edited
+RNA_Asplenium_viride	nad5	nad5_1	2	4	138289	139301	-	cis		Asplenium_viride: RNA-seq edited
+RNA_Asplenium_viride	nad5	nad5_1	3	4	137132	137344	-	cis		Asplenium_viride: RNA-seq edited
+RNA_Asplenium_viride	nad5	nad5_1	4	4	134845	135318	-			Asplenium_viride: RNA-seq edited
+RNA_Asplenium_viride	nad7	nad7_1	1	4	142810	142982	+	cis		Asplenium_viride: RNA-seq edited
+RNA_Asplenium_viride	nad7	nad7_1	2	4	63779	63847	+	cis		Asplenium_viride: RNA-seq edited
+RNA_Asplenium_viride	nad7	nad7_1	3	4	64908	65374	+	cis		Asplenium_viride: RNA-seq edited
+RNA_Asplenium_viride	nad7	nad7_1	4	4	66405	66910	+			Asplenium_viride: RNA-seq edited
+RNA_Asplenium_viride	rpl2	rpl2_1	1	2	40512	41037	-	cis		Asplenium_viride: RNA-seq edited
+RNA_Asplenium_viride	rpl2	rpl2_1	2	2	39280	39680	-			Asplenium_viride: RNA-seq edited
+RNA_Asplenium_viride	rps10	rps10_1	1	1	155150	155458	+			Asplenium_viride: RNA-seq edited
+RNA_Asplenium_viride	rps3	rps3_1	1	3	38784	38865	-	cis		Asplenium_viride: RNA-seq edited
+RNA_Asplenium_viride	rps3	rps3_1	2	3	37285	37460	-	cis		Asplenium_viride: RNA-seq edited
+RNA_Asplenium_viride	rps3	rps3_1	3	3	35299	36198	-			Asplenium_viride: RNA-seq edited
+RNA_Azolla_filiculoides	cox2	cox2_1	1	2	269148	269535	+	cis		Azolla_filiculoides: RNA-seq edited
+RNA_Azolla_filiculoides	cox2	cox2_1	2	2	270538	270914	+			Azolla_filiculoides: RNA-seq edited
+RNA_Azolla_filiculoides	nad1	nad1_1	1	4	13113	13400	+	cis		Azolla_filiculoides: RNA-seq edited
+RNA_Azolla_filiculoides	nad1	nad1_1	2	4	14234	14369	+	cis		Azolla_filiculoides: RNA-seq edited
+RNA_Azolla_filiculoides	nad1	nad1_1	3	4	15858	16191	+	cis		Azolla_filiculoides: RNA-seq edited
+RNA_Azolla_filiculoides	nad1	nad1_1	4	4	17629	17887	+			Azolla_filiculoides: RNA-seq edited
+RNA_Azolla_filiculoides	nad2	nad2_1	1	5	154851	155021	+	cis		Azolla_filiculoides: RNA-seq edited
+RNA_Azolla_filiculoides	nad2	nad2_1	2	5	156481	156866	+	cis		Azolla_filiculoides: RNA-seq edited
+RNA_Azolla_filiculoides	nad2	nad2_1	3	5	158609	158775	+	cis		Azolla_filiculoides: RNA-seq edited
+RNA_Azolla_filiculoides	nad2	nad2_1	4	5	159938	160507	+	cis		Azolla_filiculoides: RNA-seq edited
+RNA_Azolla_filiculoides	nad2	nad2_1	5	5	161949	162139	+			Azolla_filiculoides: RNA-seq edited
+RNA_Azolla_filiculoides	nad4	nad4_1	1	4	41197	41644	+	cis		Azolla_filiculoides: RNA-seq edited
+RNA_Azolla_filiculoides	nad4	nad4_1	2	4	41645	42160	+	cis		Azolla_filiculoides: RNA-seq edited
+RNA_Azolla_filiculoides	nad4	nad4_1	3	4	43829	44251	+	cis		Azolla_filiculoides: RNA-seq edited
+RNA_Azolla_filiculoides	nad4	nad4_1	4	4	47116	47204	+			Azolla_filiculoides: RNA-seq edited
+RNA_Azolla_filiculoides	nad5	nad5_1	1	4	73943	74177	+	cis		Azolla_filiculoides: RNA-seq edited
+RNA_Azolla_filiculoides	nad5	nad5_1	2	4	75031	76043	+	cis		Azolla_filiculoides: RNA-seq edited
+RNA_Azolla_filiculoides	nad5	nad5_1	3	4	76970	77182	+	cis		Azolla_filiculoides: RNA-seq edited
+RNA_Azolla_filiculoides	nad5	nad5_1	4	4	79099	79572	+			Azolla_filiculoides: RNA-seq edited
+RNA_Azolla_filiculoides	rpl2	rpl2_1	1	2	106590	107072	+	cis		Azolla_filiculoides: RNA-seq edited
+RNA_Azolla_filiculoides	rpl2	rpl2_1	2	2	107840	108490	+			Azolla_filiculoides: RNA-seq edited
+RNA_Azolla_filiculoides	rps10	rps10_1	1	1	105552	105860	+			Azolla_filiculoides: RNA-seq edited
+RNA_Azolla_filiculoides	rps3	rps3_1	1	3	108761	108838	+	cis		Azolla_filiculoides: RNA-seq edited
+RNA_Azolla_filiculoides	rps3	rps3_1	2	3	110277	110456	+	cis		Azolla_filiculoides: RNA-seq edited
+RNA_Azolla_filiculoides	rps3	rps3_1	3	3	111540	112436	+			Azolla_filiculoides: RNA-seq edited
+RNA_Dryopteris_borreri	nad1	nad1_1	1	4	212714	213001	+	cis		Dryopteris_borreri: RNA-seq edited
+RNA_Dryopteris_borreri	nad1	nad1_1	2	4	214037	214172	+	cis		Dryopteris_borreri: RNA-seq edited
+RNA_Dryopteris_borreri	nad1	nad1_1	3	4	215627	215960	+	cis		Dryopteris_borreri: RNA-seq edited
+RNA_Dryopteris_borreri	nad1	nad1_1	4	4	219602	219860	+			Dryopteris_borreri: RNA-seq edited
+RNA_Dryopteris_borreri	nad2	nad2_1	1	5	179151	179412	-	cis		Dryopteris_borreri: RNA-seq edited
+RNA_Dryopteris_borreri	nad2	nad2_1	2	5	58168	58552	+	cis		Dryopteris_borreri: RNA-seq edited
+RNA_Dryopteris_borreri	nad2	nad2_1	3	5	60813	60979	+	cis		Dryopteris_borreri: RNA-seq edited
+RNA_Dryopteris_borreri	nad2	nad2_1	4	5	62030	62599	+	cis		Dryopteris_borreri: RNA-seq edited
+RNA_Dryopteris_borreri	nad2	nad2_1	5	5	63952	64142	+			Dryopteris_borreri: RNA-seq edited
+RNA_Dryopteris_borreri	nad4	nad4_1	1	4	133296	133743	-	cis		Dryopteris_borreri: RNA-seq edited
+RNA_Dryopteris_borreri	nad4	nad4_1	2	4	131132	131647	-	cis		Dryopteris_borreri: RNA-seq edited
+RNA_Dryopteris_borreri	nad4	nad4_1	3	4	128917	129339	-	cis		Dryopteris_borreri: RNA-seq edited
+RNA_Dryopteris_borreri	nad4	nad4_1	4	4	126457	126545	-			Dryopteris_borreri: RNA-seq edited
+RNA_Dryopteris_borreri	nad5	nad5_1	1	4	50865	51099	-	cis		Dryopteris_borreri: RNA-seq edited
+RNA_Dryopteris_borreri	nad5	nad5_1	2	4	48884	49896	-	cis		Dryopteris_borreri: RNA-seq edited
+RNA_Dryopteris_borreri	nad5	nad5_1	3	4	47749	47961	-	cis		Dryopteris_borreri: RNA-seq edited
+RNA_Dryopteris_borreri	nad5	nad5_1	4	4	45526	45999	-			Dryopteris_borreri: RNA-seq edited
+RNA_Dryopteris_borreri	nad7	nad7_1	1	4	56016	56209	-	cis		Dryopteris_borreri: RNA-seq edited
+RNA_Dryopteris_borreri	nad7	nad7_1	2	4	54922	54990	-	cis		Dryopteris_borreri: RNA-seq edited
+RNA_Dryopteris_borreri	nad7	nad7_1	3	4	53407	53873	-	cis		Dryopteris_borreri: RNA-seq edited
+RNA_Dryopteris_borreri	nad7	nad7_1	4	4	51640	52145	-			Dryopteris_borreri: RNA-seq edited
+RNA_Dryopteris_borreri	rpl2	rpl2_1	1	2	208279	208806	-	cis		Dryopteris_borreri: RNA-seq edited
+RNA_Dryopteris_borreri	rpl2	rpl2_1	2	2	206891	207541	-			Dryopteris_borreri: RNA-seq edited
+RNA_Dryopteris_borreri	rps10	rps10_1	1	1	209238	209546	-			Dryopteris_borreri: RNA-seq edited
+RNA_Dryopteris_borreri	rps3	rps3_1	1	3	206538	206620	-	cis		Dryopteris_borreri: RNA-seq edited
+RNA_Dryopteris_borreri	rps3	rps3_1	2	3	205054	205225	-	cis		Dryopteris_borreri: RNA-seq edited
+RNA_Dryopteris_borreri	rps3	rps3_1	3	3	203115	204011	-			Dryopteris_borreri: RNA-seq edited
+RNA_Dryopteris_dilatata	nad1	nad1_1	1	4	177580	177867	-	cis		Dryopteris_dilatata: RNA-seq edited
+RNA_Dryopteris_dilatata	nad1	nad1_1	2	4	176439	176574	-	cis		Dryopteris_dilatata: RNA-seq edited
+RNA_Dryopteris_dilatata	nad1	nad1_1	3	4	174651	174984	-	cis		Dryopteris_dilatata: RNA-seq edited
+RNA_Dryopteris_dilatata	nad1	nad1_1	4	4	170760	171018	-			Dryopteris_dilatata: RNA-seq edited
+RNA_Dryopteris_dilatata	nad2	nad2_1	1	5	190934	191194	+	cis		Dryopteris_dilatata: RNA-seq edited
+RNA_Dryopteris_dilatata	nad2	nad2_1	2	5	192620	193005	+	cis		Dryopteris_dilatata: RNA-seq edited
+RNA_Dryopteris_dilatata	nad2	nad2_1	3	5	195284	195450	+	cis		Dryopteris_dilatata: RNA-seq edited
+RNA_Dryopteris_dilatata	nad2	nad2_1	4	5	154875	155444	+	cis		Dryopteris_dilatata: RNA-seq edited
+RNA_Dryopteris_dilatata	nad2	nad2_1	5	5	156815	157005	+			Dryopteris_dilatata: RNA-seq edited
+RNA_Dryopteris_dilatata	nad4	nad4_1	1	4	26352	26799	-	cis		Dryopteris_dilatata: RNA-seq edited
+RNA_Dryopteris_dilatata	nad4	nad4_1	2	4	24163	24678	-	cis		Dryopteris_dilatata: RNA-seq edited
+RNA_Dryopteris_dilatata	nad4	nad4_1	3	4	21916	22338	-	cis		Dryopteris_dilatata: RNA-seq edited
+RNA_Dryopteris_dilatata	nad4	nad4_1	4	4	19444	19532	-			Dryopteris_dilatata: RNA-seq edited
+RNA_Dryopteris_dilatata	nad5	nad5_1	1	4	201898	202132	+	cis		Dryopteris_dilatata: RNA-seq edited
+RNA_Dryopteris_dilatata	nad5	nad5_1	2	4	203108	204120	+	cis		Dryopteris_dilatata: RNA-seq edited
+RNA_Dryopteris_dilatata	nad5	nad5_1	3	4	205026	205238	+	cis		Dryopteris_dilatata: RNA-seq edited
+RNA_Dryopteris_dilatata	nad5	nad5_1	4	4	206988	207461	+			Dryopteris_dilatata: RNA-seq edited
+RNA_Dryopteris_dilatata	nad7	nad7_1	1	4	188547	188740	-	cis		Dryopteris_dilatata: RNA-seq edited
+RNA_Dryopteris_dilatata	nad7	nad7_1	2	4	187453	187521	-	cis		Dryopteris_dilatata: RNA-seq edited
+RNA_Dryopteris_dilatata	nad7	nad7_1	3	4	185937	186403	-	cis		Dryopteris_dilatata: RNA-seq edited
+RNA_Dryopteris_dilatata	nad7	nad7_1	4	4	200846	201351	+			Dryopteris_dilatata: RNA-seq edited
+RNA_Dryopteris_dilatata	rpl2	rpl2_1	1	2	115845	116372	-	cis		Dryopteris_dilatata: RNA-seq edited
+RNA_Dryopteris_dilatata	rpl2	rpl2_1	2	2	114457	115107	-			Dryopteris_dilatata: RNA-seq edited
+RNA_Dryopteris_dilatata	rps10	rps10_1	1	1	116804	117112	-			Dryopteris_dilatata: RNA-seq edited
+RNA_Dryopteris_dilatata	rps3	rps3_1	1	3	114105	114186	-	cis		Dryopteris_dilatata: RNA-seq edited
+RNA_Dryopteris_dilatata	rps3	rps3_1	2	3	112637	112812	-	cis		Dryopteris_dilatata: RNA-seq edited
+RNA_Dryopteris_dilatata	rps3	rps3_1	3	3	110703	111599	-			Dryopteris_dilatata: RNA-seq edited
+RNA_Dryopteris_filix_mas	cox2	cox2_1	1	2	161256	161643	+	cis		Dryopteris_filix_mas: RNA-seq edited
+RNA_Dryopteris_filix_mas	cox2	cox2_1	2	2	162614	162990	+			Dryopteris_filix_mas: RNA-seq edited
+RNA_Dryopteris_filix_mas	nad2	nad2_1	1	5	57258	57519	+	cis		Dryopteris_filix_mas: RNA-seq edited
+RNA_Dryopteris_filix_mas	nad2	nad2_1	2	5	55274	55658	-	cis		Dryopteris_filix_mas: RNA-seq edited
+RNA_Dryopteris_filix_mas	nad2	nad2_1	3	5	52847	53013	-	cis		Dryopteris_filix_mas: RNA-seq edited
+RNA_Dryopteris_filix_mas	nad2	nad2_1	4	5	51226	51796	-	cis		Dryopteris_filix_mas: RNA-seq edited
+RNA_Dryopteris_filix_mas	nad2	nad2_1	5	5	49873	49873	-			Dryopteris_filix_mas: RNA-seq edited
+RNA_Dryopteris_filix_mas	nad5	nad5_1	1	4	131406	131640	+	cis		Dryopteris_filix_mas: RNA-seq edited
+RNA_Dryopteris_filix_mas	nad5	nad5_1	2	4	132609	133621	+	cis		Dryopteris_filix_mas: RNA-seq edited
+RNA_Dryopteris_filix_mas	nad5	nad5_1	3	4	134544	134756	+	cis		Dryopteris_filix_mas: RNA-seq edited
+RNA_Dryopteris_filix_mas	nad5	nad5_1	4	4	136506	136979	+			Dryopteris_filix_mas: RNA-seq edited
+RNA_Dryopteris_filix_mas	nad7	nad7_1	1	4	126296	126489	+	cis		Dryopteris_filix_mas: RNA-seq edited
+RNA_Dryopteris_filix_mas	nad7	nad7_1	2	4	127515	127583	+	cis		Dryopteris_filix_mas: RNA-seq edited
+RNA_Dryopteris_filix_mas	nad7	nad7_1	3	4	128632	129098	+	cis		Dryopteris_filix_mas: RNA-seq edited
+RNA_Dryopteris_filix_mas	nad7	nad7_1	4	4	130360	130865	+			Dryopteris_filix_mas: RNA-seq edited
+RNA_Dryopteris_filix_mas	rpl2	rpl2_1	1	2	198326	198853	+	cis		Dryopteris_filix_mas: RNA-seq edited
+RNA_Dryopteris_filix_mas	rpl2	rpl2_1	2	2	199591	200241	+			Dryopteris_filix_mas: RNA-seq edited
+RNA_Dryopteris_filix_mas	rps10	rps10_1	1	1	197586	197894	+			Dryopteris_filix_mas: RNA-seq edited
+RNA_Dryopteris_filix_mas	rps3	rps3_1	1	3	200512	200594	+	cis		Dryopteris_filix_mas: RNA-seq edited
+RNA_Dryopteris_filix_mas	rps3	rps3_1	2	3	201907	202078	+	cis		Dryopteris_filix_mas: RNA-seq edited
+RNA_Dryopteris_filix_mas	rps3	rps3_1	3	3	203121	204017	+			Dryopteris_filix_mas: RNA-seq edited
+RNA_Onoclea_sensibilis	cox2	cox2_1	1	2	170419	170806	+	cis		Onoclea_sensibilis: RNA-seq edited
+RNA_Onoclea_sensibilis	cox2	cox2_1	2	2	171767	172143	+			Onoclea_sensibilis: RNA-seq edited
+RNA_Onoclea_sensibilis	nad1	nad1_1	1	4	126908	127195	+	cis		Onoclea_sensibilis: RNA-seq edited
+RNA_Onoclea_sensibilis	nad1	nad1_1	2	4	284221	284356	-	cis		Onoclea_sensibilis: RNA-seq edited
+RNA_Onoclea_sensibilis	nad1	nad1_1	3	4	282434	282767	-	cis		Onoclea_sensibilis: RNA-seq edited
+RNA_Onoclea_sensibilis	nad1	nad1_1	4	4	278519	278777	-			Onoclea_sensibilis: RNA-seq edited
+RNA_Onoclea_sensibilis	nad4	nad4_1	1	4	29628	30075	+	cis		Onoclea_sensibilis: RNA-seq edited
+RNA_Onoclea_sensibilis	nad4	nad4_1	2	4	31794	32309	+	cis		Onoclea_sensibilis: RNA-seq edited
+RNA_Onoclea_sensibilis	nad4	nad4_1	3	4	34383	34805	+	cis		Onoclea_sensibilis: RNA-seq edited
+RNA_Onoclea_sensibilis	nad4	nad4_1	4	4	37185	37273	+			Onoclea_sensibilis: RNA-seq edited
+RNA_Onoclea_sensibilis	nad5	nad5_1	1	4	54	288	+	cis		Onoclea_sensibilis: RNA-seq edited
+RNA_Onoclea_sensibilis	nad5	nad5_1	2	4	151024	152036	-	cis		Onoclea_sensibilis: RNA-seq edited
+RNA_Onoclea_sensibilis	nad5	nad5_1	3	4	149879	150091	-	cis		Onoclea_sensibilis: RNA-seq edited
+RNA_Onoclea_sensibilis	nad5	nad5_1	4	4	147593	148099	-			Onoclea_sensibilis: RNA-seq edited
+RNA_Onoclea_sensibilis	nad7	nad7_1	1	4	250201	250394	-	cis		Onoclea_sensibilis: RNA-seq edited
+RNA_Onoclea_sensibilis	nad7	nad7_1	2	4	261612	261680	+	cis		Onoclea_sensibilis: RNA-seq edited
+RNA_Onoclea_sensibilis	nad7	nad7_1	3	4	262735	263201	+	cis		Onoclea_sensibilis: RNA-seq edited
+RNA_Onoclea_sensibilis	nad7	nad7_1	4	4	264201	264706	+			Onoclea_sensibilis: RNA-seq edited
+RNA_Onoclea_sensibilis	rpl2	rpl2_1	1	2	21898	22425	+	cis		Onoclea_sensibilis: RNA-seq edited
+RNA_Onoclea_sensibilis	rpl2	rpl2_1	2	2	23153	23803	+			Onoclea_sensibilis: RNA-seq edited
+RNA_Onoclea_sensibilis	rps10	rps10_1	1	1	21141	21449	+			Onoclea_sensibilis: RNA-seq edited
+RNA_Onoclea_sensibilis	rps3	rps3_1	1	3	24074	24155	+	cis		Onoclea_sensibilis: RNA-seq edited
+RNA_Onoclea_sensibilis	rps3	rps3_1	2	3	52744	52919	+	cis		Onoclea_sensibilis: RNA-seq edited
+RNA_Onoclea_sensibilis	rps3	rps3_1	3	3	53997	54899	+			Onoclea_sensibilis: RNA-seq edited
+RNA_Phegopteris_connectilis	nad1	nad1_1	1	4	7330	7617	+	cis		Phegopteris_connectilis: RNA-seq edited
+RNA_Phegopteris_connectilis	nad1	nad1_1	2	4	9358	9493	+	cis		Phegopteris_connectilis: RNA-seq edited
+RNA_Phegopteris_connectilis	nad1	nad1_1	3	4	10997	11330	+	cis		Phegopteris_connectilis: RNA-seq edited
+RNA_Phegopteris_connectilis	nad1	nad1_1	4	4	13842	14100	-			Phegopteris_connectilis: RNA-seq edited
+RNA_Phegopteris_connectilis	nad2	nad2_1	1	5	212459	212719	-	cis		Phegopteris_connectilis: RNA-seq edited
+RNA_Phegopteris_connectilis	nad2	nad2_1	2	5	210637	211022	-	cis		Phegopteris_connectilis: RNA-seq edited
+RNA_Phegopteris_connectilis	nad2	nad2_1	3	5	208108	208274	-	cis		Phegopteris_connectilis: RNA-seq edited
+RNA_Phegopteris_connectilis	nad2	nad2_1	4	5	206428	206998	-	cis		Phegopteris_connectilis: RNA-seq edited
+RNA_Phegopteris_connectilis	nad2	nad2_1	5	5	205062	205062	-			Phegopteris_connectilis: RNA-seq edited
+RNA_Phegopteris_connectilis	nad5	nad5_1	1	4	128464	128698	+	cis		Phegopteris_connectilis: RNA-seq edited
+RNA_Phegopteris_connectilis	nad5	nad5_1	2	4	129672	130684	+	cis		Phegopteris_connectilis: RNA-seq edited
+RNA_Phegopteris_connectilis	nad5	nad5_1	3	4	131617	131829	+	cis		Phegopteris_connectilis: RNA-seq edited
+RNA_Phegopteris_connectilis	nad5	nad5_1	4	4	133058	133531	+			Phegopteris_connectilis: RNA-seq edited
+RNA_Phegopteris_connectilis	nad7	nad7_1	1	4	51408	51601	-	cis		Phegopteris_connectilis: RNA-seq edited
+RNA_Phegopteris_connectilis	nad7	nad7_1	2	4	50322	50390	-	cis		Phegopteris_connectilis: RNA-seq edited
+RNA_Phegopteris_connectilis	nad7	nad7_1	3	4	48807	49273	-	cis		Phegopteris_connectilis: RNA-seq edited
+RNA_Phegopteris_connectilis	nad7	nad7_1	4	4	47296	47801	-			Phegopteris_connectilis: RNA-seq edited
+RNA_Phegopteris_connectilis	rpl2	rpl2_1	1	2	101057	101584	-	cis		Phegopteris_connectilis: RNA-seq edited
+RNA_Phegopteris_connectilis	rpl2	rpl2_1	2	2	99679	100329	-			Phegopteris_connectilis: RNA-seq edited
+RNA_Phegopteris_connectilis	rps10	rps10_1	1	1	102091	102399	-			Phegopteris_connectilis: RNA-seq edited
+RNA_Phegopteris_connectilis	rps3	rps3_1	1	3	99327	99408	-	cis		Phegopteris_connectilis: RNA-seq edited
+RNA_Phegopteris_connectilis	rps3	rps3_1	2	3	97835	98010	-	cis		Phegopteris_connectilis: RNA-seq edited
+RNA_Phegopteris_connectilis	rps3	rps3_1	3	3	95866	96762	-			Phegopteris_connectilis: RNA-seq edited
+RNA_Polystichum_setiferum	cox2	cox2_1	1	2	242805	243192	-	cis		Polystichum_setiferum: RNA-seq edited
+RNA_Polystichum_setiferum	cox2	cox2_1	2	2	241468	241844	-			Polystichum_setiferum: RNA-seq edited
+RNA_Polystichum_setiferum	nad1	nad1_1	1	4	180833	181120	+	cis		Polystichum_setiferum: RNA-seq edited
+RNA_Polystichum_setiferum	nad1	nad1_1	2	4	182158	182293	+	cis		Polystichum_setiferum: RNA-seq edited
+RNA_Polystichum_setiferum	nad1	nad1_1	3	4	183748	184081	+	cis		Polystichum_setiferum: RNA-seq edited
+RNA_Polystichum_setiferum	nad1	nad1_1	4	4	187775	188033	+			Polystichum_setiferum: RNA-seq edited
+RNA_Polystichum_setiferum	nad2	nad2_1	1	5	104025	104286	-	cis		Polystichum_setiferum: RNA-seq edited
+RNA_Polystichum_setiferum	nad2	nad2_1	2	5	171006	171390	+	cis		Polystichum_setiferum: RNA-seq edited
+RNA_Polystichum_setiferum	nad2	nad2_1	3	5	173657	173823	+	cis		Polystichum_setiferum: RNA-seq edited
+RNA_Polystichum_setiferum	nad2	nad2_1	4	5	174968	175537	+	cis		Polystichum_setiferum: RNA-seq edited
+RNA_Polystichum_setiferum	nad2	nad2_1	5	5	176901	177091	+			Polystichum_setiferum: RNA-seq edited
+RNA_Polystichum_setiferum	nad5	nad5_1	1	4	162861	163095	-	cis		Polystichum_setiferum: RNA-seq edited
+RNA_Polystichum_setiferum	nad5	nad5_1	2	4	160882	161894	-	cis		Polystichum_setiferum: RNA-seq edited
+RNA_Polystichum_setiferum	nad5	nad5_1	3	4	159717	159929	-	cis		Polystichum_setiferum: RNA-seq edited
+RNA_Polystichum_setiferum	nad5	nad5_1	4	4	157468	157941	-			Polystichum_setiferum: RNA-seq edited
+RNA_Polystichum_setiferum	nad7	nad7_1	1	4	168834	169027	-	cis		Polystichum_setiferum: RNA-seq edited
+RNA_Polystichum_setiferum	nad7	nad7_1	2	4	167740	167808	-	cis		Polystichum_setiferum: RNA-seq edited
+RNA_Polystichum_setiferum	nad7	nad7_1	3	4	165122	165588	-	cis		Polystichum_setiferum: RNA-seq edited
+RNA_Polystichum_setiferum	nad7	nad7_1	4	4	163632	164137	-			Polystichum_setiferum: RNA-seq edited
+RNA_Polystichum_setiferum	rpl2	rpl2_1	1	2	145362	145892	+	cis		Polystichum_setiferum: RNA-seq edited
+RNA_Polystichum_setiferum	rpl2	rpl2_1	2	2	152700	153350	-			Polystichum_setiferum: RNA-seq edited
+RNA_Polystichum_setiferum	rps10	rps10_1	1	1	142234	142542	-			Polystichum_setiferum: RNA-seq edited
+RNA_Polystichum_setiferum	rps3	rps3_1	1	3	152348	152429	-	cis		Polystichum_setiferum: RNA-seq edited
+RNA_Polystichum_setiferum	rps3	rps3_1	2	3	150851	151026	-	cis		Polystichum_setiferum: RNA-seq edited
+RNA_Polystichum_setiferum	rps3	rps3_1	3	3	148897	149799	-			Polystichum_setiferum: RNA-seq edited
+RNA_Woodsia_ilvensis	nad1	nad1_1	1	4	76936	77223	-	cis		Woodsia_ilvensis: RNA-seq edited
+RNA_Woodsia_ilvensis	nad1	nad1_1	2	4	94547	94682	-	cis		Woodsia_ilvensis: RNA-seq edited
+RNA_Woodsia_ilvensis	nad1	nad1_1	3	4	92745	93078	-	cis		Woodsia_ilvensis: RNA-seq edited
+RNA_Woodsia_ilvensis	nad1	nad1_1	4	4	49830	50088	-			Woodsia_ilvensis: RNA-seq edited

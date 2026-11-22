@@ -187,6 +187,30 @@ def collect_proteins(
     return proteins, n_exons
 
 
+# Proteins that are not GenBank records: single-exon mito genes of DToL
+# assemblies with the editing their own RNA-seq shows applied
+# (reference/lineages/<lineage>/README.md), headers `species|gene`.
+RNA_PROTEINS_NAME = "rna_proteins.fasta"
+# Pseudo-observations per profile column, shared out by the proteins'
+# composition (pssm.build_profile), for lineages whose profiles are built
+# that way; the others keep the flat pseudocount their calls were
+# calibrated with.
+LINEAGE_PSEUDOCOUNT: dict[str, float] = {"fern": 2.0}
+
+
+def rna_proteins(lineage: str, exclude: tuple[str, ...] = ()) -> dict[str, dict[str, str]]:
+    """{gene: {"RNA_<species>": protein}} from the lineage's bundled
+    RNA-edited proteins; `exclude` holds such RNA_<species> names."""
+    path = lin.editing_profiles(PIPELINE_DIR, lineage) / RNA_PROTEINS_NAME
+    out: dict[str, dict[str, str]] = {}
+    if path.exists():
+        for header, seq in pssm.read_fasta(path).items():
+            species, gene = header.split("|")[:2]
+            if f"RNA_{species}" not in exclude:
+                out.setdefault(gene, {})[f"RNA_{species}"] = seq
+    return out
+
+
 def one_per_species(proteins: dict[str, dict[str, str]], mitogenomes: dict[str, str]) -> dict[str, dict[str, str]]:
     """`proteins` with a species' identical copies of a gene counted once.
     A mitogenome in several records (Haplopteris is nine circles, with nad9
@@ -222,6 +246,7 @@ def build_lineage_profiles(
     known = set(mitogenomes)
     if lineage == lin.DEFAULT_LINEAGE:
         known |= set(SPLIT_CCMFN_MITOGENOMES)
+    known |= {name for by_name in rna_proteins(lineage).values() for name in by_name}
     if unknown := set(exclude) - known:
         raise ValueError(f"--exclude: {sorted(unknown)} not among the {lineage} mitogenomes")
     genes = list(LINEAGE_GENES[lineage])
@@ -233,6 +258,9 @@ def build_lineage_profiles(
         reverse=lin.stop_edit_penalty(lineage) is not None,
     )
     proteins = one_per_species(proteins, mitogenomes)
+    for gene, by_name in rna_proteins(lineage, tuple(exclude)).items():
+        if gene in proteins:
+            proteins[gene].update(by_name)
     min_sequences = LINEAGE_MIN_SEQUENCES.get(lineage, profiles.MIN_SEQUENCES)
     # columns the lineage's own species don't have (trans_splicing/column_mask.py)
     mask = column_mask.load_mask(lineage, editing=True) if use_mask and lineage != lin.DEFAULT_LINEAGE else {}
@@ -255,7 +283,12 @@ def build_lineage_profiles(
             )
             stale.unlink(missing_ok=True)
             continue
-        columns = pssm.align_and_build(proteins[gene], work_dir, gene, LINEAGE_GAP_THRESHOLD[lineage])
+        sharp = {}
+        if lineage in LINEAGE_PSEUDOCOUNT:
+            sharp = dict(
+                background=pssm.composition(proteins[gene].values()), pseudocount_mass=LINEAGE_PSEUDOCOUNT[lineage]
+            )
+        columns = pssm.align_and_build(proteins[gene], work_dir, gene, LINEAGE_GAP_THRESHOLD[lineage], **sharp)
         if columns is None:
             raise StageError(f"{gene}: no profile from {work_dir / gene}.protein.fasta (mafft failed or no columns)")
         pssm.write_profile(columns, out_dir / f"{gene}.pssm")
@@ -263,7 +296,7 @@ def build_lineage_profiles(
             n = column_mask.apply_mask(out_dir / f"{gene}.pssm", mask[gene])
             log.info(f"{gene}: dropped {n} masked column(s)")
         log.info(
-            f"{gene}: {lineage} profile from {len(proteins[gene])} RefSeq proteins, "
+            f"{gene}: {lineage} profile from {len(proteins[gene])} proteins, "
             f"{len(columns)} columns -> {out_dir / gene}.pssm"
         )
 

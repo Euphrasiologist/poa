@@ -2,6 +2,36 @@
 
 ## Unreleased
 
+- Fern references rebuilt from RNA-seq editomes of eleven Darwin Tree of
+  Life ferns (nine Polypodiales, Azolla filiculoides): each species'
+  RNA-seq mapped to its own assembly, the editing it shows applied to the
+  genes poa calls, bundled as `trans_splicing/reference/lineages/fern/
+  raw_rna/` (79 spliced-gene loci) and `editing/reference/lineages/fern/
+  rna_proteins.fasta` (148 single-exon proteins), each with a README of
+  species, runs and method. With `--lineage fern`:
+  - the six GenBank ferns whose proteins only have stops edited out are
+    left out of the exon templates (`LINEAGE_UNEDITED_MITOGENOMES`);
+  - editing profiles use 2 pseudo-observations per column shared out by
+    composition, as the exon slots do (`LINEAGE_PSEUDOCOUNT`), and
+    template columns under half the references have are dropped
+    (`exon_profiles.LINEAGE_GAP_THRESHOLD`);
+  - other U-to-C edits are called at a cost of 5 on fern profiles and
+    templates (`lineage.REVERSE_EDIT_PENALTY`; orfedit and transsplice
+    `--reverse-edit-penalty`), not on plastid genes or genes on borrowed
+    profiles.
+  Held out by genus against the RNA: single-exon genes 80% of C-to-U
+  edits found with 96% of calls right (42% and 92% on the previous fern
+  profiles, 46% and 70% on the angiosperm ones) and 88% / 97% for U-to-C;
+  spliced genes 82% / 97% and 92% / 96% (9% / 74% and 50% / 93% before).
+  On 18 DToL ferns that supplied no RNA: spliced genes aligned over 99%
+  74 -> 137 of 159, genes with a frameshift call 29 -> 7. Spliced genes
+  running past a never-edited stop codon 52 -> 13 of 89. The whole-gene
+  column mask is now empty. Exon junctions agree with intron-spanning
+  reads at 116 of 144, as before.
+  The single-exon figures in the two entries below counted nine ferns
+  whose assemblies had been replaced after their gene calls were made;
+  without them the previous fern profiles align 329 of 397 copies over
+  99% (the new ones 351) and the angiosperm ones 202.
 - `--lineage fern`, for ferns, quillworts and hornworts (never picked by
   `auto`): the angiosperm references, with orfedit and transsplice
   allowed to read a genomic in-frame stop codon as Gln or Arg by a

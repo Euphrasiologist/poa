@@ -57,7 +57,13 @@ from poa import PIPELINE_DIR
 from poa.pipeline.common import lineage as lin
 from poa.pipeline.common.pssm import align_and_build, composition, translate, read_fasta, write_profile
 from poa.pipeline.common.tools import cargo_tool
-from poa.pipeline.trans_splicing.reference_genes import GENES, LINEAGE_MITOGENOMES, PLASTID_SPLICED, reference_dir
+from poa.pipeline.trans_splicing.reference_genes import (
+    GENES,
+    LINEAGE_MITOGENOMES,
+    LINEAGE_UNEDITED_MITOGENOMES,
+    PLASTID_SPLICED,
+    reference_dir,
+)
 from poa.pipeline.common.log import setup_logging
 from poa.pipeline.trans_splicing import column_mask
 
@@ -93,11 +99,29 @@ FLOOR_FRACTION = 0.075
 # 2 of 15. None: the old profiles.
 SLOT_PSEUDOCOUNT = 2.0
 
+# Alignment columns gappier than this are left out of a lineage's
+# profiles (pssm.GAP_COLUMN_THRESHOLD, 0.9, unless given here). Fern: at
+# 0.9 a stretch only one reference has stays in - a C-terminal tail past
+# where the other ferns' genes stop - and with stop codons read through
+# transsplice aligned on into it: 35 of 89 spliced genes in 11 DToL ferns
+# ran past a stop codon their RNA shows is never edited.
+LINEAGE_GAP_THRESHOLD = {"fern": 0.5}
 
-def load_all_raw_data(raw_dir: Path) -> dict[tuple[str, str, str], dict]:
+
+# Loci that are not GenBank records: genes of DToL assemblies with their
+# RNA-seq editing applied (reference/lineages/fern/raw_rna/README.md), in
+# the same format as raw/, which fetch_references.py rewrites.
+RNA_RAW_NAME = "raw_rna"
+
+
+def raw_dirs(ref_dir: Path) -> list[Path]:
+    return [d for d in (ref_dir / "raw", ref_dir / RNA_RAW_NAME) if d.is_dir()]
+
+
+def load_all_raw_data(*raw_dirs: Path) -> dict[tuple[str, str, str], dict]:
     """{(accession, gene, locus_tag): {exon_num_int: dna_seq, "refseq": protein_seq}}"""
     data: dict[tuple[str, str, str], dict] = defaultdict(dict)
-    for fasta_path in raw_dir.glob("*.fasta"):
+    for fasta_path in (path for raw_dir in raw_dirs for path in sorted(raw_dir.glob("*.fasta"))):
         for header, seq in read_fasta(fasta_path).items():
             parts = header.split("|")
             accession, gene, locus_tag, record_type = parts[0], parts[1], parts[2], parts[3]
@@ -110,16 +134,17 @@ def load_all_raw_data(raw_dir: Path) -> dict[tuple[str, str, str], dict]:
     return data
 
 
-def load_junctions(raw_dir: Path) -> dict[tuple[str, str, str], dict]:
+def load_junctions(*raw_dirs: Path) -> dict[tuple[str, str, str], dict]:
     """{(accession, gene, locus_tag): {"n_exons": int, "excluded": bool, "reason": str}}"""
     out: dict[tuple[str, str, str], dict] = {}
-    with open(raw_dir / "junctions.tsv") as fh:
-        for row in csv.DictReader(fh, delimiter="\t"):
-            key = (row["accession"], row["gene"], row["locus_tag"])
-            if key in out:
-                continue
-            excluded = "UNRESOLVED" in row["notes"]
-            out[key] = {"n_exons": int(row["n_exons"]), "excluded": excluded}
+    for raw_dir in raw_dirs:
+        with open(raw_dir / "junctions.tsv") as fh:
+            for row in csv.DictReader(fh, delimiter="\t"):
+                key = (row["accession"], row["gene"], row["locus_tag"])
+                if key in out:
+                    continue
+                excluded = "UNRESOLVED" in row["notes"]
+                out[key] = {"n_exons": int(row["n_exons"]), "excluded": excluded}
     return out
 
 
@@ -131,12 +156,19 @@ def build_and_write_profile(
     background: dict[str, float] | None = None,
     pseudocount_mass: float | None = None,
     trim_ends: tuple[bool, bool] = (False, False),
+    gap_threshold: float | None = None,
 ) -> bool:
     if len(protein_seqs) < 2:
         log.warning(f"{label}: only {len(protein_seqs)} sequences, need >= 2 - skipping")
         return False
     columns = align_and_build(
-        protein_seqs, work_dir, label, background=background, pseudocount_mass=pseudocount_mass, trim_ends=trim_ends
+        protein_seqs,
+        work_dir,
+        label,
+        **({} if gap_threshold is None else {"gap_threshold": gap_threshold}),
+        background=background,
+        pseudocount_mass=pseudocount_mass,
+        trim_ends=trim_ends,
     )
     if columns is None:
         log.warning(f"{label}: no usable alignment - skipping")
@@ -244,7 +276,10 @@ def build_exon_profiles(
     genes = list(genes or (PLASTID_SPLICED if organelle == "pltd" else GENES))
     orfedit = cargo_tool("orfedit")
     ref_dir = reference_dir(PIPELINE_DIR, organelle, lineage)
-    raw_dir = ref_dir / "raw"
+    sources = raw_dirs(ref_dir)
+    # references whose proteins are not the edited ones (fern)
+    if organelle == "mito":
+        exclude = tuple(exclude) + tuple(LINEAGE_UNEDITED_MITOGENOMES.get(lineage, ()))
     profiles_dir = Path(out_dir) if out_dir else ref_dir / "profiles"
     work_dir = Path(work_root or os.getcwd()) / "analysis" / "trans_splicing" / "work"
     if organelle == "pltd":
@@ -254,9 +289,10 @@ def build_exon_profiles(
     work_dir.mkdir(parents=True, exist_ok=True)
     profiles_dir.mkdir(parents=True, exist_ok=True)
 
-    raw = load_all_raw_data(raw_dir)
-    junctions = load_junctions(raw_dir)
+    raw = load_all_raw_data(*sources)
+    junctions = load_junctions(*sources)
     mask = column_mask.load_mask(lineage) if use_mask and organelle == "mito" else {}
+    gap_threshold = LINEAGE_GAP_THRESHOLD.get(lineage) if organelle == "mito" else None
 
     for gene in genes:
         loci = [key for key in raw if key[1] == gene and key[0] not in exclude]
@@ -275,7 +311,9 @@ def build_exon_profiles(
             if "refseq" in raw[key]:
                 whole_seqs[f"{acc}_{locus}"] = raw[key]["refseq"]
         if not (slots_only and (gene_dir / "whole_gene.pssm").exists()):
-            built = build_and_write_profile(whole_seqs, gene_dir / "whole_gene.pssm", f"{gene}.whole_gene", work_dir)
+            built = build_and_write_profile(
+                whole_seqs, gene_dir / "whole_gene.pssm", f"{gene}.whole_gene", work_dir, gap_threshold=gap_threshold
+            )
             # columns the lineage's own species don't have (column_mask.py)
             if built and mask.get(gene):
                 n = column_mask.apply_mask(gene_dir / "whole_gene.pssm", mask[gene])
@@ -352,7 +390,7 @@ def build_exon_profiles(
             # they were
             trim = (slot > 1, slot < k) if slot_pseudocount is not None else (False, False)
             if not build_and_write_profile(
-                protein_seqs, profile_path, f"{gene}.exon{slot}", work_dir, slot_background, slot_pseudocount, trim
+                protein_seqs, profile_path, f"{gene}.exon{slot}", work_dir, slot_background, slot_pseudocount, trim, gap_threshold
             ):
                 continue
             min_score = compute_min_self_score(gene, slot, dna_seqs, profile_path, work_dir, orfedit, stop_edit)

@@ -302,10 +302,12 @@ def run_orfedit(
     edit_penalty: float,
     frameshift_penalty: float,
     stop_edit_penalty: float | None = None,
+    reverse_edit_penalty: float | None = None,
 ) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     """One orfedit scan-batch over `rows`; (gene calls, edits, frameshifts)
     as all-string frames. stop_edit_penalty: read in-frame stop codons
-    through as U-to-C edits at this cost (common/lineage.py, fern)."""
+    through as U-to-C edits at this cost (common/lineage.py, fern);
+    reverse_edit_penalty: any other U-to-C edit at this cost."""
     manifest_path = work_dir / f"manifest.{tag}.tsv"
     write_manifest(rows, manifest_path)
     log.info(f"scan_editing: {tag} manifest has {len(rows)} rows -> {manifest_path}")
@@ -333,6 +335,8 @@ def run_orfedit(
         pd.DataFrame(columns=FRAMESHIFT_COLUMNS).to_csv(shifts_out, sep="\t", index=False)
     if stop_edit_penalty is not None:
         cmd += ["--stop-edit-penalty", str(stop_edit_penalty)]
+    if reverse_edit_penalty is not None:
+        cmd += ["--reverse-edit-penalty", str(reverse_edit_penalty)]
     proc = subprocess.run(cmd)
     if proc.returncode != 0:
         raise StageError(f"orfedit scan-batch failed (exit {proc.returncode})")
@@ -474,7 +478,13 @@ def scan(
     if "mito" in organelles and lineage in lin.BORROWS and any((own_dir / "mito").glob("*.pssm")):
         lrows = build_manifest(root, calls, ["mito"], species, own_dir)
         if lrows:
-            own_run = run_orfedit(orfedit, lrows, lineage, work_dir, stop_edit_penalty=stop, **opts)
+            # other U-to-C edits too, on the lineage's own profiles only
+            rev = lin.reverse_edit_penalty(lineage)
+            if rev is not None and not supports_option(orfedit, "--reverse-edit-penalty"):
+                raise StageError(f"--lineage {lineage} needs an orfedit with --reverse-edit-penalty; {orfedit} has none")
+            own_run = run_orfedit(
+                orfedit, lrows, lineage, work_dir, stop_edit_penalty=stop, reverse_edit_penalty=rev, **opts
+            )
             log.info(f"scan_editing: {len(set(own_run[0]['gene']))} mito genes use {lineage} profiles")
 
     forced = None if lineage == "auto" else lineage
