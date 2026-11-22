@@ -35,6 +35,11 @@ calls = pd.concat([calls, extra])
 # assemblies replaced (gfatk re-resolved, 2026-11-19) after the gene calls these manifests come from: their coordinates
 # no longer point at the genes
 STALE = {l.split(".")[0] for l in open(R / "build/gfatk063/pass.txt") if l.strip()}
+# ... unless they have been annotated again since (fresh.single.tsv, from poa runs on the current assemblies)
+if (H / "fresh.single.tsv").exists():
+    fm = pd.read_csv(H / "fresh.single.tsv", sep="\t"); fc = pd.read_csv(H / "fresh.single.calls.tsv", sep="\t")
+    man = pd.concat([man[~man.species.isin(set(fm.species))], fm]); calls = pd.concat([calls[~calls.species.isin(set(fm.species))], fc])
+    STALE -= set(fm.species)
 species = [s for s in species if s not in STALE]; print("single-exon species:", species)
 calls = calls[calls.species.isin(species)].copy(); calls["g"] = calls.gene.str.split("|").str[0]
 strand_of = {(r.species, r.gene): r.strand for r in man.itertuples()}
