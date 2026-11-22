@@ -247,17 +247,27 @@ def reconstruct(
     # Other U-to-C edits (lin.reverse_edit_penalty) only for mito genes on
     # the lineage's own templates, so those go in a batch apart from the
     # species' plastid genes.
-    groups: dict[tuple[float | None, float | None], list[dict]] = {}
+    # The same goes for the junction slide (lin.junction_slide), which an
+    # older transsplice simply lacks.
+    can_slide = supports_option(transsplice, "--junction-slide")
+    groups: dict[tuple[float | None, float | None, int | None], list[dict]] = {}
     for row in rows:
         name = lineage_of.get(row["species"], default_lineage)
         own = row["organelle"] == "mito" and template_lineage(name) == name
-        groups.setdefault((lin.stop_edit_penalty(name), lin.reverse_edit_penalty(name) if own else None), []).append(row)
+        key = (
+            lin.stop_edit_penalty(name),
+            lin.reverse_edit_penalty(name) if own else None,
+            lin.junction_slide(name) if own and can_slide else None,
+        )
+        groups.setdefault(key, []).append(row)
+    if not can_slide and any(lin.junction_slide(lineage_of.get(r["species"], default_lineage)) for r in rows):
+        log.warning(f"reconstruct: {transsplice} has no --junction-slide - exon junctions are not slid")
     for i, option in enumerate(("--stop-edit-penalty", "--reverse-edit-penalty")):
         if any(key[i] is not None for key in groups) and not supports_option(transsplice, option):
             raise StageError(f"the fern lineage needs a transsplice with {option}; {transsplice} has none")
     parts: dict[str, list[pd.DataFrame]] = {name: [] for name in OUT_NAMES}
     order = sorted(groups.items(), key=lambda g: tuple((v is not None, v or 0) for v in g[0]))
-    for n, ((stop, reverse), group_rows) in enumerate(order):
+    for n, ((stop, reverse, slide), group_rows) in enumerate(order):
         tag = "" if len(groups) == 1 else f".{n}"
         manifest_path = work_dir / f"manifest{tag}.tsv"
         write_manifest(group_rows, manifest_path)
@@ -265,6 +275,7 @@ def reconstruct(
             f"reconstruct: manifest has {len(group_rows)} fragment rows -> {manifest_path}"
             + (f" (stop read-through at {stop})" if stop is not None else "")
             + (f" (other U-to-C edits at {reverse})" if reverse is not None else "")
+            + (f" (junction slide {slide})" if slide is not None else "")
         )
         outs = {name: work_dir / f"{name}.new{tag}.tsv" for name in OUT_NAMES}
         cmd = [
@@ -302,6 +313,8 @@ def reconstruct(
             cmd += ["--stop-edit-penalty", str(stop)]
         if reverse is not None:
             cmd += ["--reverse-edit-penalty", str(reverse)]
+        if slide is not None:
+            cmd += ["--junction-slide", str(slide)]
         proc = subprocess.run(cmd)
         if proc.returncode != 0:
             raise StageError(f"transsplice scan-batch failed (exit {proc.returncode})")

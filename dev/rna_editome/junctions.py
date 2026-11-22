@@ -68,10 +68,17 @@ for bam in sorted(glob.glob(str(H / "tol.*.mito.bam"))):
             pred = (hi_a, lo_b + 1) if a["strand"] == "+" else (hi_b, lo_a + 1)
             near = {k: v for k, v in obs.items() if k[0] == a["contig"] and abs(k[1] - pred[0]) <= 60 and abs(k[2] - pred[1]) <= 60}
             g1 = genome[a["contig"]]
-            def ok(k):
-                if agrees(pred, k[1], k[2], k[3]): return True
-                d = k[1] - pred[0]
-                return k[3] == 0 and d == k[2] - pred[1] and 0 < abs(d) <= 12 and same_transcript(g1, pred, d)
+            def ok(k, W=15):
+                """Does the predicted junction give the transcript this split read shows? Compared as sequence: the
+                read's two pieces with their unaligned bases between them unknown (an edited base within a few bases
+                of an exon end is clipped by the aligner, not mismatched) against the predicted exons joined. This
+                also covers a junction placed anywhere within bases the two sides share."""
+                _, le, rs, gap = k
+                if pred[0] < le - W or pred[1] - 1 > rs - 1 + W: return False
+                left, right = g1[le - W:le], g1[rs - 1:rs - 1 + W]
+                t_read = left + "?" * gap + right if gap >= 0 else left + right[-gap:]
+                t_pred = g1[le - W:pred[0]] + g1[pred[1] - 1:rs - 1 + W]
+                return len(t_read) == len(t_pred) and all(x == "?" or x == y for x, y in zip(t_read, t_pred))
             exact = sum(v for k, v in near.items() if ok(k))
             # the others, as the junction they imply with the unaligned or shared bases given to the upstream side
             other = Counter()

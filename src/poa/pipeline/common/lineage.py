@@ -58,6 +58,13 @@ STOP_EDIT_PENALTY = {"fern": 2.5}
 # not the lineage's own edited proteins a U-to-C edit is too easy to call
 # (2.1 false ones per angiosperm mito gene at a cost of 2.5).
 REVERSE_EDIT_PENALTY = {"fern": 5.0}
+# Bases transsplice may slide an exon junction either way (its
+# --junction-slide), for a lineage's mito genes on its own templates.
+# Fern: nad5's 22 bp exon 3 sat a base or two off in all ten ferns with
+# intron-spanning RNA reads to check it against; with the slide 135 of 144
+# junctions agree with the reads, against 126. Not for the others: held
+# out on the angiosperm RefSeq genomes it moves two plastid exons off.
+JUNCTION_SLIDE = {"fern": 6}
 # Calibrated on the 956-species mito dataset (ToL-ID clades as truth). Every
 # moss has all 5 moss-profiled genes (atp4 ccmB ccmC mttB rps14) and wins by
 # 88-150 per gene; dicots and monocots lose by 57-430, liverworts by -25 to
@@ -80,6 +87,12 @@ def reference(lineage: str) -> str:
 def stop_edit_penalty(lineage: str) -> float | None:
     """Cost of a stop read-through for `lineage`, or None if it has none."""
     return STOP_EDIT_PENALTY.get(lineage)
+
+
+def junction_slide(lineage: str) -> int | None:
+    """How far transsplice may slide an exon junction for `lineage`'s mito
+    genes on its own templates, or None for no slide."""
+    return JUNCTION_SLIDE.get(lineage)
 
 
 def reverse_edit_penalty(lineage: str) -> float | None:

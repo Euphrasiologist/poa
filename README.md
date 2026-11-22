@@ -297,7 +297,7 @@ the RNA confirms; an RNA edit is one in at least 20% of reads):
 | | C-to-U found / right | U-to-C found / right |
 |---|---|---|
 | single-exon genes, angiosperm profiles | 46% / 70% | 45% / 89% |
-| single-exon genes, fern profiles | 80% / 96% | 88% / 97% |
+| single-exon genes, fern profiles | 80% / 96% | 89% / 97% |
 | spliced genes, fern templates | 82% / 97% | 92% / 96% |
 
 On the 18 DToL ferns that supplied no RNA, spliced mitochondrial genes
@@ -305,11 +305,17 @@ aligned over 99% of their template go from 74 to 137 of 159 against the
 previous fern templates, and genes with a frameshift call from 29 to 7;
 they get as many edit calls per gene as the eleven that did. Planted 1-bp
 indels are found in 82% of spliced genes and in all 60 planted single-exon
-ones. What the RNA also shows is not right yet: of 144 exon junctions
-with intron-spanning reads, 116 are placed where the reads put them and
-the rest 1-4 bp off (mostly nad2, and nad5 around its 22 bp exon); and 13
-of 89 spliced genes still run past a stop codon that is never edited (11
-of them nad1, by two codons). Fern plastid genes use the plastid
+ones. Exon junctions were checked against the RNA too: of 144 with
+intron-spanning reads, 135 give the transcript the reads show, with
+transsplice allowed to slide a junction a few bases (`--junction-slide`,
+which the fern lineage sets where transsplice has it; 126 without). The
+other nine are off by a base or two - nad2's first junction in eight
+species, where the alternatives give nearly the same protein and neither
+has a recognisable intron end. Two of 89 spliced genes run past a stop
+codon that is never edited. Nine of the 29 ferns had their assemblies
+replaced after their genes were first called; all figures here are from
+calls on the current ones.
+Fern plastid genes use the plastid
 templates every lineage shares.
 
 ### Stage by stage, on a whole dataset

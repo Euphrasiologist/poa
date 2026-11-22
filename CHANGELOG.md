@@ -2,6 +2,20 @@
 
 ## Unreleased
 
+- `--lineage fern`: transsplice may slide an exon junction up to 6 bases
+  where the whole-gene alignment gains (`lineage.JUNCTION_SLIDE`, its new
+  `--junction-slide`; skipped with a warning on a transsplice without
+  it). Against intron-spanning RNA reads in 11 ferns, 135 of 144
+  junctions then give the transcript the reads show, against 126 - nad5's
+  22 bp exon 3 was a base or two off in all ten. Fern only: held out on
+  the angiosperm RefSeq genomes it moves two plastid exons off.
+- Fern single-exon RNA proteins now cover all eleven RNA-seq ferns (183
+  proteins; the nine ferns whose assemblies had been replaced were
+  annotated again), and the editing profiles are rebuilt from them. On
+  all 29 DToL ferns' 562 single-exon copies this changes little: 492
+  aligned over 99% as before, frameshift calls 14 -> 11; planted 1-bp
+  indels found in 81 of 87. rps2, rps11, sdh3 and sdh4, which only the
+  non-Polypodiales ferns have, align end to end in 27 of 29 copies.
 - Fern references rebuilt from RNA-seq editomes of eleven Darwin Tree of
   Life ferns (nine Polypodiales, Azolla filiculoides): each species'
   RNA-seq mapped to its own assembly, the editing it shows applied to the

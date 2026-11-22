@@ -93,6 +93,8 @@ class SplitRuns(unittest.TestCase):
         self.assertEqual(lin.reverse_edit_penalty("fern"), 5.0)
         self.assertIsNone(lin.reverse_edit_penalty("angiosperm"))
         self.assertIsNone(lin.reverse_edit_penalty("moss"))
+        self.assertEqual(lin.junction_slide("fern"), 6)
+        self.assertIsNone(lin.junction_slide("angiosperm"))
         self.assertIsNone(lin.stop_edit_penalty("angiosperm"))
         self.assertIsNone(lin.stop_edit_penalty("moss"))
         self.assertEqual(lin.choose(scores(100, 900))[0], "moss")  # auto never says fern
