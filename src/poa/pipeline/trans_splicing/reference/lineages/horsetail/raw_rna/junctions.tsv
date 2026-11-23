@@ -1,0 +1,91 @@
+accession	gene	locus_tag	exon_num	n_exons	start	end	strand	junction_to_next	gap_bp	notes
+RNA_Equisetum_arvense	cox2	cox2_1	1	2	29047	29434	+	cis		Equisetum_arvense: RNA-seq gene model
+RNA_Equisetum_arvense	cox2	cox2_1	2	2	30833	31212	+			Equisetum_arvense: RNA-seq gene model
+RNA_Equisetum_hyemale	nad4	nad4_1	1	4	51349	51821	+	trans		Equisetum_hyemale: RNA-seq gene model
+RNA_Equisetum_hyemale	nad4	nad4_1	2	4	79101	79612	-	cis		Equisetum_hyemale: RNA-seq gene model
+RNA_Equisetum_hyemale	nad4	nad4_1	3	4	73833	74255	-	cis		Equisetum_hyemale: RNA-seq gene model
+RNA_Equisetum_hyemale	nad4	nad4_1	4	4	71827	71915	-			Equisetum_hyemale: RNA-seq gene model
+RNA_Equisetum_palustre	cox1	cox1_1	1	4	56097	56492	-	cis		Equisetum_palustre: RNA-seq gene model
+RNA_Equisetum_palustre	cox1	cox1_1	2	4	54718	54945	-	cis		Equisetum_palustre: RNA-seq gene model
+RNA_Equisetum_palustre	cox1	cox1_1	3	4	53464	53587	-	cis		Equisetum_palustre: RNA-seq gene model
+RNA_Equisetum_palustre	cox1	cox1_1	4	4	51892	52751	-			Equisetum_palustre: RNA-seq gene model
+RNA_Equisetum_palustre	cox2	cox2_1	1	2	187673	188060	-	cis		Equisetum_palustre: RNA-seq gene model
+RNA_Equisetum_palustre	cox2	cox2_1	2	2	185895	186274	-			Equisetum_palustre: RNA-seq gene model
+RNA_Equisetum_pratense	cox2	cox2_1	1	2	228504	228891	-	cis		Equisetum_pratense: RNA-seq gene model
+RNA_Equisetum_pratense	cox2	cox2_1	2	2	226734	227113	-			Equisetum_pratense: RNA-seq gene model
+RNA_Equisetum_pratense	nad7	nad7_1	1	4	37423	37565	-	cis		Equisetum_pratense: RNA-seq gene model
+RNA_Equisetum_pratense	nad7	nad7_1	2	4	36158	36226	-	cis		Equisetum_pratense: RNA-seq gene model
+RNA_Equisetum_pratense	nad7	nad7_1	3	4	34251	34717	-	cis		Equisetum_pratense: RNA-seq gene model
+RNA_Equisetum_pratense	nad7	nad7_1	4	4	32489	32994	-			Equisetum_pratense: RNA-seq gene model
+RNA_Equisetum_ramosissimum	nad1	nad1_1	1	5	41097	41354	+	cis		Equisetum_ramosissimum: RNA-seq gene model
+RNA_Equisetum_ramosissimum	nad1	nad1_1	2	5	42318	42453	+	cis		Equisetum_ramosissimum: RNA-seq gene model
+RNA_Equisetum_ramosissimum	nad1	nad1_1	3	5	44904	45178	+	cis		Equisetum_ramosissimum: RNA-seq gene model
+RNA_Equisetum_ramosissimum	nad1	nad1_1	4	5	46761	46819	+	cis		Equisetum_ramosissimum: RNA-seq gene model
+RNA_Equisetum_ramosissimum	nad1	nad1_1	5	5	49110	49368	+			Equisetum_ramosissimum: RNA-seq gene model
+RNA_Equisetum_ramosissimum	nad4	nad4_1	1	4	11921	12393	-	trans		Equisetum_ramosissimum: RNA-seq gene model
+RNA_Equisetum_ramosissimum	nad4	nad4_1	2	4	4472	4983	+	cis		Equisetum_ramosissimum: RNA-seq gene model
+RNA_Equisetum_ramosissimum	nad4	nad4_1	3	4	9806	10228	+	cis		Equisetum_ramosissimum: RNA-seq gene model
+RNA_Equisetum_ramosissimum	nad4	nad4_1	4	4	12142	12230	+			Equisetum_ramosissimum: RNA-seq gene model
+RNA_Equisetum_sylvaticum	ccmFc	ccmFc_1	1	2	149882	150977	+	cis		Equisetum_sylvaticum: RNA-seq gene model
+RNA_Equisetum_sylvaticum	ccmFc	ccmFc_1	2	2	152265	153031	+			Equisetum_sylvaticum: RNA-seq gene model
+RNA_Equisetum_sylvaticum	cox1	cox1_1	1	4	162091	162486	-	cis		Equisetum_sylvaticum: RNA-seq gene model
+RNA_Equisetum_sylvaticum	cox1	cox1_1	2	4	160711	160938	-	cis		Equisetum_sylvaticum: RNA-seq gene model
+RNA_Equisetum_sylvaticum	cox1	cox1_1	3	4	159457	159580	-	cis		Equisetum_sylvaticum: RNA-seq gene model
+RNA_Equisetum_sylvaticum	cox1	cox1_1	4	4	157885	158744	-			Equisetum_sylvaticum: RNA-seq gene model
+RNA_Equisetum_sylvaticum	cox2	cox2_1	1	2	56339	56726	-	cis		Equisetum_sylvaticum: RNA-seq gene model
+RNA_Equisetum_sylvaticum	cox2	cox2_1	2	2	54560	54939	-			Equisetum_sylvaticum: RNA-seq gene model
+RNA_Equisetum_sylvaticum	nad1	nad1_1	1	5	182068	182325	-	cis		Equisetum_sylvaticum: RNA-seq gene model
+RNA_Equisetum_sylvaticum	nad1	nad1_1	2	5	180969	181104	-	cis		Equisetum_sylvaticum: RNA-seq gene model
+RNA_Equisetum_sylvaticum	nad1	nad1_1	3	5	178208	178482	-	cis		Equisetum_sylvaticum: RNA-seq gene model
+RNA_Equisetum_sylvaticum	nad1	nad1_1	4	5	176592	176650	-	cis		Equisetum_sylvaticum: RNA-seq gene model
+RNA_Equisetum_sylvaticum	nad1	nad1_1	5	5	174118	174376	-			Equisetum_sylvaticum: RNA-seq gene model
+RNA_Equisetum_sylvaticum	nad2	nad2_1	1	5	224489	224641	+	cis		Equisetum_sylvaticum: RNA-seq gene model
+RNA_Equisetum_sylvaticum	nad2	nad2_1	2	5	226408	226796	+	cis		Equisetum_sylvaticum: RNA-seq gene model
+RNA_Equisetum_sylvaticum	nad2	nad2_1	3	5	229853	230019	+	cis		Equisetum_sylvaticum: RNA-seq gene model
+RNA_Equisetum_sylvaticum	nad2	nad2_1	4	5	231037	231605	+	cis		Equisetum_sylvaticum: RNA-seq gene model
+RNA_Equisetum_sylvaticum	nad2	nad2_1	5	5	233739	233933	+			Equisetum_sylvaticum: RNA-seq gene model
+RNA_Equisetum_sylvaticum	nad4	nad4_1	1	4	146869	147341	+	trans		Equisetum_sylvaticum: RNA-seq gene model
+RNA_Equisetum_sylvaticum	nad4	nad4_1	2	4	13307	13818	-	cis		Equisetum_sylvaticum: RNA-seq gene model
+RNA_Equisetum_sylvaticum	nad4	nad4_1	3	4	8062	8484	-	cis		Equisetum_sylvaticum: RNA-seq gene model
+RNA_Equisetum_sylvaticum	nad4	nad4_1	4	4	5996	6084	-			Equisetum_sylvaticum: RNA-seq gene model
+RNA_Equisetum_sylvaticum	nad5	nad5_1	1	5	185010	185239	-	cis		Equisetum_sylvaticum: RNA-seq gene model
+RNA_Equisetum_sylvaticum	nad5	nad5_1	2	5	72933	74040	-	cis		Equisetum_sylvaticum: RNA-seq gene model
+RNA_Equisetum_sylvaticum	nad5	nad5_1	3	5	71737	71759	-	cis		Equisetum_sylvaticum: RNA-seq gene model
+RNA_Equisetum_sylvaticum	nad5	nad5_1	4	5	67909	68303	-	cis		Equisetum_sylvaticum: RNA-seq gene model
+RNA_Equisetum_sylvaticum	nad5	nad5_1	5	5	67137	67268	-			Equisetum_sylvaticum: RNA-seq gene model
+RNA_Equisetum_sylvaticum	nad7	nad7_1	1	4	111616	111758	-	cis		Equisetum_sylvaticum: RNA-seq gene model
+RNA_Equisetum_sylvaticum	nad7	nad7_1	2	4	110357	110425	-	cis		Equisetum_sylvaticum: RNA-seq gene model
+RNA_Equisetum_sylvaticum	nad7	nad7_1	3	4	108449	108915	-	cis		Equisetum_sylvaticum: RNA-seq gene model
+RNA_Equisetum_sylvaticum	nad7	nad7_1	4	4	106686	107191	-			Equisetum_sylvaticum: RNA-seq gene model
+RNA_Equisetum_sylvaticum	rpl2	rpl2_1	1	2	171158	172168	-	cis		Equisetum_sylvaticum: RNA-seq gene model
+RNA_Equisetum_sylvaticum	rpl2	rpl2_1	2	2	169671	170393	-			Equisetum_sylvaticum: RNA-seq gene model
+RNA_Equisetum_sylvaticum	rps10	rps10_1	1	1	172746	173057	-			Equisetum_sylvaticum: RNA-seq gene model
+RNA_Equisetum_sylvaticum	rps3	rps3_1	1	3	169307	169380	-	cis		Equisetum_sylvaticum: RNA-seq gene model
+RNA_Equisetum_sylvaticum	rps3	rps3_1	2	3	167686	167959	-	cis		Equisetum_sylvaticum: RNA-seq gene model
+RNA_Equisetum_sylvaticum	rps3	rps3_1	3	3	165562	166437	-			Equisetum_sylvaticum: RNA-seq gene model
+RNA_Equisetum_telmateia	cox1	cox1_1	1	4	22461	22856	-	cis		Equisetum_telmateia: RNA-seq gene model
+RNA_Equisetum_telmateia	cox1	cox1_1	2	4	21107	21334	-	cis		Equisetum_telmateia: RNA-seq gene model
+RNA_Equisetum_telmateia	cox1	cox1_1	3	4	19898	20021	-	cis		Equisetum_telmateia: RNA-seq gene model
+RNA_Equisetum_telmateia	cox1	cox1_1	4	4	18326	19185	-			Equisetum_telmateia: RNA-seq gene model
+RNA_Equisetum_telmateia	cox2	cox2_1	1	2	139391	139778	+	cis		Equisetum_telmateia: RNA-seq gene model
+RNA_Equisetum_telmateia	cox2	cox2_1	2	2	141157	141536	+			Equisetum_telmateia: RNA-seq gene model
+RNA_Equisetum_telmateia	nad1	nad1_1	1	5	42380	42637	-	cis		Equisetum_telmateia: RNA-seq gene model
+RNA_Equisetum_telmateia	nad1	nad1_1	2	5	41279	41414	-	cis		Equisetum_telmateia: RNA-seq gene model
+RNA_Equisetum_telmateia	nad1	nad1_1	3	5	38547	38821	-	cis		Equisetum_telmateia: RNA-seq gene model
+RNA_Equisetum_telmateia	nad1	nad1_1	4	5	36925	36983	-	cis		Equisetum_telmateia: RNA-seq gene model
+RNA_Equisetum_telmateia	nad1	nad1_1	5	5	34468	34726	-			Equisetum_telmateia: RNA-seq gene model
+RNA_Equisetum_telmateia	nad5	nad5_1	1	5	231654	231883	-	cis		Equisetum_telmateia: RNA-seq gene model
+RNA_Equisetum_telmateia	nad5	nad5_1	2	5	229181	230404	-	cis		Equisetum_telmateia: RNA-seq gene model
+RNA_Equisetum_telmateia	nad5	nad5_1	3	5	169550	169572	-	cis		Equisetum_telmateia: RNA-seq gene model
+RNA_Equisetum_telmateia	nad5	nad5_1	4	5	165725	166119	-	cis		Equisetum_telmateia: RNA-seq gene model
+RNA_Equisetum_telmateia	nad5	nad5_1	5	5	164953	165084	-			Equisetum_telmateia: RNA-seq gene model
+RNA_Equisetum_telmateia	nad7	nad7_1	1	4	207589	207731	-	cis		Equisetum_telmateia: RNA-seq gene model
+RNA_Equisetum_telmateia	nad7	nad7_1	2	4	206335	206403	-	cis		Equisetum_telmateia: RNA-seq gene model
+RNA_Equisetum_telmateia	nad7	nad7_1	3	4	204499	204965	-	cis		Equisetum_telmateia: RNA-seq gene model
+RNA_Equisetum_telmateia	nad7	nad7_1	4	4	202798	203303	-			Equisetum_telmateia: RNA-seq gene model
+RNA_Equisetum_telmateia	rpl2	rpl2_1	1	2	31517	32527	-	cis		Equisetum_telmateia: RNA-seq gene model
+RNA_Equisetum_telmateia	rpl2	rpl2_1	2	2	30030	30752	-			Equisetum_telmateia: RNA-seq gene model
+RNA_Equisetum_telmateia	rps10	rps10_1	1	1	33105	33416	-			Equisetum_telmateia: RNA-seq gene model
+RNA_Equisetum_telmateia	rps3	rps3_1	1	3	29666	29739	-	cis		Equisetum_telmateia: RNA-seq gene model
+RNA_Equisetum_telmateia	rps3	rps3_1	2	3	28045	28318	-	cis		Equisetum_telmateia: RNA-seq gene model
+RNA_Equisetum_telmateia	rps3	rps3_1	3	3	25923	26798	-			Equisetum_telmateia: RNA-seq gene model
