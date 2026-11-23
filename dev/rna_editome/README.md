@@ -23,3 +23,35 @@ they read tables from earlier validation runs under `build/`.
   against the RNA.
 - `wire.sh` - rebuild the bundled profiles and templates with poa's own
   builders and validate.
+
+## Gene models, more lineages, plastid (2026-11, second round)
+
+For horsetails there was no annotated genome to start from, and fern
+atp1, cox1 and rps14 had no exon calls, so these build the gene from the
+reads instead of correcting a call:
+
+- `map4.sh`, `map5.sh` - a public paired run (ENA fastq) mapped to a
+  dataset species' contigs, or to a GenBank genome in `extra_genomes/`.
+- `boot.py` - gene models from RNA-seq, seeded by a poa run: introns
+  from intron-spanning reads, edits applied, the reading frame holding
+  the call, start by homology. Pools a species' runs.
+- `mk_lineage.py` - a lineage's `raw_rna/` and `rna_proteins.fasta` from
+  the models that pass (coverage, modal exon count, length).
+- `pltd_refs.py` - RNA-edited plastid proteins and spliced loci from a
+  poa run and the plastid pileup (the rules of `rna.py`).
+- `cv.py` - a lineage's references held out by species or genus:
+  templates and profiles rebuilt without the group, its species
+  annotated with them (mito, and plastid for a lineage with plastid
+  references), tables in poa's layout.
+- `assess.py`, `assess_pltd.py`, `calls_support.py`, `summ.py` - a run's
+  calls against the RNA: edits found and right, proteins, exon junctions
+  against intron-spanning reads; calls by how much of the RNA shows them;
+  gene-level counts without RNA.
+- `score_gb.py` - calls on a GenBank genome against its own annotation
+  (the clubmoss RefSeq genomes).
+- `gb_edit.py` - a GenBank genome's annotated genes with the editing its
+  own RNA-seq shows applied (*Phylloglossum*, the clubmoss references).
+
+`assess.py`, `assess_pltd.py`, `score_gb.py`, `calls_support.py` and
+`summ.py` sat in a `pilot/` directory under the others and import them
+from the directory above.
