@@ -252,3 +252,45 @@ RNA_Woodsia_ilvensis	nad1	nad1_1	1	4	76936	77223	-	cis		Woodsia_ilvensis: RNA-se
 RNA_Woodsia_ilvensis	nad1	nad1_1	2	4	94547	94682	-	cis		Woodsia_ilvensis: RNA-seq edited
 RNA_Woodsia_ilvensis	nad1	nad1_1	3	4	92745	93078	-	cis		Woodsia_ilvensis: RNA-seq edited
 RNA_Woodsia_ilvensis	nad1	nad1_1	4	4	49830	50088	-			Woodsia_ilvensis: RNA-seq edited
+RNA_Asplenium_scolopendrium	atp1	atp1_1	1	2	182651	183020	+	cis		Asplenium_scolopendrium: RNA-seq edited
+RNA_Asplenium_scolopendrium	atp1	atp1_1	2	2	183740	184908	+			Asplenium_scolopendrium: RNA-seq edited
+RNA_Asplenium_scolopendrium	rps14	rps14_1	1	2	63063	63182	+	cis		Asplenium_scolopendrium: RNA-seq edited
+RNA_Asplenium_scolopendrium	rps14	rps14_1	2	2	64968	65153	+			Asplenium_scolopendrium: RNA-seq edited
+RNA_Asplenium_trichomanes	atp1	atp1_1	1	2	251733	252102	+	cis		Asplenium_trichomanes: RNA-seq edited
+RNA_Asplenium_trichomanes	atp1	atp1_1	2	2	252822	253990	+			Asplenium_trichomanes: RNA-seq edited
+RNA_Asplenium_trichomanes	rps14	rps14_1	1	2	5410	5529	-	cis		Asplenium_trichomanes: RNA-seq edited
+RNA_Asplenium_trichomanes	rps14	rps14_1	2	2	3432	3617	-			Asplenium_trichomanes: RNA-seq edited
+RNA_Asplenium_viride	atp1	atp1_1	1	2	177306	177675	-	cis		Asplenium_viride: RNA-seq edited
+RNA_Asplenium_viride	atp1	atp1_1	2	2	175418	176586	-			Asplenium_viride: RNA-seq edited
+RNA_Azolla_filiculoides	atp1	atp1_1	1	2	150388	150757	+	cis		Azolla_filiculoides: RNA-seq edited
+RNA_Azolla_filiculoides	atp1	atp1_1	2	2	243517	244703	+			Azolla_filiculoides: RNA-seq edited
+RNA_Azolla_filiculoides	cox1	cox1_1	1	2	145515	145951	-	cis		Azolla_filiculoides: RNA-seq edited
+RNA_Azolla_filiculoides	cox1	cox1_1	2	2	143253	144432	-			Azolla_filiculoides: RNA-seq edited
+RNA_Dryopteris_borreri	atp1	atp1_1	1	2	191407	191776	-	cis		Dryopteris_borreri: RNA-seq edited
+RNA_Dryopteris_borreri	atp1	atp1_1	2	2	189490	190664	-			Dryopteris_borreri: RNA-seq edited
+RNA_Dryopteris_borreri	cox1	cox1_1	1	2	460	863	+	cis		Dryopteris_borreri: RNA-seq edited
+RNA_Dryopteris_borreri	cox1	cox1_1	2	2	1898	3098	+			Dryopteris_borreri: RNA-seq edited
+RNA_Dryopteris_borreri	rps14	rps14_1	1	2	163914	164033	-	cis		Dryopteris_borreri: RNA-seq edited
+RNA_Dryopteris_borreri	rps14	rps14_1	2	2	161972	162157	-			Dryopteris_borreri: RNA-seq edited
+RNA_Dryopteris_dilatata	atp1	atp1_1	1	2	8221	8590	+	cis		Dryopteris_dilatata: RNA-seq edited
+RNA_Dryopteris_dilatata	atp1	atp1_1	2	2	9333	10507	+			Dryopteris_dilatata: RNA-seq edited
+RNA_Dryopteris_dilatata	cox1	cox1_1	1	2	165831	166232	-	cis		Dryopteris_dilatata: RNA-seq edited
+RNA_Dryopteris_dilatata	cox1	cox1_1	2	2	163593	164795	-			Dryopteris_dilatata: RNA-seq edited
+RNA_Dryopteris_filix_mas	atp1	atp1_1	1	2	97811	98180	+	cis		Dryopteris_filix_mas: RNA-seq edited
+RNA_Dryopteris_filix_mas	atp1	atp1_1	2	2	139437	140611	+			Dryopteris_filix_mas: RNA-seq edited
+RNA_Dryopteris_filix_mas	cox1	cox1_1	1	2	120369	120770	-	cis		Dryopteris_filix_mas: RNA-seq edited
+RNA_Dryopteris_filix_mas	cox1	cox1_1	2	2	118132	119334	-			Dryopteris_filix_mas: RNA-seq edited
+RNA_Onoclea_sensibilis	atp1	atp1_1	1	2	344058	344469	-	cis		Onoclea_sensibilis: RNA-seq edited
+RNA_Onoclea_sensibilis	atp1	atp1_1	2	2	14414	15606	-			Onoclea_sensibilis: RNA-seq edited
+RNA_Onoclea_sensibilis	rps14	rps14_1	1	2	275269	275388	+	cis		Onoclea_sensibilis: RNA-seq edited
+RNA_Onoclea_sensibilis	rps14	rps14_1	2	2	277162	277347	+			Onoclea_sensibilis: RNA-seq edited
+RNA_Phegopteris_connectilis	cox1	cox1_1	1	2	251982	252385	+	cis		Phegopteris_connectilis: RNA-seq edited
+RNA_Phegopteris_connectilis	cox1	cox1_1	2	2	253352	254552	+			Phegopteris_connectilis: RNA-seq edited
+RNA_Phegopteris_connectilis	rps14	rps14_1	1	2	63189	63309	+	cis		Phegopteris_connectilis: RNA-seq edited
+RNA_Phegopteris_connectilis	rps14	rps14_1	2	2	65131	65315	+			Phegopteris_connectilis: RNA-seq edited
+RNA_Polystichum_setiferum	cox1	cox1_1	1	2	30001	30404	+	cis		Polystichum_setiferum: RNA-seq edited
+RNA_Polystichum_setiferum	cox1	cox1_1	2	2	31479	32679	+			Polystichum_setiferum: RNA-seq edited
+RNA_Polystichum_setiferum	rps14	rps14_1	1	2	123442	123561	-	cis		Polystichum_setiferum: RNA-seq edited
+RNA_Polystichum_setiferum	rps14	rps14_1	2	2	121484	121669	-			Polystichum_setiferum: RNA-seq edited
+RNA_Woodsia_ilvensis	cox1	cox1_1	1	2	108746	109147	-	cis		Woodsia_ilvensis: RNA-seq edited
+RNA_Woodsia_ilvensis	cox1	cox1_1	2	2	105817	107019	-			Woodsia_ilvensis: RNA-seq edited

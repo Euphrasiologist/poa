@@ -47,3 +47,32 @@ exon, genomic sequence, and the edited protein as
 `translation_REFSEQ_ANNOTATED`), and `junctions.tsv`. `exon_profiles.py`
 reads this directory next to `../raw/`; `fetch_references.py` does not
 touch it.
+
+## atp1, cox1 and rps14
+
+These three genes have one intron each in ferns and none in angiosperms,
+so poa's call for them was a single-exon one that ran across the intron
+and there were no transsplice exons to start from. Their loci here are
+gene models built from the reads (2026-11, `dev/rna_editome/boot.py`):
+
+- the introns are the junctions intron-spanning reads show (bwa-mem2
+  split alignments), with at least 5 reads that are at least a tenth of
+  the reads at the donor;
+- the transcript is followed from the middle of poa's call in both
+  directions, across every such intron, and the edits above applied;
+- the gene is the open reading frame holding most of the called bases,
+  from the ATG that a GenBank fern's protein starts at (*Haplopteris*
+  rps14 and cox1, *Azolla rubra* atp1) to its stop;
+- a model is used if at least 90% of it has 10 or more reads, its exon
+  count is the one most species show, and its protein is within 10% of
+  the median length.
+
+That gave atp1 in 8 species, cox1 in 7 and rps14 in 6, two exons each,
+which is also what the GenBank ferns annotate (*Haplopteris* atp1 alone
+has no intron). Held out by genus, on the eleven ferns: atp1 complete in
+11 of 11 (none of 19 single-exon calls aligned end to end before, and 6
+drew a frameshift call), cox1 in 9 of 11 (0 of 12), and rps14 without the
+frameshift call it drew in 12 of 12 copies; of the RNA edits in them 84%,
+77% and 91% found, with 99%, 99.6% and 95% of calls right (before: 49%,
+39% and 34% found). Of the 22 junctions with intron-spanning reads, 21
+agree with them.
