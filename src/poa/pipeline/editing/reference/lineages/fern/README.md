@@ -2,6 +2,8 @@
 
 `mito/*.pssm` are built by `editing/src/00b_build_lineage_profiles.py --lineage fern` from the GenBank ferns with RNA-seq editomes (`reference_genes.FERN_EDITED_MITOGENOMES`) and from `rna_proteins.fasta` (headers `species|gene`).
 
+`pltd/*.pssm` are the plastid profiles, built with `--organelle pltd` from `rna_proteins.pltd.fasta`: 614 proteins of 56 single-exon plastid genes from the same eleven ferns and runs, by the same rules. See `trans_splicing/reference/lineages/fern/plastid/raw_rna/README.md` for how they do.
+
 These references are not GenBank records. They are mitochondrial genes of
 eleven Darwin Tree of Life fern assemblies with the RNA editing their own
 RNA-seq shows applied, made because no leptosporangiate fern outside

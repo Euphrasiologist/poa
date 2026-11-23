@@ -1,0 +1,222 @@
+accession	gene	locus_tag	exon_num	n_exons	start	end	strand	junction_to_next	gap_bp	notes
+RNA_Asplenium_scolopendrium	atpF	atpF_1	1	2	13055	13199	-	cis		Asplenium_scolopendrium: RNA-seq edited
+RNA_Asplenium_scolopendrium	atpF	atpF_1	2	2	11936	12345	-			Asplenium_scolopendrium: RNA-seq edited
+RNA_Asplenium_scolopendrium	clpP	clpP_1	1	3	68091	68161	-	cis		Asplenium_scolopendrium: RNA-seq edited
+RNA_Asplenium_scolopendrium	clpP	clpP_1	2	3	67124	67414	-	cis		Asplenium_scolopendrium: RNA-seq edited
+RNA_Asplenium_scolopendrium	clpP	clpP_1	3	3	66263	66527	-			Asplenium_scolopendrium: RNA-seq edited
+RNA_Asplenium_scolopendrium	ndhB	ndhB_1	1	2	572	1252	-	trans		Asplenium_scolopendrium: RNA-seq edited
+RNA_Asplenium_scolopendrium	ndhB	ndhB_1	2	2	82934	83698	+			Asplenium_scolopendrium: RNA-seq edited
+RNA_Asplenium_scolopendrium	rpl2	rpl2_1	1	2	81511	81907	-	cis		Asplenium_scolopendrium: RNA-seq edited
+RNA_Asplenium_scolopendrium	rpl2	rpl2_1	2	2	80328	80761	-			Asplenium_scolopendrium: RNA-seq edited
+RNA_Asplenium_scolopendrium	rps12	rps12_1	1	3	65898	66011	-	trans		Asplenium_scolopendrium: RNA-seq edited
+RNA_Asplenium_scolopendrium	rps12	rps12_1	2	3	94026	94260	+	cis		Asplenium_scolopendrium: RNA-seq edited
+RNA_Asplenium_scolopendrium	rps12	rps12_1	3	3	94844	94869	+			Asplenium_scolopendrium: RNA-seq edited
+RNA_Asplenium_scolopendrium	rps16	rps16_1	1	2	4706	4745	-	cis		Asplenium_scolopendrium: RNA-seq edited
+RNA_Asplenium_scolopendrium	rps16	rps16_1	2	2	3710	3903	-			Asplenium_scolopendrium: RNA-seq edited
+RNA_Asplenium_scolopendrium	ycf3	ycf3_1	1	3	43554	43677	-	cis		Asplenium_scolopendrium: RNA-seq edited
+RNA_Asplenium_scolopendrium	ycf3	ycf3_1	2	3	42597	42826	-	cis		Asplenium_scolopendrium: RNA-seq edited
+RNA_Asplenium_scolopendrium	ycf3	ycf3_1	3	3	41816	41977	-			Asplenium_scolopendrium: RNA-seq edited
+RNA_Asplenium_trichomanes	atpF	atpF_1	1	2	12963	13107	-	cis		Asplenium_trichomanes: RNA-seq edited
+RNA_Asplenium_trichomanes	atpF	atpF_1	2	2	11840	12249	-			Asplenium_trichomanes: RNA-seq edited
+RNA_Asplenium_trichomanes	clpP	clpP_1	1	3	67305	67375	-	cis		Asplenium_trichomanes: RNA-seq edited
+RNA_Asplenium_trichomanes	clpP	clpP_1	2	3	66332	66622	-	cis		Asplenium_trichomanes: RNA-seq edited
+RNA_Asplenium_trichomanes	clpP	clpP_1	3	3	65459	65723	-			Asplenium_trichomanes: RNA-seq edited
+RNA_Asplenium_trichomanes	ndhA	ndhA_1	1	2	115525	116083	-	cis		Asplenium_trichomanes: RNA-seq edited
+RNA_Asplenium_trichomanes	ndhA	ndhA_1	2	2	114041	114600	-			Asplenium_trichomanes: RNA-seq edited
+RNA_Asplenium_trichomanes	ndhB	ndhB_1	1	2	465	1145	-	trans		Asplenium_trichomanes: RNA-seq edited
+RNA_Asplenium_trichomanes	ndhB	ndhB_1	2	2	82047	82811	+			Asplenium_trichomanes: RNA-seq edited
+RNA_Asplenium_trichomanes	rpl2	rpl2_1	1	2	80633	81029	-	cis		Asplenium_trichomanes: RNA-seq edited
+RNA_Asplenium_trichomanes	rpl2	rpl2_1	2	2	79476	79909	-			Asplenium_trichomanes: RNA-seq edited
+RNA_Asplenium_trichomanes	rpoC1	rpoC1_1	1	2	23061	23492	-	cis		Asplenium_trichomanes: RNA-seq edited
+RNA_Asplenium_trichomanes	rpoC1	rpoC1_1	2	2	20724	22367	-			Asplenium_trichomanes: RNA-seq edited
+RNA_Asplenium_trichomanes	rps12	rps12_1	1	3	65095	65208	-	trans		Asplenium_trichomanes: RNA-seq edited
+RNA_Asplenium_trichomanes	rps12	rps12_1	2	3	93131	93365	+	cis		Asplenium_trichomanes: RNA-seq edited
+RNA_Asplenium_trichomanes	rps12	rps12_1	3	3	93949	93974	+			Asplenium_trichomanes: RNA-seq edited
+RNA_Asplenium_trichomanes	rps16	rps16_1	1	2	4613	4652	-	cis		Asplenium_trichomanes: RNA-seq edited
+RNA_Asplenium_trichomanes	rps16	rps16_1	2	2	3597	3790	-			Asplenium_trichomanes: RNA-seq edited
+RNA_Asplenium_trichomanes	ycf3	ycf3_1	1	3	43273	43396	-	cis		Asplenium_trichomanes: RNA-seq edited
+RNA_Asplenium_trichomanes	ycf3	ycf3_1	2	3	42312	42541	-	cis		Asplenium_trichomanes: RNA-seq edited
+RNA_Asplenium_trichomanes	ycf3	ycf3_1	3	3	41531	41692	-			Asplenium_trichomanes: RNA-seq edited
+RNA_Asplenium_viride	atpF	atpF_1	1	2	13808	13952	-	cis		Asplenium_viride: RNA-seq edited
+RNA_Asplenium_viride	atpF	atpF_1	2	2	12680	13089	-			Asplenium_viride: RNA-seq edited
+RNA_Asplenium_viride	clpP	clpP_1	1	3	68140	68210	-	cis		Asplenium_viride: RNA-seq edited
+RNA_Asplenium_viride	clpP	clpP_1	2	3	67170	67460	-	cis		Asplenium_viride: RNA-seq edited
+RNA_Asplenium_viride	clpP	clpP_1	3	3	66287	66551	-			Asplenium_viride: RNA-seq edited
+RNA_Asplenium_viride	ndhA	ndhA_1	1	2	120089	120647	-	cis		Asplenium_viride: RNA-seq edited
+RNA_Asplenium_viride	ndhA	ndhA_1	2	2	118597	119156	-			Asplenium_viride: RNA-seq edited
+RNA_Asplenium_viride	ndhB	ndhB_1	1	2	1275	1859	-	cis		Asplenium_viride: RNA-seq edited
+RNA_Asplenium_viride	ndhB	ndhB_1	2	2	155329	155664	-			Asplenium_viride: RNA-seq edited
+RNA_Asplenium_viride	rpl2	rpl2_1	1	2	81535	81931	-	cis		Asplenium_viride: RNA-seq edited
+RNA_Asplenium_viride	rpl2	rpl2_1	2	2	80360	80793	-			Asplenium_viride: RNA-seq edited
+RNA_Asplenium_viride	rpoC1	rpoC1_1	1	2	23908	24339	-	cis		Asplenium_viride: RNA-seq edited
+RNA_Asplenium_viride	rpoC1	rpoC1_1	2	2	21541	23184	-			Asplenium_viride: RNA-seq edited
+RNA_Asplenium_viride	rps12	rps12_1	1	3	65923	66036	-	cis		Asplenium_viride: RNA-seq edited
+RNA_Asplenium_viride	rps12	rps12_1	2	3	144619	144853	-	trans		Asplenium_viride: RNA-seq edited
+RNA_Asplenium_viride	rps12	rps12_1	3	3	95033	95058	+			Asplenium_viride: RNA-seq edited
+RNA_Asplenium_viride	rps16	rps16_1	1	2	5431	5470	-	cis		Asplenium_viride: RNA-seq edited
+RNA_Asplenium_viride	rps16	rps16_1	2	2	4409	4602	-			Asplenium_viride: RNA-seq edited
+RNA_Asplenium_viride	ycf3	ycf3_1	1	3	44209	44332	-	cis		Asplenium_viride: RNA-seq edited
+RNA_Asplenium_viride	ycf3	ycf3_1	2	3	43254	43483	-	cis		Asplenium_viride: RNA-seq edited
+RNA_Asplenium_viride	ycf3	ycf3_1	3	3	42472	42633	-			Asplenium_viride: RNA-seq edited
+RNA_Dryopteris_borreri	atpF	atpF_1	1	2	13365	13509	-	cis		Dryopteris_borreri: RNA-seq edited
+RNA_Dryopteris_borreri	atpF	atpF_1	2	2	12226	12635	-			Dryopteris_borreri: RNA-seq edited
+RNA_Dryopteris_borreri	clpP	clpP_1	1	3	68392	68462	-	cis		Dryopteris_borreri: RNA-seq edited
+RNA_Dryopteris_borreri	clpP	clpP_1	2	3	67396	67686	-	cis		Dryopteris_borreri: RNA-seq edited
+RNA_Dryopteris_borreri	clpP	clpP_1	3	3	66600	66840	-			Dryopteris_borreri: RNA-seq edited
+RNA_Dryopteris_borreri	ndhA	ndhA_1	1	2	116602	117160	-	cis		Dryopteris_borreri: RNA-seq edited
+RNA_Dryopteris_borreri	ndhA	ndhA_1	2	2	115103	115662	-			Dryopteris_borreri: RNA-seq edited
+RNA_Dryopteris_borreri	rpl2	rpl2_1	1	2	81913	82309	-	cis		Dryopteris_borreri: RNA-seq edited
+RNA_Dryopteris_borreri	rpl2	rpl2_1	2	2	80750	81186	-			Dryopteris_borreri: RNA-seq edited
+RNA_Dryopteris_borreri	rpoC1	rpoC1_1	1	2	23430	23861	-	cis		Dryopteris_borreri: RNA-seq edited
+RNA_Dryopteris_borreri	rpoC1	rpoC1_1	2	2	21114	22724	-			Dryopteris_borreri: RNA-seq edited
+RNA_Dryopteris_borreri	rps12	rps12_1	1	3	66220	66333	-	cis		Dryopteris_borreri: RNA-seq edited
+RNA_Dryopteris_borreri	rps12	rps12_1	2	3	137686	137920	-	trans		Dryopteris_borreri: RNA-seq edited
+RNA_Dryopteris_borreri	rps12	rps12_1	3	3	94872	94897	+			Dryopteris_borreri: RNA-seq edited
+RNA_Dryopteris_borreri	rps16	rps16_1	1	2	5135	5174	-	cis		Dryopteris_borreri: RNA-seq edited
+RNA_Dryopteris_borreri	rps16	rps16_1	2	2	4088	4302	-			Dryopteris_borreri: RNA-seq edited
+RNA_Dryopteris_borreri	ycf3	ycf3_1	1	3	43817	43940	-	cis		Dryopteris_borreri: RNA-seq edited
+RNA_Dryopteris_borreri	ycf3	ycf3_1	2	3	42856	43085	-	cis		Dryopteris_borreri: RNA-seq edited
+RNA_Dryopteris_borreri	ycf3	ycf3_1	3	3	42069	42230	-			Dryopteris_borreri: RNA-seq edited
+RNA_Dryopteris_dilatata	atpF	atpF_1	1	2	12798	12942	-	cis		Dryopteris_dilatata: RNA-seq edited
+RNA_Dryopteris_dilatata	atpF	atpF_1	2	2	11664	12073	-			Dryopteris_dilatata: RNA-seq edited
+RNA_Dryopteris_dilatata	clpP	clpP_1	1	3	67791	67861	-	cis		Dryopteris_dilatata: RNA-seq edited
+RNA_Dryopteris_dilatata	clpP	clpP_1	2	3	66795	67085	-	cis		Dryopteris_dilatata: RNA-seq edited
+RNA_Dryopteris_dilatata	clpP	clpP_1	3	3	65995	66235	-			Dryopteris_dilatata: RNA-seq edited
+RNA_Dryopteris_dilatata	ndhA	ndhA_1	1	2	118995	119553	-	cis		Dryopteris_dilatata: RNA-seq edited
+RNA_Dryopteris_dilatata	ndhA	ndhA_1	2	2	117496	118055	-			Dryopteris_dilatata: RNA-seq edited
+RNA_Dryopteris_dilatata	ndhB	ndhB_1	1	2	549	1271	-	trans		Dryopteris_dilatata: RNA-seq edited
+RNA_Dryopteris_dilatata	ndhB	ndhB_1	2	2	82649	83413	+			Dryopteris_dilatata: RNA-seq edited
+RNA_Dryopteris_dilatata	rpl2	rpl2_1	1	2	81266	81662	-	cis		Dryopteris_dilatata: RNA-seq edited
+RNA_Dryopteris_dilatata	rpl2	rpl2_1	2	2	80100	80536	-			Dryopteris_dilatata: RNA-seq edited
+RNA_Dryopteris_dilatata	rpoC1	rpoC1_1	1	2	22854	23285	-	cis		Dryopteris_dilatata: RNA-seq edited
+RNA_Dryopteris_dilatata	rpoC1	rpoC1_1	2	2	20537	22147	-			Dryopteris_dilatata: RNA-seq edited
+RNA_Dryopteris_dilatata	rps12	rps12_1	1	3	65616	65729	-	trans		Dryopteris_dilatata: RNA-seq edited
+RNA_Dryopteris_dilatata	rps12	rps12_1	2	3	93723	93957	+	cis		Dryopteris_dilatata: RNA-seq edited
+RNA_Dryopteris_dilatata	rps12	rps12_1	3	3	94534	94559	+			Dryopteris_dilatata: RNA-seq edited
+RNA_Dryopteris_dilatata	rps16	rps16_1	1	2	4699	4738	-	cis		Dryopteris_dilatata: RNA-seq edited
+RNA_Dryopteris_dilatata	rps16	rps16_1	2	2	3674	3888	-			Dryopteris_dilatata: RNA-seq edited
+RNA_Dryopteris_dilatata	ycf3	ycf3_1	1	3	43208	43331	-	cis		Dryopteris_dilatata: RNA-seq edited
+RNA_Dryopteris_dilatata	ycf3	ycf3_1	2	3	42247	42476	-	cis		Dryopteris_dilatata: RNA-seq edited
+RNA_Dryopteris_dilatata	ycf3	ycf3_1	3	3	41464	41625	-			Dryopteris_dilatata: RNA-seq edited
+RNA_Dryopteris_filix_mas	atpF	atpF_1	1	2	13365	13509	-	cis		Dryopteris_filix_mas: RNA-seq edited
+RNA_Dryopteris_filix_mas	atpF	atpF_1	2	2	12226	12635	-			Dryopteris_filix_mas: RNA-seq edited
+RNA_Dryopteris_filix_mas	clpP	clpP_1	1	3	68391	68461	-	cis		Dryopteris_filix_mas: RNA-seq edited
+RNA_Dryopteris_filix_mas	clpP	clpP_1	2	3	67395	67685	-	cis		Dryopteris_filix_mas: RNA-seq edited
+RNA_Dryopteris_filix_mas	clpP	clpP_1	3	3	66599	66839	-			Dryopteris_filix_mas: RNA-seq edited
+RNA_Dryopteris_filix_mas	ndhA	ndhA_1	1	2	116601	117159	-	cis		Dryopteris_filix_mas: RNA-seq edited
+RNA_Dryopteris_filix_mas	ndhA	ndhA_1	2	2	115102	115661	-			Dryopteris_filix_mas: RNA-seq edited
+RNA_Dryopteris_filix_mas	rpl2	rpl2_1	1	2	81912	82308	-	cis		Dryopteris_filix_mas: RNA-seq edited
+RNA_Dryopteris_filix_mas	rpl2	rpl2_1	2	2	80749	81185	-			Dryopteris_filix_mas: RNA-seq edited
+RNA_Dryopteris_filix_mas	rpoC1	rpoC1_1	1	2	23429	23860	-	cis		Dryopteris_filix_mas: RNA-seq edited
+RNA_Dryopteris_filix_mas	rpoC1	rpoC1_1	2	2	21113	22723	-			Dryopteris_filix_mas: RNA-seq edited
+RNA_Dryopteris_filix_mas	rps12	rps12_1	1	3	66219	66332	-	cis		Dryopteris_filix_mas: RNA-seq edited
+RNA_Dryopteris_filix_mas	rps12	rps12_1	2	3	137686	137920	-	trans		Dryopteris_filix_mas: RNA-seq edited
+RNA_Dryopteris_filix_mas	rps12	rps12_1	3	3	94871	94896	+			Dryopteris_filix_mas: RNA-seq edited
+RNA_Dryopteris_filix_mas	rps16	rps16_1	1	2	5134	5173	-	cis		Dryopteris_filix_mas: RNA-seq edited
+RNA_Dryopteris_filix_mas	rps16	rps16_1	2	2	4088	4302	-			Dryopteris_filix_mas: RNA-seq edited
+RNA_Dryopteris_filix_mas	ycf3	ycf3_1	1	3	43816	43939	-	cis		Dryopteris_filix_mas: RNA-seq edited
+RNA_Dryopteris_filix_mas	ycf3	ycf3_1	2	3	42855	43084	-	cis		Dryopteris_filix_mas: RNA-seq edited
+RNA_Dryopteris_filix_mas	ycf3	ycf3_1	3	3	42068	42229	-			Dryopteris_filix_mas: RNA-seq edited
+RNA_Onoclea_sensibilis	atpF	atpF_1	1	2	14082	14226	-	cis		Onoclea_sensibilis: RNA-seq edited
+RNA_Onoclea_sensibilis	atpF	atpF_1	2	2	12961	13370	-			Onoclea_sensibilis: RNA-seq edited
+RNA_Onoclea_sensibilis	clpP	clpP_1	1	3	68253	68323	-	cis		Onoclea_sensibilis: RNA-seq edited
+RNA_Onoclea_sensibilis	clpP	clpP_1	2	3	67260	67550	-	cis		Onoclea_sensibilis: RNA-seq edited
+RNA_Onoclea_sensibilis	clpP	clpP_1	3	3	66455	66695	-			Onoclea_sensibilis: RNA-seq edited
+RNA_Onoclea_sensibilis	ndhA	ndhA_1	1	2	116966	117512	-	cis		Onoclea_sensibilis: RNA-seq edited
+RNA_Onoclea_sensibilis	ndhA	ndhA_1	2	2	115466	116025	-			Onoclea_sensibilis: RNA-seq edited
+RNA_Onoclea_sensibilis	ndhB	ndhB_1	1	2	1714	2442	-	cis		Onoclea_sensibilis: RNA-seq edited
+RNA_Onoclea_sensibilis	ndhB	ndhB_1	2	2	86	856	-			Onoclea_sensibilis: RNA-seq edited
+RNA_Onoclea_sensibilis	rpl2	rpl2_1	1	2	81802	82198	-	cis		Onoclea_sensibilis: RNA-seq edited
+RNA_Onoclea_sensibilis	rpl2	rpl2_1	2	2	80642	81078	-			Onoclea_sensibilis: RNA-seq edited
+RNA_Onoclea_sensibilis	rpoC1	rpoC1_1	1	2	24172	24603	-	cis		Onoclea_sensibilis: RNA-seq edited
+RNA_Onoclea_sensibilis	rpoC1	rpoC1_1	2	2	21806	23458	-			Onoclea_sensibilis: RNA-seq edited
+RNA_Onoclea_sensibilis	rps12	rps12_1	1	3	66078	66191	-	trans		Onoclea_sensibilis: RNA-seq edited
+RNA_Onoclea_sensibilis	rps12	rps12_1	2	3	94300	94534	+	cis		Onoclea_sensibilis: RNA-seq edited
+RNA_Onoclea_sensibilis	rps12	rps12_1	3	3	95113	95138	+			Onoclea_sensibilis: RNA-seq edited
+RNA_Onoclea_sensibilis	rps16	rps16_1	1	2	5856	5895	-	cis		Onoclea_sensibilis: RNA-seq edited
+RNA_Onoclea_sensibilis	rps16	rps16_1	2	2	4860	5074	-			Onoclea_sensibilis: RNA-seq edited
+RNA_Onoclea_sensibilis	ycf3	ycf3_1	1	3	44513	44636	-	cis		Onoclea_sensibilis: RNA-seq edited
+RNA_Onoclea_sensibilis	ycf3	ycf3_1	2	3	43542	43771	-	cis		Onoclea_sensibilis: RNA-seq edited
+RNA_Onoclea_sensibilis	ycf3	ycf3_1	3	3	42755	42916	-			Onoclea_sensibilis: RNA-seq edited
+RNA_Phegopteris_connectilis	atpF	atpF_1	1	2	13999	14143	-	cis		Phegopteris_connectilis: RNA-seq edited
+RNA_Phegopteris_connectilis	atpF	atpF_1	2	2	12879	13288	-			Phegopteris_connectilis: RNA-seq edited
+RNA_Phegopteris_connectilis	clpP	clpP_1	1	3	69123	69193	-	cis		Phegopteris_connectilis: RNA-seq edited
+RNA_Phegopteris_connectilis	clpP	clpP_1	2	3	68129	68419	-	cis		Phegopteris_connectilis: RNA-seq edited
+RNA_Phegopteris_connectilis	clpP	clpP_1	3	3	67263	67503	-			Phegopteris_connectilis: RNA-seq edited
+RNA_Phegopteris_connectilis	ndhA	ndhA_1	1	2	118595	119141	-	cis		Phegopteris_connectilis: RNA-seq edited
+RNA_Phegopteris_connectilis	ndhA	ndhA_1	2	2	117100	117659	-			Phegopteris_connectilis: RNA-seq edited
+RNA_Phegopteris_connectilis	ndhB	ndhB_1	1	2	1636	2316	-	trans		Phegopteris_connectilis: RNA-seq edited
+RNA_Phegopteris_connectilis	ndhB	ndhB_1	2	2	83943	84713	+			Phegopteris_connectilis: RNA-seq edited
+RNA_Phegopteris_connectilis	rpl2	rpl2_1	1	2	82519	82915	-	cis		Phegopteris_connectilis: RNA-seq edited
+RNA_Phegopteris_connectilis	rpl2	rpl2_1	2	2	81350	81786	-			Phegopteris_connectilis: RNA-seq edited
+RNA_Phegopteris_connectilis	rpoC1	rpoC1_1	1	2	24047	24478	-	cis		Phegopteris_connectilis: RNA-seq edited
+RNA_Phegopteris_connectilis	rpoC1	rpoC1_1	2	2	21676	23334	-			Phegopteris_connectilis: RNA-seq edited
+RNA_Phegopteris_connectilis	rps12	rps12_1	1	3	66869	66982	-	trans		Phegopteris_connectilis: RNA-seq edited
+RNA_Phegopteris_connectilis	rps12	rps12_1	2	3	95945	96179	+	cis		Phegopteris_connectilis: RNA-seq edited
+RNA_Phegopteris_connectilis	rps12	rps12_1	3	3	96758	96783	+			Phegopteris_connectilis: RNA-seq edited
+RNA_Phegopteris_connectilis	rps16	rps16_1	1	2	5766	5805	-	cis		Phegopteris_connectilis: RNA-seq edited
+RNA_Phegopteris_connectilis	rps16	rps16_1	2	2	4760	4974	-			Phegopteris_connectilis: RNA-seq edited
+RNA_Phegopteris_connectilis	ycf3	ycf3_1	1	3	44221	44344	-	cis		Phegopteris_connectilis: RNA-seq edited
+RNA_Phegopteris_connectilis	ycf3	ycf3_1	2	3	43253	43482	-	cis		Phegopteris_connectilis: RNA-seq edited
+RNA_Phegopteris_connectilis	ycf3	ycf3_1	3	3	42466	42627	-			Phegopteris_connectilis: RNA-seq edited
+RNA_Polystichum_setiferum	atpF	atpF_1	1	2	13090	13234	-	cis		Polystichum_setiferum: RNA-seq edited
+RNA_Polystichum_setiferum	atpF	atpF_1	2	2	11959	12368	-			Polystichum_setiferum: RNA-seq edited
+RNA_Polystichum_setiferum	clpP	clpP_1	1	3	67847	67917	-	cis		Polystichum_setiferum: RNA-seq edited
+RNA_Polystichum_setiferum	clpP	clpP_1	2	3	66839	67129	-	cis		Polystichum_setiferum: RNA-seq edited
+RNA_Polystichum_setiferum	clpP	clpP_1	3	3	66029	66269	-			Polystichum_setiferum: RNA-seq edited
+RNA_Polystichum_setiferum	ndhA	ndhA_1	1	2	141284	141803	-	cis		Polystichum_setiferum: RNA-seq edited
+RNA_Polystichum_setiferum	ndhA	ndhA_1	2	2	139792	140351	-			Polystichum_setiferum: RNA-seq edited
+RNA_Polystichum_setiferum	ndhB	ndhB_1	1	2	702	1424	-	trans		Polystichum_setiferum: RNA-seq edited
+RNA_Polystichum_setiferum	ndhB	ndhB_1	2	2	82746	83525	+			Polystichum_setiferum: RNA-seq edited
+RNA_Polystichum_setiferum	rpl2	rpl2_1	1	2	81365	81761	-	cis		Polystichum_setiferum: RNA-seq edited
+RNA_Polystichum_setiferum	rpl2	rpl2_1	2	2	80206	80642	-			Polystichum_setiferum: RNA-seq edited
+RNA_Polystichum_setiferum	rpoC1	rpoC1_1	1	2	23091	23522	-	cis		Polystichum_setiferum: RNA-seq edited
+RNA_Polystichum_setiferum	rpoC1	rpoC1_1	2	2	20777	22387	-			Polystichum_setiferum: RNA-seq edited
+RNA_Polystichum_setiferum	rps12	rps12_1	1	3	65652	65765	-	trans		Polystichum_setiferum: RNA-seq edited
+RNA_Polystichum_setiferum	rps12	rps12_1	2	3	94690	94924	+	cis		Polystichum_setiferum: RNA-seq edited
+RNA_Polystichum_setiferum	rps12	rps12_1	3	3	95502	95527	+			Polystichum_setiferum: RNA-seq edited
+RNA_Polystichum_setiferum	rps16	rps16_1	1	2	4862	4901	-	cis		Polystichum_setiferum: RNA-seq edited
+RNA_Polystichum_setiferum	rps16	rps16_1	2	2	3837	4051	-			Polystichum_setiferum: RNA-seq edited
+RNA_Polystichum_setiferum	ycf3	ycf3_1	1	3	43418	43541	-	cis		Polystichum_setiferum: RNA-seq edited
+RNA_Polystichum_setiferum	ycf3	ycf3_1	2	3	42454	42683	-	cis		Polystichum_setiferum: RNA-seq edited
+RNA_Polystichum_setiferum	ycf3	ycf3_1	3	3	41673	41834	-			Polystichum_setiferum: RNA-seq edited
+RNA_Woodsia_ilvensis	atpF	atpF_1	1	2	13878	14022	-	cis		Woodsia_ilvensis: RNA-seq edited
+RNA_Woodsia_ilvensis	atpF	atpF_1	2	2	12737	13146	-			Woodsia_ilvensis: RNA-seq edited
+RNA_Woodsia_ilvensis	clpP	clpP_1	1	3	68965	69035	-	cis		Woodsia_ilvensis: RNA-seq edited
+RNA_Woodsia_ilvensis	clpP	clpP_1	2	3	67968	68258	-	cis		Woodsia_ilvensis: RNA-seq edited
+RNA_Woodsia_ilvensis	clpP	clpP_1	3	3	67132	67372	-			Woodsia_ilvensis: RNA-seq edited
+RNA_Woodsia_ilvensis	ndhA	ndhA_1	1	2	118997	119543	-	cis		Woodsia_ilvensis: RNA-seq edited
+RNA_Woodsia_ilvensis	ndhA	ndhA_1	2	2	117472	118031	-			Woodsia_ilvensis: RNA-seq edited
+RNA_Woodsia_ilvensis	ndhB	ndhB_1	1	2	1566	2294	-	trans		Woodsia_ilvensis: RNA-seq edited
+RNA_Woodsia_ilvensis	ndhB	ndhB_1	2	2	83926	84696	+			Woodsia_ilvensis: RNA-seq edited
+RNA_Woodsia_ilvensis	rpl2	rpl2_1	1	2	82479	82875	-	cis		Woodsia_ilvensis: RNA-seq edited
+RNA_Woodsia_ilvensis	rpl2	rpl2_1	2	2	81333	81769	-			Woodsia_ilvensis: RNA-seq edited
+RNA_Woodsia_ilvensis	rps12	rps12_1	1	3	66752	66865	-	trans		Woodsia_ilvensis: RNA-seq edited
+RNA_Woodsia_ilvensis	rps12	rps12_1	2	3	96366	96600	+	cis		Woodsia_ilvensis: RNA-seq edited
+RNA_Woodsia_ilvensis	rps12	rps12_1	3	3	97179	97204	+			Woodsia_ilvensis: RNA-seq edited
+RNA_Woodsia_ilvensis	rps16	rps16_1	1	2	5690	5729	-	cis		Woodsia_ilvensis: RNA-seq edited
+RNA_Woodsia_ilvensis	rps16	rps16_1	2	2	4679	4899	-			Woodsia_ilvensis: RNA-seq edited
+RNA_Woodsia_ilvensis	ycf3	ycf3_1	1	3	44152	44275	-	cis		Woodsia_ilvensis: RNA-seq edited
+RNA_Woodsia_ilvensis	ycf3	ycf3_1	2	3	43180	43409	-	cis		Woodsia_ilvensis: RNA-seq edited
+RNA_Woodsia_ilvensis	ycf3	ycf3_1	3	3	42391	42552	-			Woodsia_ilvensis: RNA-seq edited
+RNA_Azolla_filiculoides	atpF	atpF_1	1	2	14765	14909	-	cis		Azolla_filiculoides: RNA-seq edited
+RNA_Azolla_filiculoides	atpF	atpF_1	2	2	13608	14017	-			Azolla_filiculoides: RNA-seq edited
+RNA_Azolla_filiculoides	clpP	clpP_1	1	3	69458	69528	-	cis		Azolla_filiculoides: RNA-seq edited
+RNA_Azolla_filiculoides	clpP	clpP_1	2	3	68426	68716	-	cis		Azolla_filiculoides: RNA-seq edited
+RNA_Azolla_filiculoides	clpP	clpP_1	3	3	67609	67849	-			Azolla_filiculoides: RNA-seq edited
+RNA_Azolla_filiculoides	ndhA	ndhA_1	1	2	117077	117623	-	cis		Azolla_filiculoides: RNA-seq edited
+RNA_Azolla_filiculoides	ndhA	ndhA_1	2	2	115562	116121	-			Azolla_filiculoides: RNA-seq edited
+RNA_Azolla_filiculoides	ndhB	ndhB_1	1	2	2503	3228	-	cis		Azolla_filiculoides: RNA-seq edited
+RNA_Azolla_filiculoides	ndhB	ndhB_1	2	2	862	1629	-			Azolla_filiculoides: RNA-seq edited
+RNA_Azolla_filiculoides	rpl2	rpl2_1	1	2	83309	83705	-	cis		Azolla_filiculoides: RNA-seq edited
+RNA_Azolla_filiculoides	rpl2	rpl2_1	2	2	82162	82598	-			Azolla_filiculoides: RNA-seq edited
+RNA_Azolla_filiculoides	rpoC1	rpoC1_1	1	2	24834	25265	-	cis		Azolla_filiculoides: RNA-seq edited
+RNA_Azolla_filiculoides	rpoC1	rpoC1_1	2	2	22484	24103	-			Azolla_filiculoides: RNA-seq edited
+RNA_Azolla_filiculoides	rps12	rps12_1	1	3	67100	67213	-	trans		Azolla_filiculoides: RNA-seq edited
+RNA_Azolla_filiculoides	rps12	rps12_1	2	3	94492	94726	+	cis		Azolla_filiculoides: RNA-seq edited
+RNA_Azolla_filiculoides	rps12	rps12_1	3	3	95326	95351	+			Azolla_filiculoides: RNA-seq edited
+RNA_Azolla_filiculoides	rps16	rps16_1	1	2	6631	6670	-	cis		Azolla_filiculoides: RNA-seq edited
+RNA_Azolla_filiculoides	rps16	rps16_1	2	2	5660	5853	-			Azolla_filiculoides: RNA-seq edited
+RNA_Azolla_filiculoides	ycf3	ycf3_1	1	3	45028	45136	-	cis		Azolla_filiculoides: RNA-seq edited
+RNA_Azolla_filiculoides	ycf3	ycf3_1	2	3	44083	44312	-	cis		Azolla_filiculoides: RNA-seq edited
+RNA_Azolla_filiculoides	ycf3	ycf3_1	3	3	43249	43413	-			Azolla_filiculoides: RNA-seq edited
