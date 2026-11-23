@@ -87,11 +87,29 @@ REFSEQ_GENES = [
 # copies aligned end to end with 3 frameshift calls, against 18 and none;
 # the matR profile's first 150 columns are ones the dataset's ferns lack,
 # and it drew 25 frameshift calls in 24 copies against 7.
-FERN_GENES = [g for g in REFSEQ_GENES if g not in ("matR", "nad9")]
-LINEAGE_GENES = {lin.DEFAULT_LINEAGE: REFSEQ_GENES, "moss": MOSS_GENES, "fern": FERN_GENES}
+# Nor atp1, cox1 and rps14, which have an intron in ferns and are
+# reconstructed from exon templates (rg.LINEAGE_EXTRA_SPLICED).
+FERN_GENES = [g for g in REFSEQ_GENES if g not in ("matR", "nad9", *rg.LINEAGE_EXTRA_SPLICED["fern"])]
+# horsetail: the single-exon genes of Equisetum (cox1 has introns there).
+# matR too, although the Equisetum reading frame is two thirds the length
+# of the angiosperm protein and unedited: against the angiosperm profile
+# it drew 24 edit calls a copy, none of them in the RNA.
+HORSETAIL_GENES = [g for g in REFSEQ_GENES if g not in rg.LINEAGE_EXTRA_SPLICED["horsetail"]]
+# lycophyte: every single-exon gene of clubmosses (rg.LINEAGE_EXTRA_SPLICED
+# lists the ones with introns there), from RNA-edited proteins only.
+LYCOPHYTE_GENES = [g for g in REFSEQ_GENES if g not in rg.LINEAGE_EXTRA_SPLICED["lycophyte"]]
+LINEAGE_GENES = {
+    lin.DEFAULT_LINEAGE: REFSEQ_GENES,
+    "moss": MOSS_GENES,
+    "fern": FERN_GENES,
+    "horsetail": HORSETAIL_GENES,
+    "lycophyte": LYCOPHYTE_GENES,
+}
 # fewest verified proteins a gene's profile is built from. Ferns have
 # five species with fully edited proteins (rg.FERN_EDITED_MITOGENOMES).
-LINEAGE_MIN_SEQUENCES = {"fern": 4}
+# Horsetail is one genus (Equisetum), and lycophyte has one deeply
+# sequenced transcriptome (Phylloglossum): see exon_profiles.LINEAGE_MIN_LOCI.
+LINEAGE_MIN_SEQUENCES = {"fern": 4, "horsetail": 1, "lycophyte": 1}
 # ccmFn is two genes in Brassicaceae and Allium (denovo_annotation's
 # gene_calls renames the pieces ccmFn1/ccmFn2), so each piece gets its own
 # profile, from these RefSeq mitogenomes: a spread of Brassicaceae, not
@@ -119,7 +137,13 @@ SPLIT_CCMFN_SYNONYMS = {"ccmfn": "ccmFn1", "ccmfn1": "ccmFn1", "ccmfn2": "ccmFn2
 # profile and orfedit over-extends towards it (held-out Arabidopsis: atp1
 # 1845 bp vs RefSeq 1524 at 0.9). Moss keeps the default its lineage call
 # was calibrated with.
-LINEAGE_GAP_THRESHOLD = {lin.DEFAULT_LINEAGE: 0.5, "moss": pssm.GAP_COLUMN_THRESHOLD, "fern": 0.5}
+LINEAGE_GAP_THRESHOLD = {
+    lin.DEFAULT_LINEAGE: 0.5,
+    "moss": pssm.GAP_COLUMN_THRESHOLD,
+    "fern": 0.5,
+    "horsetail": 0.5,
+    "lycophyte": 0.5,
+}
 # GenBank gene-name spellings -> ours (compared lower-cased). Angiosperm
 # records also use the pre-function names; moss keeps the set its bundled
 # profiles were built with.
@@ -138,6 +162,8 @@ LINEAGE_SYNONYMS = {
     "moss": SYNONYMS,
 }
 LINEAGE_SYNONYMS["fern"] = {**LINEAGE_SYNONYMS[lin.DEFAULT_LINEAGE], "mat-lepto": "matR"}
+LINEAGE_SYNONYMS["horsetail"] = LINEAGE_SYNONYMS[lin.DEFAULT_LINEAGE]
+LINEAGE_SYNONYMS["lycophyte"] = LINEAGE_SYNONYMS[lin.DEFAULT_LINEAGE]
 
 
 def refseq_profiles_dir(code_dir: Path = PIPELINE_DIR) -> Path:
@@ -195,13 +221,21 @@ RNA_PROTEINS_NAME = "rna_proteins.fasta"
 # composition (pssm.build_profile), for lineages whose profiles are built
 # that way; the others keep the flat pseudocount their calls were
 # calibrated with.
-LINEAGE_PSEUDOCOUNT: dict[str, float] = {"fern": 2.0}
+# Horsetail and lycophyte: one to four proteins per gene, which 2
+# pseudo-observations would outweigh (exon_profiles.LINEAGE_PSEUDOCOUNT).
+LINEAGE_PSEUDOCOUNT: dict[str, float] = {"fern": 2.0, "horsetail": 0.25, "lycophyte": 0.25}
 
 
-def rna_proteins(lineage: str, exclude: tuple[str, ...] = ()) -> dict[str, dict[str, str]]:
+# the same for plastid genes, for a lineage with plastid profiles of its
+# own (rg.LINEAGE_PLASTID)
+RNA_PLASTID_PROTEINS_NAME = "rna_proteins.pltd.fasta"
+
+
+def rna_proteins(lineage: str, exclude: tuple[str, ...] = (), organelle: str = "mito") -> dict[str, dict[str, str]]:
     """{gene: {"RNA_<species>": protein}} from the lineage's bundled
     RNA-edited proteins; `exclude` holds such RNA_<species> names."""
-    path = lin.editing_profiles(PIPELINE_DIR, lineage) / RNA_PROTEINS_NAME
+    name = RNA_PROTEINS_NAME if organelle == "mito" else RNA_PLASTID_PROTEINS_NAME
+    path = lin.editing_profiles(PIPELINE_DIR, lineage) / name
     out: dict[str, dict[str, str]] = {}
     if path.exists():
         for header, seq in pssm.read_fasta(path).items():
@@ -226,6 +260,38 @@ def one_per_species(proteins: dict[str, dict[str, str]], mitogenomes: dict[str, 
                 seen.add(key)
                 out[gene][acc] = seq
     return out
+
+
+def build_plastid_profiles(
+    lineage: str, work_root: Path, *, exclude: tuple[str, ...] = (), out_dir: Path | None = None
+) -> Path:
+    """(Re)build `lineage`'s bundled plastid editing profiles
+    (<lineage>/pltd/<gene>.pssm) from its RNA-edited plastid proteins, one
+    per gene with enough of them, leaving out the RNA_<species> in
+    `exclude`. Returns the profiles directory."""
+    if lineage not in rg.LINEAGE_PLASTID:
+        raise ValueError(f"lineage must be one of {sorted(rg.LINEAGE_PLASTID)}, not {lineage!r}")
+    proteins = rna_proteins(lineage, tuple(exclude), "pltd")
+    min_sequences = LINEAGE_MIN_SEQUENCES.get(lineage, profiles.MIN_SEQUENCES)
+    work_dir = Path(work_root) / "analysis" / "editing" / "work" / f"{lineage}_pltd"
+    work_dir.mkdir(parents=True, exist_ok=True)
+    out_dir = Path(out_dir) if out_dir else lin.editing_profiles(PIPELINE_DIR, lineage) / "pltd"
+    out_dir.mkdir(parents=True, exist_ok=True)
+    for stale in out_dir.glob("*.pssm"):
+        stale.unlink()
+    for gene, by_name in sorted(proteins.items()):
+        if len(by_name) < min_sequences:
+            log.info(f"{gene}: no {lineage} plastid profile ({len(by_name)} proteins)")
+            continue
+        sharp = {}
+        if lineage in LINEAGE_PSEUDOCOUNT:
+            sharp = dict(background=pssm.composition(by_name.values()), pseudocount_mass=LINEAGE_PSEUDOCOUNT[lineage])
+        columns = pssm.align_and_build(by_name, work_dir, gene, LINEAGE_GAP_THRESHOLD[lineage], **sharp)
+        if columns is None:
+            raise StageError(f"{gene}: no profile from {work_dir / gene}.protein.fasta (mafft failed or no columns)")
+        pssm.write_profile(columns, out_dir / f"{gene}.pssm")
+        log.info(f"{gene}: {lineage} plastid profile from {len(by_name)} proteins, {len(columns)} columns")
+    return out_dir
 
 
 def build_lineage_profiles(
@@ -274,7 +340,9 @@ def build_lineage_profiles(
     work_dir.mkdir(parents=True, exist_ok=True)
     out_dir = Path(out_dir) if out_dir else default_out_dir(lineage)
     for gene in genes:
-        modal = n_exons[gene].most_common(1)[0][0] if n_exons[gene] else None
+        # a lineage with no GenBank mitogenome at all (horsetail) has only
+        # its RNA-derived proteins, single-exon by construction
+        modal = n_exons[gene].most_common(1)[0][0] if n_exons[gene] else (None if mitogenomes else 1)
         stale = out_dir / f"{gene}.pssm"
         if modal != 1 or len(proteins[gene]) < min_sequences:
             log.info(
@@ -307,6 +375,12 @@ def main(argv: list[str] | None = None) -> int:
     setup_logging()
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--lineage", required=True, choices=sorted(LINEAGE_GENES))
+    ap.add_argument(
+        "--organelle",
+        default="mito",
+        choices=["mito", "pltd"],
+        help="pltd: the lineage's plastid profiles, from its RNA-edited plastid proteins (fern)",
+    )
     ap.add_argument("--exclude", nargs="+", default=[], metavar="ACC", help="leave these RefSeq mitogenomes out")
     ap.add_argument("--out-dir", type=Path, help="write the profiles here instead of the bundled location")
     ap.add_argument(
@@ -315,6 +389,10 @@ def main(argv: list[str] | None = None) -> int:
         help="keep every profile column, ignoring the lineage's profile_mask.tsv (do this before deriving a new mask)",
     )
     args = ap.parse_args(argv)
+    work_root = Path(os.environ.get("PLANT_ORGANELLE_DATA_ROOT") or os.getcwd())
+    if args.organelle == "pltd":
+        build_plastid_profiles(args.lineage, work_root, exclude=tuple(args.exclude), out_dir=args.out_dir)
+        return 0
     try:
         build_lineage_profiles(
             args.lineage,

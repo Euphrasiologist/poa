@@ -1,5 +1,5 @@
 """The genes trans_splicing builds templates for and reconstructs - one
-list shared by fetch_references, exon_profiles, reconstruct, gff_export
+list (GENES, plus a lineage's own in LINEAGE_EXTRA_SPLICED) shared by fetch_references, exon_profiles, reconstruct, gff_export
 and editing's lineage_profiles, so they can't drift apart.
 
 transsplice itself doesn't care whether a junction is cis or trans (it
@@ -17,6 +17,29 @@ TRANS_SPLICED_MITO = ["nad1", "nad2", "nad5", "rps3"]
 # angiosperm mito cis-spliced genes (stage 2a)
 CIS_SPLICED_MITO = ["nad4", "nad7", "ccmFc", "cox2", "rpl2", "rps10"]
 GENES = TRANS_SPLICED_MITO + CIS_SPLICED_MITO
+# Genes with introns in one lineage that are single-exon in angiosperms.
+# For such a lineage they are reconstructed from its exon templates like
+# the rest, and editing leaves them alone (a single-exon correction across
+# an intron reports the intron as frameshifts).
+# Fern: atp1, cox1 and rps14 have one intron each in all eleven DToL ferns
+# with RNA-seq. Horsetail: cox1 has three (Equisetum, same evidence).
+# Lycophyte (Lycopodiaceae): atp6 and cob have two introns, atp9 and cox1
+# three, cox3, nad3 and rps14 one, in all four RefSeq mitogenomes.
+LINEAGE_EXTRA_SPLICED = {
+    "fern": ["atp1", "cox1", "rps14"],
+    "horsetail": ["cox1"],
+    "lycophyte": ["atp6", "atp9", "cob", "cox1", "cox3", "nad3", "rps14"],
+}
+
+
+def mito_spliced(lineage: str | None = None) -> list[str]:
+    """The mito genes reconstructed for `lineage`; with None, for any."""
+    if lineage is None:
+        extra = sorted({g for genes in LINEAGE_EXTRA_SPLICED.values() for g in genes})
+    else:
+        extra = LINEAGE_EXTRA_SPLICED.get(lineage, [])
+    return GENES + [g for g in extra if g not in GENES]
+
 
 # plastid genes with introns (rps12: exon 1 trans-spliced to exons 2-3).
 # Not petB, petD, rpl16: their first exons are 2-3 codons, too short to
@@ -46,14 +69,26 @@ PLASTOMES = {
 }
 
 
+# Lineages with plastid references of their own, used with --lineage on
+# top of the land-plant plastid set: exon templates in
+# reference/lineages/<x>/plastid/ and editing profiles in
+# editing/reference/lineages/<x>/pltd/. Fern: plastid genes carry 300-900
+# C-to-U and 30-80 U-to-C edits; against the land-plant references 59% of
+# the edits poa called in 11 DToL ferns' plastid genes were in their RNA.
+LINEAGE_PLASTID = ("fern",)
+
+
 def reference_dir(code_dir, organelle: str = "mito", lineage: str | None = None):
     """trans_splicing/reference/ for a mito lineage (common/lineage), or
-    reference/plastid/ - one set for every plastid."""
+    reference/plastid/ - one set for every plastid, unless `lineage` has
+    plastid references of its own (LINEAGE_PLASTID)."""
     from pathlib import Path
 
     from poa.pipeline.common import lineage as lin
 
     if organelle == "pltd":
+        if lineage in LINEAGE_PLASTID:
+            return lin.trans_splicing_reference(code_dir, lineage) / "plastid"
         return Path(code_dir) / "trans_splicing" / "reference" / "plastid"
     return lin.trans_splicing_reference(code_dir, lineage or lin.DEFAULT_LINEAGE)
 
@@ -152,7 +187,36 @@ FERN_EDITED_MITOGENOMES = {
 # RNA-seq shows in 11 DToL ferns' spliced genes, against 83% without.
 FERN_UNEDITED_MITOGENOMES = tuple(acc for acc, name in FERN_MITOGENOMES.items() if name != "Haplopteris ensiformis")
 LINEAGE_UNEDITED_MITOGENOMES = {"fern": FERN_UNEDITED_MITOGENOMES}
-LINEAGE_MITOGENOMES = {"angiosperm": REFERENCE_MITOGENOMES, "moss": MOSS_MITOGENOMES, "fern": FERN_MITOGENOMES}
+# Horsetails (Equisetum, the one living genus) have no annotated
+# mitogenome in GenBank: their references are all RNA-derived
+# (reference/lineages/horsetail/raw_rna/README.md).
+HORSETAIL_MITOGENOMES: dict[str, str] = {}
+# Clubmosses (Lycopodiaceae): the four RefSeq mitogenomes, two subfamilies.
+# Their genes keep an intron set of their own (LINEAGE_EXTRA_SPLICED; nad2
+# 3 exons, nad4 2, cox2 4, rps3 3) and have lost the ccm genes and nad7.
+# Their annotated proteins are unedited, so the templates and profiles
+# are built from RNA-edited loci instead (lineages/lycophyte/README.md)
+# and these stay as the record of the exon structures. Not Selaginella or
+# Isoetes, whose mitogenomes are nothing like these.
+LYCOPHYTE_MITOGENOMES = {
+    "NC_017755.1": "Huperzia squarrosa",
+    "NC_071971.1": "Huperzia crispata",
+    "NC_086557.1": "Phylloglossum drummondii",
+    "NC_080981.1": "Lycopodium japonicum",
+}
+# The clubmoss RefSeq proteins are unedited too (bar a few stop codons).
+LINEAGE_UNEDITED_MITOGENOMES["lycophyte"] = tuple(LYCOPHYTE_MITOGENOMES)
+LINEAGE_MITOGENOMES = {
+    "angiosperm": REFERENCE_MITOGENOMES,
+    "moss": MOSS_MITOGENOMES,
+    "fern": FERN_MITOGENOMES,
+    "horsetail": HORSETAIL_MITOGENOMES,
+    "lycophyte": LYCOPHYTE_MITOGENOMES,
+}
+# Lineages whose reference proteins are the RNA-edited ones throughout, so
+# exon-slot profiles are cut from the protein, not translated from the
+# genome (exon_profiles.py).
+LINEAGE_EDITED_PROTEINS = ("fern", "horsetail", "lycophyte")
 # the genomes a lineage's editing profiles come from, where they are not
 # all of LINEAGE_MITOGENOMES
-LINEAGE_EDITED_MITOGENOMES = {"fern": FERN_EDITED_MITOGENOMES}
+LINEAGE_EDITED_MITOGENOMES = {"fern": FERN_EDITED_MITOGENOMES, "lycophyte": {}}

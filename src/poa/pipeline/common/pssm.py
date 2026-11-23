@@ -186,6 +186,8 @@ def align_and_build(
     protein_fasta = work_dir / f"{label}.protein.fasta"
     protein_fasta.write_text("".join(f">{name}\n{seq}\n" for name, seq in proteins.items()))
     aligned_fasta = work_dir / f"{label}.aligned.fasta"
-    if not run_mafft(protein_fasta, aligned_fasta):
+    if len(proteins) == 1:  # nothing to align
+        aligned_fasta.write_text(protein_fasta.read_text())
+    elif not run_mafft(protein_fasta, aligned_fasta):
         return None
     return build_profile(read_fasta(aligned_fasta), gap_threshold, background, pseudocount_mass, trim_ends)

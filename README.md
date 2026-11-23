@@ -64,6 +64,13 @@ All bundled so nothing to download, no oatk install needed:
 - Moss references, under `lineages/moss/` in both of the above: exon
   templates and editing profiles built from 20 moss RefSeq mitogenomes
   (cached in the same `genbank/`). See "Reference lineage" below.
+- Fern, horsetail and clubmoss references, under `lineages/fern/`,
+  `lineages/horsetail/` and `lineages/lycophyte/`: genes with the editing
+  RNA-seq shows applied (`raw_rna/`, `rna_proteins.fasta`, each with a
+  README) - of Darwin Tree of Life assemblies for fern (mostly) and
+  horsetail, of a RefSeq genome and Darwin Tree of Life assemblies for
+  clubmoss. Fern has plastid references as well (`lineages/fern/plastid/`,
+  `lineages/fern/pltd/`). Used only with `--lineage`.
 
 Cluster-specific paths (tRNAscan-SE config, mafft's `MAFFT_BINARIES`) are
 env-var overridable (`TRNASCAN_CONF`, `MAFFT_BINARIES`) and ignored when
@@ -214,9 +221,9 @@ exactly where GenBank's CDS does (17% and 67% before).
 
 What is still wrong, mostly: genes whose exon count differs from the
 template's (cox2 with one intron or two, an intron lost in a lineage),
-and gene ends the references disagree on (ccmFc, rpl2). Liverworts,
-hornworts, ferns and lycophytes are reconstructed on the angiosperm
-templates.
+and gene ends the references disagree on (ccmFc, rpl2). Liverworts and
+hornworts are reconstructed on the angiosperm templates, as are ferns,
+horsetails and clubmosses unless their lineage is given (below).
 
 The recurrence table leaves out the 54 DToL assemblies resolved with
 gfatk before 0.6.3, whose contigs repeat each graph overlap: they are
@@ -253,9 +260,11 @@ lineage.
 On the 956-species dataset, all 174 mosses were called moss and no other
 species was. Moss spliced genes went from 12% to 99% complete, and the
 share of moss calls changed by editing fell from 98% to 44%. Output for
-every other species is unchanged. Liverworts, hornworts, ferns and
-lycophytes still use the angiosperm references. See
-`trans_splicing/README.md` and `editing/README.md`.
+every other species is unchanged. Liverworts and hornworts still use the
+angiosperm references, and so do ferns, horsetails and clubmosses unless
+`--lineage fern`, `horsetail` or `lycophyte` is given: those three are
+never picked automatically. See `trans_splicing/README.md` and
+`editing/README.md`.
 
 `--lineage fern` is for ferns, quillworts (*Isoetes*) and hornworts, and
 is never picked automatically. These lineages edit U to C as well as C to
@@ -263,17 +272,21 @@ U, and their organelle genes have genomic in-frame stop codons that
 editing turns into Gln or Arg - about nine per mitochondrial gene in
 Polypodiales. Without the lineage set, treat a fern's proteins and
 frameshift calls as unreliable: each unread stop is a skipped column, an
-apparent frame change or an early end. Horsetails, clubmosses and
-*Selaginella* do not edit this way and belong on the default.
+apparent frame change or an early end. Horsetails and clubmosses have
+lineages of their own (further down); *Selaginella* has none and belongs
+on the default.
 
 With it, orfedit and transsplice read such stops through at the cost of a
 C-to-U edit, and mitochondrial genes are corrected against fern
 references: exon templates for the spliced genes (nad1, nad4, nad5 and
 nad7 have four exons in ferns, rps3 three, rps10 one, and there is no
-ccmFc) and editing profiles for 22 single-exon genes. On those fern
-references other U-to-C edits are called too, at a cost of 5; plastid
-genes and the mitochondrial genes still on angiosperm profiles (matR and
-nad9 among them) get stop read-through only. It needs builds of orfedit
+ccmFc; atp1, cox1 and rps14, which have no intron in angiosperms, have
+one in ferns and are reconstructed from templates too) and editing
+profiles for 22 single-exon genes. On those fern references other U-to-C
+edits are called too, at a cost of 5; plastid genes, which have fern
+references of their own, and the mitochondrial genes still on angiosperm
+profiles (matR and nad9 among them) get stop read-through only. It needs
+builds of orfedit
 and transsplice with `--stop-edit-penalty` and `--reverse-edit-penalty`.
 U-to-C edits are marked `U>C` in the `edit` column of the edit tables and
 `edited_from=T;edited_to=C` in the GFF.
@@ -315,8 +328,99 @@ has a recognisable intron end. Two of 89 spliced genes run past a stop
 codon that is never edited. Nine of the 29 ferns had their assemblies
 replaced after their genes were first called; all figures here are from
 calls on the current ones.
-Fern plastid genes use the plastid
-templates every lineage shares.
+
+atp1, cox1 and rps14 were single-exon calls across an intron until they
+got exon templates, from gene models built on the same RNA (the introns
+are the junctions intron-spanning reads show). Held out by genus on the
+eleven ferns, atp1 is complete in 11 of 11 (none of 19 single-exon calls
+aligned end to end, and 6 drew a frameshift call), cox1 in 9 of 11 (0 of
+12), and rps14 no longer draws the frameshift call it drew in all 12
+copies; of the RNA edits in the three genes 84%, 77% and 91% are found,
+with 95% or more of the calls right, against 49%, 39% and 34%.
+
+Fern plastid genes are corrected against fern plastid references as
+well, from the same eleven ferns: 614 edited proteins of 56 single-exon
+genes and 94 loci of the 9 spliced ones
+(`trans_splicing/reference/lineages/fern/plastid/`). Held out by genus,
+against the land-plant plastid references every other lineage uses:
+
+| | land-plant references | fern plastid references |
+|---|---|---|
+| single-exon genes aligned end to end | 339 of 614 | 596 of 614 |
+| RNA edits found / calls right, single-exon | 74% / 59% | 82% / 83% |
+| RNA edits found / calls right, spliced | 65% / 50% | 81% / 83% |
+| genes running past a stop codon the RNA never edits | 81 | 36 |
+
+Plastid calls are less often right than mitochondrial ones: about one in
+seven is a C that other fern genera edit, or have as T, and this species
+leaves alone. Other U-to-C edits are not called in plastid genes: they
+found 91% of the plastid U-to-C sites against 77%, but only 42% of those
+calls were in the RNA.
+
+`--lineage horsetail` is for *Equisetum*, the one living genus of
+horsetails. No horsetail mitogenome is annotated in GenBank, so its exon
+templates (11 genes) and editing profiles (23) come from gene models
+built on RNA-seq of eight *Equisetum* species in the Darwin Tree of Life
+dataset: the introns are the junctions intron-spanning reads show, and
+the proteins carry the C-to-U editing the reads show. Horsetails do not
+edit U to C, so the editing model is the default one. *Equisetum* genes
+are split differently from angiosperm ones - cox1 has three introns,
+nad7 four exons, rps3 three, rps10 no intron, and nad1 five exons that
+are not the angiosperm five. Poly-A RNA-seq holds few mitochondrial
+reads, and two species (*E. sylvaticum*, *E. telmateia*) supply most of
+the references; a profile is built from as little as one species
+(`trans_splicing/reference/lineages/horsetail/raw_rna/README.md`).
+
+With each species' own loci left out in turn, on nine *Equisetum*
+assemblies (the default-reference figures are for the eight that have
+them):
+
+| | default references | horsetail references |
+|---|---|---|
+| single-exon genes aligned end to end | 119 of 218 | 172 of 189 |
+| spliced genes complete | 64 of 80 | 86 of 86 |
+| genes with a frameshift call | 45 | 4 |
+| RNA edits found / calls right, single-exon | 44% / 50% | 80% / 96% |
+| RNA edits found / calls right, spliced | 47% / 58% | 79% / 99% |
+
+All 110 exon junctions with intron-spanning reads agree with the reads.
+The four frameshift calls left are in matR, whose *Equisetum* reading
+frame is short and differs between species. ccmFn aligns over 89% of its
+profile: its HMM hit is in two pieces and the correction window stops
+short of the start.
+
+`--lineage lycophyte` is for clubmosses (Lycopodiaceae). Their genes
+have an intron set of their own: atp6, atp9, cob, cox1, cox3, nad3 and
+rps14 have introns that angiosperms lack, nad2 has three exons, nad4 two,
+cox2 four, rps3 three, and the ccm genes and nad7 are gone. A few
+in-frame stop codons are edited away, so the lineage reads stops through
+as the fern one does. Four clubmoss mitogenomes are in RefSeq, but with
+unedited proteins: templates built from them placed exons and found a
+fifth of the edits RNA-seq shows. The references are therefore the
+RefSeq annotation of *Phylloglossum drummondii* with the editing its
+total-RNA library shows applied (all 35 genes; 289 C-to-U and 5 U-to-C
+edits), plus the genes that poly-A RNA-seq covers in three Darwin Tree
+of Life clubmosses
+(`trans_splicing/reference/lineages/lycophyte/README.md`).
+
+| | default references | lycophyte references |
+|---|---|---|
+| annotated exons placed within 3 bp, 3 RefSeq genomes, genus held out | 51 of 198 | 174 of 198 |
+| spliced genes with every exon placed | 4 of 44 | 41 of 44 |
+| genes with a frameshift call | 14 | 5 |
+| spliced genes complete, 3 DToL clubmosses, own loci held out | 15 of 27 | 45 of 45 |
+| RNA edits found / calls right, same | 65 of 119 / 65 of 147 | 87 of 98 / 87 of 100 |
+
+All 21 exon junctions that intron-spanning reads cross in the three
+dataset clubmosses are as the reads show. The edit figures rest on the
+18 genes with enough reads, and the references on one deeply sequenced
+species, so treat this lineage as less tested than the fern one. atp9's
+third exon, 7 bp, is rarely placed; extra copies of atp4, atp8 and rps2
+draw frameshift calls that may well be real; and nad6 draws one near its
+end in most clubmosses, where the species' proteins differ in length,
+which probably is not. It is not for
+*Selaginella* or *Isoetes*, whose mitogenomes are unlike these
+(*Isoetes* edits like a fern).
 
 ### Stage by stage, on a whole dataset
 

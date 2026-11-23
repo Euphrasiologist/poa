@@ -80,6 +80,7 @@ from poa import PIPELINE_DIR
 from poa.pipeline.common import io_utils
 from poa.pipeline.common import lineage as lin
 from poa.pipeline.editing.lineage_profiles import refseq_profiles_dir
+from poa.pipeline.trans_splicing.reference_genes import LINEAGE_EXTRA_SPLICED
 from poa.pipeline.common import species_discovery as sd
 from poa.pipeline.common.errors import StageError
 from poa.pipeline.common.tools import cargo_tool
@@ -232,6 +233,20 @@ def build_manifest(
     return rows
 
 
+def lineage_spliced(lineage: str) -> set[str]:
+    """Mito genes single-exon in angiosperms that `lineage` splices and has
+    exon templates for (reference_genes.LINEAGE_EXTRA_SPLICED)."""
+    templates = lin.trans_splicing_reference(PIPELINE_DIR, lineage) / "profiles"
+    return {g for g in LINEAGE_EXTRA_SPLICED.get(lineage, ()) if (templates / g / "whole_gene.pssm").exists()}
+
+
+def without_genes(rows: list[dict], genes: set[str]) -> list[dict]:
+    """Manifest rows minus the mito ones for `genes`."""
+    if not genes:
+        return rows
+    return [r for r in rows if not (r["organelle"] == "mito" and r["gene"].split(COPY_SEP)[0] in genes)]
+
+
 def write_manifest(rows: list[dict], path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     cols = ["species", "organelle", "gene", "fasta", "profile", "contig", "start", "end", "strand"]
@@ -261,7 +276,11 @@ RECURRENCE_WINDOW = 5  # profile columns
 
 
 def add_recurrence(
-    shifts: pd.DataFrame, lineages: dict[str, str], source: str = "editing", reference_of=lin.reference
+    shifts: pd.DataFrame,
+    lineages: dict[str, str],
+    source: str = "editing",
+    reference_of=lin.reference,
+    own_plastid: set[tuple[str, str]] | frozenset = frozenset(),
 ) -> pd.DataFrame:
     """Add dtol_assemblies: how many DToL assemblies have a frameshift in
     the same gene within RECURRENCE_WINDOW profile columns - many means a
@@ -271,7 +290,9 @@ def add_recurrence(
     source: "editing" (orfedit's profiles) or "reconstruction"
     (transsplice's whole-gene profiles), which number columns differently.
     reference_of: lineage -> the lineage whose profiles its genes were
-    aligned to (for reconstruction, its exon templates')."""
+    aligned to (for reconstruction, its exon templates'). own_plastid:
+    (species, gene) pairs of plastid genes aligned to a lineage's own
+    plastid references, which get no count either."""
     shifts = shifts.copy()
     if not FRAMESHIFT_REFERENCE.exists() or shifts.empty:
         shifts["dtol_assemblies"] = pd.Series(dtype=object)
@@ -282,6 +303,9 @@ def add_recurrence(
     out = []
     for r in shifts.itertuples():
         if r.organelle == "mito" and reference_of(lineages.get(r.species, lin.DEFAULT_LINEAGE)) != lin.DEFAULT_LINEAGE:
+            out.append("")
+            continue
+        if r.organelle == "pltd" and (r.species, r.gene) in own_plastid:
             out.append("")
             continue
         g = by_gene.get((r.organelle, r.gene))
@@ -443,6 +467,10 @@ def scan(
 
     refseq_dir = refseq_profiles_dir(PIPELINE_DIR)
     rows = build_manifest(root, calls, organelles, species, [profiles_dir, refseq_dir])
+    # genes with introns in the forced lineage (fern atp1, cox1, rps14):
+    # trans_splicing reconstructs them from the lineage's exon templates
+    spliced_here = lineage_spliced(lineage)
+    rows = without_genes(rows, spliced_here)
     if not rows:
         raise StageError("empty manifest - nothing to scan")
 
@@ -475,17 +503,25 @@ def scan(
     # corrected against it, the rest against the default ones as above.
     own_run = None
     own_dir = lin.editing_profiles(PIPELINE_DIR, lineage)
-    if "mito" in organelles and lineage in lin.BORROWS and any((own_dir / "mito").glob("*.pssm")):
-        lrows = build_manifest(root, calls, ["mito"], species, own_dir)
-        if lrows:
-            # other U-to-C edits too, on the lineage's own profiles only
-            rev = lin.reverse_edit_penalty(lineage)
-            if rev is not None and not supports_option(orfedit, "--reverse-edit-penalty"):
-                raise StageError(f"--lineage {lineage} needs an orfedit with --reverse-edit-penalty; {orfedit} has none")
-            own_run = run_orfedit(
-                orfedit, lrows, lineage, work_dir, stop_edit_penalty=stop, reverse_edit_penalty=rev, **opts
-            )
-            log.info(f"scan_editing: {len(set(own_run[0]['gene']))} mito genes use {lineage} profiles")
+    # mito, and plastid where the lineage has plastid profiles too (fern)
+    own_orgs = [o for o in organelles if lineage in lin.BORROWS and any((own_dir / o).glob("*.pssm"))]
+    own_parts = []
+    for o in own_orgs:
+        lrows = without_genes(build_manifest(root, calls, [o], species, own_dir), spliced_here)
+        if not lrows:
+            continue
+        # other U-to-C edits too, on the lineage's own mito profiles only:
+        # in plastid genes most such calls are not in the RNA (see
+        # trans_splicing/reconstruct.py)
+        rev = lin.reverse_edit_penalty(lineage) if o == "mito" else None
+        if rev is not None and not supports_option(orfedit, "--reverse-edit-penalty"):
+            raise StageError(f"--lineage {lineage} needs an orfedit with --reverse-edit-penalty; {orfedit} has none")
+        tag = lineage if o == "mito" else f"{lineage}.{o}"
+        part = run_orfedit(orfedit, lrows, tag, work_dir, stop_edit_penalty=stop, reverse_edit_penalty=rev, **opts)
+        own_parts.append(part)
+        log.info(f"scan_editing: {part[0]['gene'].nunique()} {o} genes use {lineage} profiles")
+    if own_parts:
+        own_run = tuple(pd.concat([part[i] for part in own_parts], ignore_index=True) for i in range(3))
 
     forced = None if lineage == "auto" else lineage
     lineage_table = assign_lineages({k: run[0] for k, run in runs.items()}, forced)
@@ -498,8 +534,8 @@ def scan(
     for i, out in enumerate((work_gene_calls_out, work_edits_out, work_shifts_out)):
         parts = [keep_lineage(run[i], lineages, name) for name, run in runs.items()]
         if own_run is not None:
-            covered = set(own_run[0]["gene"])
-            parts = [p[~((p["organelle"] == "mito") & p["gene"].isin(covered))] for p in parts]
+            covered = set(zip(own_run[0]["organelle"], own_run[0]["gene"]))
+            parts = [p[[pair not in covered for pair in zip(p["organelle"], p["gene"])]] for p in parts]
         table = pd.concat(parts, ignore_index=True)
         if out == work_shifts_out:
             table = add_recurrence(table, lineages)

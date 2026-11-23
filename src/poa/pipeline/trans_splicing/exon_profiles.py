@@ -59,6 +59,9 @@ from poa.pipeline.common.pssm import align_and_build, composition, translate, re
 from poa.pipeline.common.tools import cargo_tool
 from poa.pipeline.trans_splicing.reference_genes import (
     GENES,
+    LINEAGE_EDITED_PROTEINS,
+    LINEAGE_PLASTID,
+    mito_spliced,
     LINEAGE_MITOGENOMES,
     LINEAGE_UNEDITED_MITOGENOMES,
     PLASTID_SPLICED,
@@ -105,7 +108,23 @@ SLOT_PSEUDOCOUNT = 2.0
 # where the other ferns' genes stop - and with stop codons read through
 # transsplice aligned on into it: 35 of 89 spliced genes in 11 DToL ferns
 # ran past a stop codon their RNA shows is never edited.
-LINEAGE_GAP_THRESHOLD = {"fern": 0.5}
+LINEAGE_GAP_THRESHOLD = {"fern": 0.5, "horsetail": 0.5, "lycophyte": 0.5}
+# Fewest loci a template is built from (2 unless given here). Horsetail:
+# the lineage is one genus, Equisetum, whose species' proteins differ by a
+# few percent, and some genes have RNA-seq deep enough in one species
+# only; a profile of that one edited protein still places the others'.
+# Lycophyte: one clubmoss (Phylloglossum) has a transcriptome deep enough
+# to edit every gene, and its proteins alone, held out by genus on three
+# RefSeq clubmosses, placed 88% of exons within 3 bp, against 78% for the
+# four unedited RefSeq proteins together.
+LINEAGE_MIN_LOCI = {"horsetail": 1, "lycophyte": 1}
+# Pseudo-observations per column for a lineage's whole-gene and exon-slot
+# profiles, where SLOT_PSEUDOCOUNT and the whole-gene default are too
+# many: against one to four proteins (horsetail, lycophyte) 2
+# pseudo-observations outweigh the data, a mismatch costs half a bit, and
+# an RNA edit is hardly worth its penalty - held out, the other Equisetum
+# species' edits were found at 50%.
+LINEAGE_PSEUDOCOUNT = {"horsetail": 0.25, "lycophyte": 0.25}
 
 
 # Loci that are not GenBank records: genes of DToL assemblies with their
@@ -157,9 +176,10 @@ def build_and_write_profile(
     pseudocount_mass: float | None = None,
     trim_ends: tuple[bool, bool] = (False, False),
     gap_threshold: float | None = None,
+    min_sequences: int = 2,
 ) -> bool:
-    if len(protein_seqs) < 2:
-        log.warning(f"{label}: only {len(protein_seqs)} sequences, need >= 2 - skipping")
+    if len(protein_seqs) < min_sequences:
+        log.warning(f"{label}: only {len(protein_seqs)} sequences, need >= {min_sequences} - skipping")
         return False
     columns = align_and_build(
         protein_seqs,
@@ -272,8 +292,12 @@ def build_exon_profiles(
     # Lineages that edit U to C (fern): the genome's own translation of an
     # exon has stop codons where the protein has Gln or Arg, so slot
     # profiles are cut from the annotated (edited) protein instead.
-    stop_edit = lin.stop_edit_penalty(lineage) if organelle == "mito" else None
-    genes = list(genes or (PLASTID_SPLICED if organelle == "pltd" else GENES))
+    own_plastid = organelle == "pltd" and lineage in LINEAGE_PLASTID
+    stop_edit = lin.stop_edit_penalty(lineage) if organelle == "mito" or own_plastid else None
+    genes = list(genes or (PLASTID_SPLICED if organelle == "pltd" else mito_spliced(lineage)))
+    # references whose proteins are the RNA-edited ones: slot profiles are
+    # cut from the protein
+    edited_proteins = (organelle == "mito" or own_plastid) and (stop_edit is not None or lineage in LINEAGE_EDITED_PROTEINS)
     orfedit = cargo_tool("orfedit")
     ref_dir = reference_dir(PIPELINE_DIR, organelle, lineage)
     sources = raw_dirs(ref_dir)
@@ -283,7 +307,7 @@ def build_exon_profiles(
     profiles_dir = Path(out_dir) if out_dir else ref_dir / "profiles"
     work_dir = Path(work_root or os.getcwd()) / "analysis" / "trans_splicing" / "work"
     if organelle == "pltd":
-        work_dir = work_dir / "plastid"
+        work_dir = work_dir / ("plastid" if not own_plastid else f"plastid_{lineage}")
     elif lineage != lin.DEFAULT_LINEAGE:
         work_dir = work_dir / lineage
     work_dir.mkdir(parents=True, exist_ok=True)
@@ -292,7 +316,11 @@ def build_exon_profiles(
     raw = load_all_raw_data(*sources)
     junctions = load_junctions(*sources)
     mask = column_mask.load_mask(lineage) if use_mask and organelle == "mito" else {}
-    gap_threshold = LINEAGE_GAP_THRESHOLD.get(lineage) if organelle == "mito" else None
+    gap_threshold = LINEAGE_GAP_THRESHOLD.get(lineage) if organelle == "mito" or own_plastid else None
+    min_loci = LINEAGE_MIN_LOCI.get(lineage, 2) if organelle == "mito" else 2
+    sharp = LINEAGE_PSEUDOCOUNT.get(lineage) if organelle == "mito" else None
+    if sharp is not None and slot_pseudocount is not None:
+        slot_pseudocount = sharp
 
     for gene in genes:
         loci = [key for key in raw if key[1] == gene and key[0] not in exclude]
@@ -312,7 +340,13 @@ def build_exon_profiles(
                 whole_seqs[f"{acc}_{locus}"] = raw[key]["refseq"]
         if not (slots_only and (gene_dir / "whole_gene.pssm").exists()):
             built = build_and_write_profile(
-                whole_seqs, gene_dir / "whole_gene.pssm", f"{gene}.whole_gene", work_dir, gap_threshold=gap_threshold
+                whole_seqs,
+                gene_dir / "whole_gene.pssm",
+                f"{gene}.whole_gene",
+                work_dir,
+                gap_threshold=gap_threshold,
+                min_sequences=min_loci,
+                **({} if sharp is None else dict(background=composition(whole_seqs.values()), pseudocount_mass=sharp)),
             )
             # columns the lineage's own species don't have (column_mask.py)
             if built and mask.get(gene):
@@ -349,7 +383,7 @@ def build_exon_profiles(
 
         # the annotated protein's residues for each slot's whole codons
         slot_proteins: dict[int, dict[str, str]] = {n: {} for n in range(1, k + 1)}
-        if stop_edit is not None:
+        if edited_proteins:
             for key, per in frames.items():
                 acc, _, locus = key
                 protein, cum = raw[key].get("refseq", ""), 0
@@ -377,10 +411,10 @@ def build_exon_profiles(
                     lead, trail = frames[key][slot]
                     seq = raw[key][slot]
                     dna_seqs[f"{acc}_{locus}"] = seq[lead : len(seq) - trail]
-            if len(dna_seqs) < 2:
+            if len(dna_seqs) < min_loci:
                 log.warning(f"{gene} exon{slot}: only {len(dna_seqs)} sequences - skipping")
                 continue
-            if stop_edit is None:
+            if not edited_proteins:
                 protein_seqs = {name: translate(seq).rstrip("*") for name, seq in dna_seqs.items()}
             else:
                 protein_seqs = slot_proteins[slot]
@@ -390,7 +424,15 @@ def build_exon_profiles(
             # they were
             trim = (slot > 1, slot < k) if slot_pseudocount is not None else (False, False)
             if not build_and_write_profile(
-                protein_seqs, profile_path, f"{gene}.exon{slot}", work_dir, slot_background, slot_pseudocount, trim, gap_threshold
+                protein_seqs,
+                profile_path,
+                f"{gene}.exon{slot}",
+                work_dir,
+                slot_background,
+                slot_pseudocount,
+                trim,
+                gap_threshold,
+                min_loci,
             ):
                 continue
             min_score = compute_min_self_score(gene, slot, dna_seqs, profile_path, work_dir, orfedit, stop_edit)

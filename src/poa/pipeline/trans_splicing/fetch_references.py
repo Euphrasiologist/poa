@@ -36,6 +36,7 @@ from poa.pipeline.trans_splicing.reference_genes import (
     CIS_SPLICED_MITO,
     GENE_SYNONYMS,
     GENES,
+    mito_spliced,
     LINEAGE_MITOGENOMES,
     PLASTID_SPLICED,
     PLASTID_SYNONYMS,
@@ -75,7 +76,7 @@ def fetch_references(lineage: str = lin.DEFAULT_LINEAGE, force: bool = False, or
     if organelle == "pltd":
         genes, accessions, synonyms, gb_dir = PLASTID_SPLICED, PLASTOMES, PLASTID_SYNONYMS, raw_dir.parent / "genbank"
     else:
-        genes = CIS_SPLICED_MITO if lineage == lin.DEFAULT_LINEAGE else GENES
+        genes = CIS_SPLICED_MITO if lineage == lin.DEFAULT_LINEAGE else mito_spliced(lineage)
         accessions, synonyms, gb_dir = LINEAGE_MITOGENOMES[lineage], GENE_SYNONYMS, GB_DIR
     junctions_path = raw_dir / "junctions.tsv"
     existing_rows = []

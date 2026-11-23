@@ -56,7 +56,14 @@ from poa.pipeline.common import species_discovery as sd
 from poa.pipeline.common.errors import StageError
 from poa.pipeline.common.tools import cargo_tool
 from poa.pipeline.editing.scan import add_recurrence, supports_option
-from poa.pipeline.trans_splicing.reference_genes import GENES, LINEAGE_MITOGENOMES, PLASTID_SPLICED, reference_dir
+from poa.pipeline.trans_splicing.reference_genes import (
+    GENES,
+    LINEAGE_MITOGENOMES,
+    LINEAGE_PLASTID,
+    PLASTID_SPLICED,
+    mito_spliced,
+    reference_dir,
+)
 from poa.pipeline.common.log import setup_logging
 
 log = logging.getLogger(__name__)
@@ -93,6 +100,13 @@ def template_lineage(name: str) -> str:
     return name if name in LINEAGE_MITOGENOMES and any(own.glob("*/whole_gene.pssm")) else lin.reference(name)
 
 
+def on_lineage_plastid_templates(row: dict, lineage: str) -> bool:
+    """Is this plastid manifest row on `lineage`'s own plastid templates?"""
+    if lineage not in LINEAGE_PLASTID:
+        return False
+    return Path(row["template_dir"]).parent == reference_dir(PIPELINE_DIR, "pltd", lineage) / "profiles"
+
+
 def build_manifest(
     root: Path,
     gene_calls: pd.DataFrame,
@@ -109,9 +123,17 @@ def build_manifest(
     # references (fern, for editing) still has its own exon templates
     for name in LINEAGE_MITOGENOMES:
         profiles_dir = lin.trans_splicing_reference(PIPELINE_DIR, name) / "profiles"
-        templates[name] = {g: profiles_dir / g for g in GENES if (profiles_dir / g / "whole_gene.pssm").exists()}
+        # a lineage's own spliced genes (fern atp1, cox1, rps14) included
+        templates[name] = {
+            g: profiles_dir / g for g in mito_spliced(name) if (profiles_dir / g / "whole_gene.pssm").exists()
+        }
     plastid_dir = reference_dir(PIPELINE_DIR, "pltd") / "profiles"
     plastid = {g: plastid_dir / g for g in PLASTID_SPLICED if (plastid_dir / g / "whole_gene.pssm").exists()}
+    # a lineage's own plastid templates (fern), for the genes it has them for
+    plastid_own = {}
+    for name in LINEAGE_PLASTID:
+        own_dir = reference_dir(PIPELINE_DIR, "pltd", name) / "profiles"
+        plastid_own[name] = {g: own_dir / g for g in PLASTID_SPLICED if (own_dir / g / "whole_gene.pssm").exists()}
     missing = set(GENES) - set(templates[lin.DEFAULT_LINEAGE])
     if "pltd" in organelles:
         missing |= {f"pltd {g}" for g in set(PLASTID_SPLICED) - set(plastid)}
@@ -119,13 +141,15 @@ def build_manifest(
         log.warning(f"no template for {sorted(missing)} - run trans_splicing/src/00_build_exon_profiles.py first")
 
     for organelle in organelles:
-        genes = PLASTID_SPLICED if organelle == "pltd" else GENES
+        # every gene some lineage reconstructs; a species' lineage without
+        # a template for one leaves it out (manifest_rows)
+        genes = PLASTID_SPLICED if organelle == "pltd" else mito_spliced()
         sub = gene_calls[(gene_calls["organelle"] == organelle) & (gene_calls["gene"].isin(genes))]
         data_root = sd.repo_data_root(root, organelle)
         if not data_root.is_dir():
             continue
         rows += manifest_rows(sub, organelle, data_root, species_filter, lambda species, gene: (
-            plastid.get(gene)
+            plastid_own.get(lineage_of.get(species, default_lineage), {}).get(gene, plastid.get(gene))
             if organelle == "pltd"
             else templates[template_lineage(lineage_of.get(species, default_lineage))].get(gene)
         ))
@@ -254,6 +278,10 @@ def reconstruct(
     for row in rows:
         name = lineage_of.get(row["species"], default_lineage)
         own = row["organelle"] == "mito" and template_lineage(name) == name
+        # (not for plastid genes, even on the lineage's own plastid
+        # templates: held out by genus on 11 ferns, other U-to-C edits
+        # found 91% of plastid U-to-C sites against 77%, but 42% of the
+        # U-to-C calls were in the RNA against 89%)
         key = (
             lin.stop_edit_penalty(name),
             lin.reverse_edit_penalty(name) if own else None,
@@ -326,7 +354,14 @@ def reconstruct(
 
     shifts = pd.read_csv(work_outs["reconstructed_frameshifts"], sep="\t")
     lineages = {sp: lineage_of.get(sp, default_lineage) for sp in shifts["species"].unique()}
-    add_recurrence(shifts, lineages, source="reconstruction", reference_of=template_lineage).to_csv(
+    own_plastid_genes = {
+        (r["species"], r["gene"])
+        for r in rows
+        if r["organelle"] == "pltd" and on_lineage_plastid_templates(r, lineage_of.get(r["species"], default_lineage))
+    }
+    add_recurrence(
+        shifts, lineages, source="reconstruction", reference_of=template_lineage, own_plastid=own_plastid_genes
+    ).to_csv(
         work_outs["reconstructed_frameshifts"], sep="\t", index=False
     )
     tables = {name: results_dir / f"{name}.tsv" for name in OUT_NAMES}

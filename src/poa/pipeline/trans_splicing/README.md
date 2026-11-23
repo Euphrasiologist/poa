@@ -363,7 +363,23 @@ level. A few exon rows switch between identical-scoring repeat copies,
 which happens between any two runs (forced-angiosperm mode differs from
 the dataset's own earlier run in the same way).
 
-Not covered: liverworts (21% complete), hornworts, ferns and lycophytes
-still use angiosperm templates. The extra moss intron genes (cox1, cob,
-atp9, nad9, ...) have no templates; gff_export's raw chains handle them,
-as before.
+Not covered: liverworts (21% complete) and hornworts still use
+angiosperm templates. The extra moss intron genes (cox1, cob, atp9, nad9,
+...) have no templates; gff_export's raw chains handle them, as before.
+
+### Fern, horsetail and clubmoss templates
+
+`reference/lineages/fern/`, `horsetail/` and `lycophyte/` hold templates
+used only when `--lineage` names them (`common/lineage.py`). They are
+built from loci with the editing RNA-seq shows applied (`raw_rna/`, with
+a README of sources, runs and method): Darwin Tree of Life assemblies for
+fern (mostly) and horsetail, the RefSeq annotation of *Phylloglossum*
+and Darwin Tree of Life assemblies for clubmoss. GenBank records whose
+proteins are unedited stay in `raw/` as a record and are left out of the
+templates (`reference_genes.LINEAGE_UNEDITED_MITOGENOMES`);
+`00a_fetch_references.py` leaves `raw_rna/` alone. A lineage may reconstruct genes that are single-exon
+in angiosperms (`reference_genes.LINEAGE_EXTRA_SPLICED`: fern atp1, cox1,
+rps14; horsetail cox1; lycophyte atp6, atp9, cob, cox1, cox3, nad3,
+rps14), and fern has plastid templates of its own
+(`reference/lineages/fern/plastid/`, built with `--lineage fern
+--organelle pltd`). The top-level README has the figures.

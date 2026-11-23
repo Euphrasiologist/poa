@@ -215,6 +215,168 @@ class Load(unittest.TestCase):
         self.assertEqual(lin.load(root), {"A": "moss"})
 
 
+class LineageSplicedGenes(unittest.TestCase):
+    """Genes with introns in one lineage only: reconstructed there, and
+    left out of that lineage's single-exon editing."""
+
+    def test_gene_lists(self):
+        from poa.pipeline.trans_splicing import reference_genes as rg
+
+        self.assertEqual(rg.mito_spliced("angiosperm"), rg.GENES)
+        self.assertEqual(rg.mito_spliced("moss"), rg.GENES)
+        self.assertEqual(rg.mito_spliced("fern")[len(rg.GENES) :], ["atp1", "cox1", "rps14"])
+        self.assertIn("atp9", rg.mito_spliced("lycophyte"))
+        every = rg.mito_spliced()
+        self.assertEqual(len(every), len(set(every)))
+        self.assertTrue({"atp1", "cox1", "atp6", "nad3"} <= set(every))
+
+    def test_editing_leaves_them_out(self):
+        self.assertEqual(scan_editing.lineage_spliced("angiosperm"), set())
+        self.assertEqual(scan_editing.lineage_spliced("auto"), set())
+        self.assertEqual(scan_editing.lineage_spliced("fern"), {"atp1", "cox1", "rps14"})
+        self.assertEqual(scan_editing.lineage_spliced("horsetail"), {"cox1"})
+        rows = [
+            {"organelle": "mito", "gene": "cox1|ctg1:5-900"},
+            {"organelle": "mito", "gene": "cox3|ctg1:1000-1800"},
+            {"organelle": "pltd", "gene": "cox1|ctg1:5-900"},
+        ]
+        self.assertEqual(scan_editing.without_genes(rows, set()), rows)
+        self.assertEqual(scan_editing.without_genes(rows, {"cox1"}), rows[1:])
+
+    def test_templates(self):
+        from poa.pipeline.editing import lineage_profiles as lp
+        from poa.pipeline.trans_splicing import reconstruct
+
+        fern = lin.trans_splicing_reference(PIPELINE, "fern") / "profiles"
+        for gene in ("atp1", "cox1", "rps14"):
+            self.assertTrue((fern / gene / "exon2.pssm").exists(), gene)
+            self.assertFalse((fern / gene / "exon3.pssm").exists(), gene)
+            self.assertNotIn(gene, lp.LINEAGE_GENES["fern"])
+        # no template for them in a lineage that does not splice them
+        self.assertFalse((lin.trans_splicing_reference(PIPELINE, "moss") / "profiles" / "cox1").exists())
+        self.assertFalse((lin.trans_splicing_reference(PIPELINE, "angiosperm") / "profiles" / "cox1").exists())
+        self.assertEqual(reconstruct.template_lineage("fern"), "fern")
+
+
+class HorsetailAndLycophyte(unittest.TestCase):
+    """Two more lineages chosen only with --lineage, each with its own
+    exon templates and editing profiles on top of the angiosperm ones."""
+
+    def test_registered(self):
+        from poa.pipeline.trans_splicing import reconstruct
+
+        for name in ("horsetail", "lycophyte"):
+            self.assertIn(name, lin.CHOICES)
+            self.assertNotIn(name, lin.LINEAGES)  # never picked automatically
+            self.assertEqual(lin.reference(name), lin.DEFAULT_LINEAGE)
+            self.assertEqual(reconstruct.template_lineage(name), name)
+            self.assertIsNone(lin.reverse_edit_penalty(name))
+            self.assertIsNone(lin.junction_slide(name))
+        # horsetails edit C to U only; clubmosses have a few stop codons edited away
+        self.assertIsNone(lin.stop_edit_penalty("horsetail"))
+        self.assertEqual(lin.stop_edit_penalty("lycophyte"), 2.5)
+
+    def test_horsetail_references(self):
+        from poa.pipeline.editing import lineage_profiles as lp
+        from poa.pipeline.trans_splicing import exon_profiles as ep
+        from poa.pipeline.trans_splicing import reference_genes as rg
+
+        self.assertEqual(rg.LINEAGE_MITOGENOMES["horsetail"], {})  # RNA-derived only
+        ref = lin.trans_splicing_reference(PIPELINE, "horsetail")
+        self.assertEqual([d.name for d in ep.raw_dirs(ref)], [ep.RNA_RAW_NAME])
+        self.assertTrue((ref / "profiles" / "cox1" / "exon4.pssm").exists())
+        self.assertTrue((ref / "profiles" / "nad1" / "whole_gene.pssm").exists())
+        self.assertIn("RNA_Equisetum_sylvaticum", lp.rna_proteins("horsetail")["atp9"])
+        have = {p.stem for p in (lin.editing_profiles(PIPELINE, "horsetail") / "mito").glob("*.pssm")}
+        self.assertTrue({"atp9", "matR"} <= have)
+        self.assertNotIn("cox1", have)  # three introns in Equisetum
+        # one genus: a single locus is enough, with fewer pseudocounts
+        self.assertEqual(ep.LINEAGE_MIN_LOCI["horsetail"], 1)
+        self.assertLess(ep.LINEAGE_PSEUDOCOUNT["horsetail"], 1.0)
+
+    def test_lycophyte_references(self):
+        from poa.pipeline.editing import lineage_profiles as lp
+        from poa.pipeline.trans_splicing import exon_profiles as ep
+        from poa.pipeline.trans_splicing import reference_genes as rg
+
+        self.assertEqual(len(rg.LINEAGE_MITOGENOMES["lycophyte"]), 4)
+        # the RefSeq proteins are unedited: kept as a record, not built from
+        self.assertEqual(set(rg.LINEAGE_UNEDITED_MITOGENOMES["lycophyte"]), set(rg.LINEAGE_MITOGENOMES["lycophyte"]))
+        self.assertEqual(rg.LINEAGE_EDITED_MITOGENOMES["lycophyte"], {})
+        ref = lin.trans_splicing_reference(PIPELINE, "lycophyte")
+        self.assertEqual([d.name for d in ep.raw_dirs(ref)], ["raw", ep.RNA_RAW_NAME])
+        raw = ep.load_all_raw_data(*ep.raw_dirs(ref))
+        self.assertIn(("RNA_Phylloglossum_drummondii", "cox1", "cox1_1"), raw)
+        self.assertIn("RNA_Phylloglossum_drummondii", lp.rna_proteins("lycophyte")["atp1"])
+        ts = lin.trans_splicing_reference(PIPELINE, "lycophyte") / "profiles"
+        self.assertTrue((ts / "atp9" / "exon4.pssm").exists())
+        self.assertTrue((ts / "nad4" / "exon2.pssm").exists())
+        self.assertFalse((ts / "nad4" / "exon3.pssm").exists())  # two exons in clubmosses
+        self.assertFalse((ts / "nad7").exists())  # lost from their mitogenomes
+        have = {p.stem for p in (lin.editing_profiles(PIPELINE, "lycophyte") / "mito").glob("*.pssm")}
+        self.assertIn("atp1", have)
+        self.assertFalse(set(rg.LINEAGE_EXTRA_SPLICED["lycophyte"]) & have)
+
+    def test_single_sequence_profile(self):
+        from poa.pipeline.common import pssm
+
+        tmp = Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, tmp)
+        columns = pssm.align_and_build({"only": "MKLV"}, tmp, "one", 0.5, pssm.composition(["MKLV"]), 0.25)
+        self.assertEqual(len(columns), 4)
+        self.assertGreater(columns[0]["M"], 0)
+        self.assertLess(columns[0]["K"], 0)
+
+
+class LineagePlastid(unittest.TestCase):
+    """A lineage's own plastid references (fern), used with --lineage on
+    top of the land-plant plastid set."""
+
+    def test_where_they_live(self):
+        from poa.pipeline.trans_splicing import reference_genes as rg
+
+        self.assertEqual(rg.LINEAGE_PLASTID, ("fern",))
+        shared = PIPELINE / "trans_splicing" / "reference" / "plastid"
+        self.assertEqual(rg.reference_dir(PIPELINE, "pltd"), shared)
+        self.assertEqual(rg.reference_dir(PIPELINE, "pltd", "moss"), shared)
+        self.assertEqual(rg.reference_dir(PIPELINE, "pltd", "angiosperm"), shared)
+        own = rg.reference_dir(PIPELINE, "pltd", "fern")
+        self.assertEqual(own, lin.trans_splicing_reference(PIPELINE, "fern") / "plastid")
+        self.assertTrue((own / "profiles" / "ndhB" / "exon2.pssm").exists())
+        self.assertTrue((own / "raw_rna" / "junctions.tsv").exists())
+
+    def test_profiles_and_proteins(self):
+        from poa.pipeline.editing import lineage_profiles as lp
+
+        have = {p.stem for p in (lin.editing_profiles(PIPELINE, "fern") / "pltd").glob("*.pssm")}
+        self.assertTrue({"rbcL", "atpA", "ndhD"} <= have)
+        proteins = lp.rna_proteins("fern", organelle="pltd")
+        self.assertIn("RNA_Onoclea_sensibilis", proteins["rbcL"])
+        self.assertNotIn("rbcL", lp.rna_proteins("fern"))  # the mito set is a separate file
+        self.assertEqual(lp.rna_proteins("moss", organelle="pltd"), {})
+        with self.assertRaises(ValueError):
+            lp.build_plastid_profiles("moss", Path("."))
+
+    def test_reconstruct_uses_them_for_that_lineage_only(self):
+        from poa.pipeline.trans_splicing import reconstruct
+        from poa.pipeline.trans_splicing import reference_genes as rg
+
+        own = rg.reference_dir(PIPELINE, "pltd", "fern") / "profiles" / "ndhB"
+        shared = rg.reference_dir(PIPELINE, "pltd") / "profiles" / "ndhB"
+        self.assertTrue(reconstruct.on_lineage_plastid_templates({"template_dir": str(own)}, "fern"))
+        self.assertFalse(reconstruct.on_lineage_plastid_templates({"template_dir": str(shared)}, "fern"))
+        self.assertFalse(reconstruct.on_lineage_plastid_templates({"template_dir": str(own)}, "angiosperm"))
+
+    def test_no_recurrence_count_on_own_plastid_profiles(self):
+        shifts = pd.DataFrame(
+            [("Fern", "pltd", "rpoC2", 100), ("Fern", "pltd", "rpoB", 50)],
+            columns=["species", "organelle", "gene", "profile_column"],
+        )
+        out = scan_editing.add_recurrence(shifts, {"Fern": "fern"}, own_plastid={("Fern", "rpoC2")})
+        self.assertEqual(out["dtol_assemblies"].iloc[0], "")
+        self.assertNotEqual(out["dtol_assemblies"].iloc[1], "")
+
+
 class References(unittest.TestCase):
     """The bundled moss references exist where the stages look for them."""
 

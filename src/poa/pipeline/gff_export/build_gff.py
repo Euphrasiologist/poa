@@ -100,7 +100,11 @@ import pandas as pd
 
 from poa.pipeline.common import species_discovery as sd
 from poa.pipeline.common.errors import StageError
-from poa.pipeline.trans_splicing.reference_genes import CIS_SPLICED_MITO, GENES as RECONSTRUCTED_GENES, PLASTID_SPLICED
+from poa.pipeline.trans_splicing.reference_genes import CIS_SPLICED_MITO, PLASTID_SPLICED, mito_spliced
+
+# every mito gene some lineage reconstructs (a species' own lineage decides
+# which of them trans_splicing gave it)
+RECONSTRUCTED_GENES = mito_spliced()
 from poa.pipeline.common.log import setup_logging
 
 log = logging.getLogger(__name__)

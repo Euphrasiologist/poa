@@ -25,10 +25,29 @@ transsplice may read such a stop through at STOP_EDIT_PENALTY. It has
 exon templates of its own (trans_splicing/reference/lineages/fern/) and
 editing profiles for the single-exon mito genes its references cover
 (editing/reference/lineages/fern/), on which other U-to-C edits are
-called too, at REVERSE_EDIT_PENALTY; the genes it has no profile for, and
-its plastid genes, borrow the angiosperm references. It is for ferns
-proper, quillworts (Isoetes) and hornworts; horsetails, clubmosses and
-Selaginella do not edit this way and should stay on the default.
+called too, at REVERSE_EDIT_PENALTY; the genes it has no profile for
+borrow the angiosperm references. It also has plastid exon templates and
+editing profiles of its own (reference_genes.LINEAGE_PLASTID), used with
+the stop read-through but without the other U-to-C edits. It is for ferns
+proper, quillworts (Isoetes) and hornworts.
+
+"horsetail" and "lycophyte" are chosen the same way, with --lineage only,
+and likewise sit on top of the angiosperm references. Horsetail
+(Equisetum, the one living genus) edits C to U only, so it changes
+nothing in the editing model; its exon templates and editing profiles
+come from Equisetum RNA-seq, there being no annotated horsetail
+mitogenome. Lycophyte is for clubmosses (Lycopodiaceae): an intron set of
+their own, and a handful of in-frame stop codons edited away, so it reads
+stops through like fern. The four RefSeq clubmoss mitogenomes give the
+exon structures but unedited proteins, so its references are the RefSeq
+annotation of Phylloglossum with the editing its total-RNA library shows
+applied, plus loci of three Darwin Tree of Life clubmosses. Selaginella
+and Isoetes mitogenomes are unlike either and are not covered.
+
+Genes with introns in one of these lineages only (fern atp1, cox1, rps14;
+horsetail cox1; lycophyte atp6, atp9, cob, cox1, cox3, nad3, rps14) are
+reconstructed from that lineage's exon templates, and editing leaves them
+alone (reference_genes.LINEAGE_EXTRA_SPLICED).
 """
 
 from __future__ import annotations
@@ -40,7 +59,7 @@ DEFAULT_LINEAGE = "angiosperm"
 LINEAGES = (DEFAULT_LINEAGE, "moss")
 # a lineage that borrows another's references: {name: the lineage whose
 # templates and profiles it uses}
-BORROWS = {"fern": DEFAULT_LINEAGE}
+BORROWS = {"fern": DEFAULT_LINEAGE, "horsetail": DEFAULT_LINEAGE, "lycophyte": DEFAULT_LINEAGE}
 FERN = "fern"
 CHOICES = ("auto", *LINEAGES, *BORROWS)
 # Cost of reading an in-frame TAA/TAG as Gln or TGA as Arg (a U-to-C
@@ -50,7 +69,11 @@ CHOICES = ("auto", *LINEAGES, *BORROWS)
 # comes to 32% of mito and 6% of plastid edits (33-35% and 1-10% measured
 # in fern transcriptomes); 4 and 6 lose alignments, and allowing other
 # U-to-C edits as well (at 8 or 12) changes nothing for ferns.
-STOP_EDIT_PENALTY = {"fern": 2.5}
+# Lycophyte (Lycopodiaceae): the four RefSeq mitogenomes annotate the same
+# few in-frame stops as edited (cob codon 46 TAG, nad1 177 and nad5 544
+# TAA to Gln, rpl2 36 TGA to Arg), so their genes need the read-through
+# too, at the same cost.
+STOP_EDIT_PENALTY = {"fern": 2.5, "lycophyte": 2.5}
 # Cost of any other U-to-C edit (one that changes an amino acid, not a
 # stop), for a lineage's mitochondrial genes aligned to its own profiles
 # and exon templates only. Never for genes still on the borrowed

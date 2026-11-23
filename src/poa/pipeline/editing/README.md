@@ -258,9 +258,23 @@ and nothing else is. Moss results (auto vs `--lineage angiosperm`):
 | aligned < 80% | 15% | 0.5% |
 
 Every non-moss row is byte-identical between the two runs. Liverworts
-(87% changed), ferns and lycophytes still align against angiosperm
-profiles and have the same low-score symptoms. Treat their corrections
-as lower-confidence.
+(87% changed) still align against angiosperm profiles and have the same
+low-score symptoms, as do ferns, horsetails and clubmosses run without
+their lineage. Treat their corrections as lower-confidence.
+
+### Fern, horsetail and clubmoss profiles
+
+`--lineage fern`, `horsetail` and `lycophyte` are never picked
+automatically. Each has profiles under `reference/lineages/<lineage>/mito/`
+for the single-exon genes its references cover, and the species' other
+genes stay on the angiosperm profiles; a gene the lineage splices
+(`reference_genes.LINEAGE_EXTRA_SPLICED`) is left to trans_splicing. The
+profiles are built from RNA-edited proteins (`rna_proteins.fasta`, with a
+README): of Darwin Tree of Life assemblies for fern and horsetail, of the
+RefSeq *Phylloglossum* genome and Darwin Tree of Life assemblies for
+clubmoss. Fern also has plastid profiles (`reference/lineages/fern/
+pltd/`, from `rna_proteins.pltd.fasta`, built with `--organelle pltd`).
+The top-level README has the figures.
 
 ## Not yet run at full-dataset scale / not in `run_all.sh`
 

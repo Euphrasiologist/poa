@@ -2,6 +2,51 @@
 
 ## Unreleased
 
+- `--lineage horsetail`, for *Equisetum*: exon templates for 11 genes and
+  editing profiles for 23, from gene models built on RNA-seq of eight
+  Darwin Tree of Life *Equisetum* species (no horsetail mitogenome is
+  annotated in GenBank; `trans_splicing/reference/lineages/horsetail/
+  raw_rna/README.md`). Chosen with `--lineage` only; C-to-U editing only.
+  With each species' own loci left out in turn, on nine assemblies:
+  single-exon genes aligned end to end 172 of 189 (119 of 218 on the
+  default references), spliced genes complete 86 of 86 (64 of 80), genes
+  with a frameshift call 4 (45), RNA edits found 80% with 96% of calls
+  right (44% / 50%), and all 110 exon junctions with intron-spanning
+  reads as the reads show. A template or profile may come from one
+  species (`exon_profiles.LINEAGE_MIN_LOCI`), with 0.25 pseudo-
+  observations a column (`LINEAGE_PSEUDOCOUNT`).
+- `--lineage lycophyte`, for clubmosses (Lycopodiaceae): exon templates
+  for 15 genes and editing profiles for 18, with stop codons read through
+  as for fern. The four RefSeq clubmoss mitogenomes give the exon
+  structures but unedited proteins (templates from them found a fifth of
+  the edits RNA-seq shows), so the references are the RefSeq annotation
+  of *Phylloglossum drummondii* with the editing its total-RNA library
+  shows applied, plus loci of three Darwin Tree of Life clubmosses
+  (`trans_splicing/reference/lineages/lycophyte/README.md`). Three RefSeq
+  genomes with their genus held out: 174 of 198 annotated exons placed
+  within 3 bp (51 on the default references), 41 of 44 spliced genes with
+  every exon placed (4), 5 genes with a frameshift call (14). Three
+  dataset clubmosses, own loci held out, against RNA-seq: 87 of 98 edits
+  found with 87 of 100 calls right (65 of 119, 65 of 147).
+- Genes with introns in one lineage only are reconstructed from that
+  lineage's exon templates and left out of its single-exon editing
+  (`reference_genes.LINEAGE_EXTRA_SPLICED`, `mito_spliced()`): fern atp1,
+  cox1 and rps14, horsetail cox1, lycophyte atp6, atp9, cob, cox1, cox3,
+  nad3 and rps14. Fern, held out by genus on eleven ferns: atp1 complete
+  in 11 of 11 and cox1 in 9 of 11 (no single-exon call of either aligned
+  end to end), rps14 without the frameshift call it drew in every copy,
+  and 77-91% of their RNA edits found against 34-49%.
+- `--lineage fern`: plastid genes are corrected against fern plastid
+  references (`reference_genes.LINEAGE_PLASTID`; 614 RNA-edited proteins
+  of 56 single-exon genes and 94 spliced-gene loci from the eleven
+  RNA-seq ferns), with stop read-through only. Held out by genus:
+  single-exon genes aligned end to end 596 of 614 (339), RNA edits found
+  82% with 83% of calls right (74% / 59%), spliced genes 81% / 83% (65% /
+  50%), genes running past a never-edited stop codon 36 (81).
+  `00b_build_lineage_profiles.py` and `00_build_exon_profiles.py` take
+  `--organelle pltd` with `--lineage fern`.
+- Output for species on the angiosperm and moss references is unchanged.
+
 - `--lineage fern`: transsplice may slide an exon junction up to 6 bases
   where the whole-gene alignment gains (`lineage.JUNCTION_SLIDE`, its new
   `--junction-slide`; skipped with a warning on a transsplice without
