@@ -397,23 +397,24 @@ in-frame stop codons are edited away, so the lineage reads stops through
 as the fern one does. Four clubmoss mitogenomes are in RefSeq, but with
 unedited proteins: templates built from them placed exons and found a
 fifth of the edits RNA-seq shows. The references are therefore the
-RefSeq annotation of *Phylloglossum drummondii* with the editing its
-total-RNA library shows applied (all 35 genes; 289 C-to-U and 5 U-to-C
-edits), plus the genes that poly-A RNA-seq covers in three Darwin Tree
+RefSeq annotations of *Phylloglossum drummondii* and *Lycopodium
+japonicum* with the editing their own RNA-seq shows applied (all 35
+genes, 289 C-to-U and 5 U-to-C edits; all 34 genes, 266 C-to-U edits),
+plus the genes that poly-A RNA-seq covers in three Darwin Tree
 of Life clubmosses
 (`trans_splicing/reference/lineages/lycophyte/README.md`).
 
 | | default references | lycophyte references |
 |---|---|---|
-| annotated exons placed within 3 bp, 3 RefSeq genomes, genus held out | 51 of 198 | 174 of 198 |
+| annotated exons placed within 3 bp, 3 RefSeq genomes, genus held out | 51 of 198 | 176 of 198 |
 | spliced genes with every exon placed | 4 of 44 | 41 of 44 |
-| genes with a frameshift call | 14 | 5 |
+| genes with a frameshift call | 14 | 3 |
 | spliced genes complete, 3 DToL clubmosses, own loci held out | 15 of 27 | 45 of 45 |
-| RNA edits found / calls right, same | 65 of 119 / 65 of 147 | 87 of 98 / 87 of 100 |
+| RNA edits found / calls right, same | 65 of 119 / 65 of 147 | 88 of 98 / 88 of 100 |
 
 All 21 exon junctions that intron-spanning reads cross in the three
 dataset clubmosses are as the reads show. The edit figures rest on the
-18 genes with enough reads, and the references on one deeply sequenced
+18 genes with enough reads, and the references on two deeply sequenced
 species, so treat this lineage as less tested than the fern one. atp9's
 third exon, 7 bp, is rarely placed; extra copies of atp4, atp8 and rps2
 draw frameshift calls that may well be real; and nad6 draws one near its

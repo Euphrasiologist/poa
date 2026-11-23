@@ -373,8 +373,8 @@ angiosperm templates. The extra moss intron genes (cox1, cob, atp9, nad9,
 used only when `--lineage` names them (`common/lineage.py`). They are
 built from loci with the editing RNA-seq shows applied (`raw_rna/`, with
 a README of sources, runs and method): Darwin Tree of Life assemblies for
-fern (mostly) and horsetail, the RefSeq annotation of *Phylloglossum*
-and Darwin Tree of Life assemblies for clubmoss. GenBank records whose
+fern (mostly) and horsetail, the RefSeq annotations of *Phylloglossum*
+and *Lycopodium japonicum* and Darwin Tree of Life assemblies for clubmoss. GenBank records whose
 proteins are unedited stay in `raw/` as a record and are left out of the
 templates (`reference_genes.LINEAGE_UNEDITED_MITOGENOMES`);
 `00a_fetch_references.py` leaves `raw_rna/` alone. A lineage may reconstruct genes that are single-exon

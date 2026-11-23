@@ -271,7 +271,7 @@ genes stay on the angiosperm profiles; a gene the lineage splices
 (`reference_genes.LINEAGE_EXTRA_SPLICED`) is left to trans_splicing. The
 profiles are built from RNA-edited proteins (`rna_proteins.fasta`, with a
 README): of Darwin Tree of Life assemblies for fern and horsetail, of the
-RefSeq *Phylloglossum* genome and Darwin Tree of Life assemblies for
+RefSeq *Phylloglossum* and *Lycopodium japonicum* genomes and Darwin Tree of Life assemblies for
 clubmoss. Fern also has plastid profiles (`reference/lineages/fern/
 pltd/`, from `rna_proteins.pltd.fasta`, built with `--organelle pltd`).
 The top-level README has the figures.

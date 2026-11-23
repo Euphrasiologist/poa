@@ -16,18 +16,18 @@
   species (`exon_profiles.LINEAGE_MIN_LOCI`), with 0.25 pseudo-
   observations a column (`LINEAGE_PSEUDOCOUNT`).
 - `--lineage lycophyte`, for clubmosses (Lycopodiaceae): exon templates
-  for 15 genes and editing profiles for 18, with stop codons read through
+  for 15 genes and editing profiles for 19, with stop codons read through
   as for fern. The four RefSeq clubmoss mitogenomes give the exon
   structures but unedited proteins (templates from them found a fifth of
-  the edits RNA-seq shows), so the references are the RefSeq annotation
-  of *Phylloglossum drummondii* with the editing its total-RNA library
-  shows applied, plus loci of three Darwin Tree of Life clubmosses
+  the edits RNA-seq shows), so the references are the RefSeq annotations
+  of *Phylloglossum drummondii* and *Lycopodium japonicum* with the
+  editing their own RNA-seq shows applied, plus loci of three Darwin Tree of Life clubmosses
   (`trans_splicing/reference/lineages/lycophyte/README.md`). Three RefSeq
-  genomes with their genus held out: 174 of 198 annotated exons placed
+  genomes with their genus held out: 176 of 198 annotated exons placed
   within 3 bp (51 on the default references), 41 of 44 spliced genes with
-  every exon placed (4), 5 genes with a frameshift call (14). Three
-  dataset clubmosses, own loci held out, against RNA-seq: 87 of 98 edits
-  found with 87 of 100 calls right (65 of 119, 65 of 147).
+  every exon placed (4), 3 genes with a frameshift call (14). Three
+  dataset clubmosses, own loci held out, against RNA-seq: 88 of 98 edits
+  found with 88 of 100 calls right (65 of 119, 65 of 147).
 - Genes with introns in one lineage only are reconstructed from that
   lineage's exon templates and left out of its single-exon editing
   (`reference_genes.LINEAGE_EXTRA_SPLICED`, `mito_spliced()`): fern atp1,

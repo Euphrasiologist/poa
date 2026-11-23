@@ -69,3 +69,50 @@ RNA_Spinulum_annotinum	nad1	nad1_1	2	5	411855	411937	-	cis		Spinulum_annotinum: 
 RNA_Spinulum_annotinum	nad1	nad1_1	3	5	410181	410372	-	cis		Spinulum_annotinum: RNA-seq gene model
 RNA_Spinulum_annotinum	nad1	nad1_1	4	5	407019	407077	-	cis		Spinulum_annotinum: RNA-seq gene model
 RNA_Spinulum_annotinum	nad1	nad1_1	5	5	403326	403584	-			Spinulum_annotinum: RNA-seq gene model
+RNA_Lycopodium_japonicum	rps10	rps10_1	1	2	73765	73999	+	cis		Lycopodium_japonicum NC_080981.1: annotated exons, RNA-seq edited
+RNA_Lycopodium_japonicum	rps10	rps10_1	2	2	74822	74898	+			Lycopodium_japonicum NC_080981.1: annotated exons, RNA-seq edited
+RNA_Lycopodium_japonicum	rpl2	rpl2_1	1	2	77576	78502	+	cis		Lycopodium_japonicum NC_080981.1: annotated exons, RNA-seq edited
+RNA_Lycopodium_japonicum	rpl2	rpl2_1	2	2	79253	79966	+			Lycopodium_japonicum NC_080981.1: annotated exons, RNA-seq edited
+RNA_Lycopodium_japonicum	rps3	rps3_1	1	3	80231	80304	+	cis		Lycopodium_japonicum NC_080981.1: annotated exons, RNA-seq edited
+RNA_Lycopodium_japonicum	rps3	rps3_1	2	3	83333	83510	+	cis		Lycopodium_japonicum NC_080981.1: annotated exons, RNA-seq edited
+RNA_Lycopodium_japonicum	rps3	rps3_1	3	3	84617	85888	+			Lycopodium_japonicum NC_080981.1: annotated exons, RNA-seq edited
+RNA_Lycopodium_japonicum	rps14	rps14_1	1	2	87614	87727	+	cis		Lycopodium_japonicum NC_080981.1: annotated exons, RNA-seq edited
+RNA_Lycopodium_japonicum	rps14	rps14_1	2	2	90434	90619	+			Lycopodium_japonicum NC_080981.1: annotated exons, RNA-seq edited
+RNA_Lycopodium_japonicum	nad4	nad4_1	1	2	105623	106083	+	cis		Lycopodium_japonicum NC_080981.1: annotated exons, RNA-seq edited
+RNA_Lycopodium_japonicum	nad4	nad4_1	2	2	108985	110011	+			Lycopodium_japonicum NC_080981.1: annotated exons, RNA-seq edited
+RNA_Lycopodium_japonicum	nad2	nad2_1	1	3	110035	110190	+	cis		Lycopodium_japonicum NC_080981.1: annotated exons, RNA-seq edited
+RNA_Lycopodium_japonicum	nad2	nad2_1	2	3	111708	112381	+	cis		Lycopodium_japonicum NC_080981.1: annotated exons, RNA-seq edited
+RNA_Lycopodium_japonicum	nad2	nad2_1	3	3	113069	113708	+			Lycopodium_japonicum NC_080981.1: annotated exons, RNA-seq edited
+RNA_Lycopodium_japonicum	atp9	atp9_1	1	4	133938	133958	+	cis		Lycopodium_japonicum NC_080981.1: annotated exons, RNA-seq edited
+RNA_Lycopodium_japonicum	atp9	atp9_1	2	4	135566	135631	+	cis		Lycopodium_japonicum NC_080981.1: annotated exons, RNA-seq edited
+RNA_Lycopodium_japonicum	atp9	atp9_1	3	4	141377	141383	+	cis		Lycopodium_japonicum NC_080981.1: annotated exons, RNA-seq edited
+RNA_Lycopodium_japonicum	atp9	atp9_1	4	4	142374	142504	+			Lycopodium_japonicum NC_080981.1: annotated exons, RNA-seq edited
+RNA_Lycopodium_japonicum	cob	cob_1	1	3	167842	168396	-	cis		Lycopodium_japonicum NC_080981.1: annotated exons, RNA-seq edited
+RNA_Lycopodium_japonicum	cob	cob_1	2	3	165591	165684	-	cis		Lycopodium_japonicum NC_080981.1: annotated exons, RNA-seq edited
+RNA_Lycopodium_japonicum	cob	cob_1	3	3	162025	162407	-			Lycopodium_japonicum NC_080981.1: annotated exons, RNA-seq edited
+RNA_Lycopodium_japonicum	nad5	nad5_1	1	5	221279	221670	-	cis		Lycopodium_japonicum NC_080981.1: annotated exons, RNA-seq edited
+RNA_Lycopodium_japonicum	nad5	nad5_1	2	5	219488	220337	-	cis		Lycopodium_japonicum NC_080981.1: annotated exons, RNA-seq edited
+RNA_Lycopodium_japonicum	nad5	nad5_1	3	5	216491	216703	-	cis		Lycopodium_japonicum NC_080981.1: annotated exons, RNA-seq edited
+RNA_Lycopodium_japonicum	nad5	nad5_1	4	5	214828	214849	-	cis		Lycopodium_japonicum NC_080981.1: annotated exons, RNA-seq edited
+RNA_Lycopodium_japonicum	nad5	nad5_1	5	5	211396	211952	-			Lycopodium_japonicum NC_080981.1: annotated exons, RNA-seq edited
+RNA_Lycopodium_japonicum	nad1	nad1_1	1	5	249571	249964	+	cis		Lycopodium_japonicum NC_080981.1: annotated exons, RNA-seq edited
+RNA_Lycopodium_japonicum	nad1	nad1_1	2	5	251651	251733	+	cis		Lycopodium_japonicum NC_080981.1: annotated exons, RNA-seq edited
+RNA_Lycopodium_japonicum	nad1	nad1_1	3	5	253216	253407	+	cis		Lycopodium_japonicum NC_080981.1: annotated exons, RNA-seq edited
+RNA_Lycopodium_japonicum	nad1	nad1_1	4	5	256498	256556	+	cis		Lycopodium_japonicum NC_080981.1: annotated exons, RNA-seq edited
+RNA_Lycopodium_japonicum	nad1	nad1_1	5	5	259995	260253	+			Lycopodium_japonicum NC_080981.1: annotated exons, RNA-seq edited
+RNA_Lycopodium_japonicum	atp6	atp6_1	1	3	271177	271256	-	cis		Lycopodium_japonicum NC_080981.1: annotated exons, RNA-seq edited
+RNA_Lycopodium_japonicum	atp6	atp6_1	2	3	270195	270553	-	cis		Lycopodium_japonicum NC_080981.1: annotated exons, RNA-seq edited
+RNA_Lycopodium_japonicum	atp6	atp6_1	3	3	266524	266843	-			Lycopodium_japonicum NC_080981.1: annotated exons, RNA-seq edited
+RNA_Lycopodium_japonicum	nad3	nad3_1	1	3	291915	291966	-	cis		Lycopodium_japonicum NC_080981.1: annotated exons, RNA-seq edited
+RNA_Lycopodium_japonicum	nad3	nad3_1	2	3	290154	290241	-	cis		Lycopodium_japonicum NC_080981.1: annotated exons, RNA-seq edited
+RNA_Lycopodium_japonicum	nad3	nad3_1	3	3	287737	287953	-			Lycopodium_japonicum NC_080981.1: annotated exons, RNA-seq edited
+RNA_Lycopodium_japonicum	cox1	cox1_1	1	4	351074	351396	+	cis		Lycopodium_japonicum NC_080981.1: annotated exons, RNA-seq edited
+RNA_Lycopodium_japonicum	cox1	cox1_1	2	4	354287	354958	+	cis		Lycopodium_japonicum NC_080981.1: annotated exons, RNA-seq edited
+RNA_Lycopodium_japonicum	cox1	cox1_1	3	4	357855	358008	+	cis		Lycopodium_japonicum NC_080981.1: annotated exons, RNA-seq edited
+RNA_Lycopodium_japonicum	cox1	cox1_1	4	4	361056	361505	+			Lycopodium_japonicum NC_080981.1: annotated exons, RNA-seq edited
+RNA_Lycopodium_japonicum	cox3	cox3_1	1	2	374143	374313	-	cis		Lycopodium_japonicum NC_080981.1: annotated exons, RNA-seq edited
+RNA_Lycopodium_japonicum	cox3	cox3_1	2	2	372733	373359	-			Lycopodium_japonicum NC_080981.1: annotated exons, RNA-seq edited
+RNA_Lycopodium_japonicum	cox2	cox2_1	1	4	412574	412676	-	cis		Lycopodium_japonicum NC_080981.1: annotated exons, RNA-seq edited
+RNA_Lycopodium_japonicum	cox2	cox2_1	2	4	411303	411581	-	cis		Lycopodium_japonicum NC_080981.1: annotated exons, RNA-seq edited
+RNA_Lycopodium_japonicum	cox2	cox2_1	3	4	408470	408787	-	cis		Lycopodium_japonicum NC_080981.1: annotated exons, RNA-seq edited
+RNA_Lycopodium_japonicum	cox2	cox2_1	4	4	405839	405903	-			Lycopodium_japonicum NC_080981.1: annotated exons, RNA-seq edited

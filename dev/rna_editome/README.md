@@ -50,7 +50,7 @@ reads instead of correcting a call:
 - `score_gb.py` - calls on a GenBank genome against its own annotation
   (the clubmoss RefSeq genomes).
 - `gb_edit.py` - a GenBank genome's annotated genes with the editing its
-  own RNA-seq shows applied (*Phylloglossum*, the clubmoss references).
+  own RNA-seq shows applied (*Phylloglossum* and *Lycopodium japonicum*, the clubmoss references).
 
 `assess.py`, `assess_pltd.py`, `score_gb.py`, `calls_support.py` and
 `summ.py` sat in a `pilot/` directory under the others and import them
