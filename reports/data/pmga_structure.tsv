@@ -4,5 +4,7 @@ poa before	445	68	149	217	268	194	12
 poa before, genus held out	440	66	146	212	264	190	18
 poa, edited RefSeq references	469	72	166	238	284	213	5
 poa, edited RefSeq references, genus held out	463	69	163	232	278	207	6
-poa now	467	73	164	237	282	211	5
-poa now, genus held out	467	73	164	237	282	211	5
+poa, RNA-derived references and editing sites, genus held out	467	73	164	237	282	211	5
+poa, genes ended at their stop codons, genus held out	492	73	189	262	294	236	5
+poa now (and started at a start codon)	503	73	200	273	295	247	5
+poa now, genus held out	503	73	200	273	295	247	5

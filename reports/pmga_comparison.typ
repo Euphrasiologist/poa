@@ -1,15 +1,15 @@
 #import "@local/report:0.1.0": *
 // figures quoted in the prose, from the tables in data/ (set when the tables are regenerated)
-#let n-species = [108]       // Tree of Life angiosperms in the references
-#let n-rna = [107]           // ...with RNA-seq, scored held out
-#let pct-now = [71%]         // CDS with every exon placed, ten RefSeq genomes, now
-#let single-now = [164]      // single-exon CDS placed, now
-#let ss-now = [282]          // CDS placed allowing start/stop choice, now
+#let n-species = [111]       // Tree of Life angiosperms in the references
+#let n-rna = [109]           // ...with RNA-seq, scored held out
+#let pct-now = [82%]         // CDS with every exon placed, ten RefSeq genomes, now
+#let single-now = [200]      // single-exon CDS placed, now
+#let ss-now = [295]          // CDS placed allowing start/stop choice, now
 #let found-gb = [88%]        // annotated edits found, five RefSeq genomes, now
 #let right-gb = [89%]
-#let found-rna = [81%]       // RNA edits found, five species, now
+#let found-rna = [80%]       // RNA edits found, five species, now
 #let right-rna = [98%]
-#let right-pltd = [94%]      // plastid single-exon edit calls in the RNA, now
+#let right-pltd = [93%]      // plastid single-exon edit calls in the RNA, now
 #show: report.with(
   title: "poa against PMGA",
   subtitle: "A head-to-head on angiosperm mitogenomes, November 2026",
@@ -21,10 +21,12 @@
     on editing, where poa found one edit in twenty. poa's angiosperm references have since been
     rebuilt from RNA-edited proteins, and its profiles now record where those proteins are
     edited. With each test genome's genus kept out of the references, poa now finds nearly as
-    many edits as PMGA with Deepred-mt (88% against 93% of those annotated in RefSeq, 81%
-    against 84% of those in RNA-seq) and, against the reads, calls a quarter as many wrong
-    ones; PMGA still places more gene ends exactly as RefSeq annotates them. Outside angiosperm
-    mitochondria there is no contest: PMGA does not go there.
+    many edits as PMGA with Deepred-mt (88% against 93% of those annotated in RefSeq, 80%
+    against 84% of those in RNA-seq) and, against the reads, calls about a quarter as many
+    wrong ones. Its genes now start at a start codon and end at their stop codon, and on gene
+    models it is level with PMGA (every exon placed in 82% of coding sequences against PMGA's
+    81%), though PMGA still has more of them exact to the base. Outside angiosperm mitochondria
+    there is no contest: PMGA does not go there.
   ],
 )
 
@@ -51,9 +53,10 @@ translation. "Edited RefSeq references" is the first step of the rebuild: the 14
 mitogenomes annotated with RNA-edited proteins. "Now" adds genes of #n-species Darwin Tree of
 Life angiosperms with the editing their own public RNA-seq shows applied, for the plastid as
 well as the mitochondrion; profiles that record which columns are edited in the references of
-at least two genera; and a cost for an edit that depends on whether it falls at such a column
-(1.5) or not (10), in place of 2.5 everywhere. All of this is in the working tree of poa,
-orfedit and transsplice, not yet committed.
+at least two genera; a cost for an edit that depends on whether it falls at such a column
+(1.5) or not (10), in place of 2.5 everywhere; and genes started at a start codon and ended
+at their stop codon (below). The last of these is in the working tree of poa, orfedit and
+transsplice, not yet committed.
 
 Every "now" figure for a genome or species is from references built without its genus, since
 most of the ten RefSeq genomes are among poa's references and the Tree of Life species are
@@ -73,11 +76,16 @@ both its ends are within 3 bp of the annotated ones.
 
 PMGA places every exon of 81% of the coding sequences (@tab-structure); poa placed 65% before
 and places #pct-now now. On spliced genes poa is level or ahead, trans-spliced nad1, nad2 and
-nad5 included. The difference is single-exon genes, #single-now of 245 against PMGA's 200, and
-it is nearly all a matter of where a gene is said to start: allowing for the choice of start
-codon and for the stop, the two are #ss-now and 292 of 333. PMGA follows the annotation's own
-conventions because its references are curated from such annotations; poa starts a gene where
-its profile does. The RNA-derived proteins have not moved this either way.
+nad5 included. On single-exon genes it has #single-now of 245, as PMGA does. It had 164 until
+two changes. Its genes now end at their stop codon: the aligner had been reading on over a
+gene's stop wherever the reference profile ran a few residues further (189). And they start
+at a start codon: the alignment starts a gene wherever the profile's first columns match,
+and a gene that began elsewhere now starts at the nearest ATG within ten codons (200).
+Allowing for the choice of start codon and for the stop, poa places #ss-now of 333 and PMGA
+292; exact to the base, PMGA has 258 and poa 247. What is left is mostly genes whose annotated
+start lies far from the conserved part (atp6) or differs from record to record (rps4, mttB,
+rpl16, matR); PMGA follows the annotation's own conventions there, because its references
+are curated from such annotations.
 
 = Editing against curated edited proteins
 
@@ -115,12 +123,12 @@ seen these assemblies, and poa's figures are again with each genus held out.
 
 Against the reads (@tab-rna) PMGA with Deepred-mt finds 84% of the edits, with 93% of its
 calls right. poa found 2% before and now finds #found-rna, with #right-rna of its calls right:
-nearly as many edits, and a quarter as many wrong calls (8 against 33). On gene models the
-two are level.
+nearly as many edits, and about a quarter as many wrong calls (9 against 33). On gene models
+the two are level.
 
 = What changed in poa
 
-Three things, in the order they mattered.
+Four things, the first three in the order they mattered for editing.
 
 The references. An editing profile corrects a gene towards its reference proteins, so they
 have to be the edited ones. RefSeq has 14 angiosperm mitogenomes annotated that way; the rest
@@ -146,16 +154,30 @@ points of annotated edits came from.
 The two costs suit a plant that edits where angiosperms do. Gymnosperms, hornworts and
 quillworts use the same references and edit heavily elsewhere, so poa decides for each
 species from its own genes whether the sites apply: of 89 angiosperms annotated with the
-references as built, 83 take them, five
-sedges and a plantain do not, and neither do Ginkgo, a yew, a hornwort, a spikemoss or a
-quillwort, which keep the single cost and their edit calls.
+references as built, 85 take them, four sedges do not, and neither do Ginkgo, a yew, a
+hornwort, a spikemoss or a quillwort, which keep the single cost and their edit calls.
+
+Gene starts and ends. A reading frame ends at its first stop codon, but the aligner treated a stop as
+one more codon it could leave out, so a gene that ended a few residues before its reference
+profile was read on over its stop. Genes now end at their first stop; a stop the protein
+goes on matching beyond (a pseudogene, mostly) is kept in the gene and reported; and a frame
+change in the last few codons, which cannot be told from a gene that simply ends differently,
+is reported but no longer followed. On 19 RefSeq mitogenomes and 13 plastomes, with the same
+references, genes ending within 3 bp of the annotated stop went from 397 to 443 of 457 and
+from 558 to 621 of 626, and rbcL, which a short search window had been cutting at codon 341,
+is whole. A gene whose alignment began at a codon other than ATG or ACG (an edit away from
+AUG) now starts at the nearest ATG within ten codons: starts within 3 bp of the annotation
+went from 384 to 401 of 457 and from 528 to 574 of 626, with one made wrong. Neither change
+costs frameshift detection: of 1-bp indels planted in real genes as many are found as
+before.
 
 #figure(
   tsv-table(read("data/poa_heldout.tsv")),
   caption: [poa on #n-rna Darwin Tree of Life angiosperms with RNA-seq and 19 RefSeq
-  mitogenomes, each annotated with references built without its genus. "Edited RefSeq
-  references" has no Tree of Life species in it. "RNA-derived references" is at one edit cost
-  everywhere; "with editing sites" is poa now.],
+  mitogenomes, each annotated with references built without its genus, all three columns
+  with genes started at a start codon and ended at their stop. "Edited RefSeq references" has no Tree of Life species in
+  it. "RNA-derived references" is at one edit cost everywhere; "with editing sites" is poa
+  now.],
 ) <tab-poa>
 
 = What each tool does that the other does not
@@ -179,7 +201,8 @@ On angiosperm mitochondria poa is now within a few points of PMGA on editing, by
 route: Deepred-mt predicts an edit from the sequence around a cytidine, poa from what the edit
 does to the protein and from where edits have been seen. Deepred-mt finds a few more edits and
 can call a silent one, which poa cannot; against RNA-seq poa's calls are more often right, and
-it gives the edited protein. PMGA remains ahead on gene ends as RefSeq annotates them. Beyond angiosperm mitochondria, in the plastid
+it gives the edited protein. On gene models the two are now level, with PMGA ahead on how
+many ends are exact to the base. Beyond angiosperm mitochondria, in the plastid
 and in the other lineages, poa is the only one of the two that runs.
 
 #note(title: "Caveats")[
