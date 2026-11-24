@@ -9,9 +9,13 @@ depth is 700 to 9,000 reads, and of the 715 plastid genes poa called in
 the eleven species 708 gave a clean protein.
 
 Here: the spliced genes (`reference_genes.PLASTID_SPLICED`) transsplice
-had reconstructed completely on the land-plant templates, 94 loci of 9
-genes, exons cut to the protein's span. The 614 single-exon proteins (56
+had reconstructed completely on the land-plant templates, 79 loci of 9
+genes, exons cut to the protein's span. The 613 single-exon proteins (56
 genes) are in `editing/reference/lineages/fern/rna_proteins.pltd.fasta`.
+(Read again on 2026-11-24 from gene models that end at their stop codons
+and are not cut off by the search window: the first set, 94 loci and 614
+proteins, had rbcL stopping at codon 341 and matK at 243. The held-out
+figures below are the first set's.)
 `src/00_build_exon_profiles.py --lineage fern --organelle pltd` builds
 `../profiles/` from this directory, and `editing/src/00b_build_lineage_profiles.py
 --lineage fern --organelle pltd` the editing profiles.
