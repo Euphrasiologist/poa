@@ -12,7 +12,7 @@ each gene is; the species' RNA-seq says what the transcript is:
   first ATG of the frame when poa's call did not reach the start of its profile) to its stop.
 Pieces on different contigs or strands (trans-splicing) are joined at poa's boundaries.
 Writes boot/LINEAGE/SPECIES.genes.tsv and SPECIES.fasta (exons + edited protein, the raw/ format of trans_splicing)."""
-import sys, re, subprocess, glob, gzip
+import os, sys, re, subprocess, glob, gzip
 from collections import Counter, defaultdict
 from pathlib import Path
 import pandas as pd
@@ -53,7 +53,8 @@ def load_piles(sp):
 def genome_fasta(sp):
     """the dataset's mito contigs, or extra_genomes/SP.fasta (a GenBank genome)"""
     x = H / "extra_genomes" / f"{sp}.fasta"
-    return str(x) if x.exists() else sorted(glob.glob(str(D / "mito" / sp / "*.mito.ctg.fasta")))[0]
+    # USE_DATASET=1: the dataset assembly even where a GenBank genome of the same name is in extra_genomes
+    return str(x) if x.exists() and not os.environ.get("USE_DATASET") else sorted(glob.glob(str(D / "mito" / sp / "*.mito.ctg.fasta")))[0]
 
 def bams(sp): return sorted(glob.glob(str(H / f"tol.{sp}.mito.bam")) + glob.glob(str(H / f"pub.{sp}.*.mito.bam")))
 

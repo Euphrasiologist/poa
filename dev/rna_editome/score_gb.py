@@ -1,6 +1,7 @@
 """score_gb.py TAG NAME... : poa tables (pilot/TAG/NAME) for a GenBank genome (extra_genomes/accessions.tsv) against
 the genome's own annotation. Per annotated protein gene: exons placed (both ends within 3 bp of an annotated exon;
-the first exon's start and the last exon's end may differ by the start codon chosen or the stop codon), genes with
+the first exon's start and the last exon's end may differ by the start codon chosen or the stop codon; predicted exons
+that abut in the genome also count as the one exon they make), genes with
 every exon placed, frameshift calls (the annotated genes are intact, so any is false)."""
 import sys, warnings
 from pathlib import Path
@@ -8,14 +9,14 @@ import pandas as pd
 warnings.simplefilter("ignore")
 from Bio import SeqIO
 H = Path(__file__).resolve().parent.parent; R = H.parent.parent
-GB = R / "src/poa/pipeline/trans_splicing/reference/genbank"
+GB0 = R / "src/poa/pipeline/trans_splicing/reference/genbank"
 ACC = dict(l.split() for l in open(H / "extra_genomes" / "accessions.tsv"))
-SYN = {"tatc": "mttB", "mat-r": "matR"}
+SYN = {"tatc": "mttB", "mat-r": "matR", "ccmfc": "ccmFc", "ccmfn": "ccmFn", "ccmf": "ccmFn", "rpl10": "rpl10", "rpl16": "rpl16", "rpl2": "rpl2", "rpl5": "rpl5", "rpl6": "rpl6", "nad4l": "nad4L"}
 tag, names = sys.argv[1], sys.argv[2:]; rows = []
 for name in names:
     T = H / "pilot" / tag / name / "tables"
     if not T.exists(): print("skip", name); continue
-    rec = SeqIO.read(GB / f"{ACC[name]}.gb", "genbank"); ann = {}
+    GB = GB0 if (GB0 / f"{ACC[name]}.gb").exists() else H / "extra_genomes" / "gb"; rec = SeqIO.read(GB / f"{ACC[name]}.gb", "genbank"); ann = {}
     for f in rec.features:
         if f.type != "CDS" or "gene" not in f.qualifiers or "translation" not in f.qualifiers: continue
         g = f.qualifiers["gene"][0]; g = SYN.get(g.lower(), g)
@@ -37,6 +38,12 @@ for name in names:
         if g.startswith(("ORF", "orf", "mat-")): continue
         if g not in pred: rows.append(dict(genome=name, gene=g, kind="none", n_exons=len(loci[0]), placed=0, all=False, inner=False, n_fs=0, pred_exons=0)); continue
         kind, px, nfs = pred[g]
+        # exon slots that abut in the genome are one exon there (a species without that intron): the run counts too
+        run = []
+        for q in sorted(px):
+            if run and q[0] - run[-1][1] <= 1: run[-1] = (run[-1][0], q[1], run[-1][2] + 1)
+            else: run.append((q[0], q[1], 1))
+        px = px + [(a, b) for a, b, n in run if n > 1]
         best = None
         for ex in loci:  # the annotated copy the prediction fits best
             k = len(ex); placed = inner = 0

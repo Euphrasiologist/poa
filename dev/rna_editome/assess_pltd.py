@@ -15,9 +15,18 @@ def read_fasta(path):
     return {k: "".join(v) for k, v in out.items()}
 rows = []
 for sp in species:
-    T = H / "pilot" / tag / sp / "tables"; pf = H / f"tol.{sp}.pltd.pile.tsv.gz"
-    if not pf.exists() or not T.exists(): print("skip", sp); continue
-    pile = rna.load_pile(pf); genome = read_fasta(sorted(glob.glob(str(D / "plastid" / sp / "*.pltd.ctg.fasta")))[0])
+    T = H / "pilot" / tag / sp / "tables"
+    # every run mapped to the species: the ToL library and public ones (map4.sh), base counts summed
+    pfs = sorted(glob.glob(str(H / f"tol.{sp}.pltd.pile.tsv.gz")) + glob.glob(str(H / f"pub.{sp}.*[0-9].pltd.pile.tsv.gz")))
+    if not pfs or not T.exists(): print("skip", sp); continue
+    pile = rna.load_pile(pfs[0])
+    for pf in pfs[1:]:
+        for k, (ref, n, cnt) in rna.load_pile(pf).items():
+            if k in pile:
+                for b in cnt: pile[k][2][b] += cnt[b]
+                pile[k] = (ref, pile[k][1] + n, pile[k][2])
+            else: pile[k] = (ref, n, cnt)
+    genome = read_fasta(sorted(glob.glob(str(D / "plastid" / sp / "*.pltd.ctg.fasta")))[0])
     gc = pd.read_csv(T / "gene_calls.tsv", sep="\t"); gc = gc[gc.organelle == "pltd"]
     E = pd.read_csv(T / "edited_gene_calls.tsv", sep="\t"); E = E[E.organelle == "pltd"]
     PE = pd.read_csv(T / "predicted_edits.tsv", sep="\t"); PE = PE[PE.organelle == "pltd"]

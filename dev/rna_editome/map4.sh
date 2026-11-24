@@ -8,10 +8,13 @@ S=$1; RUN=$2; H=$(dirname $0); T=pub.$S.$RUN
 D=/lustre/scratch122/tol/teams/blaxter/users/mb39/plant_organellar_database/data
 W=$H/$T.work; mkdir -p $W
 get() {  # get URL MD5 OUT
-  for try in 1 2 3 4 5 6; do
-    curl -sS -A curl -L -C - --retry 3 -o $3 "https://$1" || true
+  for try in 1 2 3 4 5 6 7 8 9 10 11 12; do
+    # resume a partial file; if the server will not resume (curl 33), start that file again
+    rc=0; curl -sS -A curl -L -C - --retry 5 --retry-delay 30 -o $3 "https://$1" || rc=$?
     [ "$(md5sum < $3 | cut -d' ' -f1)" == "$2" ] && return 0
-    sleep 30
+    # a file curl thinks is whole (or that the server will not resume: 33, 22, 36) but with the wrong checksum: start it again
+    case $rc in 0|22|33|36) rm -f $3;; esac
+    sleep 120
   done
   echo "download failed: $1" >&2; return 1
 }

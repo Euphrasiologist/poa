@@ -41,15 +41,17 @@ def truth(tr):
     """{key: 'C>U' | 'U>C'} at MIN_FRAC of >= MIN_DEPTH reads (>= 3 reads)"""
     return {k: ("C>U" if b == "C" else "U>C") for k, b, n, na in tr if b in FLIP and n >= MIN_DEPTH and na >= 3 and na / n >= MIN_FRAC}
 
-def derive(tr):
+def derive(tr, reverse=True):
+    """reverse False: C-to-U editing only (seed plants, mosses, liverworts): a T the reads show as C is not applied,
+    and no stop is read through. "marked" is the protein with the residues a C-to-U edit made in lower case."""
     n_cod = len(tr) // 3
-    seq = [FLIP[b] if (b in FLIP and na >= 2 and n and na / n >= MIN_FRAC) else b for _, b, n, na in tr]
+    seq = [FLIP[b] if (b in FLIP and (reverse or b == "C") and na >= 2 and n and na / n >= MIN_FRAC) else b for _, b, n, na in tr]
     real, bad = [], []
     for i in range(n_cod):
         cod = "".join(seq[3 * i:3 * i + 3])
         if CODE.get(cod, "X") != "*": continue
         fixed = False
-        for j in range(3 * i, 3 * i + 3):
+        for j in (range(3 * i, 3 * i + 3) if reverse else ()):
             _, b, n, na = tr[j]
             if seq[j] == "T" and b == "T" and na >= 2 and n and na / n >= STOP_FRAC:
                 trial = seq[3 * i:3 * i + 3]; trial[j - 3 * i] = "C"
@@ -63,11 +65,14 @@ def derive(tr):
     if not ends and n_cod and CODE.get("".join(seq[3 * (n_cod - 1):3 * n_cod]), "X") == "*": end, has_stop = n_cod - 1, True
     inner = [i for i in real + bad if start <= i < end]
     prot = "".join(CODE.get("".join(seq[3 * i:3 * i + 3]), "X") for i in range(start, end))
+    gen = [b for _, b, _, _ in tr]
+    made = [any(gen[j] == "C" and seq[j] == "T" for j in range(3 * i, 3 * i + 3)) and CODE.get("".join(gen[3 * i:3 * i + 3]), "X") != CODE.get("".join(seq[3 * i:3 * i + 3]), "X") for i in range(start, end)]
+    marked = "".join(a.lower() if m else a for a, m in zip(prot, made))
     span = tr[3 * start:3 * end]
     cov = sum(t[2] >= MIN_DEPTH for t in span) / max(len(span), 1)
     status = "ok"
     if inner: status = f"internal stop ({'real' if any(i in real for i in inner) else 'no coverage'})"
     elif cov < 0.9: status = "low RNA coverage"
     elif len(prot) < 30: status = "short"
-    return {"status": status, "protein": prot, "start": start, "end": end, "n_codons": n_cod, "has_stop": has_stop, "covered": round(cov, 2),
+    return {"status": status, "protein": prot, "marked": marked, "start": start, "end": end, "n_codons": n_cod, "has_stop": has_stop, "covered": round(cov, 2),
             "over_extended": n_cod - end - (1 if has_stop and end == n_cod - 1 else 0), "mod3": len(tr) % 3}
