@@ -1,0 +1,1400 @@
+accession	gene	locus_tag	exon_num	n_exons	start	end	strand	junction_to_next	gap_bp	notes
+RNA_Acorus_calamus	atpF	atpF_1	1	2	13159	13303	-	cis		Acorus_calamus: RNA-seq edited; sites not used
+RNA_Acorus_calamus	atpF	atpF_1	2	2	12024	12433	-			Acorus_calamus: RNA-seq edited; sites not used
+RNA_Acorus_calamus	clpP	clpP_1	1	3	71893	71963	-	cis		Acorus_calamus: RNA-seq edited; sites not used
+RNA_Acorus_calamus	clpP	clpP_1	2	3	70838	71128	-	cis		Acorus_calamus: RNA-seq edited; sites not used
+RNA_Acorus_calamus	clpP	clpP_1	3	3	69954	70200	-			Acorus_calamus: RNA-seq edited; sites not used
+RNA_Acorus_calamus	rpl2	rpl2_1	1	2	85487	85877	-	cis		Acorus_calamus: RNA-seq edited; sites not used
+RNA_Acorus_calamus	rpl2	rpl2_1	2	2	84387	84817	-			Acorus_calamus: RNA-seq edited; sites not used
+RNA_Acorus_calamus	rps16	rps16_1	1	2	6205	6244	-	cis		Acorus_calamus: RNA-seq edited; sites not used
+RNA_Acorus_calamus	rps16	rps16_1	2	2	5165	5385	-			Acorus_calamus: RNA-seq edited; sites not used
+RNA_Alliaria_petiolata	atpF	atpF_1	1	2	12779	12923	-	cis		Alliaria_petiolata: RNA-seq edited
+RNA_Alliaria_petiolata	atpF	atpF_1	2	2	11645	12054	-			Alliaria_petiolata: RNA-seq edited
+RNA_Alliaria_petiolata	clpP	clpP_1	1	3	71246	71316	-	cis		Alliaria_petiolata: RNA-seq edited
+RNA_Alliaria_petiolata	clpP	clpP_1	2	3	70042	70332	-	cis		Alliaria_petiolata: RNA-seq edited
+RNA_Alliaria_petiolata	clpP	clpP_1	3	3	69233	69461	-			Alliaria_petiolata: RNA-seq edited
+RNA_Alliaria_petiolata	ndhA	ndhA_1	1	2	120655	121207	-	cis		Alliaria_petiolata: RNA-seq edited
+RNA_Alliaria_petiolata	ndhA	ndhA_1	2	2	119036	119565	-			Alliaria_petiolata: RNA-seq edited
+RNA_Alliaria_petiolata	ndhB	ndhB_1	1	2	140660	141436	+	cis		Alliaria_petiolata: RNA-seq edited
+RNA_Alliaria_petiolata	ndhB	ndhB_1	2	2	142116	142877	+			Alliaria_petiolata: RNA-seq edited
+RNA_Alliaria_petiolata	rpl2	rpl2_1	1	2	151974	152364	+	cis		Alliaria_petiolata: RNA-seq edited
+RNA_Alliaria_petiolata	rpl2	rpl2_1	2	2	153047	153318	+			Alliaria_petiolata: RNA-seq edited
+RNA_Alliaria_petiolata	rpoC1	rpoC1_1	1	2	22783	23214	-	cis		Alliaria_petiolata: RNA-seq edited
+RNA_Alliaria_petiolata	rpoC1	rpoC1_1	2	2	20382	21992	-			Alliaria_petiolata: RNA-seq edited
+RNA_Alliaria_petiolata	rps12	rps12_1	1	3	68946	69059	-	trans		Alliaria_petiolata: RNA-seq edited
+RNA_Alliaria_petiolata	rps12	rps12_1	2	3	139035	139266	+	cis		Alliaria_petiolata: RNA-seq edited
+RNA_Alliaria_petiolata	rps12	rps12_1	3	3	139805	139830	+			Alliaria_petiolata: RNA-seq edited
+RNA_Alliaria_petiolata	rps16	rps16_1	1	2	6421	6460	-	cis		Alliaria_petiolata: RNA-seq edited
+RNA_Alliaria_petiolata	rps16	rps16_1	2	2	5312	5538	-			Alliaria_petiolata: RNA-seq edited
+RNA_Alliaria_petiolata	ycf3	ycf3_1	1	3	44263	44386	-	cis		Alliaria_petiolata: RNA-seq edited
+RNA_Alliaria_petiolata	ycf3	ycf3_1	2	3	43312	43541	-	cis		Alliaria_petiolata: RNA-seq edited
+RNA_Alliaria_petiolata	ycf3	ycf3_1	3	3	42363	42515	-			Alliaria_petiolata: RNA-seq edited
+RNA_Anchusa_arvensis	atpF	atpF_1	1	2	13694	13838	-	cis		Anchusa_arvensis: RNA-seq edited; sites not used
+RNA_Anchusa_arvensis	atpF	atpF_1	2	2	12566	12975	-			Anchusa_arvensis: RNA-seq edited; sites not used
+RNA_Anchusa_arvensis	clpP	clpP_1	1	3	70381	70451	-	cis		Anchusa_arvensis: RNA-seq edited; sites not used
+RNA_Anchusa_arvensis	clpP	clpP_1	2	3	69333	69623	-	cis		Anchusa_arvensis: RNA-seq edited; sites not used
+RNA_Anchusa_arvensis	clpP	clpP_1	3	3	68515	68743	-			Anchusa_arvensis: RNA-seq edited; sites not used
+RNA_Anchusa_arvensis	ndhA	ndhA_1	1	2	118309	118861	-	cis		Anchusa_arvensis: RNA-seq edited; sites not used
+RNA_Anchusa_arvensis	ndhA	ndhA_1	2	2	116801	117339	-			Anchusa_arvensis: RNA-seq edited; sites not used
+RNA_Anchusa_arvensis	ndhB	ndhB_1	1	2	94262	95038	-	cis		Anchusa_arvensis: RNA-seq edited; sites not used
+RNA_Anchusa_arvensis	ndhB	ndhB_1	2	2	92840	93595	-			Anchusa_arvensis: RNA-seq edited; sites not used
+RNA_Anchusa_arvensis	rpl2	rpl2_1	1	2	83895	84285	-	cis		Anchusa_arvensis: RNA-seq edited; sites not used
+RNA_Anchusa_arvensis	rpl2	rpl2_1	2	2	82804	83237	-			Anchusa_arvensis: RNA-seq edited; sites not used
+RNA_Anchusa_arvensis	rpoC1	rpoC1_1	1	2	23976	24407	-	cis		Anchusa_arvensis: RNA-seq edited; sites not used
+RNA_Anchusa_arvensis	rpoC1	rpoC1_1	2	2	21593	23209	-			Anchusa_arvensis: RNA-seq edited; sites not used
+RNA_Anchusa_arvensis	rps12	rps12_1	1	3	68253	68366	-	cis		Anchusa_arvensis: RNA-seq edited; sites not used
+RNA_Anchusa_arvensis	rps12	rps12_1	2	3	96415	96646	-	trans		Anchusa_arvensis: RNA-seq edited; sites not used
+RNA_Anchusa_arvensis	rps12	rps12_1	3	3	137372	137397	+			Anchusa_arvensis: RNA-seq edited; sites not used
+RNA_Anchusa_arvensis	rps16	rps16_1	1	2	7234	7273	-	cis		Anchusa_arvensis: RNA-seq edited; sites not used
+RNA_Anchusa_arvensis	rps16	rps16_1	2	2	6147	6373	-			Anchusa_arvensis: RNA-seq edited; sites not used
+RNA_Anchusa_arvensis	ycf3	ycf3_1	1	3	44866	44989	-	cis		Anchusa_arvensis: RNA-seq edited; sites not used
+RNA_Anchusa_arvensis	ycf3	ycf3_1	2	3	43891	44120	-	cis		Anchusa_arvensis: RNA-seq edited; sites not used
+RNA_Anchusa_arvensis	ycf3	ycf3_1	3	3	43022	43174	-			Anchusa_arvensis: RNA-seq edited; sites not used
+RNA_Arabidopsis_thaliana	atpF	atpF_1	1	2	12710	12854	-	cis		Arabidopsis_thaliana: RNA-seq edited
+RNA_Arabidopsis_thaliana	atpF	atpF_1	2	2	11589	11998	-			Arabidopsis_thaliana: RNA-seq edited
+RNA_Arabidopsis_thaliana	clpP	clpP_1	1	3	71882	71952	-	cis		Arabidopsis_thaliana: RNA-seq edited
+RNA_Arabidopsis_thaliana	clpP	clpP_1	2	3	70724	71014	-	cis		Arabidopsis_thaliana: RNA-seq edited
+RNA_Arabidopsis_thaliana	clpP	clpP_1	3	3	69981	70209	-			Arabidopsis_thaliana: RNA-seq edited
+RNA_Arabidopsis_thaliana	ndhA	ndhA_1	1	2	121529	122081	-	cis		Arabidopsis_thaliana: RNA-seq edited
+RNA_Arabidopsis_thaliana	ndhA	ndhA_1	2	2	119919	120448	-			Arabidopsis_thaliana: RNA-seq edited
+RNA_Arabidopsis_thaliana	ndhB	ndhB_1	1	2	96459	97235	-	cis		Arabidopsis_thaliana: RNA-seq edited
+RNA_Arabidopsis_thaliana	ndhB	ndhB_1	2	2	95012	95773	-			Arabidopsis_thaliana: RNA-seq edited
+RNA_Arabidopsis_thaliana	rpl2	rpl2_1	1	2	85524	85914	-	cis		Arabidopsis_thaliana: RNA-seq edited
+RNA_Arabidopsis_thaliana	rpl2	rpl2_1	2	2	84408	84841	-			Arabidopsis_thaliana: RNA-seq edited
+RNA_Arabidopsis_thaliana	rpoC1	rpoC1_1	1	2	22711	23142	-	cis		Arabidopsis_thaliana: RNA-seq edited
+RNA_Arabidopsis_thaliana	rpoC1	rpoC1_1	2	2	20308	21918	-			Arabidopsis_thaliana: RNA-seq edited
+RNA_Arabidopsis_thaliana	rps12	rps12_1	1	3	69682	69795	-	cis		Arabidopsis_thaliana: RNA-seq edited
+RNA_Arabidopsis_thaliana	rps12	rps12_1	2	3	98633	98864	-	trans		Arabidopsis_thaliana: RNA-seq edited
+RNA_Arabidopsis_thaliana	rps12	rps12_1	3	3	140697	140722	+			Arabidopsis_thaliana: RNA-seq edited
+RNA_Arabidopsis_thaliana	ycf3	ycf3_1	1	3	44561	44684	-	cis		Arabidopsis_thaliana: RNA-seq edited
+RNA_Arabidopsis_thaliana	ycf3	ycf3_1	2	3	43612	43841	-	cis		Arabidopsis_thaliana: RNA-seq edited
+RNA_Arabidopsis_thaliana	ycf3	ycf3_1	3	3	42672	42824	-			Arabidopsis_thaliana: RNA-seq edited
+RNA_Asparagus_officinalis	atpF	atpF_1	1	2	13536	13680	-	cis		Asparagus_officinalis: RNA-seq edited; sites not used
+RNA_Asparagus_officinalis	atpF	atpF_1	2	2	12288	12697	-			Asparagus_officinalis: RNA-seq edited; sites not used
+RNA_Asparagus_officinalis	clpP	clpP_1	1	3	73434	73504	-	cis		Asparagus_officinalis: RNA-seq edited; sites not used
+RNA_Asparagus_officinalis	clpP	clpP_1	2	3	72340	72630	-	cis		Asparagus_officinalis: RNA-seq edited; sites not used
+RNA_Asparagus_officinalis	clpP	clpP_1	3	3	71422	71674	-			Asparagus_officinalis: RNA-seq edited; sites not used
+RNA_Asparagus_officinalis	ndhA	ndhA_1	1	2	123410	123968	-	cis		Asparagus_officinalis: RNA-seq edited; sites not used
+RNA_Asparagus_officinalis	ndhA	ndhA_1	2	2	121747	122285	-			Asparagus_officinalis: RNA-seq edited; sites not used
+RNA_Asparagus_officinalis	rpl2	rpl2_1	1	2	87065	87455	-	cis		Asparagus_officinalis: RNA-seq edited; sites not used
+RNA_Asparagus_officinalis	rpl2	rpl2_1	2	2	85970	86400	-			Asparagus_officinalis: RNA-seq edited; sites not used
+RNA_Asparagus_officinalis	rpoC1	rpoC1_1	1	2	23470	23907	-	cis		Asparagus_officinalis: RNA-seq edited; sites not used
+RNA_Asparagus_officinalis	rpoC1	rpoC1_1	2	2	21097	22719	-			Asparagus_officinalis: RNA-seq edited; sites not used
+RNA_Asparagus_officinalis	rps12	rps12_1	1	3	71173	71286	-	cis		Asparagus_officinalis: RNA-seq edited; sites not used
+RNA_Asparagus_officinalis	rps12	rps12_1	2	3	100189	100420	-	trans		Asparagus_officinalis: RNA-seq edited; sites not used
+RNA_Asparagus_officinalis	rps12	rps12_1	3	3	142862	142887	+			Asparagus_officinalis: RNA-seq edited; sites not used
+RNA_Asparagus_officinalis	rps16	rps16_1	1	2	6152	6191	-	cis		Asparagus_officinalis: RNA-seq edited; sites not used
+RNA_Asparagus_officinalis	rps16	rps16_1	2	2	5084	5292	-			Asparagus_officinalis: RNA-seq edited; sites not used
+RNA_Asparagus_officinalis	ycf3	ycf3_1	1	3	45043	45166	-	cis		Asparagus_officinalis: RNA-seq edited; sites not used
+RNA_Asparagus_officinalis	ycf3	ycf3_1	2	3	44094	44323	-	cis		Asparagus_officinalis: RNA-seq edited; sites not used
+RNA_Asparagus_officinalis	ycf3	ycf3_1	3	3	43200	43352	-			Asparagus_officinalis: RNA-seq edited; sites not used
+RNA_Bellardia_viscosa	atpF	atpF_1	1	2	13625	13769	-	cis		Bellardia_viscosa: RNA-seq edited; sites not used
+RNA_Bellardia_viscosa	atpF	atpF_1	2	2	12527	12936	-			Bellardia_viscosa: RNA-seq edited; sites not used
+RNA_Bellardia_viscosa	clpP	clpP_1	1	3	72692	72762	-	cis		Bellardia_viscosa: RNA-seq edited; sites not used
+RNA_Bellardia_viscosa	clpP	clpP_1	2	3	71668	71958	-	cis		Bellardia_viscosa: RNA-seq edited; sites not used
+RNA_Bellardia_viscosa	clpP	clpP_1	3	3	70808	71036	-			Bellardia_viscosa: RNA-seq edited; sites not used
+RNA_Bellardia_viscosa	rpl2	rpl2_1	1	2	85831	86221	-	trans		Bellardia_viscosa: RNA-seq edited; sites not used
+RNA_Bellardia_viscosa	rpl2	rpl2_1	2	2	48	481	+			Bellardia_viscosa: RNA-seq edited; sites not used
+RNA_Bellardia_viscosa	rps12	rps12_1	1	3	70545	70658	-	cis		Bellardia_viscosa: RNA-seq edited; sites not used
+RNA_Bellardia_viscosa	rps12	rps12_1	2	3	98507	98738	-	cis		Bellardia_viscosa: RNA-seq edited; sites not used
+RNA_Bellardia_viscosa	rps12	rps12_1	3	3	97945	97970	-			Bellardia_viscosa: RNA-seq edited; sites not used
+RNA_Bellardia_viscosa	rps16	rps16_1	1	2	6740	6779	-	cis		Bellardia_viscosa: RNA-seq edited; sites not used
+RNA_Bellardia_viscosa	rps16	rps16_1	2	2	5706	5899	-			Bellardia_viscosa: RNA-seq edited; sites not used
+RNA_Berberis_vulgaris	atpF	atpF_1	1	2	12902	13046	-	cis		Berberis_vulgaris: RNA-seq edited; sites not used
+RNA_Berberis_vulgaris	atpF	atpF_1	2	2	11767	12176	-			Berberis_vulgaris: RNA-seq edited; sites not used
+RNA_Berberis_vulgaris	clpP	clpP_1	1	3	73360	73430	-	cis		Berberis_vulgaris: RNA-seq edited; sites not used
+RNA_Berberis_vulgaris	clpP	clpP_1	2	3	72330	72620	-	cis		Berberis_vulgaris: RNA-seq edited; sites not used
+RNA_Berberis_vulgaris	clpP	clpP_1	3	3	71351	71594	-			Berberis_vulgaris: RNA-seq edited; sites not used
+RNA_Berberis_vulgaris	ndhA	ndhA_1	1	2	122604	123159	-	cis		Berberis_vulgaris: RNA-seq edited; sites not used
+RNA_Berberis_vulgaris	ndhA	ndhA_1	2	2	121025	121563	-			Berberis_vulgaris: RNA-seq edited; sites not used
+RNA_Berberis_vulgaris	ndhB	ndhB_1	1	2	143379	144155	+	cis		Berberis_vulgaris: RNA-seq edited; sites not used
+RNA_Berberis_vulgaris	ndhB	ndhB_1	2	2	144847	145605	+			Berberis_vulgaris: RNA-seq edited; sites not used
+RNA_Berberis_vulgaris	rpl2	rpl2_1	1	2	153249	153630	+	cis		Berberis_vulgaris: RNA-seq edited; sites not used
+RNA_Berberis_vulgaris	rpl2	rpl2_1	2	2	154290	154723	+			Berberis_vulgaris: RNA-seq edited; sites not used
+RNA_Berberis_vulgaris	rpoC1	rpoC1_1	1	2	23045	23476	-	cis		Berberis_vulgaris: RNA-seq edited; sites not used
+RNA_Berberis_vulgaris	rpoC1	rpoC1_1	2	2	20674	22284	-			Berberis_vulgaris: RNA-seq edited; sites not used
+RNA_Berberis_vulgaris	rps12	rps12_1	1	3	70728	70841	-	trans		Berberis_vulgaris: RNA-seq edited; sites not used
+RNA_Berberis_vulgaris	rps12	rps12_1	2	3	141737	141968	+	cis		Berberis_vulgaris: RNA-seq edited; sites not used
+RNA_Berberis_vulgaris	rps12	rps12_1	3	3	142505	142530	+			Berberis_vulgaris: RNA-seq edited; sites not used
+RNA_Berberis_vulgaris	rps16	rps16_1	1	2	6314	6353	-	cis		Berberis_vulgaris: RNA-seq edited; sites not used
+RNA_Berberis_vulgaris	rps16	rps16_1	2	2	5221	5417	-			Berberis_vulgaris: RNA-seq edited; sites not used
+RNA_Berberis_vulgaris	ycf3	ycf3_1	1	3	45136	45259	-	cis		Berberis_vulgaris: RNA-seq edited; sites not used
+RNA_Berberis_vulgaris	ycf3	ycf3_1	2	3	44180	44409	-	cis		Berberis_vulgaris: RNA-seq edited; sites not used
+RNA_Berberis_vulgaris	ycf3	ycf3_1	3	3	43279	43431	-			Berberis_vulgaris: RNA-seq edited; sites not used
+RNA_Betula_pendula	rps16	rps16_1	1	2	6915	6954	-	cis		Betula_pendula: RNA-seq edited; sites not used
+RNA_Betula_pendula	rps16	rps16_1	2	2	5819	6030	-			Betula_pendula: RNA-seq edited; sites not used
+RNA_Brassica_nigra	atpF	atpF_1	1	2	12543	12687	-	cis		Brassica_nigra: RNA-seq edited
+RNA_Brassica_nigra	atpF	atpF_1	2	2	11403	11812	-			Brassica_nigra: RNA-seq edited
+RNA_Buxus_sempervirens	atpF	atpF_1	1	2	13308	13452	-	cis		Buxus_sempervirens: RNA-seq edited
+RNA_Buxus_sempervirens	atpF	atpF_1	2	2	12150	12559	-			Buxus_sempervirens: RNA-seq edited
+RNA_Buxus_sempervirens	clpP	clpP_1	1	3	75330	75400	-	cis		Buxus_sempervirens: RNA-seq edited
+RNA_Buxus_sempervirens	clpP	clpP_1	2	3	74246	74536	-	cis		Buxus_sempervirens: RNA-seq edited
+RNA_Buxus_sempervirens	clpP	clpP_1	3	3	73342	73588	-			Buxus_sempervirens: RNA-seq edited
+RNA_Buxus_sempervirens	ndhA	ndhA_1	1	2	126317	126869	-	cis		Buxus_sempervirens: RNA-seq edited
+RNA_Buxus_sempervirens	ndhA	ndhA_1	2	2	124685	125223	-			Buxus_sempervirens: RNA-seq edited
+RNA_Buxus_sempervirens	ndhB	ndhB_1	1	2	146784	147560	+	cis		Buxus_sempervirens: RNA-seq edited
+RNA_Buxus_sempervirens	ndhB	ndhB_1	2	2	148261	149016	+			Buxus_sempervirens: RNA-seq edited
+RNA_Buxus_sempervirens	rpl2	rpl2_1	1	2	88795	89185	-	cis		Buxus_sempervirens: RNA-seq edited
+RNA_Buxus_sempervirens	rpl2	rpl2_1	2	2	87691	88124	-			Buxus_sempervirens: RNA-seq edited
+RNA_Buxus_sempervirens	rps12	rps12_1	1	3	73077	73190	-	trans		Buxus_sempervirens: RNA-seq edited
+RNA_Buxus_sempervirens	rps12	rps12_1	2	3	145152	145383	+	cis		Buxus_sempervirens: RNA-seq edited
+RNA_Buxus_sempervirens	rps12	rps12_1	3	3	145920	145945	+			Buxus_sempervirens: RNA-seq edited
+RNA_Buxus_sempervirens	rps16	rps16_1	1	2	5686	5725	-	cis		Buxus_sempervirens: RNA-seq edited
+RNA_Buxus_sempervirens	rps16	rps16_1	2	2	4638	4858	-			Buxus_sempervirens: RNA-seq edited
+RNA_Buxus_sempervirens	ycf3	ycf3_1	1	3	46437	46560	-	cis		Buxus_sempervirens: RNA-seq edited
+RNA_Buxus_sempervirens	ycf3	ycf3_1	2	3	45464	45693	-	cis		Buxus_sempervirens: RNA-seq edited
+RNA_Buxus_sempervirens	ycf3	ycf3_1	3	3	44558	44710	-			Buxus_sempervirens: RNA-seq edited
+RNA_Carex_elata	atpF	atpF_1	1	2	24906	25050	-	cis		Carex_elata: RNA-seq edited
+RNA_Carex_elata	atpF	atpF_1	2	2	23697	24097	-			Carex_elata: RNA-seq edited
+RNA_Carex_elata	clpP	clpP_1	1	3	68643	68712	+	cis		Carex_elata: RNA-seq edited
+RNA_Carex_elata	clpP	clpP_1	2	3	70303	70604	+	cis		Carex_elata: RNA-seq edited
+RNA_Carex_elata	clpP	clpP_1	3	3	78936	79196	+			Carex_elata: RNA-seq edited
+RNA_Carex_elata	ndhA	ndhA_1	1	2	157000	157549	+	cis		Carex_elata: RNA-seq edited
+RNA_Carex_elata	ndhA	ndhA_1	2	2	158600	159138	+			Carex_elata: RNA-seq edited
+RNA_Carex_elata	ndhB	ndhB_1	1	2	201125	201892	-	cis		Carex_elata: RNA-seq edited
+RNA_Carex_elata	ndhB	ndhB_1	2	2	199683	200438	-			Carex_elata: RNA-seq edited
+RNA_Carex_elata	rpoC1	rpoC1_1	1	2	56860	57285	+	cis		Carex_elata: RNA-seq edited
+RNA_Carex_elata	rpoC1	rpoC1_1	2	2	58005	59654	+			Carex_elata: RNA-seq edited
+RNA_Carex_elata	rps12	rps12_1	1	3	103107	103220	-	cis		Carex_elata: RNA-seq edited
+RNA_Carex_elata	rps12	rps12_1	2	3	204931	205162	-	trans		Carex_elata: RNA-seq edited
+RNA_Carex_elata	rps12	rps12_1	3	3	124712	124749	+			Carex_elata: RNA-seq edited
+RNA_Carex_elata	rps16	rps16_1	1	2	112308	112347	-	cis		Carex_elata: RNA-seq edited
+RNA_Carex_elata	rps16	rps16_1	2	2	111246	111457	-			Carex_elata: RNA-seq edited
+RNA_Carex_elata	ycf3	ycf3_1	1	3	109471	109594	-	cis		Carex_elata: RNA-seq edited
+RNA_Carex_elata	ycf3	ycf3_1	2	3	108436	108665	-	trans		Carex_elata: RNA-seq edited
+RNA_Carex_elata	ycf3	ycf3_1	3	3	66580	66738	+			Carex_elata: RNA-seq edited
+RNA_Centaurium_intermedium	atpF	atpF_1	1	2	13559	13703	-	cis		Centaurium_intermedium: RNA-seq edited; sites not used
+RNA_Centaurium_intermedium	atpF	atpF_1	2	2	12430	12833	-			Centaurium_intermedium: RNA-seq edited; sites not used
+RNA_Centaurium_intermedium	clpP	clpP_1	1	3	73951	74021	-	cis		Centaurium_intermedium: RNA-seq edited; sites not used
+RNA_Centaurium_intermedium	clpP	clpP_1	2	3	72908	73198	-	cis		Centaurium_intermedium: RNA-seq edited; sites not used
+RNA_Centaurium_intermedium	clpP	clpP_1	3	3	71999	72227	-			Centaurium_intermedium: RNA-seq edited; sites not used
+RNA_Centaurium_intermedium	ndhA	ndhA_1	1	2	122212	122779	-	cis		Centaurium_intermedium: RNA-seq edited; sites not used
+RNA_Centaurium_intermedium	ndhA	ndhA_1	2	2	120529	121067	-			Centaurium_intermedium: RNA-seq edited; sites not used
+RNA_Centaurium_intermedium	ndhB	ndhB_1	1	2	97002	97778	-	cis		Centaurium_intermedium: RNA-seq edited; sites not used
+RNA_Centaurium_intermedium	ndhB	ndhB_1	2	2	95563	96318	-			Centaurium_intermedium: RNA-seq edited; sites not used
+RNA_Centaurium_intermedium	rpl2	rpl2_1	1	2	289	680	+	trans		Centaurium_intermedium: RNA-seq edited; sites not used
+RNA_Centaurium_intermedium	rpl2	rpl2_1	2	2	86043	86475	-			Centaurium_intermedium: RNA-seq edited; sites not used
+RNA_Centaurium_intermedium	rpoC1	rpoC1_1	1	2	24017	24448	-	cis		Centaurium_intermedium: RNA-seq edited; sites not used
+RNA_Centaurium_intermedium	rpoC1	rpoC1_1	2	2	21662	23275	-			Centaurium_intermedium: RNA-seq edited; sites not used
+RNA_Centaurium_intermedium	rps12	rps12_1	1	3	71718	71831	-	cis		Centaurium_intermedium: RNA-seq edited; sites not used
+RNA_Centaurium_intermedium	rps12	rps12_1	2	3	99143	99374	-	trans		Centaurium_intermedium: RNA-seq edited; sites not used
+RNA_Centaurium_intermedium	rps12	rps12_1	3	3	141629	141654	+			Centaurium_intermedium: RNA-seq edited; sites not used
+RNA_Centaurium_intermedium	rps16	rps16_1	1	2	7306	7345	-	cis		Centaurium_intermedium: RNA-seq edited; sites not used
+RNA_Centaurium_intermedium	rps16	rps16_1	2	2	6231	6433	-			Centaurium_intermedium: RNA-seq edited; sites not used
+RNA_Centaurium_intermedium	ycf3	ycf3_1	1	3	46281	46404	-	cis		Centaurium_intermedium: RNA-seq edited; sites not used
+RNA_Centaurium_intermedium	ycf3	ycf3_1	2	3	45312	45541	-	cis		Centaurium_intermedium: RNA-seq edited; sites not used
+RNA_Centaurium_intermedium	ycf3	ycf3_1	3	3	44382	44534	-			Centaurium_intermedium: RNA-seq edited; sites not used
+RNA_Ceratophyllum_demersum	ycf3	ycf3_1	1	3	46298	46421	-	cis		Ceratophyllum_demersum: RNA-seq edited; sites not used
+RNA_Ceratophyllum_demersum	ycf3	ycf3_1	2	3	45325	45554	-	cis		Ceratophyllum_demersum: RNA-seq edited; sites not used
+RNA_Ceratophyllum_demersum	ycf3	ycf3_1	3	3	44454	44606	-			Ceratophyllum_demersum: RNA-seq edited; sites not used
+RNA_Claytonia_sibirica	atpF	atpF_1	1	2	12831	12975	-	cis		Claytonia_sibirica: RNA-seq edited
+RNA_Claytonia_sibirica	atpF	atpF_1	2	2	11692	12101	-			Claytonia_sibirica: RNA-seq edited
+RNA_Claytonia_sibirica	clpP	clpP_1	1	3	72496	72566	-	cis		Claytonia_sibirica: RNA-seq edited
+RNA_Claytonia_sibirica	clpP	clpP_1	2	3	71361	71651	-	cis		Claytonia_sibirica: RNA-seq edited
+RNA_Claytonia_sibirica	clpP	clpP_1	3	3	70530	70758	-			Claytonia_sibirica: RNA-seq edited
+RNA_Claytonia_sibirica	ndhA	ndhA_1	1	2	121221	121773	-	cis		Claytonia_sibirica: RNA-seq edited
+RNA_Claytonia_sibirica	ndhA	ndhA_1	2	2	119582	120120	-			Claytonia_sibirica: RNA-seq edited
+RNA_Claytonia_sibirica	rpl2	rpl2_1	1	2	152526	152917	+	trans		Claytonia_sibirica: RNA-seq edited
+RNA_Claytonia_sibirica	rpl2	rpl2_1	2	2	84991	85423	-			Claytonia_sibirica: RNA-seq edited
+RNA_Claytonia_sibirica	rpoC1	rpoC1_1	1	2	22936	23367	-	cis		Claytonia_sibirica: RNA-seq edited
+RNA_Claytonia_sibirica	rpoC1	rpoC1_1	2	2	20544	22145	-			Claytonia_sibirica: RNA-seq edited
+RNA_Claytonia_sibirica	rps12	rps12_1	1	3	70272	70385	-	trans		Claytonia_sibirica: RNA-seq edited
+RNA_Claytonia_sibirica	rps12	rps12_1	2	3	139734	139965	+	cis		Claytonia_sibirica: RNA-seq edited
+RNA_Claytonia_sibirica	rps12	rps12_1	3	3	140499	140524	+			Claytonia_sibirica: RNA-seq edited
+RNA_Claytonia_sibirica	rps16	rps16_1	1	2	6517	6556	-	cis		Claytonia_sibirica: RNA-seq edited
+RNA_Claytonia_sibirica	rps16	rps16_1	2	2	5469	5680	-			Claytonia_sibirica: RNA-seq edited
+RNA_Claytonia_sibirica	ycf3	ycf3_1	1	3	45097	45220	-	cis		Claytonia_sibirica: RNA-seq edited
+RNA_Claytonia_sibirica	ycf3	ycf3_1	2	3	44110	44339	-	cis		Claytonia_sibirica: RNA-seq edited
+RNA_Claytonia_sibirica	ycf3	ycf3_1	3	3	43195	43347	-			Claytonia_sibirica: RNA-seq edited
+RNA_Convolvulus_arvensis	atpF	atpF_1	1	2	14186	14330	-	cis		Convolvulus_arvensis: RNA-seq edited; sites not used
+RNA_Convolvulus_arvensis	atpF	atpF_1	2	2	13066	13475	-			Convolvulus_arvensis: RNA-seq edited; sites not used
+RNA_Convolvulus_arvensis	clpP	clpP_1	1	3	75605	75675	-	cis		Convolvulus_arvensis: RNA-seq edited; sites not used
+RNA_Convolvulus_arvensis	clpP	clpP_1	2	3	74523	74813	-	cis		Convolvulus_arvensis: RNA-seq edited; sites not used
+RNA_Convolvulus_arvensis	clpP	clpP_1	3	3	73650	73905	-			Convolvulus_arvensis: RNA-seq edited; sites not used
+RNA_Convolvulus_arvensis	ndhA	ndhA_1	1	2	123616	124174	-	cis		Convolvulus_arvensis: RNA-seq edited; sites not used
+RNA_Convolvulus_arvensis	ndhA	ndhA_1	2	2	121612	122159	-			Convolvulus_arvensis: RNA-seq edited; sites not used
+RNA_Convolvulus_arvensis	ndhB	ndhB_1	1	2	144247	145023	+	cis		Convolvulus_arvensis: RNA-seq edited; sites not used
+RNA_Convolvulus_arvensis	ndhB	ndhB_1	2	2	145695	146444	+			Convolvulus_arvensis: RNA-seq edited; sites not used
+RNA_Convolvulus_arvensis	rpl2	rpl2_1	1	2	88497	88887	-	cis		Convolvulus_arvensis: RNA-seq edited; sites not used
+RNA_Convolvulus_arvensis	rpl2	rpl2_1	2	2	88063	88496	-			Convolvulus_arvensis: RNA-seq edited; sites not used
+RNA_Convolvulus_arvensis	rpoC1	rpoC1_1	1	2	24758	25189	-	cis		Convolvulus_arvensis: RNA-seq edited; sites not used
+RNA_Convolvulus_arvensis	rpoC1	rpoC1_1	2	2	22333	23943	-			Convolvulus_arvensis: RNA-seq edited; sites not used
+RNA_Convolvulus_arvensis	rps12	rps12_1	1	3	73374	73487	-	trans		Convolvulus_arvensis: RNA-seq edited; sites not used
+RNA_Convolvulus_arvensis	rps12	rps12_1	2	3	142658	142889	+	cis		Convolvulus_arvensis: RNA-seq edited; sites not used
+RNA_Convolvulus_arvensis	rps12	rps12_1	3	3	143426	143451	+			Convolvulus_arvensis: RNA-seq edited; sites not used
+RNA_Convolvulus_arvensis	rps16	rps16_1	1	2	6978	7017	-	cis		Convolvulus_arvensis: RNA-seq edited; sites not used
+RNA_Convolvulus_arvensis	rps16	rps16_1	2	2	5952	6157	-			Convolvulus_arvensis: RNA-seq edited; sites not used
+RNA_Convolvulus_arvensis	ycf3	ycf3_1	1	3	47188	47311	-	cis		Convolvulus_arvensis: RNA-seq edited; sites not used
+RNA_Convolvulus_arvensis	ycf3	ycf3_1	2	3	46237	46466	-	cis		Convolvulus_arvensis: RNA-seq edited; sites not used
+RNA_Convolvulus_arvensis	ycf3	ycf3_1	3	3	45301	45453	-			Convolvulus_arvensis: RNA-seq edited; sites not used
+RNA_Cornus_suecica	atpF	atpF_1	1	2	13077	13221	-	cis		Cornus_suecica: RNA-seq edited; sites not used
+RNA_Cornus_suecica	atpF	atpF_1	2	2	11969	12378	-			Cornus_suecica: RNA-seq edited; sites not used
+RNA_Cornus_suecica	clpP	clpP_1	1	3	74333	74403	-	cis		Cornus_suecica: RNA-seq edited; sites not used
+RNA_Cornus_suecica	clpP	clpP_1	2	3	73282	73573	-	cis		Cornus_suecica: RNA-seq edited; sites not used
+RNA_Cornus_suecica	clpP	clpP_1	3	3	72366	72593	-			Cornus_suecica: RNA-seq edited; sites not used
+RNA_Cornus_suecica	ndhA	ndhA_1	1	2	124362	124914	-	cis		Cornus_suecica: RNA-seq edited; sites not used
+RNA_Cornus_suecica	ndhA	ndhA_1	2	2	122655	123193	-			Cornus_suecica: RNA-seq edited; sites not used
+RNA_Cornus_suecica	ndhB	ndhB_1	1	2	144644	145420	+	cis		Cornus_suecica: RNA-seq edited; sites not used
+RNA_Cornus_suecica	ndhB	ndhB_1	2	2	146102	146857	+			Cornus_suecica: RNA-seq edited; sites not used
+RNA_Cornus_suecica	rpoC1	rpoC1_1	1	2	23551	23982	-	cis		Cornus_suecica: RNA-seq edited; sites not used
+RNA_Cornus_suecica	rpoC1	rpoC1_1	2	2	21177	22799	-			Cornus_suecica: RNA-seq edited; sites not used
+RNA_Cornus_suecica	rps12	rps12_1	1	3	72109	72222	-	trans		Cornus_suecica: RNA-seq edited; sites not used
+RNA_Cornus_suecica	rps12	rps12_1	2	3	143007	143238	+	cis		Cornus_suecica: RNA-seq edited; sites not used
+RNA_Cornus_suecica	rps12	rps12_1	3	3	143774	143799	+			Cornus_suecica: RNA-seq edited; sites not used
+RNA_Cornus_suecica	rps16	rps16_1	1	2	6269	6308	-	cis		Cornus_suecica: RNA-seq edited; sites not used
+RNA_Cornus_suecica	rps16	rps16_1	2	2	5176	5387	-			Cornus_suecica: RNA-seq edited; sites not used
+RNA_Cornus_suecica	ycf3	ycf3_1	1	3	45564	45687	-	cis		Cornus_suecica: RNA-seq edited; sites not used
+RNA_Cornus_suecica	ycf3	ycf3_1	2	3	44603	44832	-	cis		Cornus_suecica: RNA-seq edited; sites not used
+RNA_Cornus_suecica	ycf3	ycf3_1	3	3	43692	43844	-			Cornus_suecica: RNA-seq edited; sites not used
+RNA_Cruciata_laevipes	atpF	atpF_1	1	2	13937	14081	-	cis		Cruciata_laevipes: RNA-seq edited; sites not used
+RNA_Cruciata_laevipes	atpF	atpF_1	2	2	12840	13249	-			Cruciata_laevipes: RNA-seq edited; sites not used
+RNA_Cruciata_laevipes	clpP	clpP_1	1	3	72371	72441	-	cis		Cruciata_laevipes: RNA-seq edited; sites not used
+RNA_Cruciata_laevipes	clpP	clpP_1	2	3	71115	71405	-	cis		Cruciata_laevipes: RNA-seq edited; sites not used
+RNA_Cruciata_laevipes	clpP	clpP_1	3	3	70278	70506	-			Cruciata_laevipes: RNA-seq edited; sites not used
+RNA_Cruciata_laevipes	ndhA	ndhA_1	1	2	121707	122259	-	cis		Cruciata_laevipes: RNA-seq edited; sites not used
+RNA_Cruciata_laevipes	ndhA	ndhA_1	2	2	119995	120533	-			Cruciata_laevipes: RNA-seq edited; sites not used
+RNA_Cruciata_laevipes	ndhB	ndhB_1	1	2	96285	97061	-	cis		Cruciata_laevipes: RNA-seq edited; sites not used
+RNA_Cruciata_laevipes	ndhB	ndhB_1	2	2	94844	95599	-			Cruciata_laevipes: RNA-seq edited; sites not used
+RNA_Cruciata_laevipes	rpl2	rpl2_1	1	2	85734	86124	-	trans		Cruciata_laevipes: RNA-seq edited; sites not used
+RNA_Cruciata_laevipes	rpl2	rpl2_1	2	2	339	772	+			Cruciata_laevipes: RNA-seq edited; sites not used
+RNA_Cruciata_laevipes	rpoC1	rpoC1_1	1	2	24321	24752	-	cis		Cruciata_laevipes: RNA-seq edited; sites not used
+RNA_Cruciata_laevipes	rpoC1	rpoC1_1	2	2	21968	23584	-			Cruciata_laevipes: RNA-seq edited; sites not used
+RNA_Cruciata_laevipes	rps12	rps12_1	1	3	70043	70156	-	cis		Cruciata_laevipes: RNA-seq edited; sites not used
+RNA_Cruciata_laevipes	rps12	rps12_1	2	3	98434	98665	-	trans		Cruciata_laevipes: RNA-seq edited; sites not used
+RNA_Cruciata_laevipes	rps12	rps12_1	3	3	140732	140757	+			Cruciata_laevipes: RNA-seq edited; sites not used
+RNA_Cruciata_laevipes	rps16	rps16_1	1	2	6947	6986	-	cis		Cruciata_laevipes: RNA-seq edited; sites not used
+RNA_Cruciata_laevipes	rps16	rps16_1	2	2	5687	5913	-			Cruciata_laevipes: RNA-seq edited; sites not used
+RNA_Cruciata_laevipes	ycf3	ycf3_1	1	3	45553	45676	-	cis		Cruciata_laevipes: RNA-seq edited; sites not used
+RNA_Cruciata_laevipes	ycf3	ycf3_1	2	3	44434	44663	-	cis		Cruciata_laevipes: RNA-seq edited; sites not used
+RNA_Cruciata_laevipes	ycf3	ycf3_1	3	3	43532	43684	-			Cruciata_laevipes: RNA-seq edited; sites not used
+RNA_Daucus_carota	ycf3	ycf3_1	1	3	45872	45995	-	cis		Daucus_carota: RNA-seq edited; sites not used
+RNA_Daucus_carota	ycf3	ycf3_1	2	3	44923	45152	-	cis		Daucus_carota: RNA-seq edited; sites not used
+RNA_Daucus_carota	ycf3	ycf3_1	3	3	43985	44137	-			Daucus_carota: RNA-seq edited; sites not used
+RNA_Diapensia_lapponica	atpF	atpF_1	1	2	53592	53736	+	cis		Diapensia_lapponica: RNA-seq edited
+RNA_Diapensia_lapponica	atpF	atpF_1	2	2	54444	54853	+			Diapensia_lapponica: RNA-seq edited
+RNA_Diapensia_lapponica	ndhA	ndhA_1	1	2	124449	125013	+	cis		Diapensia_lapponica: RNA-seq edited
+RNA_Diapensia_lapponica	ndhA	ndhA_1	2	2	126106	126644	+			Diapensia_lapponica: RNA-seq edited
+RNA_Diapensia_lapponica	ndhB	ndhB_1	1	2	101217	101993	-	cis		Diapensia_lapponica: RNA-seq edited
+RNA_Diapensia_lapponica	ndhB	ndhB_1	2	2	99782	100537	-			Diapensia_lapponica: RNA-seq edited
+RNA_Diapensia_lapponica	rpl2	rpl2_1	1	2	89786	90187	-	cis		Diapensia_lapponica: RNA-seq edited
+RNA_Diapensia_lapponica	rpl2	rpl2_1	2	2	89342	89785	-			Diapensia_lapponica: RNA-seq edited
+RNA_Diapensia_lapponica	rpoC1	rpoC1_1	1	2	44142	44585	+	cis		Diapensia_lapponica: RNA-seq edited
+RNA_Diapensia_lapponica	rpoC1	rpoC1_1	2	2	44586	46190	+			Diapensia_lapponica: RNA-seq edited
+RNA_Diapensia_lapponica	rps12	rps12_1	1	3	114592	114705	+	trans		Diapensia_lapponica: RNA-seq edited
+RNA_Diapensia_lapponica	rps12	rps12_1	2	3	155422	155653	-	cis		Diapensia_lapponica: RNA-seq edited
+RNA_Diapensia_lapponica	rps12	rps12_1	3	3	102825	102856	-			Diapensia_lapponica: RNA-seq edited
+RNA_Diapensia_lapponica	rps16	rps16_1	1	2	33829	33868	+	cis		Diapensia_lapponica: RNA-seq edited
+RNA_Diapensia_lapponica	rps16	rps16_1	2	2	33869	34101	+			Diapensia_lapponica: RNA-seq edited
+RNA_Diapensia_lapponica	ycf3	ycf3_1	1	3	30570	30693	+	cis		Diapensia_lapponica: RNA-seq edited
+RNA_Diapensia_lapponica	ycf3	ycf3_1	2	3	31364	31593	+	cis		Diapensia_lapponica: RNA-seq edited
+RNA_Diapensia_lapponica	ycf3	ycf3_1	3	3	32349	32501	+			Diapensia_lapponica: RNA-seq edited
+RNA_Dioscorea_communis	atpF	atpF_1	1	2	13498	13645	-	cis		Dioscorea_communis: RNA-seq edited; sites not used
+RNA_Dioscorea_communis	atpF	atpF_1	2	2	12135	12544	-			Dioscorea_communis: RNA-seq edited; sites not used
+RNA_Drosera_rotundifolia	atpF	atpF_1	1	2	36231	36375	+	cis		Drosera_rotundifolia: RNA-seq edited; sites not used
+RNA_Drosera_rotundifolia	atpF	atpF_1	2	2	37122	37531	+			Drosera_rotundifolia: RNA-seq edited; sites not used
+RNA_Drosera_rotundifolia	rps16	rps16_1	1	2	5250	5289	-	cis		Drosera_rotundifolia: RNA-seq edited; sites not used
+RNA_Drosera_rotundifolia	rps16	rps16_1	2	2	5029	5249	-			Drosera_rotundifolia: RNA-seq edited; sites not used
+RNA_Ecballium_elaterium	atpF	atpF_1	1	2	14237	14381	-	cis		Ecballium_elaterium: RNA-seq edited; sites not used
+RNA_Ecballium_elaterium	atpF	atpF_1	2	2	13121	13530	-			Ecballium_elaterium: RNA-seq edited; sites not used
+RNA_Ecballium_elaterium	clpP	clpP_1	1	3	73967	74037	-	cis		Ecballium_elaterium: RNA-seq edited; sites not used
+RNA_Ecballium_elaterium	clpP	clpP_1	2	3	72836	73126	-	cis		Ecballium_elaterium: RNA-seq edited; sites not used
+RNA_Ecballium_elaterium	clpP	clpP_1	3	3	72011	72239	-			Ecballium_elaterium: RNA-seq edited; sites not used
+RNA_Ecballium_elaterium	rps16	rps16_1	1	2	6513	6552	-	cis		Ecballium_elaterium: RNA-seq edited; sites not used
+RNA_Ecballium_elaterium	rps16	rps16_1	2	2	5440	5654	-			Ecballium_elaterium: RNA-seq edited; sites not used
+RNA_Eryngium_campestre	atpF	atpF_1	1	2	13806	13950	-	cis		Eryngium_campestre: RNA-seq edited; sites not used
+RNA_Eryngium_campestre	atpF	atpF_1	2	2	12671	13080	-			Eryngium_campestre: RNA-seq edited; sites not used
+RNA_Eryngium_campestre	clpP	clpP_1	1	3	73961	74031	-	cis		Eryngium_campestre: RNA-seq edited; sites not used
+RNA_Eryngium_campestre	clpP	clpP_1	2	3	72848	73138	-	cis		Eryngium_campestre: RNA-seq edited; sites not used
+RNA_Eryngium_campestre	clpP	clpP_1	3	3	72003	72228	-			Eryngium_campestre: RNA-seq edited; sites not used
+RNA_Eryngium_campestre	ndhA	ndhA_1	1	2	123706	124258	-	cis		Eryngium_campestre: RNA-seq edited; sites not used
+RNA_Eryngium_campestre	ndhA	ndhA_1	2	2	122087	122625	-			Eryngium_campestre: RNA-seq edited; sites not used
+RNA_Eryngium_campestre	ndhB	ndhB_1	1	2	97638	98414	-	cis		Eryngium_campestre: RNA-seq edited; sites not used
+RNA_Eryngium_campestre	ndhB	ndhB_1	2	2	96200	96955	-			Eryngium_campestre: RNA-seq edited; sites not used
+RNA_Eryngium_campestre	rpl2	rpl2_1	1	2	87552	87942	-	cis		Eryngium_campestre: RNA-seq edited; sites not used
+RNA_Eryngium_campestre	rpl2	rpl2_1	2	2	86463	86896	-			Eryngium_campestre: RNA-seq edited; sites not used
+RNA_Eryngium_campestre	rpoC1	rpoC1_1	1	2	24437	24868	-	cis		Eryngium_campestre: RNA-seq edited; sites not used
+RNA_Eryngium_campestre	rpoC1	rpoC1_1	2	2	22065	23681	-			Eryngium_campestre: RNA-seq edited; sites not used
+RNA_Eryngium_campestre	rps12	rps12_1	1	3	71741	71854	-	cis		Eryngium_campestre: RNA-seq edited; sites not used
+RNA_Eryngium_campestre	rps12	rps12_1	2	3	99789	100020	-	trans		Eryngium_campestre: RNA-seq edited; sites not used
+RNA_Eryngium_campestre	rps12	rps12_1	3	3	143043	143068	+			Eryngium_campestre: RNA-seq edited; sites not used
+RNA_Eryngium_campestre	rps16	rps16_1	1	2	6391	6430	-	cis		Eryngium_campestre: RNA-seq edited; sites not used
+RNA_Eryngium_campestre	rps16	rps16_1	2	2	5363	5559	-			Eryngium_campestre: RNA-seq edited; sites not used
+RNA_Eryngium_campestre	ycf3	ycf3_1	1	3	45987	46110	-	cis		Eryngium_campestre: RNA-seq edited; sites not used
+RNA_Eryngium_campestre	ycf3	ycf3_1	2	3	45029	45258	-	cis		Eryngium_campestre: RNA-seq edited; sites not used
+RNA_Eryngium_campestre	ycf3	ycf3_1	3	3	44102	44254	-			Eryngium_campestre: RNA-seq edited; sites not used
+RNA_Erythranthe_guttata	atpF	atpF_1	1	2	12742	12886	-	cis		Erythranthe_guttata: RNA-seq edited; sites not used
+RNA_Erythranthe_guttata	atpF	atpF_1	2	2	11616	12025	-			Erythranthe_guttata: RNA-seq edited; sites not used
+RNA_Erythranthe_guttata	clpP	clpP_1	1	3	71559	71629	-	cis		Erythranthe_guttata: RNA-seq edited; sites not used
+RNA_Erythranthe_guttata	clpP	clpP_1	2	3	70534	70824	-	cis		Erythranthe_guttata: RNA-seq edited; sites not used
+RNA_Erythranthe_guttata	clpP	clpP_1	3	3	69664	69892	-			Erythranthe_guttata: RNA-seq edited; sites not used
+RNA_Erythranthe_guttata	ndhB	ndhB_1	1	2	139851	140627	+	cis		Erythranthe_guttata: RNA-seq edited; sites not used
+RNA_Erythranthe_guttata	ndhB	ndhB_1	2	2	141309	142064	+			Erythranthe_guttata: RNA-seq edited; sites not used
+RNA_Erythranthe_guttata	rpl2	rpl2_1	1	2	150879	151269	+	cis		Erythranthe_guttata: RNA-seq edited; sites not used
+RNA_Erythranthe_guttata	rpl2	rpl2_1	2	2	151936	152369	+			Erythranthe_guttata: RNA-seq edited; sites not used
+RNA_Erythranthe_guttata	rps12	rps12_1	1	3	69414	69527	-	trans		Erythranthe_guttata: RNA-seq edited; sites not used
+RNA_Erythranthe_guttata	rps12	rps12_1	2	3	138262	138493	+	cis		Erythranthe_guttata: RNA-seq edited; sites not used
+RNA_Erythranthe_guttata	rps12	rps12_1	3	3	139030	139055	+			Erythranthe_guttata: RNA-seq edited; sites not used
+RNA_Erythranthe_guttata	rps16	rps16_1	1	2	5729	5768	-	cis		Erythranthe_guttata: RNA-seq edited; sites not used
+RNA_Erythranthe_guttata	rps16	rps16_1	2	2	4623	4849	-			Erythranthe_guttata: RNA-seq edited; sites not used
+RNA_Erythranthe_guttata	ycf3	ycf3_1	1	3	44228	44351	-	cis		Erythranthe_guttata: RNA-seq edited; sites not used
+RNA_Erythranthe_guttata	ycf3	ycf3_1	2	3	43284	43513	-	cis		Erythranthe_guttata: RNA-seq edited; sites not used
+RNA_Erythranthe_guttata	ycf3	ycf3_1	3	3	42397	42549	-			Erythranthe_guttata: RNA-seq edited; sites not used
+RNA_Euonymus_europaeus	atpF	atpF_1	1	2	13301	13445	-	cis		Euonymus_europaeus: RNA-seq edited; sites not used
+RNA_Euonymus_europaeus	atpF	atpF_1	2	2	12200	12609	-			Euonymus_europaeus: RNA-seq edited; sites not used
+RNA_Euonymus_europaeus	clpP	clpP_1	1	3	73885	73955	-	cis		Euonymus_europaeus: RNA-seq edited; sites not used
+RNA_Euonymus_europaeus	clpP	clpP_1	2	3	72741	73031	-	cis		Euonymus_europaeus: RNA-seq edited; sites not used
+RNA_Euonymus_europaeus	clpP	clpP_1	3	3	71899	72130	-			Euonymus_europaeus: RNA-seq edited; sites not used
+RNA_Euonymus_europaeus	ndhA	ndhA_1	1	2	124228	124780	-	cis		Euonymus_europaeus: RNA-seq edited; sites not used
+RNA_Euonymus_europaeus	ndhA	ndhA_1	2	2	122513	123051	-			Euonymus_europaeus: RNA-seq edited; sites not used
+RNA_Euonymus_europaeus	rpoC1	rpoC1_1	1	2	23866	24297	-	cis		Euonymus_europaeus: RNA-seq edited; sites not used
+RNA_Euonymus_europaeus	rpoC1	rpoC1_1	2	2	21429	23045	-			Euonymus_europaeus: RNA-seq edited; sites not used
+RNA_Euonymus_europaeus	rps12	rps12_1	1	3	71575	71688	-	trans		Euonymus_europaeus: RNA-seq edited; sites not used
+RNA_Euonymus_europaeus	rps12	rps12_1	2	3	143109	143340	+	cis		Euonymus_europaeus: RNA-seq edited; sites not used
+RNA_Euonymus_europaeus	rps12	rps12_1	3	3	143885	143910	+			Euonymus_europaeus: RNA-seq edited; sites not used
+RNA_Euonymus_europaeus	rps16	rps16_1	1	2	5654	5693	-	cis		Euonymus_europaeus: RNA-seq edited; sites not used
+RNA_Euonymus_europaeus	rps16	rps16_1	2	2	5394	5653	-			Euonymus_europaeus: RNA-seq edited; sites not used
+RNA_Euonymus_europaeus	ycf3	ycf3_1	1	3	46102	46225	-	cis		Euonymus_europaeus: RNA-seq edited; sites not used
+RNA_Euonymus_europaeus	ycf3	ycf3_1	2	3	45140	45369	-	cis		Euonymus_europaeus: RNA-seq edited; sites not used
+RNA_Euonymus_europaeus	ycf3	ycf3_1	3	3	44245	44397	-			Euonymus_europaeus: RNA-seq edited; sites not used
+RNA_Euphorbia_maculata	atpF	atpF_1	1	2	13380	13524	-	cis		Euphorbia_maculata: RNA-seq edited; sites not used
+RNA_Euphorbia_maculata	atpF	atpF_1	2	2	12248	12657	-			Euphorbia_maculata: RNA-seq edited; sites not used
+RNA_Euphorbia_maculata	ndhA	ndhA_1	1	2	128894	129446	-	cis		Euphorbia_maculata: RNA-seq edited; sites not used
+RNA_Euphorbia_maculata	ndhA	ndhA_1	2	2	127219	127757	-			Euphorbia_maculata: RNA-seq edited; sites not used
+RNA_Euphorbia_maculata	rps12	rps12_1	1	3	75902	76015	-	cis		Euphorbia_maculata: RNA-seq edited; sites not used
+RNA_Euphorbia_maculata	rps12	rps12_1	2	3	105336	105567	-	trans		Euphorbia_maculata: RNA-seq edited; sites not used
+RNA_Euphorbia_maculata	rps12	rps12_1	3	3	148675	148700	+			Euphorbia_maculata: RNA-seq edited; sites not used
+RNA_Filago_lutescens	atpF	atpF_1	1	2	27686	27830	+	cis		Filago_lutescens: RNA-seq edited
+RNA_Filago_lutescens	atpF	atpF_1	2	2	28542	28951	+			Filago_lutescens: RNA-seq edited
+RNA_Filago_lutescens	ndhA	ndhA_1	1	2	121021	121573	-	cis		Filago_lutescens: RNA-seq edited
+RNA_Filago_lutescens	ndhA	ndhA_1	2	2	119451	119989	-			Filago_lutescens: RNA-seq edited
+RNA_Filago_lutescens	ndhB	ndhB_1	1	2	140697	141473	+	cis		Filago_lutescens: RNA-seq edited
+RNA_Filago_lutescens	ndhB	ndhB_1	2	2	142144	142899	+			Filago_lutescens: RNA-seq edited
+RNA_Filago_lutescens	rps12	rps12_1	1	3	70547	70660	-	trans		Filago_lutescens: RNA-seq edited
+RNA_Filago_lutescens	rps12	rps12_1	2	3	139094	139325	+	cis		Filago_lutescens: RNA-seq edited
+RNA_Filago_lutescens	rps12	rps12_1	3	3	139861	139886	+			Filago_lutescens: RNA-seq edited
+RNA_Filago_lutescens	rps16	rps16_1	1	2	7592	7631	-	cis		Filago_lutescens: RNA-seq edited
+RNA_Filago_lutescens	rps16	rps16_1	2	2	6513	6739	-			Filago_lutescens: RNA-seq edited
+RNA_Filago_lutescens	ycf3	ycf3_1	1	3	45065	45188	-	cis		Filago_lutescens: RNA-seq edited
+RNA_Filago_lutescens	ycf3	ycf3_1	2	3	44140	44369	-	cis		Filago_lutescens: RNA-seq edited
+RNA_Filago_lutescens	ycf3	ycf3_1	3	3	43238	43390	-			Filago_lutescens: RNA-seq edited
+RNA_Frangula_alnus	atpF	atpF_1	1	2	14119	14263	-	cis		Frangula_alnus: RNA-seq edited
+RNA_Frangula_alnus	atpF	atpF_1	2	2	12952	13361	-			Frangula_alnus: RNA-seq edited
+RNA_Frangula_alnus	clpP	clpP_1	1	3	77010	77080	-	cis		Frangula_alnus: RNA-seq edited
+RNA_Frangula_alnus	clpP	clpP_1	2	3	75855	76145	-	cis		Frangula_alnus: RNA-seq edited
+RNA_Frangula_alnus	clpP	clpP_1	3	3	74995	75223	-			Frangula_alnus: RNA-seq edited
+RNA_Frangula_alnus	ndhA	ndhA_1	1	2	128158	128710	-	cis		Frangula_alnus: RNA-seq edited
+RNA_Frangula_alnus	ndhA	ndhA_1	2	2	126413	126957	-			Frangula_alnus: RNA-seq edited
+RNA_Frangula_alnus	ndhB	ndhB_1	1	2	148638	149414	+	cis		Frangula_alnus: RNA-seq edited
+RNA_Frangula_alnus	ndhB	ndhB_1	2	2	150095	150850	+			Frangula_alnus: RNA-seq edited
+RNA_Frangula_alnus	rpoC1	rpoC1_1	1	2	24767	25198	-	cis		Frangula_alnus: RNA-seq edited
+RNA_Frangula_alnus	rpoC1	rpoC1_1	2	2	22373	23983	-			Frangula_alnus: RNA-seq edited
+RNA_Frangula_alnus	rps12	rps12_1	1	3	74707	74820	-	trans		Frangula_alnus: RNA-seq edited
+RNA_Frangula_alnus	rps12	rps12_1	2	3	147001	147232	+	cis		Frangula_alnus: RNA-seq edited
+RNA_Frangula_alnus	rps12	rps12_1	3	3	147769	147794	+			Frangula_alnus: RNA-seq edited
+RNA_Frangula_alnus	rps16	rps16_1	1	2	7068	7107	-	cis		Frangula_alnus: RNA-seq edited
+RNA_Frangula_alnus	rps16	rps16_1	2	2	5960	6189	-			Frangula_alnus: RNA-seq edited
+RNA_Frangula_alnus	ycf3	ycf3_1	1	3	47556	47679	-	cis		Frangula_alnus: RNA-seq edited
+RNA_Frangula_alnus	ycf3	ycf3_1	2	3	46485	46714	-	cis		Frangula_alnus: RNA-seq edited
+RNA_Frangula_alnus	ycf3	ycf3_1	3	3	45578	45730	-			Frangula_alnus: RNA-seq edited
+RNA_Fraxinus_excelsior	atpF	atpF_1	1	2	14713	14857	-	cis		Fraxinus_excelsior: RNA-seq edited; sites not used
+RNA_Fraxinus_excelsior	atpF	atpF_1	2	2	13608	14017	-			Fraxinus_excelsior: RNA-seq edited; sites not used
+RNA_Fraxinus_excelsior	clpP	clpP_1	1	3	75134	75204	-	cis		Fraxinus_excelsior: RNA-seq edited; sites not used
+RNA_Fraxinus_excelsior	clpP	clpP_1	2	3	74024	74314	-	cis		Fraxinus_excelsior: RNA-seq edited; sites not used
+RNA_Fraxinus_excelsior	clpP	clpP_1	3	3	73152	73380	-			Fraxinus_excelsior: RNA-seq edited; sites not used
+RNA_Fraxinus_excelsior	ndhA	ndhA_1	1	2	123666	124221	-	cis		Fraxinus_excelsior: RNA-seq edited; sites not used
+RNA_Fraxinus_excelsior	ndhA	ndhA_1	2	2	122034	122563	-			Fraxinus_excelsior: RNA-seq edited; sites not used
+RNA_Fraxinus_excelsior	ndhB	ndhB_1	1	2	98939	99715	-	cis		Fraxinus_excelsior: RNA-seq edited; sites not used
+RNA_Fraxinus_excelsior	ndhB	ndhB_1	2	2	97504	98259	-			Fraxinus_excelsior: RNA-seq edited; sites not used
+RNA_Fraxinus_excelsior	rpl2	rpl2_1	1	2	88334	88724	-	trans		Fraxinus_excelsior: RNA-seq edited; sites not used
+RNA_Fraxinus_excelsior	rpl2	rpl2_1	2	2	344	777	+			Fraxinus_excelsior: RNA-seq edited; sites not used
+RNA_Fraxinus_excelsior	rps12	rps12_1	1	3	72905	73018	-	cis		Fraxinus_excelsior: RNA-seq edited; sites not used
+RNA_Fraxinus_excelsior	rps12	rps12_1	2	3	101073	101304	-	trans		Fraxinus_excelsior: RNA-seq edited; sites not used
+RNA_Fraxinus_excelsior	rps12	rps12_1	3	3	143043	143068	+			Fraxinus_excelsior: RNA-seq edited; sites not used
+RNA_Fraxinus_excelsior	rps16	rps16_1	1	2	7230	7269	-	cis		Fraxinus_excelsior: RNA-seq edited; sites not used
+RNA_Fraxinus_excelsior	rps16	rps16_1	2	2	6134	6360	-			Fraxinus_excelsior: RNA-seq edited; sites not used
+RNA_Fraxinus_excelsior	ycf3	ycf3_1	1	3	46755	46878	-	cis		Fraxinus_excelsior: RNA-seq edited; sites not used
+RNA_Fraxinus_excelsior	ycf3	ycf3_1	2	3	45820	46049	-	cis		Fraxinus_excelsior: RNA-seq edited; sites not used
+RNA_Fraxinus_excelsior	ycf3	ycf3_1	3	3	44914	45066	-			Fraxinus_excelsior: RNA-seq edited; sites not used
+RNA_Fuchsia_magellanica	rps12	rps12_1	1	3	73121	73234	-	trans		Fuchsia_magellanica: RNA-seq edited
+RNA_Fuchsia_magellanica	rps12	rps12_1	2	3	103637	103868	-	trans		Fuchsia_magellanica: RNA-seq edited
+RNA_Fuchsia_magellanica	rps12	rps12_1	3	3	147144	147169	+			Fuchsia_magellanica: RNA-seq edited
+RNA_Geranium_robertianum	atpF	atpF_1	1	2	69668	69812	+	cis		Geranium_robertianum: RNA-seq edited; sites not used
+RNA_Geranium_robertianum	atpF	atpF_1	2	2	70556	70965	+			Geranium_robertianum: RNA-seq edited; sites not used
+RNA_Geranium_robertianum	ndhA	ndhA_1	1	2	41289	41841	-	cis		Geranium_robertianum: RNA-seq edited; sites not used
+RNA_Geranium_robertianum	ndhA	ndhA_1	2	2	39673	40211	-			Geranium_robertianum: RNA-seq edited; sites not used
+RNA_Geranium_robertianum	ndhB	ndhB_1	1	2	132565	133323	+	cis		Geranium_robertianum: RNA-seq edited; sites not used
+RNA_Geranium_robertianum	ndhB	ndhB_1	2	2	133993	134748	+			Geranium_robertianum: RNA-seq edited; sites not used
+RNA_Helianthemum_oelandicum	atpF	atpF_1	1	2	27536	27680	+	cis		Helianthemum_oelandicum: RNA-seq edited
+RNA_Helianthemum_oelandicum	atpF	atpF_1	2	2	27681	28090	+			Helianthemum_oelandicum: RNA-seq edited
+RNA_Helianthemum_oelandicum	ndhA	ndhA_1	1	2	157820	158372	+	trans		Helianthemum_oelandicum: RNA-seq edited
+RNA_Helianthemum_oelandicum	ndhA	ndhA_1	2	2	164857	165386	-			Helianthemum_oelandicum: RNA-seq edited
+RNA_Helianthemum_oelandicum	ndhB	ndhB_1	1	2	113530	114306	-	cis		Helianthemum_oelandicum: RNA-seq edited
+RNA_Helianthemum_oelandicum	ndhB	ndhB_1	2	2	112083	112838	-			Helianthemum_oelandicum: RNA-seq edited
+RNA_Helianthemum_oelandicum	rpl2	rpl2_1	1	2	98551	98938	-	cis		Helianthemum_oelandicum: RNA-seq edited
+RNA_Helianthemum_oelandicum	rpl2	rpl2_1	2	2	97458	97891	-			Helianthemum_oelandicum: RNA-seq edited
+RNA_Helianthemum_oelandicum	rpoC1	rpoC1_1	1	2	18145	18576	+	cis		Helianthemum_oelandicum: RNA-seq edited
+RNA_Helianthemum_oelandicum	rpoC1	rpoC1_1	2	2	18577	20214	+			Helianthemum_oelandicum: RNA-seq edited
+RNA_Helianthemum_oelandicum	rps12	rps12_1	1	3	50158	50271	-	cis		Helianthemum_oelandicum: RNA-seq edited
+RNA_Helianthemum_oelandicum	rps12	rps12_1	2	3	102669	102900	-	cis		Helianthemum_oelandicum: RNA-seq edited
+RNA_Helianthemum_oelandicum	rps12	rps12_1	3	3	104621	104649	-			Helianthemum_oelandicum: RNA-seq edited
+RNA_Helianthemum_oelandicum	rps16	rps16_1	1	2	135941	135980	+	cis		Helianthemum_oelandicum: RNA-seq edited
+RNA_Helianthemum_oelandicum	rps16	rps16_1	2	2	136780	136976	+			Helianthemum_oelandicum: RNA-seq edited
+RNA_Helianthemum_oelandicum	ycf3	ycf3_1	1	3	150982	151105	+	trans		Helianthemum_oelandicum: RNA-seq edited
+RNA_Helianthemum_oelandicum	ycf3	ycf3_1	2	3	173548	173777	-	trans		Helianthemum_oelandicum: RNA-seq edited
+RNA_Helianthemum_oelandicum	ycf3	ycf3_1	3	3	151336	151494	+			Helianthemum_oelandicum: RNA-seq edited
+RNA_Hibiscus_verdcourtii	atpF	atpF_1	1	2	13846	13990	-	cis		Hibiscus_verdcourtii: RNA-seq edited; sites not used
+RNA_Hibiscus_verdcourtii	atpF	atpF_1	2	2	12635	13044	-			Hibiscus_verdcourtii: RNA-seq edited; sites not used
+RNA_Hibiscus_verdcourtii	clpP	clpP_1	1	3	76778	76848	-	cis		Hibiscus_verdcourtii: RNA-seq edited; sites not used
+RNA_Hibiscus_verdcourtii	clpP	clpP_1	2	3	75532	75822	-	cis		Hibiscus_verdcourtii: RNA-seq edited; sites not used
+RNA_Hibiscus_verdcourtii	clpP	clpP_1	3	3	74624	74852	-			Hibiscus_verdcourtii: RNA-seq edited; sites not used
+RNA_Hibiscus_verdcourtii	rps12	rps12_1	1	3	74315	74428	-	trans		Hibiscus_verdcourtii: RNA-seq edited; sites not used
+RNA_Hibiscus_verdcourtii	rps12	rps12_1	2	3	146932	147163	+	cis		Hibiscus_verdcourtii: RNA-seq edited; sites not used
+RNA_Hibiscus_verdcourtii	rps12	rps12_1	3	3	147700	147725	+			Hibiscus_verdcourtii: RNA-seq edited; sites not used
+RNA_Hibiscus_verdcourtii	rps16	rps16_1	1	2	6889	6928	-	cis		Hibiscus_verdcourtii: RNA-seq edited; sites not used
+RNA_Hibiscus_verdcourtii	rps16	rps16_1	2	2	5802	6028	-			Hibiscus_verdcourtii: RNA-seq edited; sites not used
+RNA_Hibiscus_verdcourtii	ycf3	ycf3_1	1	3	47280	47403	-	cis		Hibiscus_verdcourtii: RNA-seq edited; sites not used
+RNA_Hibiscus_verdcourtii	ycf3	ycf3_1	2	3	46278	46507	-	cis		Hibiscus_verdcourtii: RNA-seq edited; sites not used
+RNA_Hibiscus_verdcourtii	ycf3	ycf3_1	3	3	45332	45484	-			Hibiscus_verdcourtii: RNA-seq edited; sites not used
+RNA_Hordeum_vulgare	atpF	atpF_1	1	2	33463	33607	+	cis		Hordeum_vulgare: RNA-seq edited; sites not used
+RNA_Hordeum_vulgare	atpF	atpF_1	2	2	34441	34847	+			Hordeum_vulgare: RNA-seq edited; sites not used
+RNA_Hordeum_vulgare	clpP	clpP_1	1	3	68934	69003	-	cis		Hordeum_vulgare: RNA-seq edited; sites not used
+RNA_Hordeum_vulgare	clpP	clpP_1	2	3	68641	68933	-	cis		Hordeum_vulgare: RNA-seq edited; sites not used
+RNA_Hordeum_vulgare	clpP	clpP_1	3	3	68410	68643	-			Hordeum_vulgare: RNA-seq edited; sites not used
+RNA_Hordeum_vulgare	rpl2	rpl2_1	1	2	82922	83312	-	cis		Hordeum_vulgare: RNA-seq edited; sites not used
+RNA_Hordeum_vulgare	rpl2	rpl2_1	2	2	81828	82258	-			Hordeum_vulgare: RNA-seq edited; sites not used
+RNA_Hordeum_vulgare	rps12	rps12_1	1	3	68098	68211	-	cis		Hordeum_vulgare: RNA-seq edited; sites not used
+RNA_Hordeum_vulgare	rps12	rps12_1	2	3	90530	90761	-	trans		Hordeum_vulgare: RNA-seq edited; sites not used
+RNA_Hordeum_vulgare	rps12	rps12_1	3	3	128351	128379	+			Hordeum_vulgare: RNA-seq edited; sites not used
+RNA_Hordeum_vulgare	ycf3	ycf3_1	1	3	44526	44649	-	cis		Hordeum_vulgare: RNA-seq edited; sites not used
+RNA_Hordeum_vulgare	ycf3	ycf3_1	2	3	43537	43766	-	cis		Hordeum_vulgare: RNA-seq edited; sites not used
+RNA_Hordeum_vulgare	ycf3	ycf3_1	3	3	42655	42813	-			Hordeum_vulgare: RNA-seq edited; sites not used
+RNA_Houttuynia_cordata	atpF	atpF_1	1	2	13605	13749	-	cis		Houttuynia_cordata: RNA-seq edited; sites not used
+RNA_Houttuynia_cordata	atpF	atpF_1	2	2	12468	12877	-			Houttuynia_cordata: RNA-seq edited; sites not used
+RNA_Houttuynia_cordata	rpl2	rpl2_1	1	2	89512	89902	-	cis		Houttuynia_cordata: RNA-seq edited; sites not used
+RNA_Houttuynia_cordata	rpl2	rpl2_1	2	2	88416	88846	-			Houttuynia_cordata: RNA-seq edited; sites not used
+RNA_Humulus_lupulus	atpF	atpF_1	1	2	14177	14321	-	cis		Humulus_lupulus: RNA-seq edited; sites not used
+RNA_Humulus_lupulus	atpF	atpF_1	2	2	13027	13436	-			Humulus_lupulus: RNA-seq edited; sites not used
+RNA_Humulus_lupulus	clpP	clpP_1	1	3	73370	73440	-	cis		Humulus_lupulus: RNA-seq edited; sites not used
+RNA_Humulus_lupulus	clpP	clpP_1	2	3	72217	72507	-	cis		Humulus_lupulus: RNA-seq edited; sites not used
+RNA_Humulus_lupulus	clpP	clpP_1	3	3	71377	71605	-			Humulus_lupulus: RNA-seq edited; sites not used
+RNA_Humulus_lupulus	ndhA	ndhA_1	1	2	121654	122206	-	cis		Humulus_lupulus: RNA-seq edited; sites not used
+RNA_Humulus_lupulus	ndhA	ndhA_1	2	2	119909	120447	-			Humulus_lupulus: RNA-seq edited; sites not used
+RNA_Humulus_lupulus	ndhB	ndhB_1	1	2	97159	97935	-	cis		Humulus_lupulus: RNA-seq edited; sites not used
+RNA_Humulus_lupulus	ndhB	ndhB_1	2	2	95718	96473	-			Humulus_lupulus: RNA-seq edited; sites not used
+RNA_Humulus_lupulus	rpl2	rpl2_1	1	2	86599	86989	-	trans		Humulus_lupulus: RNA-seq edited; sites not used
+RNA_Humulus_lupulus	rpl2	rpl2_1	2	2	79	512	+			Humulus_lupulus: RNA-seq edited; sites not used
+RNA_Humulus_lupulus	rps12	rps12_1	1	3	71091	71204	-	cis		Humulus_lupulus: RNA-seq edited; sites not used
+RNA_Humulus_lupulus	rps12	rps12_1	2	3	99347	99578	-	trans		Humulus_lupulus: RNA-seq edited; sites not used
+RNA_Humulus_lupulus	rps12	rps12_1	3	3	140948	140973	+			Humulus_lupulus: RNA-seq edited; sites not used
+RNA_Humulus_lupulus	rps16	rps16_1	1	2	7498	7537	-	cis		Humulus_lupulus: RNA-seq edited; sites not used
+RNA_Humulus_lupulus	rps16	rps16_1	2	2	6394	6623	-			Humulus_lupulus: RNA-seq edited; sites not used
+RNA_Hypericum_perforatum	atpF	atpF_1	1	2	173505	173649	-	cis		Hypericum_perforatum: RNA-seq edited; sites not used
+RNA_Hypericum_perforatum	atpF	atpF_1	2	2	172358	172767	-			Hypericum_perforatum: RNA-seq edited; sites not used
+RNA_Hypericum_perforatum	ndhA	ndhA_1	1	2	34684	35254	+	cis		Hypericum_perforatum: RNA-seq edited; sites not used
+RNA_Hypericum_perforatum	ndhA	ndhA_1	2	2	36634	37172	+			Hypericum_perforatum: RNA-seq edited; sites not used
+RNA_Hypericum_perforatum	ndhB	ndhB_1	1	2	104564	105340	+	cis		Hypericum_perforatum: RNA-seq edited; sites not used
+RNA_Hypericum_perforatum	ndhB	ndhB_1	2	2	106037	106792	+			Hypericum_perforatum: RNA-seq edited; sites not used
+RNA_Hypericum_perforatum	rpl2	rpl2_1	1	2	110151	110550	+	cis		Hypericum_perforatum: RNA-seq edited; sites not used
+RNA_Hypericum_perforatum	rpl2	rpl2_1	2	2	112103	112536	+			Hypericum_perforatum: RNA-seq edited; sites not used
+RNA_Hypericum_perforatum	rpoC1	rpoC1_1	1	2	183189	183608	-	cis		Hypericum_perforatum: RNA-seq edited; sites not used
+RNA_Hypericum_perforatum	rpoC1	rpoC1_1	2	2	181533	183188	-			Hypericum_perforatum: RNA-seq edited; sites not used
+RNA_Hypericum_perforatum	rps12	rps12_1	1	3	134944	135057	-	cis		Hypericum_perforatum: RNA-seq edited; sites not used
+RNA_Hypericum_perforatum	rps12	rps12_1	2	3	97052	97284	-	trans		Hypericum_perforatum: RNA-seq edited; sites not used
+RNA_Hypericum_perforatum	rps12	rps12_1	3	3	45625	45655	+			Hypericum_perforatum: RNA-seq edited; sites not used
+RNA_Hypericum_perforatum	ycf3	ycf3_1	1	3	210545	210668	+	cis		Hypericum_perforatum: RNA-seq edited; sites not used
+RNA_Hypericum_perforatum	ycf3	ycf3_1	2	3	211438	211667	+	cis		Hypericum_perforatum: RNA-seq edited; sites not used
+RNA_Hypericum_perforatum	ycf3	ycf3_1	3	3	211668	211820	+			Hypericum_perforatum: RNA-seq edited; sites not used
+RNA_Ilex_aquifolium	atpF	atpF_1	1	2	13791	13935	-	cis		Ilex_aquifolium: RNA-seq edited; sites not used
+RNA_Ilex_aquifolium	atpF	atpF_1	2	2	12682	13091	-			Ilex_aquifolium: RNA-seq edited; sites not used
+RNA_Ilex_aquifolium	clpP	clpP_1	1	3	74778	74815	-	cis		Ilex_aquifolium: RNA-seq edited; sites not used
+RNA_Ilex_aquifolium	clpP	clpP_1	2	3	73666	73956	-	cis		Ilex_aquifolium: RNA-seq edited; sites not used
+RNA_Ilex_aquifolium	clpP	clpP_1	3	3	72995	73013	-			Ilex_aquifolium: RNA-seq edited; sites not used
+RNA_Ilex_aquifolium	ndhB	ndhB_1	1	2	98873	99649	-	cis		Ilex_aquifolium: RNA-seq edited; sites not used
+RNA_Ilex_aquifolium	ndhB	ndhB_1	2	2	97438	98193	-			Ilex_aquifolium: RNA-seq edited; sites not used
+RNA_Ilex_aquifolium	rpl2	rpl2_1	1	2	88184	88574	-	cis		Ilex_aquifolium: RNA-seq edited; sites not used
+RNA_Ilex_aquifolium	rpl2	rpl2_1	2	2	87086	87519	-			Ilex_aquifolium: RNA-seq edited; sites not used
+RNA_Ilex_aquifolium	rps12	rps12_1	1	3	72490	72603	-	cis		Ilex_aquifolium: RNA-seq edited; sites not used
+RNA_Ilex_aquifolium	rps12	rps12_1	2	3	101067	101298	-	cis		Ilex_aquifolium: RNA-seq edited; sites not used
+RNA_Ilex_aquifolium	rps12	rps12_1	3	3	100500	100525	-			Ilex_aquifolium: RNA-seq edited; sites not used
+RNA_Ilex_aquifolium	rps16	rps16_1	1	2	6419	6458	-	cis		Ilex_aquifolium: RNA-seq edited; sites not used
+RNA_Ilex_aquifolium	rps16	rps16_1	2	2	5320	5546	-			Ilex_aquifolium: RNA-seq edited; sites not used
+RNA_Ilex_aquifolium	ycf3	ycf3_1	1	3	46389	46512	-	cis		Ilex_aquifolium: RNA-seq edited; sites not used
+RNA_Ilex_aquifolium	ycf3	ycf3_1	2	3	45429	45658	-	cis		Ilex_aquifolium: RNA-seq edited; sites not used
+RNA_Ilex_aquifolium	ycf3	ycf3_1	3	3	44527	44679	-			Ilex_aquifolium: RNA-seq edited; sites not used
+RNA_Impatiens_parviflora	atpF	atpF_1	1	2	12404	12548	-	cis		Impatiens_parviflora: RNA-seq edited
+RNA_Impatiens_parviflora	atpF	atpF_1	2	2	11277	11686	-			Impatiens_parviflora: RNA-seq edited
+RNA_Impatiens_parviflora	clpP	clpP_1	1	3	71430	71500	-	cis		Impatiens_parviflora: RNA-seq edited
+RNA_Impatiens_parviflora	clpP	clpP_1	2	3	70432	70722	-	cis		Impatiens_parviflora: RNA-seq edited
+RNA_Impatiens_parviflora	clpP	clpP_1	3	3	69577	69802	-			Impatiens_parviflora: RNA-seq edited
+RNA_Impatiens_parviflora	ndhA	ndhA_1	1	2	120058	120604	-	cis		Impatiens_parviflora: RNA-seq edited
+RNA_Impatiens_parviflora	ndhA	ndhA_1	2	2	118469	119007	-			Impatiens_parviflora: RNA-seq edited
+RNA_Impatiens_parviflora	ndhB	ndhB_1	1	2	95281	96057	-	cis		Impatiens_parviflora: RNA-seq edited
+RNA_Impatiens_parviflora	ndhB	ndhB_1	2	2	93852	94607	-			Impatiens_parviflora: RNA-seq edited
+RNA_Impatiens_parviflora	rpl2	rpl2_1	1	2	84875	85265	-	cis		Impatiens_parviflora: RNA-seq edited
+RNA_Impatiens_parviflora	rpl2	rpl2_1	2	2	83776	84209	-			Impatiens_parviflora: RNA-seq edited
+RNA_Impatiens_parviflora	rpoC1	rpoC1_1	1	2	22918	23349	-	cis		Impatiens_parviflora: RNA-seq edited
+RNA_Impatiens_parviflora	rpoC1	rpoC1_1	2	2	20571	22187	-			Impatiens_parviflora: RNA-seq edited
+RNA_Impatiens_parviflora	rps12	rps12_1	1	3	69323	69436	-	cis		Impatiens_parviflora: RNA-seq edited
+RNA_Impatiens_parviflora	rps12	rps12_1	2	3	97449	97680	-	trans		Impatiens_parviflora: RNA-seq edited
+RNA_Impatiens_parviflora	rps12	rps12_1	3	3	139318	139343	+			Impatiens_parviflora: RNA-seq edited
+RNA_Impatiens_parviflora	rps16	rps16_1	1	2	5982	6021	-	cis		Impatiens_parviflora: RNA-seq edited
+RNA_Impatiens_parviflora	rps16	rps16_1	2	2	4964	5160	-			Impatiens_parviflora: RNA-seq edited
+RNA_Impatiens_parviflora	ycf3	ycf3_1	1	3	44064	44187	-	cis		Impatiens_parviflora: RNA-seq edited
+RNA_Impatiens_parviflora	ycf3	ycf3_1	2	3	43130	43359	-	cis		Impatiens_parviflora: RNA-seq edited
+RNA_Impatiens_parviflora	ycf3	ycf3_1	3	3	42263	42415	-			Impatiens_parviflora: RNA-seq edited
+RNA_Juncus_conglomeratus	atpF	atpF_1	1	2	19872	20016	-	cis		Juncus_conglomeratus: RNA-seq edited
+RNA_Juncus_conglomeratus	atpF	atpF_1	2	2	18615	19021	-			Juncus_conglomeratus: RNA-seq edited
+RNA_Juncus_conglomeratus	clpP	clpP_1	1	3	9370	9435	+	cis		Juncus_conglomeratus: RNA-seq edited
+RNA_Juncus_conglomeratus	clpP	clpP_1	2	3	14365	14649	+	cis		Juncus_conglomeratus: RNA-seq edited
+RNA_Juncus_conglomeratus	clpP	clpP_1	3	3	13022	13270	+			Juncus_conglomeratus: RNA-seq edited
+RNA_Juncus_conglomeratus	ndhA	ndhA_1	1	2	126353	126902	+	cis		Juncus_conglomeratus: RNA-seq edited
+RNA_Juncus_conglomeratus	ndhA	ndhA_1	2	2	127945	128483	+			Juncus_conglomeratus: RNA-seq edited
+RNA_Juncus_conglomeratus	ndhB	ndhB_1	1	2	163492	164280	-	cis		Juncus_conglomeratus: RNA-seq edited
+RNA_Juncus_conglomeratus	ndhB	ndhB_1	2	2	162045	162800	-			Juncus_conglomeratus: RNA-seq edited
+RNA_Juncus_conglomeratus	rpoC1	rpoC1_1	1	2	30920	31351	-	cis		Juncus_conglomeratus: RNA-seq edited
+RNA_Juncus_conglomeratus	rpoC1	rpoC1_1	2	2	28578	30215	-			Juncus_conglomeratus: RNA-seq edited
+RNA_Juncus_conglomeratus	rps12	rps12_1	1	3	10142	10255	+	trans		Juncus_conglomeratus: RNA-seq edited
+RNA_Juncus_conglomeratus	rps12	rps12_1	2	3	165704	165935	-	trans		Juncus_conglomeratus: RNA-seq edited
+RNA_Juncus_conglomeratus	rps12	rps12_1	3	3	102962	102996	+			Juncus_conglomeratus: RNA-seq edited
+RNA_Juncus_conglomeratus	rps16	rps16_1	1	2	80840	80879	-	cis		Juncus_conglomeratus: RNA-seq edited
+RNA_Juncus_conglomeratus	rps16	rps16_1	2	2	79928	80124	-			Juncus_conglomeratus: RNA-seq edited
+RNA_Juncus_conglomeratus	ycf3	ycf3_1	1	3	83325	83448	-	cis		Juncus_conglomeratus: RNA-seq edited
+RNA_Juncus_conglomeratus	ycf3	ycf3_1	2	3	82377	82606	-	cis		Juncus_conglomeratus: RNA-seq edited
+RNA_Juncus_conglomeratus	ycf3	ycf3_1	3	3	81401	81559	-			Juncus_conglomeratus: RNA-seq edited
+RNA_Lactuca_saligna	atpF	atpF_1	1	2	28243	28387	+	cis		Lactuca_saligna: RNA-seq edited; sites not used
+RNA_Lactuca_saligna	atpF	atpF_1	2	2	29105	29514	+			Lactuca_saligna: RNA-seq edited; sites not used
+RNA_Lactuca_saligna	clpP	clpP_1	1	3	73150	73220	-	cis		Lactuca_saligna: RNA-seq edited; sites not used
+RNA_Lactuca_saligna	clpP	clpP_1	2	3	72047	72337	-	cis		Lactuca_saligna: RNA-seq edited; sites not used
+RNA_Lactuca_saligna	clpP	clpP_1	3	3	71188	71416	-			Lactuca_saligna: RNA-seq edited; sites not used
+RNA_Lactuca_saligna	ndhA	ndhA_1	1	2	121927	122479	-	cis		Lactuca_saligna: RNA-seq edited; sites not used
+RNA_Lactuca_saligna	ndhA	ndhA_1	2	2	120335	120873	-			Lactuca_saligna: RNA-seq edited; sites not used
+RNA_Lactuca_saligna	ndhB	ndhB_1	1	2	141702	142478	+	cis		Lactuca_saligna: RNA-seq edited; sites not used
+RNA_Lactuca_saligna	ndhB	ndhB_1	2	2	143148	143903	+			Lactuca_saligna: RNA-seq edited; sites not used
+RNA_Lactuca_saligna	rpoC1	rpoC1_1	1	2	17516	17947	+	cis		Lactuca_saligna: RNA-seq edited; sites not used
+RNA_Lactuca_saligna	rpoC1	rpoC1_1	2	2	18684	20321	+			Lactuca_saligna: RNA-seq edited; sites not used
+RNA_Lactuca_saligna	rps12	rps12_1	1	3	70908	71021	-	trans		Lactuca_saligna: RNA-seq edited; sites not used
+RNA_Lactuca_saligna	rps12	rps12_1	2	3	140099	140330	+	cis		Lactuca_saligna: RNA-seq edited; sites not used
+RNA_Lactuca_saligna	rps12	rps12_1	3	3	140866	140891	+			Lactuca_saligna: RNA-seq edited; sites not used
+RNA_Lactuca_saligna	rps16	rps16_1	1	2	7578	7617	-	cis		Lactuca_saligna: RNA-seq edited; sites not used
+RNA_Lactuca_saligna	rps16	rps16_1	2	2	6502	6728	-			Lactuca_saligna: RNA-seq edited; sites not used
+RNA_Lactuca_saligna	ycf3	ycf3_1	1	3	45290	45413	-	cis		Lactuca_saligna: RNA-seq edited; sites not used
+RNA_Lactuca_saligna	ycf3	ycf3_1	2	3	44369	44598	-	cis		Lactuca_saligna: RNA-seq edited; sites not used
+RNA_Lactuca_saligna	ycf3	ycf3_1	3	3	43479	43631	-			Lactuca_saligna: RNA-seq edited; sites not used
+RNA_Lactuca_serriola	atpF	atpF_1	1	2	28276	28420	+	cis		Lactuca_serriola: RNA-seq edited
+RNA_Lactuca_serriola	atpF	atpF_1	2	2	29138	29547	+			Lactuca_serriola: RNA-seq edited
+RNA_Lactuca_serriola	clpP	clpP_1	1	3	73163	73233	-	cis		Lactuca_serriola: RNA-seq edited
+RNA_Lactuca_serriola	clpP	clpP_1	2	3	72064	72354	-	cis		Lactuca_serriola: RNA-seq edited
+RNA_Lactuca_serriola	clpP	clpP_1	3	3	71202	71430	-			Lactuca_serriola: RNA-seq edited
+RNA_Lactuca_serriola	ndhA	ndhA_1	1	2	121858	122410	-	cis		Lactuca_serriola: RNA-seq edited
+RNA_Lactuca_serriola	ndhA	ndhA_1	2	2	120266	120804	-			Lactuca_serriola: RNA-seq edited
+RNA_Lactuca_serriola	ndhB	ndhB_1	1	2	141698	142474	+	cis		Lactuca_serriola: RNA-seq edited
+RNA_Lactuca_serriola	ndhB	ndhB_1	2	2	143144	143899	+			Lactuca_serriola: RNA-seq edited
+RNA_Lactuca_serriola	rpoC1	rpoC1_1	1	2	17558	17989	+	cis		Lactuca_serriola: RNA-seq edited
+RNA_Lactuca_serriola	rpoC1	rpoC1_1	2	2	18723	20360	+			Lactuca_serriola: RNA-seq edited
+RNA_Lactuca_serriola	rps12	rps12_1	1	3	70922	71035	-	trans		Lactuca_serriola: RNA-seq edited
+RNA_Lactuca_serriola	rps12	rps12_1	2	3	140095	140326	+	cis		Lactuca_serriola: RNA-seq edited
+RNA_Lactuca_serriola	rps12	rps12_1	3	3	140862	140887	+			Lactuca_serriola: RNA-seq edited
+RNA_Lactuca_serriola	rps16	rps16_1	1	2	7614	7653	-	cis		Lactuca_serriola: RNA-seq edited
+RNA_Lactuca_serriola	rps16	rps16_1	2	2	6539	6765	-			Lactuca_serriola: RNA-seq edited
+RNA_Lactuca_serriola	ycf3	ycf3_1	1	3	45325	45448	-	cis		Lactuca_serriola: RNA-seq edited
+RNA_Lactuca_serriola	ycf3	ycf3_1	2	3	44404	44633	-	cis		Lactuca_serriola: RNA-seq edited
+RNA_Lactuca_serriola	ycf3	ycf3_1	3	3	43514	43666	-			Lactuca_serriola: RNA-seq edited
+RNA_Levisticum_officinale	atpF	atpF_1	1	2	13760	13904	-	cis		Levisticum_officinale: RNA-seq edited; sites not used
+RNA_Levisticum_officinale	atpF	atpF_1	2	2	12635	13035	-			Levisticum_officinale: RNA-seq edited; sites not used
+RNA_Levisticum_officinale	clpP	clpP_1	1	3	73903	73973	-	cis		Levisticum_officinale: RNA-seq edited; sites not used
+RNA_Levisticum_officinale	clpP	clpP_1	2	3	72776	73066	-	cis		Levisticum_officinale: RNA-seq edited; sites not used
+RNA_Levisticum_officinale	clpP	clpP_1	3	3	71906	72137	-			Levisticum_officinale: RNA-seq edited; sites not used
+RNA_Levisticum_officinale	ndhA	ndhA_1	1	2	124074	124626	-	cis		Levisticum_officinale: RNA-seq edited; sites not used
+RNA_Levisticum_officinale	ndhA	ndhA_1	2	2	122470	123008	-			Levisticum_officinale: RNA-seq edited; sites not used
+RNA_Levisticum_officinale	ndhB	ndhB_1	1	2	97389	98165	-	cis		Levisticum_officinale: RNA-seq edited; sites not used
+RNA_Levisticum_officinale	ndhB	ndhB_1	2	2	95951	96706	-			Levisticum_officinale: RNA-seq edited; sites not used
+RNA_Levisticum_officinale	rpl2	rpl2_1	1	2	87364	87754	-	cis		Levisticum_officinale: RNA-seq edited; sites not used
+RNA_Levisticum_officinale	rpl2	rpl2_1	2	2	86279	86712	-			Levisticum_officinale: RNA-seq edited; sites not used
+RNA_Levisticum_officinale	rps12	rps12_1	1	3	71647	71760	-	cis		Levisticum_officinale: RNA-seq edited; sites not used
+RNA_Levisticum_officinale	rps12	rps12_1	2	3	99549	99780	-	trans		Levisticum_officinale: RNA-seq edited; sites not used
+RNA_Levisticum_officinale	rps12	rps12_1	3	3	143546	143571	+			Levisticum_officinale: RNA-seq edited; sites not used
+RNA_Levisticum_officinale	rps16	rps16_1	1	2	6892	6931	-	cis		Levisticum_officinale: RNA-seq edited; sites not used
+RNA_Levisticum_officinale	rps16	rps16_1	2	2	5838	6034	-			Levisticum_officinale: RNA-seq edited; sites not used
+RNA_Levisticum_officinale	ycf3	ycf3_1	1	3	46241	46364	-	cis		Levisticum_officinale: RNA-seq edited; sites not used
+RNA_Levisticum_officinale	ycf3	ycf3_1	2	3	45293	45522	-	cis		Levisticum_officinale: RNA-seq edited; sites not used
+RNA_Levisticum_officinale	ycf3	ycf3_1	3	3	44368	44520	-			Levisticum_officinale: RNA-seq edited; sites not used
+RNA_Linum_bienne	atpF	atpF_1	1	2	7092	7236	-	cis		Linum_bienne: RNA-seq edited
+RNA_Linum_bienne	atpF	atpF_1	2	2	5919	6328	-			Linum_bienne: RNA-seq edited
+RNA_Linum_bienne	ndhA	ndhA_1	1	2	111362	111914	+	trans		Linum_bienne: RNA-seq edited
+RNA_Linum_bienne	ndhA	ndhA_1	2	2	122127	122665	-			Linum_bienne: RNA-seq edited
+RNA_Linum_bienne	rpl2	rpl2_1	1	2	79337	79727	-	cis		Linum_bienne: RNA-seq edited
+RNA_Linum_bienne	rpl2	rpl2_1	2	2	78244	78677	-			Linum_bienne: RNA-seq edited
+RNA_Linum_bienne	rpoC1	rpoC1_1	1	2	17737	18168	-	cis		Linum_bienne: RNA-seq edited
+RNA_Linum_bienne	rpoC1	rpoC1_1	2	2	15370	16980	-			Linum_bienne: RNA-seq edited
+RNA_Linum_bienne	rps12	rps12_1	1	3	64408	64521	-	cis		Linum_bienne: RNA-seq edited
+RNA_Linum_bienne	rps12	rps12_1	2	3	93940	94171	-	trans		Linum_bienne: RNA-seq edited
+RNA_Linum_bienne	rps12	rps12_1	3	3	142242	142267	+			Linum_bienne: RNA-seq edited
+RNA_Linum_bienne	ycf3	ycf3_1	1	3	39386	39500	-	cis		Linum_bienne: RNA-seq edited
+RNA_Linum_bienne	ycf3	ycf3_1	2	3	38444	38673	-	cis		Linum_bienne: RNA-seq edited
+RNA_Linum_bienne	ycf3	ycf3_1	3	3	37592	37744	-			Linum_bienne: RNA-seq edited
+RNA_Lobelia_urens	atpF	atpF_1	1	2	19331	19475	-	cis		Lobelia_urens: RNA-seq edited; sites not used
+RNA_Lobelia_urens	atpF	atpF_1	2	2	18170	18579	-			Lobelia_urens: RNA-seq edited; sites not used
+RNA_Lobelia_urens	clpP	clpP_1	1	3	71326	71402	-	cis		Lobelia_urens: RNA-seq edited; sites not used
+RNA_Lobelia_urens	clpP	clpP_1	2	3	70264	70554	-	cis		Lobelia_urens: RNA-seq edited; sites not used
+RNA_Lobelia_urens	clpP	clpP_1	3	3	69378	69624	-			Lobelia_urens: RNA-seq edited; sites not used
+RNA_Lobelia_urens	ndhA	ndhA_1	1	2	117114	117666	+	cis		Lobelia_urens: RNA-seq edited; sites not used
+RNA_Lobelia_urens	ndhA	ndhA_1	2	2	118697	119235	+			Lobelia_urens: RNA-seq edited; sites not used
+RNA_Lobelia_urens	ndhB	ndhB_1	1	2	95141	95917	-	cis		Lobelia_urens: RNA-seq edited; sites not used
+RNA_Lobelia_urens	ndhB	ndhB_1	2	2	93713	94468	-			Lobelia_urens: RNA-seq edited; sites not used
+RNA_Lobelia_urens	rpl2	rpl2_1	1	2	84929	85319	-	trans		Lobelia_urens: RNA-seq edited; sites not used
+RNA_Lobelia_urens	rpl2	rpl2_1	2	2	392	825	+			Lobelia_urens: RNA-seq edited; sites not used
+RNA_Lobelia_urens	rps12	rps12_1	1	3	69091	69204	-	cis		Lobelia_urens: RNA-seq edited; sites not used
+RNA_Lobelia_urens	rps12	rps12_1	2	3	97312	97543	-	trans		Lobelia_urens: RNA-seq edited; sites not used
+RNA_Lobelia_urens	rps12	rps12_1	3	3	153381	153406	+			Lobelia_urens: RNA-seq edited; sites not used
+RNA_Lobelia_urens	rps16	rps16_1	1	2	12336	12375	-	cis		Lobelia_urens: RNA-seq edited; sites not used
+RNA_Lobelia_urens	rps16	rps16_1	2	2	12109	12335	-			Lobelia_urens: RNA-seq edited; sites not used
+RNA_Lobelia_urens	ycf3	ycf3_1	1	3	51025	51148	-	cis		Lobelia_urens: RNA-seq edited; sites not used
+RNA_Lobelia_urens	ycf3	ycf3_1	2	3	50091	50320	-	cis		Lobelia_urens: RNA-seq edited; sites not used
+RNA_Lobelia_urens	ycf3	ycf3_1	3	3	49198	49350	-			Lobelia_urens: RNA-seq edited; sites not used
+RNA_Lythrum_salicaria	atpF	atpF_1	1	2	13869	14013	-	cis		Lythrum_salicaria: RNA-seq edited
+RNA_Lythrum_salicaria	atpF	atpF_1	2	2	12690	13099	-			Lythrum_salicaria: RNA-seq edited
+RNA_Lythrum_salicaria	clpP	clpP_1	1	3	76857	76927	-	cis		Lythrum_salicaria: RNA-seq edited
+RNA_Lythrum_salicaria	clpP	clpP_1	2	3	75741	76031	-	cis		Lythrum_salicaria: RNA-seq edited
+RNA_Lythrum_salicaria	clpP	clpP_1	3	3	74918	75146	-			Lythrum_salicaria: RNA-seq edited
+RNA_Lythrum_salicaria	ndhA	ndhA_1	1	2	126110	126662	-	cis		Lythrum_salicaria: RNA-seq edited
+RNA_Lythrum_salicaria	ndhA	ndhA_1	2	2	124538	125076	-			Lythrum_salicaria: RNA-seq edited
+RNA_Lythrum_salicaria	ndhB	ndhB_1	1	2	100676	101452	-	cis		Lythrum_salicaria: RNA-seq edited
+RNA_Lythrum_salicaria	ndhB	ndhB_1	2	2	99238	99993	-			Lythrum_salicaria: RNA-seq edited
+RNA_Lythrum_salicaria	rpl2	rpl2_1	1	2	157665	158056	+	trans		Lythrum_salicaria: RNA-seq edited
+RNA_Lythrum_salicaria	rpl2	rpl2_1	2	2	89282	89714	-			Lythrum_salicaria: RNA-seq edited
+RNA_Lythrum_salicaria	rpoC1	rpoC1_1	1	2	24432	24863	-	cis		Lythrum_salicaria: RNA-seq edited
+RNA_Lythrum_salicaria	rpoC1	rpoC1_1	2	2	22076	23683	-			Lythrum_salicaria: RNA-seq edited
+RNA_Lythrum_salicaria	rps12	rps12_1	1	3	74647	74760	-	cis		Lythrum_salicaria: RNA-seq edited
+RNA_Lythrum_salicaria	rps12	rps12_1	2	3	102871	103102	-	trans		Lythrum_salicaria: RNA-seq edited
+RNA_Lythrum_salicaria	rps12	rps12_1	3	3	145447	145472	+			Lythrum_salicaria: RNA-seq edited
+RNA_Lythrum_salicaria	rps16	rps16_1	1	2	6267	6306	-	cis		Lythrum_salicaria: RNA-seq edited
+RNA_Lythrum_salicaria	rps16	rps16_1	2	2	5186	5412	-			Lythrum_salicaria: RNA-seq edited
+RNA_Lythrum_salicaria	ycf3	ycf3_1	1	3	47143	47266	-	cis		Lythrum_salicaria: RNA-seq edited
+RNA_Lythrum_salicaria	ycf3	ycf3_1	2	3	46172	46401	-	cis		Lythrum_salicaria: RNA-seq edited
+RNA_Lythrum_salicaria	ycf3	ycf3_1	3	3	45246	45398	-			Lythrum_salicaria: RNA-seq edited
+RNA_Malus_domestica	atpF	atpF_1	1	2	13803	13947	-	cis		Malus_domestica: RNA-seq edited; sites not used
+RNA_Malus_domestica	atpF	atpF_1	2	2	12661	13070	-			Malus_domestica: RNA-seq edited; sites not used
+RNA_Malus_domestica	clpP	clpP_1	1	3	75919	75989	-	cis		Malus_domestica: RNA-seq edited; sites not used
+RNA_Malus_domestica	clpP	clpP_1	2	3	74808	75098	-	cis		Malus_domestica: RNA-seq edited; sites not used
+RNA_Malus_domestica	clpP	clpP_1	3	3	73930	74158	-			Malus_domestica: RNA-seq edited; sites not used
+RNA_Malus_domestica	ndhA	ndhA_1	1	2	126763	127315	-	cis		Malus_domestica: RNA-seq edited; sites not used
+RNA_Malus_domestica	ndhA	ndhA_1	2	2	125085	125623	-			Malus_domestica: RNA-seq edited; sites not used
+RNA_Malus_domestica	rps12	rps12_1	1	3	73629	73742	-	cis		Malus_domestica: RNA-seq edited; sites not used
+RNA_Malus_domestica	rps12	rps12_1	2	3	102727	102958	-	trans		Malus_domestica: RNA-seq edited; sites not used
+RNA_Malus_domestica	rps12	rps12_1	3	3	146339	146364	+			Malus_domestica: RNA-seq edited; sites not used
+RNA_Medicago_sativa	atpF	atpF_1	1	2	62469	62613	+	cis		Medicago_sativa: RNA-seq edited; sites not used
+RNA_Medicago_sativa	atpF	atpF_1	2	2	63307	63716	+			Medicago_sativa: RNA-seq edited; sites not used
+RNA_Medicago_sativa	clpP	clpP_1	1	3	84723	84792	-	cis		Medicago_sativa: RNA-seq edited; sites not used
+RNA_Medicago_sativa	clpP	clpP_1	2	3	84428	84722	-	cis		Medicago_sativa: RNA-seq edited; sites not used
+RNA_Medicago_sativa	clpP	clpP_1	3	3	83556	83778	-			Medicago_sativa: RNA-seq edited; sites not used
+RNA_Medicago_sativa	ndhA	ndhA_1	1	2	2241	2793	+	cis		Medicago_sativa: RNA-seq edited; sites not used
+RNA_Medicago_sativa	ndhA	ndhA_1	2	2	4014	4552	+			Medicago_sativa: RNA-seq edited; sites not used
+RNA_Medicago_sativa	ndhB	ndhB_1	1	2	108620	109387	-	cis		Medicago_sativa: RNA-seq edited; sites not used
+RNA_Medicago_sativa	ndhB	ndhB_1	2	2	107176	107931	-			Medicago_sativa: RNA-seq edited; sites not used
+RNA_Medicago_sativa	rpl2	rpl2_1	1	2	99041	99431	-	cis		Medicago_sativa: RNA-seq edited; sites not used
+RNA_Medicago_sativa	rpl2	rpl2_1	2	2	97911	98344	-			Medicago_sativa: RNA-seq edited; sites not used
+RNA_Medicago_sativa	rpoC1	rpoC1_1	1	2	51584	52015	+	cis		Medicago_sativa: RNA-seq edited; sites not used
+RNA_Medicago_sativa	rpoC1	rpoC1_1	2	2	52806	54428	+			Medicago_sativa: RNA-seq edited; sites not used
+RNA_Medicago_sativa	rps12	rps12_1	1	3	81895	82008	-	cis		Medicago_sativa: RNA-seq edited; sites not used
+RNA_Medicago_sativa	rps12	rps12_1	2	3	110165	110397	-	trans		Medicago_sativa: RNA-seq edited; sites not used
+RNA_Medicago_sativa	rps12	rps12_1	3	3	12598	12628	+			Medicago_sativa: RNA-seq edited; sites not used
+RNA_Medicago_sativa	ycf3	ycf3_1	1	3	29989	30112	+	cis		Medicago_sativa: RNA-seq edited; sites not used
+RNA_Medicago_sativa	ycf3	ycf3_1	2	3	30825	31054	+	cis		Medicago_sativa: RNA-seq edited; sites not used
+RNA_Medicago_sativa	ycf3	ycf3_1	3	3	31799	31951	+			Medicago_sativa: RNA-seq edited; sites not used
+RNA_Myrica_gale	atpF	atpF_1	1	2	14605	14749	-	cis		Myrica_gale: RNA-seq edited; sites not used
+RNA_Myrica_gale	atpF	atpF_1	2	2	13436	13845	-			Myrica_gale: RNA-seq edited; sites not used
+RNA_Myrica_gale	clpP	clpP_1	1	3	76550	76620	-	cis		Myrica_gale: RNA-seq edited; sites not used
+RNA_Myrica_gale	clpP	clpP_1	2	3	75423	75713	-	cis		Myrica_gale: RNA-seq edited; sites not used
+RNA_Myrica_gale	clpP	clpP_1	3	3	74594	74822	-			Myrica_gale: RNA-seq edited; sites not used
+RNA_Myrica_gale	ndhA	ndhA_1	1	2	127216	127768	-	cis		Myrica_gale: RNA-seq edited; sites not used
+RNA_Myrica_gale	ndhA	ndhA_1	2	2	125459	125997	-			Myrica_gale: RNA-seq edited; sites not used
+RNA_Myrica_gale	rpl2	rpl2_1	1	2	90467	90857	-	cis		Myrica_gale: RNA-seq edited; sites not used
+RNA_Myrica_gale	rpl2	rpl2_1	2	2	89347	89780	-			Myrica_gale: RNA-seq edited; sites not used
+RNA_Myrica_gale	rpoC1	rpoC1_1	1	2	25320	25751	-	cis		Myrica_gale: RNA-seq edited; sites not used
+RNA_Myrica_gale	rpoC1	rpoC1_1	2	2	22839	24455	-			Myrica_gale: RNA-seq edited; sites not used
+RNA_Myrica_gale	rps12	rps12_1	1	3	74308	74421	-	cis		Myrica_gale: RNA-seq edited; sites not used
+RNA_Myrica_gale	rps12	rps12_1	2	3	103360	103591	-	trans		Myrica_gale: RNA-seq edited; sites not used
+RNA_Myrica_gale	rps12	rps12_1	3	3	146659	146684	+			Myrica_gale: RNA-seq edited; sites not used
+RNA_Myrica_gale	rps16	rps16_1	1	2	6398	6437	-	cis		Myrica_gale: RNA-seq edited; sites not used
+RNA_Myrica_gale	rps16	rps16_1	2	2	5301	5515	-			Myrica_gale: RNA-seq edited; sites not used
+RNA_Myrica_gale	ycf3	ycf3_1	1	3	48213	48336	-	cis		Myrica_gale: RNA-seq edited; sites not used
+RNA_Myrica_gale	ycf3	ycf3_1	2	3	47272	47501	-	cis		Myrica_gale: RNA-seq edited; sites not used
+RNA_Myrica_gale	ycf3	ycf3_1	3	3	46360	46512	-			Myrica_gale: RNA-seq edited; sites not used
+RNA_Myriophyllum_alterniflorum	atpF	atpF_1	1	2	14246	14390	-	cis		Myriophyllum_alterniflorum: RNA-seq edited
+RNA_Myriophyllum_alterniflorum	atpF	atpF_1	2	2	13102	13511	-			Myriophyllum_alterniflorum: RNA-seq edited
+RNA_Myriophyllum_alterniflorum	clpP	clpP_1	1	3	75672	75742	-	cis		Myriophyllum_alterniflorum: RNA-seq edited
+RNA_Myriophyllum_alterniflorum	clpP	clpP_1	2	3	74571	74861	-	cis		Myriophyllum_alterniflorum: RNA-seq edited
+RNA_Myriophyllum_alterniflorum	clpP	clpP_1	3	3	73724	73952	-			Myriophyllum_alterniflorum: RNA-seq edited
+RNA_Myriophyllum_alterniflorum	ndhA	ndhA_1	1	2	126215	126779	-	cis		Myriophyllum_alterniflorum: RNA-seq edited
+RNA_Myriophyllum_alterniflorum	ndhA	ndhA_1	2	2	124538	125070	-			Myriophyllum_alterniflorum: RNA-seq edited
+RNA_Myriophyllum_alterniflorum	ndhB	ndhB_1	1	2	146324	147100	+	cis		Myriophyllum_alterniflorum: RNA-seq edited
+RNA_Myriophyllum_alterniflorum	ndhB	ndhB_1	2	2	147779	148534	+			Myriophyllum_alterniflorum: RNA-seq edited
+RNA_Myriophyllum_alterniflorum	rpl2	rpl2_1	1	2	157221	157611	+	cis		Myriophyllum_alterniflorum: RNA-seq edited
+RNA_Myriophyllum_alterniflorum	rpl2	rpl2_1	2	2	158280	158659	+			Myriophyllum_alterniflorum: RNA-seq edited
+RNA_Myriophyllum_alterniflorum	rpoC1	rpoC1_1	1	2	24782	25213	-	cis		Myriophyllum_alterniflorum: RNA-seq edited
+RNA_Myriophyllum_alterniflorum	rpoC1	rpoC1_1	2	2	22414	24048	-			Myriophyllum_alterniflorum: RNA-seq edited
+RNA_Myriophyllum_alterniflorum	rps12	rps12_1	1	3	73466	73579	-	trans		Myriophyllum_alterniflorum: RNA-seq edited
+RNA_Myriophyllum_alterniflorum	rps12	rps12_1	2	3	144683	144914	+	cis		Myriophyllum_alterniflorum: RNA-seq edited
+RNA_Myriophyllum_alterniflorum	rps12	rps12_1	3	3	145453	145478	+			Myriophyllum_alterniflorum: RNA-seq edited
+RNA_Myriophyllum_alterniflorum	rps16	rps16_1	1	2	6582	6621	-	cis		Myriophyllum_alterniflorum: RNA-seq edited
+RNA_Myriophyllum_alterniflorum	rps16	rps16_1	2	2	5459	5691	-			Myriophyllum_alterniflorum: RNA-seq edited
+RNA_Myriophyllum_alterniflorum	ycf3	ycf3_1	1	3	47199	47322	-	cis		Myriophyllum_alterniflorum: RNA-seq edited
+RNA_Myriophyllum_alterniflorum	ycf3	ycf3_1	2	3	46232	46461	-	cis		Myriophyllum_alterniflorum: RNA-seq edited
+RNA_Myriophyllum_alterniflorum	ycf3	ycf3_1	3	3	45303	45455	-			Myriophyllum_alterniflorum: RNA-seq edited
+RNA_Narcissus_pseudonarcissus	rps16	rps16_1	1	2	6104	6143	-	cis		Narcissus_pseudonarcissus: RNA-seq edited; sites not used
+RNA_Narcissus_pseudonarcissus	rps16	rps16_1	2	2	5020	5228	-			Narcissus_pseudonarcissus: RNA-seq edited; sites not used
+RNA_Nicandra_physalodes	atpF	atpF_1	1	2	13466	13610	-	cis		Nicandra_physalodes: RNA-seq edited; sites not used
+RNA_Nicandra_physalodes	atpF	atpF_1	2	2	12359	12768	-			Nicandra_physalodes: RNA-seq edited; sites not used
+RNA_Nicandra_physalodes	ndhA	ndhA_1	1	2	124281	124833	-	cis		Nicandra_physalodes: RNA-seq edited; sites not used
+RNA_Nicandra_physalodes	ndhA	ndhA_1	2	2	122583	123121	-			Nicandra_physalodes: RNA-seq edited; sites not used
+RNA_Nicandra_physalodes	ndhB	ndhB_1	1	2	144349	145125	+	cis		Nicandra_physalodes: RNA-seq edited; sites not used
+RNA_Nicandra_physalodes	ndhB	ndhB_1	2	2	145805	146560	+			Nicandra_physalodes: RNA-seq edited; sites not used
+RNA_Nicandra_physalodes	rps12	rps12_1	1	3	72919	73032	-	trans		Nicandra_physalodes: RNA-seq edited; sites not used
+RNA_Nicandra_physalodes	rps12	rps12_1	2	3	142749	142980	+	cis		Nicandra_physalodes: RNA-seq edited; sites not used
+RNA_Nicandra_physalodes	rps12	rps12_1	3	3	143517	143542	+			Nicandra_physalodes: RNA-seq edited; sites not used
+RNA_Nicandra_physalodes	ycf3	ycf3_1	1	3	46409	46532	-	cis		Nicandra_physalodes: RNA-seq edited; sites not used
+RNA_Nicandra_physalodes	ycf3	ycf3_1	2	3	45443	45672	-	cis		Nicandra_physalodes: RNA-seq edited; sites not used
+RNA_Nicandra_physalodes	ycf3	ycf3_1	3	3	44524	44676	-			Nicandra_physalodes: RNA-seq edited; sites not used
+RNA_Nuphar_pumila	atpF	atpF_1	1	2	15140	15284	-	cis		Nuphar_pumila: RNA-seq edited
+RNA_Nuphar_pumila	atpF	atpF_1	2	2	13966	14375	-			Nuphar_pumila: RNA-seq edited
+RNA_Nuphar_pumila	clpP	clpP_1	1	3	78723	78793	-	cis		Nuphar_pumila: RNA-seq edited
+RNA_Nuphar_pumila	clpP	clpP_1	2	3	77678	77968	-	cis		Nuphar_pumila: RNA-seq edited
+RNA_Nuphar_pumila	clpP	clpP_1	3	3	76799	77045	-			Nuphar_pumila: RNA-seq edited
+RNA_Nuphar_pumila	ndhA	ndhA_1	1	2	127924	128470	-	cis		Nuphar_pumila: RNA-seq edited
+RNA_Nuphar_pumila	ndhA	ndhA_1	2	2	126464	127002	-			Nuphar_pumila: RNA-seq edited
+RNA_Nuphar_pumila	ndhB	ndhB_1	1	2	103221	103997	-	cis		Nuphar_pumila: RNA-seq edited
+RNA_Nuphar_pumila	ndhB	ndhB_1	2	2	101760	102515	-			Nuphar_pumila: RNA-seq edited
+RNA_Nuphar_pumila	rpl2	rpl2_1	1	2	92257	92647	-	trans		Nuphar_pumila: RNA-seq edited
+RNA_Nuphar_pumila	rpl2	rpl2_1	2	2	91	521	+			Nuphar_pumila: RNA-seq edited
+RNA_Nuphar_pumila	rpoC1	rpoC1_1	1	2	25837	26268	-	cis		Nuphar_pumila: RNA-seq edited
+RNA_Nuphar_pumila	rpoC1	rpoC1_1	2	2	23464	25092	-			Nuphar_pumila: RNA-seq edited
+RNA_Nuphar_pumila	rps12	rps12_1	1	3	76552	76665	-	cis		Nuphar_pumila: RNA-seq edited
+RNA_Nuphar_pumila	rps12	rps12_1	2	3	105402	105633	-	trans		Nuphar_pumila: RNA-seq edited
+RNA_Nuphar_pumila	rps12	rps12_1	3	3	147487	147512	+			Nuphar_pumila: RNA-seq edited
+RNA_Nuphar_pumila	rps16	rps16_1	1	2	6803	6842	-	cis		Nuphar_pumila: RNA-seq edited
+RNA_Nuphar_pumila	rps16	rps16_1	2	2	5748	5974	-			Nuphar_pumila: RNA-seq edited
+RNA_Nuphar_pumila	ycf3	ycf3_1	1	3	48780	48903	-	cis		Nuphar_pumila: RNA-seq edited
+RNA_Nuphar_pumila	ycf3	ycf3_1	2	3	47821	48050	-	cis		Nuphar_pumila: RNA-seq edited
+RNA_Nuphar_pumila	ycf3	ycf3_1	3	3	46844	46996	-			Nuphar_pumila: RNA-seq edited
+RNA_Nymphaea_alba	atpF	atpF_1	1	2	15090	15234	-	cis		Nymphaea_alba: RNA-seq edited
+RNA_Nymphaea_alba	atpF	atpF_1	2	2	13943	14352	-			Nymphaea_alba: RNA-seq edited
+RNA_Nymphaea_alba	clpP	clpP_1	1	3	78226	78296	-	cis		Nymphaea_alba: RNA-seq edited
+RNA_Nymphaea_alba	clpP	clpP_1	2	3	77162	77452	-	cis		Nymphaea_alba: RNA-seq edited
+RNA_Nymphaea_alba	clpP	clpP_1	3	3	76286	76532	-			Nymphaea_alba: RNA-seq edited
+RNA_Nymphaea_alba	ndhA	ndhA_1	1	2	127100	127646	-	cis		Nymphaea_alba: RNA-seq edited
+RNA_Nymphaea_alba	ndhA	ndhA_1	2	2	125627	126165	-			Nymphaea_alba: RNA-seq edited
+RNA_Nymphaea_alba	ndhB	ndhB_1	1	2	102630	103406	-	cis		Nymphaea_alba: RNA-seq edited
+RNA_Nymphaea_alba	ndhB	ndhB_1	2	2	101169	101924	-			Nymphaea_alba: RNA-seq edited
+RNA_Nymphaea_alba	rpl2	rpl2_1	1	2	91704	92094	-	trans		Nymphaea_alba: RNA-seq edited
+RNA_Nymphaea_alba	rpl2	rpl2_1	2	2	93	523	+			Nymphaea_alba: RNA-seq edited
+RNA_Nymphaea_alba	rpoC1	rpoC1_1	1	2	25746	26177	-	cis		Nymphaea_alba: RNA-seq edited
+RNA_Nymphaea_alba	rpoC1	rpoC1_1	2	2	23389	25011	-			Nymphaea_alba: RNA-seq edited
+RNA_Nymphaea_alba	rps12	rps12_1	1	3	76007	76120	-	cis		Nymphaea_alba: RNA-seq edited
+RNA_Nymphaea_alba	rps12	rps12_1	2	3	104811	105042	-	trans		Nymphaea_alba: RNA-seq edited
+RNA_Nymphaea_alba	rps12	rps12_1	3	3	146781	146806	+			Nymphaea_alba: RNA-seq edited
+RNA_Nymphaea_alba	rps16	rps16_1	1	2	6931	6970	-	cis		Nymphaea_alba: RNA-seq edited
+RNA_Nymphaea_alba	rps16	rps16_1	2	2	5858	6078	-			Nymphaea_alba: RNA-seq edited
+RNA_Nymphaea_alba	ycf3	ycf3_1	1	3	48522	48645	-	cis		Nymphaea_alba: RNA-seq edited
+RNA_Nymphaea_alba	ycf3	ycf3_1	2	3	47496	47725	-	cis		Nymphaea_alba: RNA-seq edited
+RNA_Nymphaea_alba	ycf3	ycf3_1	3	3	46548	46700	-			Nymphaea_alba: RNA-seq edited
+RNA_Nymphoides_peltata	atpF	atpF_1	1	2	13397	13541	-	cis		Nymphoides_peltata: RNA-seq edited; sites not used
+RNA_Nymphoides_peltata	atpF	atpF_1	2	2	12259	12668	-			Nymphoides_peltata: RNA-seq edited; sites not used
+RNA_Oxyria_digyna	atpF	atpF_1	1	2	13500	13644	-	cis		Oxyria_digyna: RNA-seq edited
+RNA_Oxyria_digyna	atpF	atpF_1	2	2	12352	12761	-			Oxyria_digyna: RNA-seq edited
+RNA_Oxyria_digyna	clpP	clpP_1	1	3	74088	74158	-	cis		Oxyria_digyna: RNA-seq edited
+RNA_Oxyria_digyna	clpP	clpP_1	2	3	72668	72958	-	cis		Oxyria_digyna: RNA-seq edited
+RNA_Oxyria_digyna	clpP	clpP_1	3	3	71780	72050	-			Oxyria_digyna: RNA-seq edited
+RNA_Oxyria_digyna	ndhA	ndhA_1	1	2	128004	128556	-	cis		Oxyria_digyna: RNA-seq edited
+RNA_Oxyria_digyna	ndhA	ndhA_1	2	2	126626	127155	-			Oxyria_digyna: RNA-seq edited
+RNA_Oxyria_digyna	ndhB	ndhB_1	1	2	97926	98702	-	cis		Oxyria_digyna: RNA-seq edited
+RNA_Oxyria_digyna	ndhB	ndhB_1	2	2	96491	97246	-			Oxyria_digyna: RNA-seq edited
+RNA_Oxyria_digyna	rpl2	rpl2_1	1	2	87398	87788	-	cis		Oxyria_digyna: RNA-seq edited
+RNA_Oxyria_digyna	rpl2	rpl2_1	2	2	86299	86732	-			Oxyria_digyna: RNA-seq edited
+RNA_Oxyria_digyna	rpoC1	rpoC1_1	1	2	23494	23925	-	cis		Oxyria_digyna: RNA-seq edited
+RNA_Oxyria_digyna	rpoC1	rpoC1_1	2	2	21109	22719	-			Oxyria_digyna: RNA-seq edited
+RNA_Oxyria_digyna	rps12	rps12_1	1	3	71542	71655	-	cis		Oxyria_digyna: RNA-seq edited
+RNA_Oxyria_digyna	rps12	rps12_1	2	3	100112	100343	-	trans		Oxyria_digyna: RNA-seq edited
+RNA_Oxyria_digyna	rps12	rps12_1	3	3	147545	147570	+			Oxyria_digyna: RNA-seq edited
+RNA_Oxyria_digyna	rps16	rps16_1	1	2	6382	6421	-	cis		Oxyria_digyna: RNA-seq edited
+RNA_Oxyria_digyna	rps16	rps16_1	2	2	5303	5529	-			Oxyria_digyna: RNA-seq edited
+RNA_Oxyria_digyna	ycf3	ycf3_1	1	3	46112	46235	-	cis		Oxyria_digyna: RNA-seq edited
+RNA_Oxyria_digyna	ycf3	ycf3_1	2	3	45151	45380	-	cis		Oxyria_digyna: RNA-seq edited
+RNA_Oxyria_digyna	ycf3	ycf3_1	3	3	44276	44428	-			Oxyria_digyna: RNA-seq edited
+RNA_Papaver_somniferum	atpF	atpF_1	1	2	12968	13112	-	cis		Papaver_somniferum: RNA-seq edited; sites not used
+RNA_Papaver_somniferum	atpF	atpF_1	2	2	11862	12271	-			Papaver_somniferum: RNA-seq edited; sites not used
+RNA_Papaver_somniferum	rps16	rps16_1	1	2	5825	5864	-	cis		Papaver_somniferum: RNA-seq edited; sites not used
+RNA_Papaver_somniferum	rps16	rps16_1	2	2	4752	4978	-			Papaver_somniferum: RNA-seq edited; sites not used
+RNA_Paulownia_tomentosa	atpF	atpF_1	1	2	11952	12096	-	cis		Paulownia_tomentosa: RNA-seq edited; sites not used
+RNA_Paulownia_tomentosa	atpF	atpF_1	2	2	10834	11243	-			Paulownia_tomentosa: RNA-seq edited; sites not used
+RNA_Paulownia_tomentosa	clpP	clpP_1	1	3	71994	72064	-	cis		Paulownia_tomentosa: RNA-seq edited; sites not used
+RNA_Paulownia_tomentosa	clpP	clpP_1	2	3	70971	71261	-	cis		Paulownia_tomentosa: RNA-seq edited; sites not used
+RNA_Paulownia_tomentosa	clpP	clpP_1	3	3	70099	70327	-			Paulownia_tomentosa: RNA-seq edited; sites not used
+RNA_Paulownia_tomentosa	rpl2	rpl2_1	1	2	151806	152196	+	cis		Paulownia_tomentosa: RNA-seq edited; sites not used
+RNA_Paulownia_tomentosa	rpl2	rpl2_1	2	2	152864	153297	+			Paulownia_tomentosa: RNA-seq edited; sites not used
+RNA_Paulownia_tomentosa	rps12	rps12_1	1	3	69852	69965	-	trans		Paulownia_tomentosa: RNA-seq edited; sites not used
+RNA_Paulownia_tomentosa	rps12	rps12_1	2	3	139177	139408	+	cis		Paulownia_tomentosa: RNA-seq edited; sites not used
+RNA_Paulownia_tomentosa	rps12	rps12_1	3	3	139945	139970	+			Paulownia_tomentosa: RNA-seq edited; sites not used
+RNA_Paulownia_tomentosa	rps16	rps16_1	1	2	5144	5183	-	cis		Paulownia_tomentosa: RNA-seq edited; sites not used
+RNA_Paulownia_tomentosa	rps16	rps16_1	2	2	4051	4277	-			Paulownia_tomentosa: RNA-seq edited; sites not used
+RNA_Pentaglottis_sempervirens	atpF	atpF_1	1	2	13082	13226	-	cis		Pentaglottis_sempervirens: RNA-seq edited
+RNA_Pentaglottis_sempervirens	atpF	atpF_1	2	2	12003	12412	-			Pentaglottis_sempervirens: RNA-seq edited
+RNA_Pentaglottis_sempervirens	clpP	clpP_1	1	3	69019	69089	-	cis		Pentaglottis_sempervirens: RNA-seq edited
+RNA_Pentaglottis_sempervirens	clpP	clpP_1	2	3	67968	68258	-	cis		Pentaglottis_sempervirens: RNA-seq edited
+RNA_Pentaglottis_sempervirens	clpP	clpP_1	3	3	67152	67380	-			Pentaglottis_sempervirens: RNA-seq edited
+RNA_Pentaglottis_sempervirens	ndhA	ndhA_1	1	2	116811	117363	-	cis		Pentaglottis_sempervirens: RNA-seq edited
+RNA_Pentaglottis_sempervirens	ndhA	ndhA_1	2	2	115290	115828	-			Pentaglottis_sempervirens: RNA-seq edited
+RNA_Pentaglottis_sempervirens	ndhB	ndhB_1	1	2	92876	93652	-	cis		Pentaglottis_sempervirens: RNA-seq edited
+RNA_Pentaglottis_sempervirens	ndhB	ndhB_1	2	2	91450	92205	-			Pentaglottis_sempervirens: RNA-seq edited
+RNA_Pentaglottis_sempervirens	rpl2	rpl2_1	1	2	82521	82911	-	cis		Pentaglottis_sempervirens: RNA-seq edited
+RNA_Pentaglottis_sempervirens	rpl2	rpl2_1	2	2	81427	81860	-			Pentaglottis_sempervirens: RNA-seq edited
+RNA_Pentaglottis_sempervirens	rpoC1	rpoC1_1	1	2	23409	23840	-	cis		Pentaglottis_sempervirens: RNA-seq edited
+RNA_Pentaglottis_sempervirens	rpoC1	rpoC1_1	2	2	21032	22648	-			Pentaglottis_sempervirens: RNA-seq edited
+RNA_Pentaglottis_sempervirens	rps12	rps12_1	1	3	66884	66997	-	cis		Pentaglottis_sempervirens: RNA-seq edited
+RNA_Pentaglottis_sempervirens	rps12	rps12_1	2	3	95027	95258	-	trans		Pentaglottis_sempervirens: RNA-seq edited
+RNA_Pentaglottis_sempervirens	rps12	rps12_1	3	3	135601	135626	+			Pentaglottis_sempervirens: RNA-seq edited
+RNA_Pentaglottis_sempervirens	rps16	rps16_1	1	2	7183	7222	-	cis		Pentaglottis_sempervirens: RNA-seq edited
+RNA_Pentaglottis_sempervirens	rps16	rps16_1	2	2	6108	6334	-			Pentaglottis_sempervirens: RNA-seq edited
+RNA_Pentaglottis_sempervirens	ycf3	ycf3_1	1	3	44606	44729	-	cis		Pentaglottis_sempervirens: RNA-seq edited
+RNA_Pentaglottis_sempervirens	ycf3	ycf3_1	2	3	43646	43875	-	cis		Pentaglottis_sempervirens: RNA-seq edited
+RNA_Pentaglottis_sempervirens	ycf3	ycf3_1	3	3	42772	42924	-			Pentaglottis_sempervirens: RNA-seq edited
+RNA_Phragmites_australis	atpF	atpF_1	1	2	35004	35148	+	cis		Phragmites_australis: RNA-seq edited; sites not used
+RNA_Phragmites_australis	atpF	atpF_1	2	2	35981	36387	+			Phragmites_australis: RNA-seq edited; sites not used
+RNA_Phragmites_australis	clpP	clpP_1	1	3	70228	70297	-	cis		Phragmites_australis: RNA-seq edited; sites not used
+RNA_Phragmites_australis	clpP	clpP_1	2	3	69935	70227	-	cis		Phragmites_australis: RNA-seq edited; sites not used
+RNA_Phragmites_australis	clpP	clpP_1	3	3	69704	69937	-			Phragmites_australis: RNA-seq edited; sites not used
+RNA_Phragmites_australis	ndhB	ndhB_1	1	2	89348	90124	-	cis		Phragmites_australis: RNA-seq edited; sites not used
+RNA_Phragmites_australis	ndhB	ndhB_1	2	2	87880	88635	-			Phragmites_australis: RNA-seq edited; sites not used
+RNA_Phragmites_australis	rpl2	rpl2_1	1	2	84127	84517	-	cis		Phragmites_australis: RNA-seq edited; sites not used
+RNA_Phragmites_australis	rpl2	rpl2_1	2	2	83035	83465	-			Phragmites_australis: RNA-seq edited; sites not used
+RNA_Phragmites_australis	rpoC1	rpoC1_1	1	2	24781	25212	+	cis		Phragmites_australis: RNA-seq edited; sites not used
+RNA_Phragmites_australis	rpoC1	rpoC1_1	2	2	25213	26832	+			Phragmites_australis: RNA-seq edited; sites not used
+RNA_Phragmites_australis	rps12	rps12_1	1	3	69392	69505	-	cis		Phragmites_australis: RNA-seq edited; sites not used
+RNA_Phragmites_australis	rps12	rps12_1	2	3	91522	91753	-	trans		Phragmites_australis: RNA-seq edited; sites not used
+RNA_Phragmites_australis	rps12	rps12_1	3	3	129181	129209	+			Phragmites_australis: RNA-seq edited; sites not used
+RNA_Phragmites_australis	rps16	rps16_1	1	2	5607	5646	-	cis		Phragmites_australis: RNA-seq edited; sites not used
+RNA_Phragmites_australis	rps16	rps16_1	2	2	4535	4752	-			Phragmites_australis: RNA-seq edited; sites not used
+RNA_Phragmites_australis	ycf3	ycf3_1	1	3	45981	46104	-	cis		Phragmites_australis: RNA-seq edited; sites not used
+RNA_Phragmites_australis	ycf3	ycf3_1	2	3	45008	45237	-	cis		Phragmites_australis: RNA-seq edited; sites not used
+RNA_Phragmites_australis	ycf3	ycf3_1	3	3	44116	44274	-			Phragmites_australis: RNA-seq edited; sites not used
+RNA_Platanthera_chlorantha	atpF	atpF_1	1	2	12939	13083	-	cis		Platanthera_chlorantha: RNA-seq edited; sites not used
+RNA_Platanthera_chlorantha	atpF	atpF_1	2	2	11688	12085	-			Platanthera_chlorantha: RNA-seq edited; sites not used
+RNA_Platanus_x_hispanica	atpF	atpF_1	1	2	14830	14974	-	cis		Platanus_x_hispanica: RNA-seq edited
+RNA_Platanus_x_hispanica	atpF	atpF_1	2	2	13658	14067	-			Platanus_x_hispanica: RNA-seq edited
+RNA_Platanus_x_hispanica	clpP	clpP_1	1	3	80017	80087	-	cis		Platanus_x_hispanica: RNA-seq edited
+RNA_Platanus_x_hispanica	clpP	clpP_1	2	3	78916	79206	-	cis		Platanus_x_hispanica: RNA-seq edited
+RNA_Platanus_x_hispanica	clpP	clpP_1	3	3	78009	78255	-			Platanus_x_hispanica: RNA-seq edited
+RNA_Platanus_x_hispanica	ndhA	ndhA_1	1	2	129117	129669	-	cis		Platanus_x_hispanica: RNA-seq edited
+RNA_Platanus_x_hispanica	ndhA	ndhA_1	2	2	127488	128026	-			Platanus_x_hispanica: RNA-seq edited
+RNA_Platanus_x_hispanica	ndhB	ndhB_1	1	2	104086	104862	-	cis		Platanus_x_hispanica: RNA-seq edited
+RNA_Platanus_x_hispanica	ndhB	ndhB_1	2	2	102630	103385	-			Platanus_x_hispanica: RNA-seq edited
+RNA_Platanus_x_hispanica	rpl2	rpl2_1	1	2	93671	94062	-	cis		Platanus_x_hispanica: RNA-seq edited
+RNA_Platanus_x_hispanica	rpl2	rpl2_1	2	2	92549	92981	-			Platanus_x_hispanica: RNA-seq edited
+RNA_Platanus_x_hispanica	rpoC1	rpoC1_1	1	2	25528	25959	-	cis		Platanus_x_hispanica: RNA-seq edited
+RNA_Platanus_x_hispanica	rpoC1	rpoC1_1	2	2	23177	24793	-			Platanus_x_hispanica: RNA-seq edited
+RNA_Platanus_x_hispanica	rps12	rps12_1	1	3	77748	77861	-	cis		Platanus_x_hispanica: RNA-seq edited
+RNA_Platanus_x_hispanica	rps12	rps12_1	2	3	106269	106500	-	trans		Platanus_x_hispanica: RNA-seq edited
+RNA_Platanus_x_hispanica	rps12	rps12_1	3	3	148778	148803	+			Platanus_x_hispanica: RNA-seq edited
+RNA_Platanus_x_hispanica	rps16	rps16_1	1	2	7026	7065	-	cis		Platanus_x_hispanica: RNA-seq edited
+RNA_Platanus_x_hispanica	rps16	rps16_1	2	2	5943	6169	-			Platanus_x_hispanica: RNA-seq edited
+RNA_Platanus_x_hispanica	ycf3	ycf3_1	1	3	48966	49089	-	cis		Platanus_x_hispanica: RNA-seq edited
+RNA_Platanus_x_hispanica	ycf3	ycf3_1	2	3	47995	48224	-	cis		Platanus_x_hispanica: RNA-seq edited
+RNA_Platanus_x_hispanica	ycf3	ycf3_1	3	3	47108	47260	-			Platanus_x_hispanica: RNA-seq edited
+RNA_Polygala_serpyllifolia	atpF	atpF_1	1	2	23456	23600	-	cis		Polygala_serpyllifolia: RNA-seq edited; sites not used
+RNA_Polygala_serpyllifolia	atpF	atpF_1	2	2	22285	22694	-			Polygala_serpyllifolia: RNA-seq edited; sites not used
+RNA_Polygala_serpyllifolia	ndhA	ndhA_1	1	2	118292	118844	+	cis		Polygala_serpyllifolia: RNA-seq edited; sites not used
+RNA_Polygala_serpyllifolia	ndhA	ndhA_1	2	2	120117	120655	+			Polygala_serpyllifolia: RNA-seq edited; sites not used
+RNA_Polygala_serpyllifolia	ndhB	ndhB_1	1	2	152806	153582	+	cis		Polygala_serpyllifolia: RNA-seq edited; sites not used
+RNA_Polygala_serpyllifolia	ndhB	ndhB_1	2	2	154270	155025	+			Polygala_serpyllifolia: RNA-seq edited; sites not used
+RNA_Polygala_serpyllifolia	rpoC1	rpoC1_1	1	2	34436	34867	-	cis		Polygala_serpyllifolia: RNA-seq edited; sites not used
+RNA_Polygala_serpyllifolia	rpoC1	rpoC1_1	2	2	32050	33657	-			Polygala_serpyllifolia: RNA-seq edited; sites not used
+RNA_Polygala_serpyllifolia	rps12	rps12_1	1	3	71480	71593	-	trans		Polygala_serpyllifolia: RNA-seq edited; sites not used
+RNA_Polygala_serpyllifolia	rps12	rps12_1	2	3	151170	151401	+	cis		Polygala_serpyllifolia: RNA-seq edited; sites not used
+RNA_Polygala_serpyllifolia	rps12	rps12_1	3	3	151939	151964	+			Polygala_serpyllifolia: RNA-seq edited; sites not used
+RNA_Polygala_serpyllifolia	ycf3	ycf3_1	1	3	56344	56467	-	cis		Polygala_serpyllifolia: RNA-seq edited; sites not used
+RNA_Polygala_serpyllifolia	ycf3	ycf3_1	2	3	55365	55594	-	cis		Polygala_serpyllifolia: RNA-seq edited; sites not used
+RNA_Polygala_serpyllifolia	ycf3	ycf3_1	3	3	54375	54533	-			Polygala_serpyllifolia: RNA-seq edited; sites not used
+RNA_Pontederia_cordata	atpF	atpF_1	1	2	14407	14551	-	cis		Pontederia_cordata: RNA-seq edited
+RNA_Pontederia_cordata	atpF	atpF_1	2	2	13201	13610	-			Pontederia_cordata: RNA-seq edited
+RNA_Pontederia_cordata	clpP	clpP_1	1	3	77743	77813	-	cis		Pontederia_cordata: RNA-seq edited
+RNA_Pontederia_cordata	clpP	clpP_1	2	3	76604	76894	-	cis		Pontederia_cordata: RNA-seq edited
+RNA_Pontederia_cordata	clpP	clpP_1	3	3	75707	75959	-			Pontederia_cordata: RNA-seq edited
+RNA_Pontederia_cordata	ndhA	ndhA_1	1	2	128375	128927	-	cis		Pontederia_cordata: RNA-seq edited
+RNA_Pontederia_cordata	ndhA	ndhA_1	2	2	126754	127283	-			Pontederia_cordata: RNA-seq edited
+RNA_Pontederia_cordata	ndhB	ndhB_1	1	2	102529	103305	-	cis		Pontederia_cordata: RNA-seq edited
+RNA_Pontederia_cordata	ndhB	ndhB_1	2	2	101068	101823	-			Pontederia_cordata: RNA-seq edited
+RNA_Pontederia_cordata	rpl2	rpl2_1	1	2	91508	91898	-	cis		Pontederia_cordata: RNA-seq edited
+RNA_Pontederia_cordata	rpl2	rpl2_1	2	2	90408	90838	-			Pontederia_cordata: RNA-seq edited
+RNA_Pontederia_cordata	rpoC1	rpoC1_1	1	2	25847	26278	-	cis		Pontederia_cordata: RNA-seq edited
+RNA_Pontederia_cordata	rpoC1	rpoC1_1	2	2	23477	25093	-			Pontederia_cordata: RNA-seq edited
+RNA_Pontederia_cordata	rps12	rps12_1	1	3	75465	75578	-	cis		Pontederia_cordata: RNA-seq edited
+RNA_Pontederia_cordata	rps12	rps12_1	2	3	104692	104923	-	trans		Pontederia_cordata: RNA-seq edited
+RNA_Pontederia_cordata	rps12	rps12_1	3	3	147949	147974	+			Pontederia_cordata: RNA-seq edited
+RNA_Pontederia_cordata	rps16	rps16_1	1	2	6174	6213	-	cis		Pontederia_cordata: RNA-seq edited
+RNA_Pontederia_cordata	rps16	rps16_1	2	2	5132	5343	-			Pontederia_cordata: RNA-seq edited
+RNA_Pontederia_cordata	ycf3	ycf3_1	1	3	48032	48155	-	cis		Pontederia_cordata: RNA-seq edited
+RNA_Pontederia_cordata	ycf3	ycf3_1	2	3	47057	47286	-	cis		Pontederia_cordata: RNA-seq edited
+RNA_Pontederia_cordata	ycf3	ycf3_1	3	3	46176	46328	-			Pontederia_cordata: RNA-seq edited
+RNA_Populus_alba	atpF	atpF_1	1	2	12900	13044	-	cis		Populus_alba: RNA-seq edited; sites not used
+RNA_Populus_alba	atpF	atpF_1	2	2	11764	12173	-			Populus_alba: RNA-seq edited; sites not used
+RNA_Populus_alba	clpP	clpP_1	1	3	73611	73681	-	cis		Populus_alba: RNA-seq edited; sites not used
+RNA_Populus_alba	clpP	clpP_1	2	3	72522	72812	-	cis		Populus_alba: RNA-seq edited; sites not used
+RNA_Populus_alba	clpP	clpP_1	3	3	71665	71893	-			Populus_alba: RNA-seq edited; sites not used
+RNA_Populus_alba	ndhA	ndhA_1	1	2	123879	124431	-	cis		Populus_alba: RNA-seq edited; sites not used
+RNA_Populus_alba	ndhA	ndhA_1	2	2	122263	122807	-			Populus_alba: RNA-seq edited; sites not used
+RNA_Populus_alba	rpl2	rpl2_1	1	2	87615	88005	-	trans		Populus_alba: RNA-seq edited; sites not used
+RNA_Populus_alba	rpl2	rpl2_1	2	2	345	778	+			Populus_alba: RNA-seq edited; sites not used
+RNA_Populus_alba	rpoC1	rpoC1_1	1	2	23435	23866	-	cis		Populus_alba: RNA-seq edited; sites not used
+RNA_Populus_alba	rpoC1	rpoC1_1	2	2	21032	22648	-			Populus_alba: RNA-seq edited; sites not used
+RNA_Populus_alba	rps12	rps12_1	1	3	71359	71472	-	cis		Populus_alba: RNA-seq edited; sites not used
+RNA_Populus_alba	rps12	rps12_1	2	3	100830	101061	-	trans		Populus_alba: RNA-seq edited; sites not used
+RNA_Populus_alba	rps12	rps12_1	3	3	143513	143538	+			Populus_alba: RNA-seq edited; sites not used
+RNA_Populus_alba	ycf3	ycf3_1	1	3	45582	45705	-	cis		Populus_alba: RNA-seq edited; sites not used
+RNA_Populus_alba	ycf3	ycf3_1	2	3	44628	44857	-	cis		Populus_alba: RNA-seq edited; sites not used
+RNA_Populus_alba	ycf3	ycf3_1	3	3	43741	43893	-			Populus_alba: RNA-seq edited; sites not used
+RNA_Populus_nigra	atpF	atpF_1	1	2	12127	12271	-	cis		Populus_nigra: RNA-seq edited; sites not used
+RNA_Populus_nigra	atpF	atpF_1	2	2	10992	11401	-			Populus_nigra: RNA-seq edited; sites not used
+RNA_Populus_nigra	clpP	clpP_1	1	3	72765	72835	-	cis		Populus_nigra: RNA-seq edited; sites not used
+RNA_Populus_nigra	clpP	clpP_1	2	3	71675	71965	-	cis		Populus_nigra: RNA-seq edited; sites not used
+RNA_Populus_nigra	clpP	clpP_1	3	3	70819	71047	-			Populus_nigra: RNA-seq edited; sites not used
+RNA_Populus_nigra	ndhA	ndhA_1	1	2	122962	123514	-	cis		Populus_nigra: RNA-seq edited; sites not used
+RNA_Populus_nigra	ndhA	ndhA_1	2	2	121344	121888	-			Populus_nigra: RNA-seq edited; sites not used
+RNA_Populus_nigra	ndhB	ndhB_1	1	2	97756	98532	-	cis		Populus_nigra: RNA-seq edited; sites not used
+RNA_Populus_nigra	ndhB	ndhB_1	2	2	96318	97073	-			Populus_nigra: RNA-seq edited; sites not used
+RNA_Populus_nigra	rpl2	rpl2_1	1	2	86744	87134	-	cis		Populus_nigra: RNA-seq edited; sites not used
+RNA_Populus_nigra	rpl2	rpl2_1	2	2	85642	86075	-			Populus_nigra: RNA-seq edited; sites not used
+RNA_Populus_nigra	rpoC1	rpoC1_1	1	2	22703	23134	-	cis		Populus_nigra: RNA-seq edited; sites not used
+RNA_Populus_nigra	rpoC1	rpoC1_1	2	2	20307	21923	-			Populus_nigra: RNA-seq edited; sites not used
+RNA_Populus_nigra	rps12	rps12_1	1	3	70513	70626	-	cis		Populus_nigra: RNA-seq edited; sites not used
+RNA_Populus_nigra	rps12	rps12_1	2	3	99953	100184	-	trans		Populus_nigra: RNA-seq edited; sites not used
+RNA_Populus_nigra	rps12	rps12_1	3	3	142576	142601	+			Populus_nigra: RNA-seq edited; sites not used
+RNA_Populus_nigra	ycf3	ycf3_1	1	3	44813	44936	-	cis		Populus_nigra: RNA-seq edited; sites not used
+RNA_Populus_nigra	ycf3	ycf3_1	2	3	43859	44088	-	cis		Populus_nigra: RNA-seq edited; sites not used
+RNA_Populus_nigra	ycf3	ycf3_1	3	3	42977	43129	-			Populus_nigra: RNA-seq edited; sites not used
+RNA_Portulaca_oleracea	atpF	atpF_1	1	2	13488	13632	-	cis		Portulaca_oleracea: RNA-seq edited
+RNA_Portulaca_oleracea	atpF	atpF_1	2	2	12330	12739	-			Portulaca_oleracea: RNA-seq edited
+RNA_Portulaca_oleracea	clpP	clpP_1	1	3	75454	75524	-	cis		Portulaca_oleracea: RNA-seq edited
+RNA_Portulaca_oleracea	clpP	clpP_1	2	3	74291	74581	-	cis		Portulaca_oleracea: RNA-seq edited
+RNA_Portulaca_oleracea	clpP	clpP_1	3	3	73464	73692	-			Portulaca_oleracea: RNA-seq edited
+RNA_Portulaca_oleracea	ndhA	ndhA_1	1	2	125343	125895	-	cis		Portulaca_oleracea: RNA-seq edited
+RNA_Portulaca_oleracea	ndhA	ndhA_1	2	2	123705	124243	-			Portulaca_oleracea: RNA-seq edited
+RNA_Portulaca_oleracea	ndhB	ndhB_1	1	2	98831	99607	-	cis		Portulaca_oleracea: RNA-seq edited
+RNA_Portulaca_oleracea	ndhB	ndhB_1	2	2	97407	98162	-			Portulaca_oleracea: RNA-seq edited
+RNA_Portulaca_oleracea	rps12	rps12_1	1	3	73206	73319	-	cis		Portulaca_oleracea: RNA-seq edited
+RNA_Portulaca_oleracea	rps12	rps12_1	2	3	101001	101232	-	trans		Portulaca_oleracea: RNA-seq edited
+RNA_Portulaca_oleracea	rps12	rps12_1	3	3	144653	144678	+			Portulaca_oleracea: RNA-seq edited
+RNA_Portulaca_oleracea	rps16	rps16_1	1	2	6657	6696	-	cis		Portulaca_oleracea: RNA-seq edited
+RNA_Portulaca_oleracea	rps16	rps16_1	2	2	5561	5763	-			Portulaca_oleracea: RNA-seq edited
+RNA_Portulaca_oleracea	ycf3	ycf3_1	1	3	46048	46171	-	cis		Portulaca_oleracea: RNA-seq edited
+RNA_Portulaca_oleracea	ycf3	ycf3_1	2	3	45009	45238	-	cis		Portulaca_oleracea: RNA-seq edited
+RNA_Portulaca_oleracea	ycf3	ycf3_1	3	3	44095	44247	-			Portulaca_oleracea: RNA-seq edited
+RNA_Potamogeton_perfoliatus	atpF	atpF_1	1	2	14644	14788	-	cis		Potamogeton_perfoliatus: RNA-seq edited; sites not used
+RNA_Potamogeton_perfoliatus	atpF	atpF_1	2	2	13195	13604	-			Potamogeton_perfoliatus: RNA-seq edited; sites not used
+RNA_Potamogeton_perfoliatus	ndhA	ndhA_1	1	2	124676	125228	-	cis		Potamogeton_perfoliatus: RNA-seq edited; sites not used
+RNA_Potamogeton_perfoliatus	ndhA	ndhA_1	2	2	123025	123566	-			Potamogeton_perfoliatus: RNA-seq edited; sites not used
+RNA_Potamogeton_perfoliatus	rpl2	rpl2_1	1	2	88625	89015	-	trans		Potamogeton_perfoliatus: RNA-seq edited; sites not used
+RNA_Potamogeton_perfoliatus	rpl2	rpl2_1	2	2	202	632	+			Potamogeton_perfoliatus: RNA-seq edited; sites not used
+RNA_Potamogeton_perfoliatus	rps16	rps16_1	1	2	6599	6638	-	cis		Potamogeton_perfoliatus: RNA-seq edited; sites not used
+RNA_Potamogeton_perfoliatus	rps16	rps16_1	2	2	5485	5717	-			Potamogeton_perfoliatus: RNA-seq edited; sites not used
+RNA_Quercus_cerris	atpF	atpF_1	1	2	14843	14987	-	cis		Quercus_cerris: RNA-seq edited
+RNA_Quercus_cerris	atpF	atpF_1	2	2	13652	14061	-			Quercus_cerris: RNA-seq edited
+RNA_Quercus_cerris	ndhA	ndhA_1	1	2	128225	128777	-	cis		Quercus_cerris: RNA-seq edited
+RNA_Quercus_cerris	ndhA	ndhA_1	2	2	126649	127187	-			Quercus_cerris: RNA-seq edited
+RNA_Quercus_cerris	ndhB	ndhB_1	1	2	102262	103038	-	cis		Quercus_cerris: RNA-seq edited
+RNA_Quercus_cerris	ndhB	ndhB_1	2	2	100826	101581	-			Quercus_cerris: RNA-seq edited
+RNA_Quercus_cerris	rpl2	rpl2_1	1	2	91701	92091	-	cis		Quercus_cerris: RNA-seq edited
+RNA_Quercus_cerris	rpl2	rpl2_1	2	2	90583	91016	-			Quercus_cerris: RNA-seq edited
+RNA_Quercus_cerris	rpoC1	rpoC1_1	1	2	25604	26035	-	cis		Quercus_cerris: RNA-seq edited
+RNA_Quercus_cerris	rpoC1	rpoC1_1	2	2	23150	24766	-			Quercus_cerris: RNA-seq edited
+RNA_Quercus_cerris	rps12	rps12_1	1	3	75696	75809	-	cis		Quercus_cerris: RNA-seq edited
+RNA_Quercus_cerris	rps12	rps12_1	2	3	104445	104676	-	trans		Quercus_cerris: RNA-seq edited
+RNA_Quercus_cerris	rps12	rps12_1	3	3	147858	147883	+			Quercus_cerris: RNA-seq edited
+RNA_Quercus_cerris	rps16	rps16_1	1	2	6688	6727	-	cis		Quercus_cerris: RNA-seq edited
+RNA_Quercus_cerris	rps16	rps16_1	2	2	5554	5783	-			Quercus_cerris: RNA-seq edited
+RNA_Quercus_cerris	ycf3	ycf3_1	1	3	49235	49358	-	cis		Quercus_cerris: RNA-seq edited
+RNA_Quercus_cerris	ycf3	ycf3_1	2	3	48284	48513	-	cis		Quercus_cerris: RNA-seq edited
+RNA_Quercus_cerris	ycf3	ycf3_1	3	3	47363	47515	-			Quercus_cerris: RNA-seq edited
+RNA_Ranunculus_repens	atpF	atpF_1	1	2	12728	12872	-	cis		Ranunculus_repens: RNA-seq edited; sites not used
+RNA_Ranunculus_repens	atpF	atpF_1	2	2	11604	12010	-			Ranunculus_repens: RNA-seq edited; sites not used
+RNA_Ranunculus_repens	clpP	clpP_1	1	3	72792	72862	-	cis		Ranunculus_repens: RNA-seq edited; sites not used
+RNA_Ranunculus_repens	clpP	clpP_1	2	3	71671	71961	-	cis		Ranunculus_repens: RNA-seq edited; sites not used
+RNA_Ranunculus_repens	clpP	clpP_1	3	3	70748	70994	-			Ranunculus_repens: RNA-seq edited; sites not used
+RNA_Ranunculus_repens	ndhA	ndhA_1	1	2	122406	122958	-	cis		Ranunculus_repens: RNA-seq edited; sites not used
+RNA_Ranunculus_repens	ndhA	ndhA_1	2	2	120865	121403	-			Ranunculus_repens: RNA-seq edited; sites not used
+RNA_Ranunculus_repens	ndhB	ndhB_1	1	2	143351	144127	+	cis		Ranunculus_repens: RNA-seq edited; sites not used
+RNA_Ranunculus_repens	ndhB	ndhB_1	2	2	144840	145595	+			Ranunculus_repens: RNA-seq edited; sites not used
+RNA_Ranunculus_repens	rps12	rps12_1	1	3	70462	70575	-	trans		Ranunculus_repens: RNA-seq edited; sites not used
+RNA_Ranunculus_repens	rps12	rps12_1	2	3	141721	141952	+	cis		Ranunculus_repens: RNA-seq edited; sites not used
+RNA_Ranunculus_repens	rps12	rps12_1	3	3	142488	142513	+			Ranunculus_repens: RNA-seq edited; sites not used
+RNA_Ranunculus_repens	rps16	rps16_1	1	2	6115	6154	-	cis		Ranunculus_repens: RNA-seq edited; sites not used
+RNA_Ranunculus_repens	rps16	rps16_1	2	2	5058	5254	-			Ranunculus_repens: RNA-seq edited; sites not used
+RNA_Ranunculus_repens	ycf3	ycf3_1	1	3	44828	44951	-	cis		Ranunculus_repens: RNA-seq edited; sites not used
+RNA_Ranunculus_repens	ycf3	ycf3_1	2	3	43883	44112	-	cis		Ranunculus_repens: RNA-seq edited; sites not used
+RNA_Ranunculus_repens	ycf3	ycf3_1	3	3	43000	43152	-			Ranunculus_repens: RNA-seq edited; sites not used
+RNA_Reseda_luteola	atpF	atpF_1	1	2	13509	13653	-	cis		Reseda_luteola: RNA-seq edited
+RNA_Reseda_luteola	atpF	atpF_1	2	2	12392	12801	-			Reseda_luteola: RNA-seq edited
+RNA_Reseda_luteola	clpP	clpP_1	1	3	72714	72784	-	cis		Reseda_luteola: RNA-seq edited
+RNA_Reseda_luteola	clpP	clpP_1	2	3	71561	71851	-	cis		Reseda_luteola: RNA-seq edited
+RNA_Reseda_luteola	clpP	clpP_1	3	3	70787	71015	-			Reseda_luteola: RNA-seq edited
+RNA_Reseda_luteola	ndhA	ndhA_1	1	2	121812	122364	-	cis		Reseda_luteola: RNA-seq edited
+RNA_Reseda_luteola	ndhA	ndhA_1	2	2	120225	120763	-			Reseda_luteola: RNA-seq edited
+RNA_Reseda_luteola	ndhB	ndhB_1	1	2	96907	97683	-	cis		Reseda_luteola: RNA-seq edited
+RNA_Reseda_luteola	ndhB	ndhB_1	2	2	95466	96221	-			Reseda_luteola: RNA-seq edited
+RNA_Reseda_luteola	rpl2	rpl2_1	1	2	85923	86313	-	trans		Reseda_luteola: RNA-seq edited
+RNA_Reseda_luteola	rpl2	rpl2_1	2	2	360	793	+			Reseda_luteola: RNA-seq edited
+RNA_Reseda_luteola	rpoC1	rpoC1_1	1	2	23695	24126	-	cis		Reseda_luteola: RNA-seq edited
+RNA_Reseda_luteola	rpoC1	rpoC1_1	2	2	21294	22904	-			Reseda_luteola: RNA-seq edited
+RNA_Reseda_luteola	rps12	rps12_1	1	3	70488	70601	-	cis		Reseda_luteola: RNA-seq edited
+RNA_Reseda_luteola	rps12	rps12_1	2	3	99088	99319	-	trans		Reseda_luteola: RNA-seq edited
+RNA_Reseda_luteola	rps12	rps12_1	3	3	141166	141191	+			Reseda_luteola: RNA-seq edited
+RNA_Reseda_luteola	rps16	rps16_1	1	2	7301	7340	-	cis		Reseda_luteola: RNA-seq edited
+RNA_Reseda_luteola	rps16	rps16_1	2	2	6168	6394	-			Reseda_luteola: RNA-seq edited
+RNA_Reseda_luteola	ycf3	ycf3_1	1	3	45775	45898	-	cis		Reseda_luteola: RNA-seq edited
+RNA_Reseda_luteola	ycf3	ycf3_1	2	3	44787	45016	-	cis		Reseda_luteola: RNA-seq edited
+RNA_Reseda_luteola	ycf3	ycf3_1	3	3	43831	43983	-			Reseda_luteola: RNA-seq edited
+RNA_Ribes_rubrum	atpF	atpF_1	1	2	14096	14240	-	cis		Ribes_rubrum: RNA-seq edited; sites not used
+RNA_Ribes_rubrum	atpF	atpF_1	2	2	12976	13385	-			Ribes_rubrum: RNA-seq edited; sites not used
+RNA_Ribes_rubrum	clpP	clpP_1	1	3	75399	75469	-	cis		Ribes_rubrum: RNA-seq edited; sites not used
+RNA_Ribes_rubrum	clpP	clpP_1	2	3	74322	74612	-	cis		Ribes_rubrum: RNA-seq edited; sites not used
+RNA_Ribes_rubrum	clpP	clpP_1	3	3	73472	73700	-			Ribes_rubrum: RNA-seq edited; sites not used
+RNA_Ribes_rubrum	ndhA	ndhA_1	1	2	124974	125526	-	cis		Ribes_rubrum: RNA-seq edited; sites not used
+RNA_Ribes_rubrum	ndhA	ndhA_1	2	2	123425	123963	-			Ribes_rubrum: RNA-seq edited; sites not used
+RNA_Ribes_rubrum	ndhB	ndhB_1	1	2	145348	146124	+	cis		Ribes_rubrum: RNA-seq edited; sites not used
+RNA_Ribes_rubrum	ndhB	ndhB_1	2	2	146804	147559	+			Ribes_rubrum: RNA-seq edited; sites not used
+RNA_Ribes_rubrum	rpl2	rpl2_1	1	2	156364	156757	+	cis		Ribes_rubrum: RNA-seq edited; sites not used
+RNA_Ribes_rubrum	rpl2	rpl2_1	2	2	157424	157803	+			Ribes_rubrum: RNA-seq edited; sites not used
+RNA_Ribes_rubrum	rpoC1	rpoC1_1	1	2	24586	25017	-	cis		Ribes_rubrum: RNA-seq edited; sites not used
+RNA_Ribes_rubrum	rpoC1	rpoC1_1	2	2	22232	23848	-			Ribes_rubrum: RNA-seq edited; sites not used
+RNA_Ribes_rubrum	rps12	rps12_1	1	3	73205	73318	-	trans		Ribes_rubrum: RNA-seq edited; sites not used
+RNA_Ribes_rubrum	rps12	rps12_1	2	3	143727	143958	+	cis		Ribes_rubrum: RNA-seq edited; sites not used
+RNA_Ribes_rubrum	rps12	rps12_1	3	3	144479	144504	+			Ribes_rubrum: RNA-seq edited; sites not used
+RNA_Ribes_rubrum	rps16	rps16_1	1	2	6384	6423	-	cis		Ribes_rubrum: RNA-seq edited; sites not used
+RNA_Ribes_rubrum	rps16	rps16_1	2	2	5333	5544	-			Ribes_rubrum: RNA-seq edited; sites not used
+RNA_Ribes_rubrum	ycf3	ycf3_1	1	3	47122	47245	-	cis		Ribes_rubrum: RNA-seq edited; sites not used
+RNA_Ribes_rubrum	ycf3	ycf3_1	2	3	46175	46404	-	cis		Ribes_rubrum: RNA-seq edited; sites not used
+RNA_Ribes_rubrum	ycf3	ycf3_1	3	3	45276	45428	-			Ribes_rubrum: RNA-seq edited; sites not used
+RNA_Salix_alba	atpF	atpF_1	1	2	11936	12080	-	cis		Salix_alba: RNA-seq edited; sites not used
+RNA_Salix_alba	atpF	atpF_1	2	2	10795	11204	-			Salix_alba: RNA-seq edited; sites not used
+RNA_Sambucus_nigra	atpF	atpF_1	1	2	13764	13908	-	cis		Sambucus_nigra: RNA-seq edited; sites not used
+RNA_Sambucus_nigra	atpF	atpF_1	2	2	12643	13052	-			Sambucus_nigra: RNA-seq edited; sites not used
+RNA_Sambucus_nigra	clpP	clpP_1	1	3	74800	74870	-	cis		Sambucus_nigra: RNA-seq edited; sites not used
+RNA_Sambucus_nigra	clpP	clpP_1	2	3	73689	73979	-	cis		Sambucus_nigra: RNA-seq edited; sites not used
+RNA_Sambucus_nigra	clpP	clpP_1	3	3	72820	73048	-			Sambucus_nigra: RNA-seq edited; sites not used
+RNA_Sambucus_nigra	ndhA	ndhA_1	1	2	125222	125774	-	cis		Sambucus_nigra: RNA-seq edited; sites not used
+RNA_Sambucus_nigra	ndhA	ndhA_1	2	2	123589	124127	-			Sambucus_nigra: RNA-seq edited; sites not used
+RNA_Sambucus_nigra	ndhB	ndhB_1	1	2	145735	146511	+	cis		Sambucus_nigra: RNA-seq edited; sites not used
+RNA_Sambucus_nigra	ndhB	ndhB_1	2	2	147191	147946	+			Sambucus_nigra: RNA-seq edited; sites not used
+RNA_Sambucus_nigra	rps12	rps12_1	1	3	72557	72670	-	trans		Sambucus_nigra: RNA-seq edited; sites not used
+RNA_Sambucus_nigra	rps12	rps12_1	2	3	144097	144328	+	cis		Sambucus_nigra: RNA-seq edited; sites not used
+RNA_Sambucus_nigra	rps12	rps12_1	3	3	144865	144890	+			Sambucus_nigra: RNA-seq edited; sites not used
+RNA_Sambucus_nigra	rps16	rps16_1	1	2	6561	6600	-	cis		Sambucus_nigra: RNA-seq edited; sites not used
+RNA_Sambucus_nigra	rps16	rps16_1	2	2	5514	5710	-			Sambucus_nigra: RNA-seq edited; sites not used
+RNA_Sambucus_nigra	ycf3	ycf3_1	1	3	46267	46390	-	cis		Sambucus_nigra: RNA-seq edited; sites not used
+RNA_Sambucus_nigra	ycf3	ycf3_1	2	3	45319	45548	-	cis		Sambucus_nigra: RNA-seq edited; sites not used
+RNA_Sambucus_nigra	ycf3	ycf3_1	3	3	44417	44569	-			Sambucus_nigra: RNA-seq edited; sites not used
+RNA_Saponaria_officinalis	atpF	atpF_1	1	2	12496	12640	-	cis		Saponaria_officinalis: RNA-seq edited; sites not used
+RNA_Saponaria_officinalis	atpF	atpF_1	2	2	11372	11781	-			Saponaria_officinalis: RNA-seq edited; sites not used
+RNA_Saponaria_officinalis	clpP	clpP_1	1	3	70717	70787	-	cis		Saponaria_officinalis: RNA-seq edited; sites not used
+RNA_Saponaria_officinalis	clpP	clpP_1	2	3	69479	69770	-	cis		Saponaria_officinalis: RNA-seq edited; sites not used
+RNA_Saponaria_officinalis	clpP	clpP_1	3	3	68661	68888	-			Saponaria_officinalis: RNA-seq edited; sites not used
+RNA_Saponaria_officinalis	ndhA	ndhA_1	1	2	119643	120195	-	cis		Saponaria_officinalis: RNA-seq edited; sites not used
+RNA_Saponaria_officinalis	ndhA	ndhA_1	2	2	118062	118600	-			Saponaria_officinalis: RNA-seq edited; sites not used
+RNA_Saponaria_officinalis	rpl2	rpl2_1	1	2	83507	83898	-	trans		Saponaria_officinalis: RNA-seq edited; sites not used
+RNA_Saponaria_officinalis	rpl2	rpl2_1	2	2	150966	151398	+			Saponaria_officinalis: RNA-seq edited; sites not used
+RNA_Saponaria_officinalis	ycf3	ycf3_1	1	3	44099	44222	-	cis		Saponaria_officinalis: RNA-seq edited; sites not used
+RNA_Saponaria_officinalis	ycf3	ycf3_1	2	3	43086	43315	-	cis		Saponaria_officinalis: RNA-seq edited; sites not used
+RNA_Saponaria_officinalis	ycf3	ycf3_1	3	3	42175	42327	-			Saponaria_officinalis: RNA-seq edited; sites not used
+RNA_Scheuchzeria_palustris	atpF	atpF_1	1	2	15107	15251	-	cis		Scheuchzeria_palustris: RNA-seq edited; sites not used
+RNA_Scheuchzeria_palustris	atpF	atpF_1	2	2	13654	14063	-			Scheuchzeria_palustris: RNA-seq edited; sites not used
+RNA_Scheuchzeria_palustris	clpP	clpP_1	1	3	75302	75372	-	cis		Scheuchzeria_palustris: RNA-seq edited; sites not used
+RNA_Scheuchzeria_palustris	clpP	clpP_1	2	3	74227	74517	-	cis		Scheuchzeria_palustris: RNA-seq edited; sites not used
+RNA_Scheuchzeria_palustris	clpP	clpP_1	3	3	73287	73533	-			Scheuchzeria_palustris: RNA-seq edited; sites not used
+RNA_Scheuchzeria_palustris	ndhA	ndhA_1	1	2	125164	125716	-	cis		Scheuchzeria_palustris: RNA-seq edited; sites not used
+RNA_Scheuchzeria_palustris	ndhA	ndhA_1	2	2	123525	124066	-			Scheuchzeria_palustris: RNA-seq edited; sites not used
+RNA_Scheuchzeria_palustris	ndhB	ndhB_1	1	2	100090	100866	-	cis		Scheuchzeria_palustris: RNA-seq edited; sites not used
+RNA_Scheuchzeria_palustris	ndhB	ndhB_1	2	2	98635	99390	-			Scheuchzeria_palustris: RNA-seq edited; sites not used
+RNA_Scheuchzeria_palustris	rpl2	rpl2_1	1	2	89038	89428	-	cis		Scheuchzeria_palustris: RNA-seq edited; sites not used
+RNA_Scheuchzeria_palustris	rpl2	rpl2_1	2	2	87938	88368	-			Scheuchzeria_palustris: RNA-seq edited; sites not used
+RNA_Scheuchzeria_palustris	rpoC1	rpoC1_1	1	2	25398	25829	-	cis		Scheuchzeria_palustris: RNA-seq edited; sites not used
+RNA_Scheuchzeria_palustris	rpoC1	rpoC1_1	2	2	23006	24631	-			Scheuchzeria_palustris: RNA-seq edited; sites not used
+RNA_Scheuchzeria_palustris	rps12	rps12_1	1	3	73017	73130	-	cis		Scheuchzeria_palustris: RNA-seq edited; sites not used
+RNA_Scheuchzeria_palustris	rps12	rps12_1	2	3	102273	102504	-	trans		Scheuchzeria_palustris: RNA-seq edited; sites not used
+RNA_Scheuchzeria_palustris	rps12	rps12_1	3	3	144768	144793	+			Scheuchzeria_palustris: RNA-seq edited; sites not used
+RNA_Scheuchzeria_palustris	rps16	rps16_1	1	2	6343	6382	-	cis		Scheuchzeria_palustris: RNA-seq edited; sites not used
+RNA_Scheuchzeria_palustris	rps16	rps16_1	2	2	5099	5307	-			Scheuchzeria_palustris: RNA-seq edited; sites not used
+RNA_Scheuchzeria_palustris	ycf3	ycf3_1	1	3	46940	47063	-	cis		Scheuchzeria_palustris: RNA-seq edited; sites not used
+RNA_Scheuchzeria_palustris	ycf3	ycf3_1	2	3	45978	46207	-	cis		Scheuchzeria_palustris: RNA-seq edited; sites not used
+RNA_Scheuchzeria_palustris	ycf3	ycf3_1	3	3	45094	45246	-			Scheuchzeria_palustris: RNA-seq edited; sites not used
+RNA_Scrophularia_umbrosa	atpF	atpF_1	1	2	12865	13009	-	cis		Scrophularia_umbrosa: RNA-seq edited; sites not used
+RNA_Scrophularia_umbrosa	atpF	atpF_1	2	2	11726	12135	-			Scrophularia_umbrosa: RNA-seq edited; sites not used
+RNA_Scrophularia_umbrosa	clpP	clpP_1	1	3	72216	72286	-	cis		Scrophularia_umbrosa: RNA-seq edited; sites not used
+RNA_Scrophularia_umbrosa	clpP	clpP_1	2	3	71197	71487	-	cis		Scrophularia_umbrosa: RNA-seq edited; sites not used
+RNA_Scrophularia_umbrosa	clpP	clpP_1	3	3	70333	70561	-			Scrophularia_umbrosa: RNA-seq edited; sites not used
+RNA_Scrophularia_umbrosa	ndhA	ndhA_1	1	2	120634	121186	-	cis		Scrophularia_umbrosa: RNA-seq edited; sites not used
+RNA_Scrophularia_umbrosa	ndhA	ndhA_1	2	2	119071	119600	-			Scrophularia_umbrosa: RNA-seq edited; sites not used
+RNA_Scrophularia_umbrosa	ndhB	ndhB_1	1	2	96047	96823	-	cis		Scrophularia_umbrosa: RNA-seq edited; sites not used
+RNA_Scrophularia_umbrosa	ndhB	ndhB_1	2	2	94612	95367	-			Scrophularia_umbrosa: RNA-seq edited; sites not used
+RNA_Scrophularia_umbrosa	rpl2	rpl2_1	1	2	85422	85812	-	cis		Scrophularia_umbrosa: RNA-seq edited; sites not used
+RNA_Scrophularia_umbrosa	rpl2	rpl2_1	2	2	84321	84754	-			Scrophularia_umbrosa: RNA-seq edited; sites not used
+RNA_Scrophularia_umbrosa	rps12	rps12_1	1	3	70093	70206	-	cis		Scrophularia_umbrosa: RNA-seq edited; sites not used
+RNA_Scrophularia_umbrosa	rps12	rps12_1	2	3	98181	98412	-	trans		Scrophularia_umbrosa: RNA-seq edited; sites not used
+RNA_Scrophularia_umbrosa	rps12	rps12_1	3	3	139712	139737	+			Scrophularia_umbrosa: RNA-seq edited; sites not used
+RNA_Scrophularia_umbrosa	rps16	rps16_1	1	2	6053	6092	-	cis		Scrophularia_umbrosa: RNA-seq edited; sites not used
+RNA_Scrophularia_umbrosa	rps16	rps16_1	2	2	4975	5201	-			Scrophularia_umbrosa: RNA-seq edited; sites not used
+RNA_Scrophularia_umbrosa	ycf3	ycf3_1	1	3	44603	44726	-	cis		Scrophularia_umbrosa: RNA-seq edited; sites not used
+RNA_Scrophularia_umbrosa	ycf3	ycf3_1	2	3	43667	43896	-	cis		Scrophularia_umbrosa: RNA-seq edited; sites not used
+RNA_Scrophularia_umbrosa	ycf3	ycf3_1	3	3	42788	42940	-			Scrophularia_umbrosa: RNA-seq edited; sites not used
+RNA_Solanum_crispum	atpF	atpF_1	1	2	13184	13328	-	cis		Solanum_crispum: RNA-seq edited; sites not used
+RNA_Solanum_crispum	atpF	atpF_1	2	2	12072	12481	-			Solanum_crispum: RNA-seq edited; sites not used
+RNA_Solanum_crispum	clpP	clpP_1	1	3	74559	74629	-	cis		Solanum_crispum: RNA-seq edited; sites not used
+RNA_Solanum_crispum	clpP	clpP_1	2	3	73464	73754	-	cis		Solanum_crispum: RNA-seq edited; sites not used
+RNA_Solanum_crispum	clpP	clpP_1	3	3	72605	72839	-			Solanum_crispum: RNA-seq edited; sites not used
+RNA_Spirodela_polyrhiza	atpF	atpF_1	1	2	13625	13769	-	cis		Spirodela_polyrhiza: RNA-seq edited; sites not used
+RNA_Spirodela_polyrhiza	atpF	atpF_1	2	2	12279	12679	-			Spirodela_polyrhiza: RNA-seq edited; sites not used
+RNA_Suaeda_vera	atpF	atpF_1	1	2	12724	12868	-	cis		Suaeda_vera: RNA-seq edited; sites not used
+RNA_Suaeda_vera	atpF	atpF_1	2	2	11508	11917	-			Suaeda_vera: RNA-seq edited; sites not used
+RNA_Suaeda_vera	clpP	clpP_1	1	3	69585	69655	-	cis		Suaeda_vera: RNA-seq edited; sites not used
+RNA_Suaeda_vera	clpP	clpP_1	2	3	68546	68836	-	cis		Suaeda_vera: RNA-seq edited; sites not used
+RNA_Suaeda_vera	clpP	clpP_1	3	3	67731	67959	-			Suaeda_vera: RNA-seq edited; sites not used
+RNA_Suaeda_vera	ndhA	ndhA_1	1	2	117955	118507	-	cis		Suaeda_vera: RNA-seq edited; sites not used
+RNA_Suaeda_vera	ndhA	ndhA_1	2	2	116288	116826	-			Suaeda_vera: RNA-seq edited; sites not used
+RNA_Suaeda_vera	ndhB	ndhB_1	1	2	92978	93754	-	cis		Suaeda_vera: RNA-seq edited; sites not used
+RNA_Suaeda_vera	ndhB	ndhB_1	2	2	91554	92309	-			Suaeda_vera: RNA-seq edited; sites not used
+RNA_Suaeda_vera	rpl2	rpl2_1	1	2	82534	82925	-	trans		Suaeda_vera: RNA-seq edited; sites not used
+RNA_Suaeda_vera	rpl2	rpl2_1	2	2	149151	149583	+			Suaeda_vera: RNA-seq edited; sites not used
+RNA_Suaeda_vera	rpoC1	rpoC1_1	1	2	22842	23273	-	cis		Suaeda_vera: RNA-seq edited; sites not used
+RNA_Suaeda_vera	rpoC1	rpoC1_1	2	2	20461	22062	-			Suaeda_vera: RNA-seq edited; sites not used
+RNA_Suaeda_vera	rps12	rps12_1	1	3	67481	67594	-	cis		Suaeda_vera: RNA-seq edited; sites not used
+RNA_Suaeda_vera	rps12	rps12_1	2	3	95136	95367	-	trans		Suaeda_vera: RNA-seq edited; sites not used
+RNA_Suaeda_vera	rps12	rps12_1	3	3	137091	137116	+			Suaeda_vera: RNA-seq edited; sites not used
+RNA_Suaeda_vera	ycf3	ycf3_1	1	3	43353	43476	-	cis		Suaeda_vera: RNA-seq edited; sites not used
+RNA_Suaeda_vera	ycf3	ycf3_1	2	3	42343	42572	-	cis		Suaeda_vera: RNA-seq edited; sites not used
+RNA_Suaeda_vera	ycf3	ycf3_1	3	3	41400	41552	-			Suaeda_vera: RNA-seq edited; sites not used
+RNA_Succisa_pratensis	atpF	atpF_1	1	2	14924	15068	-	cis		Succisa_pratensis: RNA-seq edited; sites not used
+RNA_Succisa_pratensis	atpF	atpF_1	2	2	13788	14197	-			Succisa_pratensis: RNA-seq edited; sites not used
+RNA_Succisa_pratensis	clpP	clpP_1	1	3	78838	78908	-	cis		Succisa_pratensis: RNA-seq edited; sites not used
+RNA_Succisa_pratensis	clpP	clpP_1	2	3	77716	78006	-	cis		Succisa_pratensis: RNA-seq edited; sites not used
+RNA_Succisa_pratensis	clpP	clpP_1	3	3	76803	77040	-			Succisa_pratensis: RNA-seq edited; sites not used
+RNA_Succisa_pratensis	ndhA	ndhA_1	1	2	128117	128669	-	cis		Succisa_pratensis: RNA-seq edited; sites not used
+RNA_Succisa_pratensis	ndhA	ndhA_1	2	2	126487	127025	-			Succisa_pratensis: RNA-seq edited; sites not used
+RNA_Succisa_pratensis	ndhB	ndhB_1	1	2	103612	104388	-	cis		Succisa_pratensis: RNA-seq edited; sites not used
+RNA_Succisa_pratensis	ndhB	ndhB_1	2	2	102177	102932	-			Succisa_pratensis: RNA-seq edited; sites not used
+RNA_Succisa_pratensis	rpl2	rpl2_1	1	2	92787	93177	-	cis		Succisa_pratensis: RNA-seq edited; sites not used
+RNA_Succisa_pratensis	rpl2	rpl2_1	2	2	91677	92110	-			Succisa_pratensis: RNA-seq edited; sites not used
+RNA_Succisa_pratensis	rps12	rps12_1	1	3	76431	76544	-	cis		Succisa_pratensis: RNA-seq edited; sites not used
+RNA_Succisa_pratensis	rps12	rps12_1	2	3	105795	106026	-	trans		Succisa_pratensis: RNA-seq edited; sites not used
+RNA_Succisa_pratensis	rps12	rps12_1	3	3	148125	148150	+			Succisa_pratensis: RNA-seq edited; sites not used
+RNA_Succisa_pratensis	ycf3	ycf3_1	1	3	55986	56109	+	cis		Succisa_pratensis: RNA-seq edited; sites not used
+RNA_Succisa_pratensis	ycf3	ycf3_1	2	3	56852	57081	+	cis		Succisa_pratensis: RNA-seq edited; sites not used
+RNA_Succisa_pratensis	ycf3	ycf3_1	3	3	57840	57992	+			Succisa_pratensis: RNA-seq edited; sites not used
+RNA_Tellima_grandiflora	atpF	atpF_1	1	2	13841	13985	-	cis		Tellima_grandiflora: RNA-seq edited
+RNA_Tellima_grandiflora	atpF	atpF_1	2	2	12700	13109	-			Tellima_grandiflora: RNA-seq edited
+RNA_Tellima_grandiflora	ndhA	ndhA_1	1	2	122711	123263	-	cis		Tellima_grandiflora: RNA-seq edited
+RNA_Tellima_grandiflora	ndhA	ndhA_1	2	2	121085	121623	-			Tellima_grandiflora: RNA-seq edited
+RNA_Tellima_grandiflora	ndhB	ndhB_1	1	2	97418	98194	-	cis		Tellima_grandiflora: RNA-seq edited
+RNA_Tellima_grandiflora	ndhB	ndhB_1	2	2	95983	96738	-			Tellima_grandiflora: RNA-seq edited
+RNA_Tellima_grandiflora	rpl2	rpl2_1	1	2	86502	86893	-	trans		Tellima_grandiflora: RNA-seq edited
+RNA_Tellima_grandiflora	rpl2	rpl2_1	2	2	154621	154999	+			Tellima_grandiflora: RNA-seq edited
+RNA_Tellima_grandiflora	rpoC1	rpoC1_1	1	2	24269	24475	-	cis		Tellima_grandiflora: RNA-seq edited
+RNA_Tellima_grandiflora	rpoC1	rpoC1_1	2	2	21913	23529	-			Tellima_grandiflora: RNA-seq edited
+RNA_Tellima_grandiflora	rps12	rps12_1	1	3	71542	71655	-	cis		Tellima_grandiflora: RNA-seq edited
+RNA_Tellima_grandiflora	rps12	rps12_1	2	3	99577	99808	-	cis		Tellima_grandiflora: RNA-seq edited
+RNA_Tellima_grandiflora	rps12	rps12_1	3	3	99031	99056	-			Tellima_grandiflora: RNA-seq edited
+RNA_Tellima_grandiflora	rps16	rps16_1	1	2	6147	6186	-	cis		Tellima_grandiflora: RNA-seq edited
+RNA_Tellima_grandiflora	rps16	rps16_1	2	2	5094	5320	-			Tellima_grandiflora: RNA-seq edited
+RNA_Tellima_grandiflora	ycf3	ycf3_1	1	3	46407	46530	-	cis		Tellima_grandiflora: RNA-seq edited
+RNA_Tellima_grandiflora	ycf3	ycf3_1	2	3	45462	45691	-	cis		Tellima_grandiflora: RNA-seq edited
+RNA_Tellima_grandiflora	ycf3	ycf3_1	3	3	44569	44721	-			Tellima_grandiflora: RNA-seq edited
+RNA_Teucrium_chamaedrys	clpP	clpP_1	1	3	71891	71961	-	cis		Teucrium_chamaedrys: RNA-seq edited; sites not used
+RNA_Teucrium_chamaedrys	clpP	clpP_1	2	3	70877	71167	-	cis		Teucrium_chamaedrys: RNA-seq edited; sites not used
+RNA_Teucrium_chamaedrys	clpP	clpP_1	3	3	70020	70248	-			Teucrium_chamaedrys: RNA-seq edited; sites not used
+RNA_Teucrium_chamaedrys	rpl2	rpl2_1	1	2	147792	148182	+	cis		Teucrium_chamaedrys: RNA-seq edited; sites not used
+RNA_Teucrium_chamaedrys	rpl2	rpl2_1	2	2	148852	149096	+			Teucrium_chamaedrys: RNA-seq edited; sites not used
+RNA_Teucrium_chamaedrys	rps12	rps12_1	1	3	69768	69881	-	trans		Teucrium_chamaedrys: RNA-seq edited; sites not used
+RNA_Teucrium_chamaedrys	rps12	rps12_1	2	3	136692	136923	+	cis		Teucrium_chamaedrys: RNA-seq edited; sites not used
+RNA_Teucrium_chamaedrys	rps12	rps12_1	3	3	137463	137488	+			Teucrium_chamaedrys: RNA-seq edited; sites not used
+RNA_Trifolium_subterraneum	atpF	atpF_1	1	2	40096	40240	+	cis		Trifolium_subterraneum: RNA-seq edited
+RNA_Trifolium_subterraneum	atpF	atpF_1	2	2	40924	41333	+			Trifolium_subterraneum: RNA-seq edited
+RNA_Trifolium_subterraneum	clpP	clpP_1	1	3	140329	140398	+	cis		Trifolium_subterraneum: RNA-seq edited
+RNA_Trifolium_subterraneum	clpP	clpP_1	2	3	140399	140691	+	cis		Trifolium_subterraneum: RNA-seq edited
+RNA_Trifolium_subterraneum	clpP	clpP_1	3	3	141240	141476	+			Trifolium_subterraneum: RNA-seq edited
+RNA_Trifolium_subterraneum	ndhA	ndhA_1	1	2	106165	106717	-	cis		Trifolium_subterraneum: RNA-seq edited
+RNA_Trifolium_subterraneum	ndhA	ndhA_1	2	2	104394	104926	-			Trifolium_subterraneum: RNA-seq edited
+RNA_Trifolium_subterraneum	ndhB	ndhB_1	1	2	110898	111656	-	cis		Trifolium_subterraneum: RNA-seq edited
+RNA_Trifolium_subterraneum	ndhB	ndhB_1	2	2	109457	110212	-			Trifolium_subterraneum: RNA-seq edited
+RNA_Trifolium_subterraneum	rpl2	rpl2_1	1	2	84542	84923	+	cis		Trifolium_subterraneum: RNA-seq edited
+RNA_Trifolium_subterraneum	rpl2	rpl2_1	2	2	85635	86068	+			Trifolium_subterraneum: RNA-seq edited
+RNA_Trifolium_subterraneum	rpoC1	rpoC1_1	1	2	135445	135876	+	cis		Trifolium_subterraneum: RNA-seq edited
+RNA_Trifolium_subterraneum	rpoC1	rpoC1_1	2	2	136658	138277	+			Trifolium_subterraneum: RNA-seq edited
+RNA_Trifolium_subterraneum	ycf3	ycf3_1	1	3	95832	95955	+	cis		Trifolium_subterraneum: RNA-seq edited
+RNA_Trifolium_subterraneum	ycf3	ycf3_1	2	3	96689	96918	+	cis		Trifolium_subterraneum: RNA-seq edited
+RNA_Trifolium_subterraneum	ycf3	ycf3_1	3	3	97663	97815	+			Trifolium_subterraneum: RNA-seq edited
+RNA_Typha_angustifolia	atpF	atpF_1	1	2	14118	14262	-	cis		Typha_angustifolia: RNA-seq edited; sites not used
+RNA_Typha_angustifolia	atpF	atpF_1	2	2	12899	13314	-			Typha_angustifolia: RNA-seq edited; sites not used
+RNA_Ulmus_procera	atpF	atpF_1	1	2	14863	15007	-	cis		Ulmus_procera: RNA-seq edited
+RNA_Ulmus_procera	atpF	atpF_1	2	2	13717	14126	-			Ulmus_procera: RNA-seq edited
+RNA_Ulmus_procera	clpP	clpP_1	1	3	76150	76220	-	cis		Ulmus_procera: RNA-seq edited
+RNA_Ulmus_procera	clpP	clpP_1	2	3	74953	75243	-	cis		Ulmus_procera: RNA-seq edited
+RNA_Ulmus_procera	clpP	clpP_1	3	3	74111	74339	-			Ulmus_procera: RNA-seq edited
+RNA_Ulmus_procera	ndhA	ndhA_1	1	2	126920	127478	-	cis		Ulmus_procera: RNA-seq edited
+RNA_Ulmus_procera	ndhA	ndhA_1	2	2	124983	125521	-			Ulmus_procera: RNA-seq edited
+RNA_Ulmus_procera	ndhB	ndhB_1	1	2	100445	101221	-	cis		Ulmus_procera: RNA-seq edited
+RNA_Ulmus_procera	ndhB	ndhB_1	2	2	99009	99764	-			Ulmus_procera: RNA-seq edited
+RNA_Ulmus_procera	rpl2	rpl2_1	1	2	89890	90280	-	trans		Ulmus_procera: RNA-seq edited
+RNA_Ulmus_procera	rpl2	rpl2_1	2	2	133	566	+			Ulmus_procera: RNA-seq edited
+RNA_Ulmus_procera	rpoC1	rpoC1_1	1	2	25195	25626	-	cis		Ulmus_procera: RNA-seq edited
+RNA_Ulmus_procera	rpoC1	rpoC1_1	2	2	22746	24356	-			Ulmus_procera: RNA-seq edited
+RNA_Ulmus_procera	rps12	rps12_1	1	3	73837	73950	-	cis		Ulmus_procera: RNA-seq edited
+RNA_Ulmus_procera	rps12	rps12_1	2	3	102628	102859	-	trans		Ulmus_procera: RNA-seq edited
+RNA_Ulmus_procera	rps12	rps12_1	3	3	146551	146576	+			Ulmus_procera: RNA-seq edited
+RNA_Ulmus_procera	rps16	rps16_1	1	2	7192	7231	-	cis		Ulmus_procera: RNA-seq edited
+RNA_Ulmus_procera	rps16	rps16_1	2	2	6060	6289	-			Ulmus_procera: RNA-seq edited
+RNA_Ulmus_procera	ycf3	ycf3_1	1	3	47332	47455	-	cis		Ulmus_procera: RNA-seq edited
+RNA_Ulmus_procera	ycf3	ycf3_1	2	3	46250	46479	-	cis		Ulmus_procera: RNA-seq edited
+RNA_Ulmus_procera	ycf3	ycf3_1	3	3	45345	45497	-			Ulmus_procera: RNA-seq edited
+RNA_Urtica_dioica	atpF	atpF_1	1	2	11524	11668	-	cis		Urtica_dioica: RNA-seq edited; sites not used
+RNA_Urtica_dioica	atpF	atpF_1	2	2	10406	10815	-			Urtica_dioica: RNA-seq edited; sites not used
+RNA_Urtica_dioica	ndhA	ndhA_1	1	2	115395	115947	-	cis		Urtica_dioica: RNA-seq edited; sites not used
+RNA_Urtica_dioica	ndhA	ndhA_1	2	2	113696	114234	-			Urtica_dioica: RNA-seq edited; sites not used
+RNA_Urtica_dioica	rpl2	rpl2_1	1	2	80596	80924	-	trans		Urtica_dioica: RNA-seq edited; sites not used
+RNA_Urtica_dioica	rpl2	rpl2_1	2	2	146221	146653	+			Urtica_dioica: RNA-seq edited; sites not used
+RNA_Urtica_dioica	ycf3	ycf3_1	1	3	42053	42176	-	cis		Urtica_dioica: RNA-seq edited; sites not used
+RNA_Urtica_dioica	ycf3	ycf3_1	2	3	41059	41288	-	cis		Urtica_dioica: RNA-seq edited; sites not used
+RNA_Urtica_dioica	ycf3	ycf3_1	3	3	40156	40308	-			Urtica_dioica: RNA-seq edited; sites not used
+RNA_Valeriana_pyrenaica	atpF	atpF_1	1	2	12266	12410	-	cis		Valeriana_pyrenaica: RNA-seq edited
+RNA_Valeriana_pyrenaica	atpF	atpF_1	2	2	11151	11560	-			Valeriana_pyrenaica: RNA-seq edited
+RNA_Valeriana_pyrenaica	clpP	clpP_1	1	3	70304	70374	-	cis		Valeriana_pyrenaica: RNA-seq edited
+RNA_Valeriana_pyrenaica	clpP	clpP_1	2	3	69244	69534	-	cis		Valeriana_pyrenaica: RNA-seq edited
+RNA_Valeriana_pyrenaica	clpP	clpP_1	3	3	68432	68657	-			Valeriana_pyrenaica: RNA-seq edited
+RNA_Valeriana_pyrenaica	ndhA	ndhA_1	1	2	116424	116976	-	cis		Valeriana_pyrenaica: RNA-seq edited
+RNA_Valeriana_pyrenaica	ndhA	ndhA_1	2	2	114848	115386	-			Valeriana_pyrenaica: RNA-seq edited
+RNA_Valeriana_pyrenaica	ndhB	ndhB_1	1	2	95122	95898	-	cis		Valeriana_pyrenaica: RNA-seq edited
+RNA_Valeriana_pyrenaica	ndhB	ndhB_1	2	2	93688	94443	-			Valeriana_pyrenaica: RNA-seq edited
+RNA_Valeriana_pyrenaica	rpl2	rpl2_1	1	2	83946	84336	-	cis		Valeriana_pyrenaica: RNA-seq edited
+RNA_Valeriana_pyrenaica	rpl2	rpl2_1	2	2	82860	83293	-			Valeriana_pyrenaica: RNA-seq edited
+RNA_Valeriana_pyrenaica	rpoC1	rpoC1_1	1	2	22758	23189	-	cis		Valeriana_pyrenaica: RNA-seq edited
+RNA_Valeriana_pyrenaica	rpoC1	rpoC1_1	2	2	20384	21994	-			Valeriana_pyrenaica: RNA-seq edited
+RNA_Valeriana_pyrenaica	rps12	rps12_1	1	3	68153	68266	-	cis		Valeriana_pyrenaica: RNA-seq edited
+RNA_Valeriana_pyrenaica	rps12	rps12_1	2	3	97308	97539	-	trans		Valeriana_pyrenaica: RNA-seq edited
+RNA_Valeriana_pyrenaica	rps12	rps12_1	3	3	142065	142090	+			Valeriana_pyrenaica: RNA-seq edited
+RNA_Valeriana_pyrenaica	rps16	rps16_1	1	2	5675	5714	-	cis		Valeriana_pyrenaica: RNA-seq edited
+RNA_Valeriana_pyrenaica	rps16	rps16_1	2	2	4615	4844	-			Valeriana_pyrenaica: RNA-seq edited
+RNA_Valeriana_pyrenaica	ycf3	ycf3_1	1	3	43364	43487	-	cis		Valeriana_pyrenaica: RNA-seq edited
+RNA_Valeriana_pyrenaica	ycf3	ycf3_1	2	3	42379	42608	-	cis		Valeriana_pyrenaica: RNA-seq edited
+RNA_Valeriana_pyrenaica	ycf3	ycf3_1	3	3	41474	41626	-			Valeriana_pyrenaica: RNA-seq edited
+RNA_Valerianella_locusta	atpF	atpF_1	1	2	12392	12536	-	cis		Valerianella_locusta: RNA-seq edited; sites not used
+RNA_Valerianella_locusta	atpF	atpF_1	2	2	11255	11664	-			Valerianella_locusta: RNA-seq edited; sites not used
+RNA_Valerianella_locusta	clpP	clpP_1	1	3	68023	68092	-	cis		Valerianella_locusta: RNA-seq edited; sites not used
+RNA_Valerianella_locusta	clpP	clpP_1	2	3	67736	68022	-	cis		Valerianella_locusta: RNA-seq edited; sites not used
+RNA_Valerianella_locusta	clpP	clpP_1	3	3	67490	67732	-			Valerianella_locusta: RNA-seq edited; sites not used
+RNA_Valerianella_locusta	ndhA	ndhA_1	1	2	112824	113376	-	cis		Valerianella_locusta: RNA-seq edited; sites not used
+RNA_Valerianella_locusta	ndhA	ndhA_1	2	2	111211	111749	-			Valerianella_locusta: RNA-seq edited; sites not used
+RNA_Valerianella_locusta	rpl2	rpl2_1	1	2	81589	81979	-	cis		Valerianella_locusta: RNA-seq edited; sites not used
+RNA_Valerianella_locusta	rpl2	rpl2_1	2	2	80503	80936	-			Valerianella_locusta: RNA-seq edited; sites not used
+RNA_Valerianella_locusta	rps12	rps12_1	1	3	67127	67240	-	cis		Valerianella_locusta: RNA-seq edited; sites not used
+RNA_Valerianella_locusta	rps12	rps12_1	2	3	94896	95127	-	trans		Valerianella_locusta: RNA-seq edited; sites not used
+RNA_Valerianella_locusta	rps12	rps12_1	3	3	137959	137984	+			Valerianella_locusta: RNA-seq edited; sites not used
+RNA_Valerianella_locusta	rps16	rps16_1	1	2	5996	6035	-	cis		Valerianella_locusta: RNA-seq edited; sites not used
+RNA_Valerianella_locusta	rps16	rps16_1	2	2	4960	5162	-			Valerianella_locusta: RNA-seq edited; sites not used
+RNA_Valerianella_locusta	ycf3	ycf3_1	1	3	42994	43117	-	cis		Valerianella_locusta: RNA-seq edited; sites not used
+RNA_Valerianella_locusta	ycf3	ycf3_1	2	3	42049	42278	-	cis		Valerianella_locusta: RNA-seq edited; sites not used
+RNA_Valerianella_locusta	ycf3	ycf3_1	3	3	41126	41278	-			Valerianella_locusta: RNA-seq edited; sites not used
+RNA_Veronica_verna	atpF	atpF_1	1	2	12539	12683	-	cis		Veronica_verna: RNA-seq edited
+RNA_Veronica_verna	atpF	atpF_1	2	2	11435	11844	-			Veronica_verna: RNA-seq edited
+RNA_Veronica_verna	clpP	clpP_1	1	3	69853	69923	-	cis		Veronica_verna: RNA-seq edited
+RNA_Veronica_verna	clpP	clpP_1	2	3	68837	69127	-	cis		Veronica_verna: RNA-seq edited
+RNA_Veronica_verna	clpP	clpP_1	3	3	67982	68210	-			Veronica_verna: RNA-seq edited
+RNA_Veronica_verna	ndhA	ndhA_1	1	2	118123	118675	-	cis		Veronica_verna: RNA-seq edited
+RNA_Veronica_verna	ndhA	ndhA_1	2	2	116506	117044	-			Veronica_verna: RNA-seq edited
+RNA_Veronica_verna	ndhB	ndhB_1	1	2	93508	94275	-	cis		Veronica_verna: RNA-seq edited
+RNA_Veronica_verna	ndhB	ndhB_1	2	2	92073	92828	-			Veronica_verna: RNA-seq edited
+RNA_Veronica_verna	rpl2	rpl2_1	1	2	82923	83313	-	cis		Veronica_verna: RNA-seq edited
+RNA_Veronica_verna	rpl2	rpl2_1	2	2	81821	82254	-			Veronica_verna: RNA-seq edited
+RNA_Veronica_verna	rpoC1	rpoC1_1	1	2	22825	23256	-	cis		Veronica_verna: RNA-seq edited
+RNA_Veronica_verna	rpoC1	rpoC1_1	2	2	20450	22060	-			Veronica_verna: RNA-seq edited
+RNA_Veronica_verna	rps12	rps12_1	1	3	67709	67822	-	cis		Veronica_verna: RNA-seq edited
+RNA_Veronica_verna	rps12	rps12_1	2	3	95636	95867	-	trans		Veronica_verna: RNA-seq edited
+RNA_Veronica_verna	rps12	rps12_1	3	3	136831	136856	+			Veronica_verna: RNA-seq edited
+RNA_Veronica_verna	rps16	rps16_1	1	2	6236	6275	-	cis		Veronica_verna: RNA-seq edited
+RNA_Veronica_verna	rps16	rps16_1	2	2	5151	5377	-			Veronica_verna: RNA-seq edited
+RNA_Veronica_verna	ycf3	ycf3_1	1	3	43690	43813	-	cis		Veronica_verna: RNA-seq edited
+RNA_Veronica_verna	ycf3	ycf3_1	2	3	42735	42964	-	cis		Veronica_verna: RNA-seq edited
+RNA_Veronica_verna	ycf3	ycf3_1	3	3	41872	42024	-			Veronica_verna: RNA-seq edited
+RNA_Vicia_sativa	atpF	atpF_1	1	2	46787	46931	+	cis		Vicia_sativa: RNA-seq edited
+RNA_Vicia_sativa	atpF	atpF_1	2	2	47626	48035	+			Vicia_sativa: RNA-seq edited
+RNA_Vicia_sativa	clpP	clpP_1	1	3	29724	29793	-	cis		Vicia_sativa: RNA-seq edited
+RNA_Vicia_sativa	clpP	clpP_1	2	3	29431	29723	-	cis		Vicia_sativa: RNA-seq edited
+RNA_Vicia_sativa	clpP	clpP_1	3	3	28601	28849	-			Vicia_sativa: RNA-seq edited
+RNA_Vicia_sativa	ndhA	ndhA_1	1	2	102437	102989	+	cis		Vicia_sativa: RNA-seq edited
+RNA_Vicia_sativa	ndhA	ndhA_1	2	2	104190	104728	+			Vicia_sativa: RNA-seq edited
+RNA_Vicia_sativa	ndhB	ndhB_1	1	2	82385	83152	-	cis		Vicia_sativa: RNA-seq edited
+RNA_Vicia_sativa	ndhB	ndhB_1	2	2	80928	81683	-			Vicia_sativa: RNA-seq edited
+RNA_Vicia_sativa	rpl2	rpl2_1	1	2	72678	73068	-	cis		Vicia_sativa: RNA-seq edited
+RNA_Vicia_sativa	rpl2	rpl2_1	2	2	71528	71961	-			Vicia_sativa: RNA-seq edited
+RNA_Vicia_sativa	rpoC1	rpoC1_1	1	2	36240	36671	+	cis		Vicia_sativa: RNA-seq edited
+RNA_Vicia_sativa	rpoC1	rpoC1_1	2	2	37461	39104	+			Vicia_sativa: RNA-seq edited
+RNA_Vicia_sativa	rps12	rps12_1	1	3	28088	28201	-	cis		Vicia_sativa: RNA-seq edited
+RNA_Vicia_sativa	rps12	rps12_1	2	3	83804	84037	-	trans		Vicia_sativa: RNA-seq edited
+RNA_Vicia_sativa	rps12	rps12_1	3	3	18056	18121	+			Vicia_sativa: RNA-seq edited
+RNA_Vicia_sativa	ycf3	ycf3_1	1	3	23937	24060	-	cis		Vicia_sativa: RNA-seq edited
+RNA_Vicia_sativa	ycf3	ycf3_1	2	3	22969	23198	-	cis		Vicia_sativa: RNA-seq edited
+RNA_Vicia_sativa	ycf3	ycf3_1	3	3	22052	22198	-			Vicia_sativa: RNA-seq edited
+RNA_Vinca_minor	atpF	atpF_1	1	2	12827	12971	-	cis		Vinca_minor: RNA-seq edited; sites not used
+RNA_Vinca_minor	atpF	atpF_1	2	2	11722	12131	-			Vinca_minor: RNA-seq edited; sites not used
+RNA_Vinca_minor	clpP	clpP_1	1	3	73737	73807	-	cis		Vinca_minor: RNA-seq edited; sites not used
+RNA_Vinca_minor	clpP	clpP_1	2	3	72677	72967	-	cis		Vinca_minor: RNA-seq edited; sites not used
+RNA_Vinca_minor	clpP	clpP_1	3	3	71773	72001	-			Vinca_minor: RNA-seq edited; sites not used
+RNA_Vinca_minor	ndhA	ndhA_1	1	2	121811	122363	-	cis		Vinca_minor: RNA-seq edited; sites not used
+RNA_Vinca_minor	ndhA	ndhA_1	2	2	120188	120726	-			Vinca_minor: RNA-seq edited; sites not used
+RNA_Vinca_minor	ndhB	ndhB_1	1	2	141850	142626	+	cis		Vinca_minor: RNA-seq edited; sites not used
+RNA_Vinca_minor	ndhB	ndhB_1	2	2	143311	144066	+			Vinca_minor: RNA-seq edited; sites not used
+RNA_Vinca_minor	rps12	rps12_1	1	3	71522	71635	-	trans		Vinca_minor: RNA-seq edited; sites not used
+RNA_Vinca_minor	rps12	rps12_1	2	3	140260	140491	+	cis		Vinca_minor: RNA-seq edited; sites not used
+RNA_Vinca_minor	rps12	rps12_1	3	3	141028	141053	+			Vinca_minor: RNA-seq edited; sites not used
+RNA_Vinca_minor	rps16	rps16_1	1	2	6271	6310	-	cis		Vinca_minor: RNA-seq edited; sites not used
+RNA_Vinca_minor	rps16	rps16_1	2	2	5206	5432	-			Vinca_minor: RNA-seq edited; sites not used
+RNA_Vinca_minor	ycf3	ycf3_1	1	3	45338	45461	-	cis		Vinca_minor: RNA-seq edited; sites not used
+RNA_Vinca_minor	ycf3	ycf3_1	2	3	44369	44598	-	cis		Vinca_minor: RNA-seq edited; sites not used
+RNA_Vinca_minor	ycf3	ycf3_1	3	3	43454	43606	-			Vinca_minor: RNA-seq edited; sites not used
+RNA_Viola_tricolor	atpF	atpF_1	1	2	10856	11000	-	cis		Viola_tricolor: RNA-seq edited; sites not used
+RNA_Viola_tricolor	atpF	atpF_1	2	2	9743	10152	-			Viola_tricolor: RNA-seq edited; sites not used
+RNA_Viola_tricolor	ycf3	ycf3_1	1	3	44501	44624	-	cis		Viola_tricolor: RNA-seq edited; sites not used
+RNA_Viola_tricolor	ycf3	ycf3_1	2	3	43565	43794	-	cis		Viola_tricolor: RNA-seq edited; sites not used
+RNA_Viola_tricolor	ycf3	ycf3_1	3	3	42697	42849	-			Viola_tricolor: RNA-seq edited; sites not used
+RNA_Viscum_album	atpF	atpF_1	1	2	11872	12004	-	cis		Viscum_album: RNA-seq edited; sites not used
+RNA_Viscum_album	atpF	atpF_1	2	2	10651	11060	-			Viscum_album: RNA-seq edited; sites not used
+RNA_Viscum_album	clpP	clpP_1	1	3	62859	62929	-	cis		Viscum_album: RNA-seq edited; sites not used
+RNA_Viscum_album	clpP	clpP_1	2	3	61671	61961	-	cis		Viscum_album: RNA-seq edited; sites not used
+RNA_Viscum_album	clpP	clpP_1	3	3	60769	60997	-			Viscum_album: RNA-seq edited; sites not used
+RNA_Viscum_album	rpl2	rpl2_1	1	2	76518	76908	-	cis		Viscum_album: RNA-seq edited; sites not used
+RNA_Viscum_album	rpl2	rpl2_1	2	2	75423	75856	-			Viscum_album: RNA-seq edited; sites not used
+RNA_Viscum_album	rpoC1	rpoC1_1	1	2	21741	22172	-	cis		Viscum_album: RNA-seq edited; sites not used
+RNA_Viscum_album	rpoC1	rpoC1_1	2	2	19357	20964	-			Viscum_album: RNA-seq edited; sites not used
+RNA_Viscum_album	rps12	rps12_1	1	3	60510	60623	-	cis		Viscum_album: RNA-seq edited; sites not used
+RNA_Viscum_album	rps12	rps12_1	2	3	86844	87075	-	trans		Viscum_album: RNA-seq edited; sites not used
+RNA_Viscum_album	rps12	rps12_1	3	3	117637	117662	+			Viscum_album: RNA-seq edited; sites not used
+RNA_Viscum_album	rps16	rps16_1	1	2	6361	6400	-	cis		Viscum_album: RNA-seq edited; sites not used
+RNA_Viscum_album	rps16	rps16_1	2	2	5100	5347	-			Viscum_album: RNA-seq edited; sites not used
+RNA_Viscum_album	ycf3	ycf3_1	1	3	41499	41622	-	cis		Viscum_album: RNA-seq edited; sites not used
+RNA_Viscum_album	ycf3	ycf3_1	2	3	40467	40696	-	cis		Viscum_album: RNA-seq edited; sites not used
+RNA_Viscum_album	ycf3	ycf3_1	3	3	39486	39638	-			Viscum_album: RNA-seq edited; sites not used
+RNA_Xerophyllum_tenax	atpF	atpF_1	1	2	13267	13411	-	cis		Xerophyllum_tenax: RNA-seq edited; sites not used
+RNA_Xerophyllum_tenax	atpF	atpF_1	2	2	12083	12492	-			Xerophyllum_tenax: RNA-seq edited; sites not used
+RNA_Xerophyllum_tenax	clpP	clpP_1	1	3	72885	72955	-	cis		Xerophyllum_tenax: RNA-seq edited; sites not used
+RNA_Xerophyllum_tenax	clpP	clpP_1	2	3	71845	72135	-	cis		Xerophyllum_tenax: RNA-seq edited; sites not used
+RNA_Xerophyllum_tenax	clpP	clpP_1	3	3	70933	71185	-			Xerophyllum_tenax: RNA-seq edited; sites not used
+RNA_Xerophyllum_tenax	ndhA	ndhA_1	1	2	122868	123420	-	cis		Xerophyllum_tenax: RNA-seq edited; sites not used
+RNA_Xerophyllum_tenax	ndhA	ndhA_1	2	2	121261	121790	-			Xerophyllum_tenax: RNA-seq edited; sites not used
+RNA_Xerophyllum_tenax	ndhB	ndhB_1	1	2	97592	98368	-	cis		Xerophyllum_tenax: RNA-seq edited; sites not used
+RNA_Xerophyllum_tenax	ndhB	ndhB_1	2	2	96141	96896	-			Xerophyllum_tenax: RNA-seq edited; sites not used
+RNA_Xerophyllum_tenax	rpl2	rpl2_1	1	2	86627	87017	-	cis		Xerophyllum_tenax: RNA-seq edited; sites not used
+RNA_Xerophyllum_tenax	rpl2	rpl2_1	2	2	85532	85962	-			Xerophyllum_tenax: RNA-seq edited; sites not used
+RNA_Xerophyllum_tenax	rpoC1	rpoC1_1	1	2	23502	23933	-	cis		Xerophyllum_tenax: RNA-seq edited; sites not used
+RNA_Xerophyllum_tenax	rpoC1	rpoC1_1	2	2	21154	22770	-			Xerophyllum_tenax: RNA-seq edited; sites not used
+RNA_Xerophyllum_tenax	rps12	rps12_1	1	3	70689	70802	-	cis		Xerophyllum_tenax: RNA-seq edited; sites not used
+RNA_Xerophyllum_tenax	rps12	rps12_1	2	3	99785	100016	-	trans		Xerophyllum_tenax: RNA-seq edited; sites not used
+RNA_Xerophyllum_tenax	rps12	rps12_1	3	3	142418	142443	+			Xerophyllum_tenax: RNA-seq edited; sites not used
+RNA_Xerophyllum_tenax	rps16	rps16_1	1	2	6190	6229	-	cis		Xerophyllum_tenax: RNA-seq edited; sites not used
+RNA_Xerophyllum_tenax	rps16	rps16_1	2	2	5227	5438	-			Xerophyllum_tenax: RNA-seq edited; sites not used
+RNA_Xerophyllum_tenax	ycf3	ycf3_1	1	3	44925	45048	-	cis		Xerophyllum_tenax: RNA-seq edited; sites not used
+RNA_Xerophyllum_tenax	ycf3	ycf3_1	2	3	43957	44186	-	cis		Xerophyllum_tenax: RNA-seq edited; sites not used
+RNA_Xerophyllum_tenax	ycf3	ycf3_1	3	3	43052	43210	-			Xerophyllum_tenax: RNA-seq edited; sites not used
