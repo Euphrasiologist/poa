@@ -45,32 +45,38 @@ All bundled so nothing to download, no oatk install needed:
   `nhmmer` by `denovo_annotation/rrna_nhmmer.py`, a port of the
   `barrnap --kingdom plant` set-up this pipeline was validated with.
   barrnap itself isn't needed.
-- `src/poa/pipeline/trans_splicing/reference/` - the 11 angiosperm RefSeq
+- `src/poa/pipeline/trans_splicing/reference/` - angiosperm RefSeq
   mitogenomes (`genbank/`), their verified exon sets (`raw/`, with
-  `junctions.tsv`) and the exon/whole-gene templates `transsplice` runs
-  with (`profiles/`). `src/00a_fetch_references.py` regenerates `genbank/`
-  and the cis-gene `raw/` files from NCBI; `src/00_build_exon_profiles.py`
-  rebuilds templates from `raw/`. The trans-spliced genes' `whole_gene.pssm`
-  were refined (`02_bootstrap_refine.py`) on the 1250-species dataset;
-  rebuilding them from `raw/` alone resets that.
-- `src/poa/pipeline/editing/reference/profiles/` - `orfedit` profiles built
-  on the same dataset. `editing/src/01_scan_editing.py` uses them whenever
-  the data root has none of its own.
+  `junctions.tsv`), spliced genes of DToL angiosperms with the editing
+  their RNA-seq shows applied (`raw_rna/`), and the exon/whole-gene
+  templates `transsplice` runs with (`profiles/`), built from the loci
+  whose proteins are the edited ones. `src/00a_fetch_references.py`
+  regenerates `genbank/` and the cis-gene `raw/` files from NCBI;
+  `src/00_build_exon_profiles.py` rebuilds the templates. `plastid/` is
+  the same for the plastid genes.
 - `src/poa/pipeline/editing/reference/profiles_refseq/` - `orfedit`
-  profiles for the other single-exon mito genes, built from the 11
-  angiosperm RefSeq mitogenomes, and for the two pieces of split ccmFn
-  (ccmFn1/ccmFn2), from 10 Brassicaceae and Allium cepa; used for any
-  gene the dataset profiles don't cover.
-- Moss references, under `lineages/moss/` in both of the above: exon
-  templates and editing profiles built from 20 moss RefSeq mitogenomes
-  (cached in the same `genbank/`). See "Reference lineage" below.
+  profiles for the single-exon mito genes, built from the RefSeq
+  angiosperm mitogenomes annotated with edited proteins and from
+  RNA-edited genes of DToL angiosperms
+  (`reference/lineages/angiosperm/`, which also holds the plastid
+  profiles built from such genes), and for the two pieces of split ccmFn
+  (ccmFn1/ccmFn2), from 10 Brassicaceae and Allium cepa. These come
+  first.
+- `src/poa/pipeline/editing/reference/profiles/` - `orfedit` profiles built
+  from the DToL dataset's own gene calls, for a gene the others lack.
+- Moss and liverwort references, under `lineages/moss/` and
+  `lineages/liverwort/` in both of the above: exon templates and editing
+  profiles built from 20 moss and 27 liverwort RefSeq mitogenomes (cached
+  in the same `genbank/`), and plastid ones from 26 moss and 30 liverwort
+  RefSeq plastomes (`plastid/`, `pltd/`, `refseq_proteins.pltd.fasta`).
+  See "Reference lineage" below.
 - Fern, horsetail and clubmoss references, under `lineages/fern/`,
   `lineages/horsetail/` and `lineages/lycophyte/`: genes with the editing
   RNA-seq shows applied (`raw_rna/`, `rna_proteins.fasta`, each with a
   README) - of Darwin Tree of Life assemblies for fern (mostly) and
   horsetail, of a RefSeq genome and Darwin Tree of Life assemblies for
-  clubmoss. Fern has plastid references as well (`lineages/fern/plastid/`,
-  `lineages/fern/pltd/`). Used only with `--lineage`.
+  clubmoss. Each has plastid references as well (`lineages/<x>/plastid/`,
+  `lineages/<x>/pltd/`). Picked by `--lineage auto` or forced.
 
 Cluster-specific paths (tRNAscan-SE config, mafft's `MAFFT_BINARIES`) are
 env-var overridable (`TRNASCAN_CONF`, `MAFFT_BINARIES`) and ignored when
@@ -189,8 +195,9 @@ exon-placement changes below and not repeated since). The misses are mostly shor
 and indels near a gene end, with too little gene on one side to tell.
 Across the DToL assemblies there's a mean of 2 single-exon calls per
 assembly, nearly all in partial copies or recurring in other assemblies;
-79 are one-off calls in a gene's best copy. With older
-orfedit/transsplice there are no frameshift calls (a warning says so).
+79 are one-off calls in a gene's best copy. poa needs orfedit 0.2.0 and
+transsplice 0.3.0: older ones cannot read the profiles that record
+editing sites, and poa stops with a message saying so.
 
 Read frameshifts in spliced genes with care. In the DToL mitochondria
 9% of reconstructed genes carry one (ccmFc 29%, rpl2 26%, nad5 16%, nad7
@@ -244,30 +251,171 @@ depend on the assembler's origin.
 
 ### Reference lineage
 
-Moss mitochondria have their own intron set (nad1 has 3 exons, not 5;
-nad2 2; nad4 2) and barely edit, so on the angiosperm references only 12%
-of moss spliced genes came out complete and 98% of moss mito calls were
+poa's first references were angiosperm ones, and other land plants differ
+in both things they encode: where the introns are, and how much the
+transcripts are edited. On the angiosperm references only 12% of moss
+spliced genes came out complete, and 98% of moss mito calls were
 "corrected" towards the angiosperm protein. poa therefore picks a
-reference lineage per species (`--lineage auto`, the default): the editing
-stage aligns five single-exon mito genes (atp4 ccmB ccmC mttB rps14)
-against both the angiosperm and the moss profiles, and a species goes to
-moss only when at least 4 of them are scored and moss wins by 50 or more
-per gene. The call is written to `tables/lineage.tsv`
+reference lineage per species (`--lineage auto`, the default; any lineage
+can be forced):
+
+| lineage | for | mito references | plastid references |
+|---|---|---|---|
+| angiosperm | seed plants, and anything not recognised | 14 RefSeq mitogenomes annotated with edited proteins, and RNA-edited genes of DToL angiosperms | RNA-edited genes of DToL angiosperms |
+| moss | mosses | 20 RefSeq mitogenomes | 26 RefSeq plastomes |
+| liverwort | liverworts | 27 RefSeq mitogenomes | 30 RefSeq plastomes |
+| fern | ferns | RNA-edited genes of 11 DToL ferns, on top of angiosperm | the same 11 ferns |
+| horsetail | *Equisetum* | RNA-edited genes of 8 DToL horsetails, on top of angiosperm | the same horsetails |
+| lycophyte | clubmosses | RNA-edited genes of two RefSeq and three DToL clubmosses, on top of angiosperm | two DToL clubmosses |
+
+The editing stage aligns the species' mito genes to the angiosperm
+profiles and to each other lineage's (plain C-to-U editing), and the
+species takes the lineage whose profiles beat the angiosperm ones by the
+most per gene, provided that reaches the lineage's margin over at least
+4 genes (215 for moss, 275 for liverwort, 60 for fern, 250 for horsetail
+and lycophyte; `common/lineage.py` has the calibration). Anything less
+clear stays angiosperm. Moss and liverwort replace the angiosperm
+references outright; fern, horsetail and lycophyte keep them and add
+exon templates and editing profiles of their own, and are looked for
+among the species still on the angiosperm references. The call and the
+margins are written to `tables/lineage.tsv`
 (`analysis/editing/results/lineage.tsv` stage by stage), and the editing
-and trans_splicing stages use it. `--lineage angiosperm|moss` forces a
-lineage.
+and trans_splicing stages use it. The lineage is read from the
+mitochondrial genes: a plastid run on its own uses the angiosperm
+references unless `--lineage` names one.
 
-On the 956-species dataset, all 174 mosses were called moss and no other
-species was. Moss spliced genes went from 12% to 99% complete, and the
-share of moss calls changed by editing fell from 98% to 44%. Output for
-every other species is unchanged. Liverworts and hornworts still use the
-angiosperm references, and so do ferns, horsetails and clubmosses unless
-`--lineage fern`, `horsetail` or `lycophyte` is given: those three are
-never picked automatically. See `trans_splicing/README.md` and
-`editing/README.md`.
+On fresh runs of 153 Darwin Tree of Life assemblies every call was
+right: 64 of 64 liverworts, 30 of 30 ferns, 28 of 28 mosses, 9 of 9
+horsetails and 4 of 4 clubmosses, with 12 angiosperms, 3 gymnosperms, a
+hornwort, *Isoetes* and *Selaginella* left on the angiosperm references.
+The ferns furthest from the fern references, *Ophioglossum* and
+*Cryptogramma*, have margins of 87 and 140. On the dataset's stored gene
+calls the highest of 716 angiosperms reaches 50 on the liverwort
+profiles, 28 on the moss ones and 12 on the fern ones. Output for a species is the same whether its lineage
+is detected or forced (15 species compared).
 
-`--lineage fern` is for ferns, quillworts (*Isoetes*) and hornworts, and
-is never picked automatically. These lineages edit U to C as well as C to
+Angiosperm. An editing profile corrects a gene towards its reference
+proteins, so those have to be the edited ones. The first angiosperm
+references were RefSeq proteins, most of them the genome's own
+translation, and poa found one annotated edit in twenty. They are now
+the proteins of the 14 RefSeq mitogenomes that are annotated edited, and
+genes of DToL angiosperms with the editing their own public RNA-seq
+shows applied; the plastid ones are RNA-derived throughout. Those
+proteins also say where editing happens, and each profile records the
+columns edited in at least two genera. A C-to-U edit then costs 1.5 at
+such a column and 10 anywhere else, where a difference from the profile
+is far more often a residue of the species' own; without that, most
+edits called in fast-evolving plastid genes (rpoC2, matK) were wrong.
+
+The two costs suit a plant that edits where angiosperms do. Gymnosperms,
+hornworts, quillworts and spikemosses use the same references and edit
+heavily elsewhere, so each species is first corrected at one cost (2.5)
+everywhere, and takes the two only if at least 65% of the C-to-U edits
+then called in its mitochondrial genes are at known columns (10% of the
+plastid ones, when there is no mitochondrion to judge by). Of 89
+angiosperms 83 do, with a median of 95% there; five sedges and *Plantago
+coronopus*, whose mitochondrial genes have drifted furthest, have 57 to
+64% and keep the one cost. Ginkgo has 42%, a yew 38%, a hornwort 32%, a
+spikemoss 26% and a quillwort 25%, and these too are annotated at the one
+cost. `tables/lineage.tsv` gives the counts and the outcome
+(`edit_sites`).
+
+With each species' genus left out of the references, against the RNA-seq
+of 107 DToL angiosperms and the annotation of 19 RefSeq mitogenomes:
+
+| | RefSeq edited proteins alone | with the RNA-derived genes | and editing sites |
+|---|---|---|---|
+| mito single-exon genes: C-to-U sites in the RNA found | 50% | 71% | 77% |
+| ... edit calls that are in the RNA | 90% | 93% | 97% |
+| mito spliced genes: sites found | 69% | 78% | 80% |
+| ... edit calls that are in the RNA | 95% | 96% | 98% |
+| plastid single-exon genes aligned end to end (of 4,412) | 3,316 | 4,146 | 4,145 |
+| ... sites found, 32 species whose reads are the assembly's own | 14% | 72% | 76% |
+| ... edit calls that are in the RNA | 8% (251 right) | 40% (1,444) | 94% (1,494) |
+| plastid spliced genes: edit calls that are in the RNA | 12% (63 right) | 59% (721) | 94% (822) |
+| RefSeq coding sequences with every exon placed (of 655) | 455 | 479 | 481 |
+| RefSeq annotated edits found | 64% | 84% | 89% |
+| ... edit calls that are annotated | 85% | 85% | 87% |
+
+Before any of this, with references of unedited proteins, poa placed 424
+of the 655 RefSeq coding sequences and found 6% of their annotated edits.
+A silent edit changes no residue and cannot be called, and the RNA-seq is
+mostly poly-A selected, so "found" is out of a list that holds
+unprocessed transcripts' partial edits. It is also often another
+plant's than the assembly, and where the two differ by a C/T the reads
+show an edit that is not one: hence the plastid row for the 32 species
+without such differences (over all 107, the same calls are 44% of the
+"sites"). Checked site by site against the reads, 93% of the mito calls
+with at least 10 reads are edited there and another 3% in under a fifth
+of the reads; of the plastid ones, 91% and 3%.
+
+Still open: rbcL, whose HMM hit covers half the gene, is called over 341
+of its 476 codons and keeps its old profile, as does psbF; plastid
+rps19, rpl22 and rpl32 are a few codons short of their annotated length,
+as before; and a plastid-derived rpl2 in a mitogenome is now reported as
+an incomplete mito rpl2 where it used to pass for a complete one.
+
+Moss. Moss mitochondria have their own intron set (nad1 has 3 exons, not
+5; nad2 2; nad4 2) and edit little. On the 956-species dataset, all 174
+mosses were called moss and no other species was, and moss spliced genes
+went from 12% to 99% complete. Moss genes are aligned at an edit cost of
+6, not 2.5 (`lineage.EDIT_PENALTY`): against RNA-seq of 16 DToL mosses,
+poa at 2.5 called 579 edits in 626 plastid genes and 127 of them were in
+the RNA; at 6, on the moss plastid references, it calls 31 and 16 are.
+That gives up the real edits of the few mosses that do edit their
+plastids (*Brachythecium rutabulum* and *Fissidens dubius*, about 80
+sites each, of which 10 to 15 are still found), for proteins that are
+otherwise the genome's own.
+
+Liverwort. Liverwort mitochondrial genes are split differently again
+(cob 4 exons, cox1 up to 10, cox2 and cox3 3, atp1 3 or 1; none
+trans-spliced) and the complex thalloids do not edit at all. With each
+genome's genus left out of the references, on 27 RefSeq liverwort
+mitogenomes against their own annotation:
+
+| | angiosperm references | liverwort references |
+|---|---|---|
+| annotated exons placed within 3 bp | 176 of 1,696 | 1,542 of 1,696 |
+| intron-containing genes with every exon placed | 0 of 337 | 305 of 337 |
+| single-exon genes placed | 172 of 697 | 579 of 697 |
+| annotated genes with a frameshift call | 144 | 17 |
+| annotated genes not called | 126 | 0 |
+| spliced genes complete, 64 DToL liverworts | 372 of 635 | 1,072 of 1,082 |
+| frameshift calls, same | 590 | 20 |
+| mito edits called in 9 complex thalloid liverworts | 942 | 12 |
+
+Most single-exon genes still off are ccmB, ccmFn and nad6, whose
+annotated start differs between the RefSeq records themselves. nad7, a
+pseudogene in nearly all liverworts, is not reconstructed, and rpl6 and
+rps8, which liverworts keep, have no gene model and are not called. The
+references are the RefSeq proteins, which are unedited, so in the leafy
+and simple thalloid liverworts, which do edit, poa finds part of the
+editing only: against RNA-seq of 14 DToL species, 226 edits called in
+132 mito genes and 142 of them right, of 581 in the RNA (on the
+angiosperm references, 594 called in the 122 genes placed and 124
+right, of 406).
+
+Plastids. Each lineage but angiosperm has plastid exon templates and
+editing profiles of its own, used for the species that take the lineage.
+Against the angiosperm-built profiles poa "edited" these plastids
+towards the angiosperm protein - 713 edits called in 431 plastid genes
+of 8 horsetails, whose RNA shows a handful.
+
+| plastid single-exon genes, against RNA-seq | aligned end to end | edits called | of them in the RNA |
+|---|---|---|---|
+| horsetail, 8 species (each left out in turn) | 263 of 431 -> 439 of 445 | 713 -> 59 | 6 -> 9 |
+| clubmoss, 2 species (each left out in turn) | 57 of 89 -> 76 of 79 | 401 -> 282 | 214 -> 186 |
+| moss, 16 species | 405 of 626 -> 597 of 624 | 579 -> 31 | 127 -> 16 |
+| leafy liverwort, 15 species | 230 of 358 -> 333 of 358 | 541 -> 286 | 198 -> 153 |
+| complex thalloid liverwort, 4 species | 119 of 178 -> 167 of 178 | 112 -> 36 | 1 -> 1 |
+
+The moss and liverwort rows are not held out (their references are
+RefSeq plastomes of other individuals, often of the same genus). See
+`trans_splicing/README.md`, `editing/README.md` and the READMEs under
+`reference/lineages/`.
+
+`--lineage fern` is for ferns, and, forced, for quillworts (*Isoetes*)
+and hornworts, which are not detected. These lineages edit U to C as well as C to
 U, and their organelle genes have genomic in-frame stop codons that
 editing turns into Gln or Arg - about nine per mitochondrial gene in
 Polypodiales. Without the lineage set, treat a fern's proteins and

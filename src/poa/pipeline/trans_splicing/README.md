@@ -90,6 +90,21 @@ structural. Cis vs trans is a per-species, per-junction *output label*
    the profile of a short exon), and drop the end columns on an intron
    side that most references lack. `--slots-only` rebuilds the slots and
    floors and leaves `whole_gene.pssm` alone.
+   The angiosperm templates (0.3.0) are built from loci whose proteins
+   are the edited ones only: the 14 RefSeq mitogenomes annotated edited,
+   and genes of DToL angiosperms with the editing their own RNA-seq shows
+   applied (`reference/raw_rna/`; the plastid templates from
+   `reference/plastid/raw_rna/` alone). Slot profiles are cut from the
+   protein, as for fern. Where loci differ in which introns they have
+   (cox2 has two intron positions; Nymphaea has both, beet the first,
+   Arabidopsis the second, legumes neither), the slots are those of the
+   full set and every locus is cut to it, at the homologous codon where
+   it lacks the intron (`union_exons`). Both the whole-gene profile and
+   the slots record the columns edited in the reference proteins of at
+   least two genera (a 21st column, `edit`), which transsplice charges
+   apart from the rest for the species editing marked as editing where
+   the references do (`--known-edit-penalty`, `--novel-edit-penalty`;
+   see `editing/README.md`, Editing sites).
 2. **`01_reconstruct.py`** builds one manifest row per raw `.ctg.bed`
    fragment (not best-hit-only, unlike `editing`) and calls
    `transsplice scan-batch`, which per (species, gene):

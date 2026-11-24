@@ -180,6 +180,80 @@ and a full-length profile can only partly fit either piece. atp6 stays
 raw in the check because Arabidopsis has two copies and `scan` corrects
 the best-scoring one, not the one RefSeq is compared against.
 
+Since 0.3.0 these are the first choice for a mito gene, not the last, and
+are built from edited proteins only: the 14 RefSeq mitogenomes annotated
+with edited proteins (`ANGIOSPERM_EDITED_MITOGENOMES`; a gene a record
+gives unedited, by `refseq_mito.unedited`, is left out) and
+`reference/lineages/angiosperm/rna_proteins.fasta`, genes of DToL
+angiosperms with the editing their own RNA-seq shows applied. A profile
+built from the genome's own translation holds the unedited residue at a
+conserved editing site, and there is then nothing to correct towards:
+with the 11-genome profiles poa found 6% of the edits annotated in RefSeq
+mitogenomes. The plastid profiles of
+`reference/lineages/angiosperm/pltd/`, from RNA-derived proteins alone,
+are likewise the first choice for a plastid gene.
+
+### Profile scores
+
+A column's score for a residue is log2 of its frequency in the column
+over its frequency in the proteins, with `pssm.PSEUDOCOUNT_MASS` (10)
+pseudo-observations shared out in proportion to the latter. Until 0.3.0
+every residue had the same half pseudo-observation. A residue the
+proteins hardly use then had a background far below its pseudocount and
+scored +5 to +9 bits in every column, as a match, and any C-to-U that
+made it was worth its cost: Arg to Cys at all three arginine codons of
+plastid rps19 in 44 of 46 angiosperms, none of them in their RNA. Now a
+residue a column does not have scores the same, below zero, whatever its
+background. The fern, horsetail and lycophyte profiles already shared
+their pseudocounts this way (`LINEAGE_PSEUDOCOUNT`) and are unchanged.
+
+### Editing sites
+
+A reference protein can say which of its residues an edit made, in lower
+case: an annotated edited protein against its gene's own translation
+(`pssm.mark_edited`), or a protein derived from RNA-seq
+(`dev/rna_editome/rna_refs.py`). The profiles of a lineage whose proteins
+all say (`lineage.SITE_LINEAGES`: angiosperm) get a 21st column, `edit`:
+the share of the genera present at that column that are edited there, 0
+unless at least two are (`pssm.EDIT_SITE_MIN_GROUPS`; one genus is not
+enough because public RNA-seq is often another plant's than the
+assembly, and a C/T difference between the two looks like an edit).
+orfedit then charges `--known-edit-penalty` (1.5) for a C-to-U at a
+column above 0 and `--novel-edit-penalty` (10) at any other, in place of
+`--edit-penalty` (2.5), which a profile without the column still takes
+everywhere.
+
+`scan` first corrects every species at 2.5 everywhere - the scores the
+lineage is chosen from - and counts, in the genes whose profile has
+sites, how many of the C-to-U edits called are at known columns
+(`known_site_calls`). A species on the default references with at least
+65% of its mito calls there (10% of its plastid ones, with fewer than 20
+mito calls) is corrected again at the two costs
+(`lineage.follows_sites`); `lineage.tsv` records the counts and
+`edit_sites`. Of 89 angiosperms 83 are (median 95% of mito calls at
+known columns; five sedges and *Plantago coronopus*, at 57 to 64%, are
+not). The rest - gymnosperms, hornworts, quillworts and spikemosses,
+which edit heavily where no angiosperm does (25 to 42% at known columns)
+- keep the one cost: at the two, Ginkgo's plastid calls went from 299 to
+23.
+
+Held out by genus on 107 DToL angiosperms with RNA-seq, calls at 2.5
+everywhere against calls at 1.5 and 10: mito single-exon C-to-U sites
+found 71% -> 77%, calls in the RNA 93% -> 97%; plastid single-exon calls
+3,630 (1,444 in the RNA) -> 1,586 (1,494). Checked site by site against
+the reads (`dev/rna_editome/call_frac.py`), of the plastid calls with at
+least 10 reads 39% were edited before and 91% are now, 94% counting
+sites edited in under a fifth of the reads.
+
+The RNA-derived proteins come from calls made on the profiles before
+them, so they are only as long as those calls. A protein is taken when
+its call aligned to 95% of its profile, or when it runs from a Met to a
+stop codon (the old profile was the longer one: psbJ, psaI, matK). That
+leaves out rbcL, whose HMM hit covers half the gene so that the call
+stops at codon 341 of 476, and psbF and psaJ, whose calls begin a few
+codons before the Met; rbcL and psbF keep their old profiles. rps19,
+rpl22 and rpl32 are as short as their old profiles were.
+
 ### Split ccmFn
 
 Brassicaceae, Allium and Galeopsis carry mitochondrial ccmFn as two
@@ -264,8 +338,14 @@ their lineage. Treat their corrections as lower-confidence.
 
 ### Fern, horsetail and clubmoss profiles
 
-`--lineage fern`, `horsetail` and `lycophyte` are never picked
-automatically. Each has profiles under `reference/lineages/<lineage>/mito/`
+`fern`, `horsetail` and `lycophyte` sit on the angiosperm references.
+With `--lineage auto` they are looked for among the species the moss call
+leaves on those: each species' mito genes are aligned to the three
+lineages' own profiles (plain C-to-U editing), and it takes the lineage
+that beats the angiosperm profiles by the most per gene, if by at least
+`lineage.MIN_OWN_MARGIN` (150 for fern, 250 for the other two) over 4 or
+more genes; `lineage.tsv` records the three margins. Such a species is
+then corrected as with the lineage forced. Each has profiles under `reference/lineages/<lineage>/mito/`
 for the single-exon genes its references cover, and the species' other
 genes stay on the angiosperm profiles; a gene the lineage splices
 (`reference_genes.LINEAGE_EXTRA_SPLICED`) is left to trans_splicing. The
