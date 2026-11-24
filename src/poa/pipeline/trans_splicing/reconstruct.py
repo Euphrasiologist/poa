@@ -55,7 +55,7 @@ from poa.pipeline.common import lineage as lin
 from poa.pipeline.common import species_discovery as sd
 from poa.pipeline.common.errors import StageError
 from poa.pipeline.common.tools import cargo_tool
-from poa.pipeline.editing.scan import add_recurrence, supports_option
+from poa.pipeline.editing.scan import DEFAULT_INTERNAL_STOP_PENALTY, add_recurrence, supports_option
 from poa.pipeline.trans_splicing.reference_genes import (
     GENES,
     LINEAGE_MITOGENOMES,
@@ -280,8 +280,12 @@ def reconstruct(
     can_slide = supports_option(transsplice, "--junction-slide")
     # the bundled angiosperm templates carry their editing sites in a 21st
     # column, which a transsplice without --novel-edit-penalty cannot read
-    if not supports_option(transsplice, "--novel-edit-penalty"):
-        raise StageError(f"{transsplice} is too old for the bundled templates (no --novel-edit-penalty): transsplice 0.3.0 is needed")
+    # and a stop inside a gene is aligned at a cost and shown, as in editing
+    # (scan.DEFAULT_INTERNAL_STOP_PENALTY), not stepped over. (No end
+    # margin: see scan.DEFAULT_END_MARGIN.)
+    for option in ("--novel-edit-penalty", "--internal-stop-penalty"):
+        if not supports_option(transsplice, option):
+            raise StageError(f"{transsplice} is too old for this poa (no {option}): transsplice 0.3.0 is needed")
     # And a lineage's own cost of a C-to-U edit (lin.edit_penalty), for its
     # genes on its own templates, mito or plastid (moss).
     # And the editing-site costs, for the species editing found to edit
@@ -367,6 +371,7 @@ def reconstruct(
             cmd += ["--edit-penalty", str(edit)]
         if sites:
             cmd += ["--known-edit-penalty", str(known_edit_penalty), "--novel-edit-penalty", str(novel_edit_penalty)]
+        cmd += ["--internal-stop-penalty", str(DEFAULT_INTERNAL_STOP_PENALTY)]
         proc = subprocess.run(cmd)
         if proc.returncode != 0:
             raise StageError(f"transsplice scan-batch failed (exit {proc.returncode})")

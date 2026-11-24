@@ -98,6 +98,48 @@ DEFAULT_FLANK = 300
 DEFAULT_EDIT_PENALTY = 2.5
 # orfedit's cost of a frame change inside a gene (see FRAMESHIFTS below)
 DEFAULT_FRAMESHIFT_PENALTY = 20.0
+# Where a gene ends. A reading frame stops at its first stop codon, and
+# orfedit no longer lets an alignment step over one to reach the profile
+# columns beyond (it did, wherever a gene ended a few residues before its
+# profile). STOP_SEARCH: with no stop right after the aligned protein, the
+# first one within this many codons, in frame, ends the gene (it runs on
+# past its profile, or ends short of it). INTERNAL_STOP_PENALTY: a stop the
+# protein goes on matching beyond - a pseudogene, a stop a lineage edits
+# away, an error - is aligned to a column at this cost and shows as `*` in
+# the protein (n_internal_stops); no more than a frame change costs, or the
+# alignment gets round the stop with two of those. END_MARGIN: the gene is
+# not read through an internal stop or a frame change with fewer than this
+# many profile columns before or after it - it starts after it, or ends
+# before it at its own stop - since one that buys only the profile's last
+# few columns cannot be told from a gene that ends differently there. Such
+# a frame change is still a row of frameshifts.tsv, with near_end true: an
+# indel there is as worth checking against the reads as any other, and
+# leaving them out cost 12 points of the planted indels found (95% -> 83%
+# of 1,500; build/recall/results_ends.txt). transsplice is given no margin:
+# for spliced genes it found fewer planted indels (mito 90% -> 83%,
+# plastid 77% -> 64%) and called more elsewhere.
+# On 19 RefSeq mitogenomes and 13 RefSeq plastomes (build/rnaedit/ends), the
+# single-exon genes ending within 3 bp of the annotated stop went from 397 to
+# 443 of 457 (mito) and from 558 to 621 of 626 (plastid), with one that was
+# right made wrong (an edit-made stop a codon beyond the profile's end), and
+# the frame changes called in those mito genes from 23 to 3. Margins of 15,
+# 20, 25 and 30 gave 436, 440, 443 and 443 mito stops; internal-stop costs of
+# 15 to 30 the same ends; a search of 10, 20, 30, 50, 100 codons 583, 596,
+# 611, 617, 618 plastid stops.
+DEFAULT_STOP_SEARCH = 50
+DEFAULT_INTERNAL_STOP_PENALTY = 20.0
+DEFAULT_END_MARGIN = 25
+# Where a gene starts: the alignment starts a gene wherever the profile's
+# first columns match, not always at a start codon. With START_SEARCH, a
+# gene whose first aligned codon is not ATG (or ACG, which an edit makes
+# AUG) starts at the nearest ATG within this many codons instead - upstream
+# in an open frame, or downstream at a column whose references can start
+# with Met - else the nearest ACG. On the same 32 RefSeq genomes, starts
+# within 3 bp of the annotation went from 384 to 401 of 457 (mito) and 528
+# to 574 of 626 (plastid) with 1 made wrong; at 5, 15, 20 and 30 codons
+# 393/559, 407/576, 409/577, 409/576, with 1, 6, 8 and 9 made wrong - the
+# extra ones genes annotated with another start codon (TTG, GTG, ATT, ATA).
+DEFAULT_START_SEARCH = 10
 # a hit other than a gene's best is corrected as a copy of its own when it
 # covers at least this much of the HMM (a short fragment - Arabidopsis's
 # third atp6 hit spans 21% - stays raw)
@@ -273,7 +315,7 @@ def supports_frameshifts(orfedit: str) -> bool:
     return m is not None and tuple(map(int, m.groups())) >= (0, 2, 0)
 
 
-FRAMESHIFT_COLUMNS = ["species", "organelle", "gene", "start", "end", "n_bases", "profile_column", "window_start", "window_end"]
+FRAMESHIFT_COLUMNS = ["species", "organelle", "gene", "start", "end", "n_bases", "profile_column", "window_start", "window_end", "near_end"]
 # frameshifts orfedit found across the DToL dataset (frameshift_reference.py)
 FRAMESHIFT_REFERENCE = PIPELINE_DIR / "editing" / "reference" / "frameshifts_dtol.tsv"
 RECURRENCE_WINDOW = 5  # profile columns
@@ -361,6 +403,14 @@ def run_orfedit(
         str(flank),
         "--edit-penalty",
         str(edit_penalty),
+        "--stop-search",
+        str(DEFAULT_STOP_SEARCH),
+        "--start-search",
+        str(DEFAULT_START_SEARCH),
+        "--internal-stop-penalty",
+        str(DEFAULT_INTERNAL_STOP_PENALTY),
+        "--end-margin",
+        str(DEFAULT_END_MARGIN),
     ]
     if math.isfinite(frameshift_penalty):
         cmd += ["--frameshifts-out", str(shifts_out), "--frameshift-penalty", str(frameshift_penalty)]
@@ -555,9 +605,11 @@ def scan(
     results_dir = analysis_dir / "editing" / "results"
     results_dir.mkdir(parents=True, exist_ok=True)
     # the bundled angiosperm profiles carry their editing sites in a 21st
-    # column, which an orfedit without --novel-edit-penalty cannot read
-    if not supports_option(orfedit, "--novel-edit-penalty"):
-        raise StageError(f"{orfedit} is too old for the bundled profiles (no --novel-edit-penalty): orfedit 0.2.0 is needed")
+    # column, which an orfedit without --novel-edit-penalty cannot read; and
+    # genes are ended by rules (--end-margin) only orfedit 0.2.0 has
+    for option in ("--novel-edit-penalty", "--end-margin", "--start-search"):
+        if not supports_option(orfedit, option):
+            raise StageError(f"{orfedit} is too old for this poa (no {option}): orfedit 0.2.0 is needed")
     opts = dict(
         threads=threads,
         flank=flank,

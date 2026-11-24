@@ -47,7 +47,13 @@ GFF3 mechanics used here (see `../README.md` for the full explanation):
   `n_frameshifts`. The CDS itself stays one row over the corrected span.
   `window=start-end` gives the stretch the frame change could equally well
   sit in when that's wider than the skipped bases (a homopolymer run, or a
-  stretch both frames read about as well).
+  stretch both frames read about as well). `near_end=true` marks one within
+  a few codons of the gene's start or end, which the CDS is not read
+  through: it ends in its own frame at its own stop.
+- A stop codon inside an edited gene whose protein goes on matching beyond
+  it (a pseudogene, a stop the lineage edits away, an error) leaves the CDS
+  one row over the whole gene, and the mRNA carries `n_internal_stops`;
+  the protein in tables/edited_gene_calls.tsv has `*` there.
 - `phase` (GFF3 column 8) is `0` for `editing`/`trans_splicing`-derived
   exons. For editing's single-exon calls that's exact; for trans_splicing
   it is NOT - see README ("Known issue"). Raw cis-spliced models take each CDS's
@@ -692,6 +698,7 @@ def emit_protein_coding_gene(
                             "n_exons": len(parts),
                             "n_edits": n_edits_summary,
                             "n_frameshifts": len(frameshifts) or None,
+                            "n_internal_stops": copy.get("internal_stops") or None,
                             "exon_boundaries": "approximate" if approximate else None,
                         }
                     ),
@@ -770,6 +777,8 @@ def emit_protein_coding_gene(
                             "Parent": cid,
                             "n_bases": int(f["n_bases"]),
                             "window": window_attr(f),
+                            # one the gene is not read through (editing.scan.DEFAULT_END_MARGIN)
+                            "near_end": "true" if str(f.get("near_end", "")).lower() == "true" else None,
                         }
                     ),
                 ]
@@ -970,6 +979,7 @@ def build_species_gff(
                             ],
                             "edits": ed.to_dict("records"),
                             "frameshifts": fs.to_dict("records"),
+                            "internal_stops": int(getattr(erow, "n_internal_stops", 0) or 0),
                             "coverage": target["coverage"],
                             "partial": target["partial"],
                         }

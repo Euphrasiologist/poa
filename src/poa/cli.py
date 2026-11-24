@@ -59,9 +59,9 @@ def tool_version(cmd: str, flag: str | None) -> str:
 
 
 # An option each of these must have: the bundled profiles record editing
-# sites in a column only a version with it can read (orfedit 0.2.0,
-# transsplice 0.3.0).
-NEEDS_OPTION = {"orfedit": "--novel-edit-penalty", "transsplice": "--novel-edit-penalty"}
+# sites in a column only a version with it can read, and genes are ended
+# by rules only orfedit 0.2.0 has (orfedit 0.2.0, transsplice 0.3.0).
+NEEDS_OPTION = {"orfedit": "--start-search", "transsplice": "--internal-stop-penalty"}
 
 
 def has_option(cmd: str, option: str) -> bool:

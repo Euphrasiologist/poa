@@ -67,7 +67,8 @@ def refine_whole_gene_profiles(root: Path, min_score: float = 0.0) -> list[str]:
 
     refined = []
     for gene, sub in df.groupby("gene"):
-        good = sub[(sub["complete"]) & (sub["whole_gene_score"] > min_score)]
+        # (a protein with a stop inside it, `*`, is no reference)
+        good = sub[(sub["complete"]) & (sub["whole_gene_score"] > min_score) & ~sub["protein"].str.contains("*", regex=False)]
         if len(good) < MIN_TRAINING_SEQS:
             log.warning(
                 f"{gene}: only {len(good)} complete, score>{min_score} reconstructions "
