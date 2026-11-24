@@ -107,7 +107,11 @@ structural. Cis vs trans is a per-species, per-junction *output label*
    see `editing/README.md`, Editing sites).
 2. **`01_reconstruct.py`** builds one manifest row per raw `.ctg.bed`
    fragment (not best-hit-only, unlike `editing`) and calls
-   `transsplice scan-batch`, which per (species, gene):
+   `transsplice scan-batch` - with `--internal-stop-penalty` as in
+   `editing` (a stop inside a gene is aligned at a cost and shown as `*`
+   in the protein, counted in `n_internal_stops`, not stepped over; see
+   `editing/README.md`, Gene starts, gene ends and internal stops) - which per
+   (species, gene):
    - **Merges** same-strand fragments within 5kb into an additional
      candidate spanning the whole run (oatk's HMM sometimes splits one
      true exon into adjacent hits - confirmed directly in real data, e.g.

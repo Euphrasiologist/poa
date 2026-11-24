@@ -221,10 +221,58 @@ exon of 30 bp or less right). What changed: the exon-slot profiles
 (`00_build_exon_profiles.py`, see CHANGELOG), and in transsplice a
 whole-contig and a next-to-the-neighbours search for every short exon,
 decided by the whole-gene alignment and intron ends, and gene ends held
-to the start and stop codon. Single-exon genes corrected by orfedit now
-end at the stop codon too when the profile stops a few residues short
-of it: on the same genomes 89% of plastid and 80% of mito genes end
-exactly where GenBank's CDS does (17% and 67% before).
+to the start and stop codon.
+
+Where a single-exon gene starts. The alignment starts a gene wherever
+the profile's first columns match, which is not always a start codon. A
+gene whose first aligned codon is not ATG (or ACG, which an edit makes
+AUG) now starts at the nearest ATG within 10 codons: upstream, in an
+open frame, or downstream at a column whose references can start with
+Met; failing that, the nearest ACG. On 19 RefSeq angiosperm mitogenomes
+and 13 RefSeq plastomes, starts within 3 bp of the annotation went from
+384 to 401 of 457 (mito) and from 528 to 574 of 626 (plastid), with one
+made wrong.
+
+Where a single-exon gene ends. A reading frame ends at its first stop
+codon, and orfedit no longer lets an alignment step over one to reach
+the profile's last columns, as it did wherever a gene ended a few
+residues before its profile. With no stop right after the aligned
+protein, the first one within 50 codons ends the gene. A stop the
+protein goes on matching beyond (a pseudogene, a stop the lineage edits
+away, an error) is kept inside the gene and reported: `*` in the
+protein and `n_internal_stops` in `tables/edited_gene_calls.tsv`
+(`reconstructed_genes.tsv` for spliced genes), `n_internal_stops` on
+the gene's mRNA in the GFF. And a gene is not read through an internal
+stop or a frame change with fewer than 25 profile columns before or
+after it: it starts after it, or ends before it in its own frame, since
+one that buys only the profile's last few columns cannot be told from a
+gene that ends differently there. Such a frame change is still reported
+- a row of `tables/frameshifts.tsv` with `near_end` true, a `frameshift`
+feature with `near_end=true` in the GFF - because an indel there is as
+worth checking against the reads as any other (leaving them out, 83% of
+planted indels were found in place of 95%). A gene that runs out of the window it is
+looked for in (the hit plus 300 bp each side) is looked for again in a
+longer one: rbcL, whose HMM is the gene's first half, used to stop at
+codon 341.
+
+On 19 RefSeq angiosperm mitogenomes and 13 RefSeq plastomes, with the
+same profiles before and after (`build/rnaedit/ends`), single-exon
+genes ending within 3 bp of the annotated stop went from 397 to 443 of
+457 (mito) and from 558 to 621 of 626 (plastid), and the frame changes
+called in those mito genes from 23 to 3; one end that was right is now
+wrong (an edit-made stop a codon past the profile's end). On 153 DToL
+assemblies, single-exon genes ending at a stop went from 10,728 to
+11,479 of 11,608 and the frame changes their genes are read through
+from 234 to 184 (105 more, near a gene's end, are reported and not
+followed); spliced genes complete went from 3,179 to 3,187 of 3,252;
+81 single-exon and 25 spliced genes have an internal stop. Of 1-bp
+indels planted in real genes as many are found as before (single-exon
+94.9% of 1,500 against 94.7%; spliced mito 90.2% of 768, plastid 77.3%
+of 894, against 90.2% and 77.0%). A
+gene that ends before its profile's tail no longer counts as aligned
+end to end - it used to by the step over its stop - so that count falls
+where a profile's tail is longer than a species' gene (ccmC in every
+moss; sdh4, rps19, rps14 and ccmC in angiosperms).
 
 What is still wrong, mostly: genes whose exon count differs from the
 template's (cox2 with one intron or two, an intron lost in a lineage),
@@ -313,47 +361,53 @@ heavily elsewhere, so each species is first corrected at one cost (2.5)
 everywhere, and takes the two only if at least 65% of the C-to-U edits
 then called in its mitochondrial genes are at known columns (10% of the
 plastid ones, when there is no mitochondrion to judge by). Of 89
-angiosperms 83 do, with a median of 95% there; five sedges and *Plantago
-coronopus*, whose mitochondrial genes have drifted furthest, have 57 to
-64% and keep the one cost. Ginkgo has 42%, a yew 38%, a hornwort 32%, a
-spikemoss 26% and a quillwort 25%, and these too are annotated at the one
-cost. `tables/lineage.tsv` gives the counts and the outcome
+angiosperms 85 do, with a median of 95% there; four sedges, whose
+mitochondrial genes have drifted furthest, have 58 to 62% and keep the
+one cost. Ginkgo has 42%, a yew 38%, a hornwort 32%, a spikemoss 25%
+and a quillwort 25%, and these too are annotated at the one cost. `tables/lineage.tsv` gives the counts and the outcome
 (`edit_sites`).
 
 With each species' genus left out of the references, against the RNA-seq
-of 107 DToL angiosperms and the annotation of 19 RefSeq mitogenomes:
+of 109 DToL angiosperms and the annotation of 19 RefSeq mitogenomes:
 
 | | RefSeq edited proteins alone | with the RNA-derived genes | and editing sites |
 |---|---|---|---|
-| mito single-exon genes: C-to-U sites in the RNA found | 50% | 71% | 77% |
-| ... edit calls that are in the RNA | 90% | 93% | 97% |
+| mito single-exon genes: C-to-U sites in the RNA found | 56% | 71% | 77% |
+| ... edit calls that are in the RNA | 94% | 93% | 97% |
 | mito spliced genes: sites found | 69% | 78% | 80% |
 | ... edit calls that are in the RNA | 95% | 96% | 98% |
-| plastid single-exon genes aligned end to end (of 4,412) | 3,316 | 4,146 | 4,145 |
-| ... sites found, 32 species whose reads are the assembly's own | 14% | 72% | 76% |
-| ... edit calls that are in the RNA | 8% (251 right) | 40% (1,444) | 94% (1,494) |
-| plastid spliced genes: edit calls that are in the RNA | 12% (63 right) | 59% (721) | 94% (822) |
-| RefSeq coding sequences with every exon placed (of 655) | 455 | 479 | 481 |
-| RefSeq annotated edits found | 64% | 84% | 89% |
-| ... edit calls that are annotated | 85% | 85% | 87% |
+| plastid single-exon genes aligned end to end (of 4,561) | 3,426 | 4,044 | 4,044 |
+| ... sites found, 32 species whose reads are the assembly's own | 14% | 70% | 75% |
+| ... edit calls that are in the RNA | 8% (259 right) | 40% (1,474) | 93% (1,520) |
+| plastid spliced genes: edit calls that are in the RNA | 12% (64 right) | 59% (729) | 94% (835) |
+| RefSeq coding sequences with every exon placed (of 655) | 505 | 535 | 536 |
+| RefSeq annotated edits found | 68% | 84% | 89% |
+| ... edit calls that are annotated | 85% | 86% | 87% |
 
-Before any of this, with references of unedited proteins, poa placed 424
-of the 655 RefSeq coding sequences and found 6% of their annotated edits.
+Before any of this, with references of unedited proteins and genes not
+yet ended at their stops, poa placed 424 of the 655 RefSeq coding
+sequences and found 6% of their annotated edits.
 A silent edit changes no residue and cannot be called, and the RNA-seq is
 mostly poly-A selected, so "found" is out of a list that holds
 unprocessed transcripts' partial edits. It is also often another
 plant's than the assembly, and where the two differ by a C/T the reads
 show an edit that is not one: hence the plastid row for the 32 species
-without such differences (over all 107, the same calls are 44% of the
+without such differences (over all 109, the same calls are 42% of the
 "sites"). Checked site by site against the reads, 93% of the mito calls
 with at least 10 reads are edited there and another 3% in under a fifth
-of the reads; of the plastid ones, 91% and 3%.
+of the reads; of the plastid ones, 90% and 4%.
 
-Still open: rbcL, whose HMM hit covers half the gene, is called over 341
-of its 476 codons and keeps its old profile, as does psbF; plastid
-rps19, rpl22 and rpl32 are a few codons short of their annotated length,
-as before; and a plastid-derived rpl2 in a mitogenome is now reported as
-an incomplete mito rpl2 where it used to pass for a complete one.
+Still open: starts far from the conserved part of a gene, and starts
+RefSeq's own records disagree on. Of the single-exon genes of ten
+RefSeq mitogenomes, 200 of 245 have both ends within 3 bp of the
+annotation (164 before the start and stop rules above); most of the
+rest are atp6, whose annotated starts lie 18 to 146 codons before the
+conserved part, and rps4, mttB, rpl16 and matR, whose annotated starts
+differ from record to record. A stop made by an edit a codon or
+more beyond the profile's end is missed for a literal one further on
+(Liriodendron sdh4); psbF keeps the profile it had; and a
+plastid-derived rpl2 in a mitogenome is reported as an incomplete mito
+rpl2 where it used to pass for a complete one.
 
 Moss. Moss mitochondria have their own intron set (nad1 has 3 exons, not
 5; nad2 2; nad4 2) and edit little. On the 956-species dataset, all 174
@@ -487,10 +541,11 @@ copies; of the RNA edits in the three genes 84%, 77% and 91% are found,
 with 95% or more of the calls right, against 49%, 39% and 34%.
 
 Fern plastid genes are corrected against fern plastid references as
-well, from the same eleven ferns: 614 edited proteins of 56 single-exon
-genes and 94 loci of the 9 spliced ones
+well, from the same eleven ferns: 613 edited proteins of 56 single-exon
+genes and 79 loci of the 9 spliced ones
 (`trans_splicing/reference/lineages/fern/plastid/`). Held out by genus,
-against the land-plant plastid references every other lineage uses:
+against the land-plant plastid references every other lineage uses (as
+first built, before rbcL and matK were read whole):
 
 | | land-plant references | fern plastid references |
 |---|---|---|

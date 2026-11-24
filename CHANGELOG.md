@@ -2,6 +2,77 @@
 
 ## Unreleased
 
+- Where a single-exon gene starts (orfedit 0.2.0, `--start-search`).
+  The alignment starts a gene wherever the profile's first columns
+  match, not always at a start codon. A gene whose first aligned codon
+  is not ATG (or ACG, an edit away from AUG) now starts at the nearest
+  ATG within 10 codons (`scan.DEFAULT_START_SEARCH`) - upstream in an
+  open frame, or downstream at a column whose references can start with
+  Met - else the nearest ACG. With the same profiles, on 19 RefSeq
+  mitogenomes and 13 RefSeq plastomes: starts within 3 bp of the
+  annotation 384 -> 401 of 457 (mito) and 528 -> 574 of 626 (plastid),
+  one made wrong. On the ten RefSeq mitogenomes of the PMGA comparison
+  as built: single-exon coding sequences with both ends placed 189 ->
+  200 of 245, all coding sequences 262 -> 273 of 333 (PMGA 200 and
+  269). Edit calls unchanged.
+- Where a gene ends (orfedit 0.2.0, transsplice 0.3.0; `poa check` says
+  when they are too old). A reading frame ends at its first stop codon,
+  but the aligner treated a stop as one more codon it could leave out,
+  so a gene that ended a few residues before its profile was read on
+  over its stop to match the profile's last columns. Now:
+  - a stop codon cannot lie in an insertion; with no stop right after
+    the aligned protein, the first within 50 codons ends the gene
+    (`scan.DEFAULT_STOP_SEARCH`; it was 10, and only when the alignment
+    reached the profile's end);
+  - a stop the protein goes on matching beyond (a pseudogene, a stop
+    the lineage edits away, an error) is aligned to a profile column at
+    a cost of 20 (`DEFAULT_INTERNAL_STOP_PENALTY`) and reported: `*` in
+    the protein, an `n_internal_stops` column in
+    `edited_gene_calls.tsv` and `reconstructed_genes.tsv`, and
+    `n_internal_stops` on the mRNA in the GFF. Without it such genes
+    (sdh4, rps14) became two frame changes round the stop;
+  - a gene is not read through a frame change or an internal stop with
+    fewer than 25 profile columns before or after it
+    (`DEFAULT_END_MARGIN`): it starts after it, or ends before it in
+    its own frame at its own stop. The frame change is still reported,
+    with `near_end` true in `frameshifts.tsv` and on its GFF feature
+    (single-exon genes; spliced genes get no margin, which cost them
+    recall);
+  - a gene that runs out of the window it is looked for in is looked
+    for again in a longer one. oatkDB's rbcL model is the gene's first
+    698 bp, and 300 bp beyond its hit the window ended at codon 341:
+    rbcL is now whole, and so are the cemA, ccmFn, rpoC2 and matK calls
+    that ended at the window's edge (338 of 16,975 calls did).
+  With the same profiles before and after, on 19 RefSeq mitogenomes and
+  13 RefSeq plastomes: single-exon genes ending within 3 bp of the
+  annotated stop 397 -> 443 of 457 (mito) and 558 -> 621 of 626
+  (plastid); frame changes called in those mito genes 23 -> 3; one end
+  that was right made wrong (Liriodendron sdh4, a stop made by an edit a
+  codon past the profile's end). On the ten RefSeq mitogenomes of the
+  PMGA comparison, genus held out: coding sequences with every exon
+  placed 238 -> 262 of 333 (single-exon 165 -> 189 of 245), allowing
+  for the choice of start codon and the stop 282 -> 294. On 153 DToL
+  assemblies: single-exon genes ending at a stop 10,728 -> 11,479 of
+  11,608, frame changes genes are read through 234 -> 184 (and 105
+  near a gene's end reported, not followed), spliced genes complete
+  3,179 -> 3,187 of 3,252, 81 single-exon and 25 spliced genes with an
+  internal stop; every lineage call as before. Planted 1-bp indels found
+  as before: single-exon 94.7% -> 94.9% of 1,500, spliced mito 90.2% ->
+  90.2% of 768, plastid 77.0% -> 77.3% of 894 (`build/recall`). Genes aligned over at least 99% of their profile fall
+  where a profile's tail is longer than the species' gene (it used to be
+  reached by the step over the stop): ccmC in all 28 mosses, and 71 of
+  1,323 mito genes in 64 angiosperms.
+- References read again from gene models made with these rules. The
+  RNA-derived angiosperm references now come from 111 species (three
+  more had finished mapping), and rbcL has a profile of its own (475
+  columns; only psbF keeps the old one). The plastid profiles of fern,
+  horsetail and clubmoss had been built from the same cut-off calls
+  (rbcL 341 columns; fern matK 243 of about 500, rpoC2; clubmoss rpoB)
+  and are rebuilt from genes called on the default profiles
+  (`build/rnaedit/pilot/tree_seedp.sh`: a lineage's own short profile
+  cannot be the seed for its replacement); horsetail gains a clpP
+  template and all 72 of its spliced plastid genes are now complete
+  (63).
 - Angiosperm references rebuilt from RNA-edited proteins. The mito exon
   templates and editing profiles came from 11 RefSeq mitogenomes, mostly
   annotated with the genome's own translation, so at a conserved editing
@@ -10,7 +81,7 @@
   mitogenomes and 2% of those in RNA-seq. They are now built from the 14
   RefSeq angiosperm mitogenomes annotated with edited proteins (a gene a
   record gives unedited is left out, `refseq_mito.unedited`) and from
-  genes of 108 DToL angiosperms with the editing their own public RNA-seq
+  genes of 111 DToL angiosperms with the editing their own public RNA-seq
   shows applied (`dev/rna_editome/rna_refs.py`;
   `editing/reference/lineages/angiosperm/README.md` lists the species
   and runs; reads that are not the assembly's plant are recognised by
@@ -30,24 +101,27 @@
   read from its own genes: it is first corrected at 2.5 everywhere, and
   takes the two costs if at least 65% of its mitochondrial C-to-U calls
   fall at known columns (10% of its plastid ones, for a plastid alone;
-  `lineage.follows_sites`). Of 89 angiosperms 83 do (median 95% of calls
-  at known columns; five sedges and *Plantago coronopus*, with 57 to
-  64%, keep the one cost). Ginkgo, a yew, a hornwort, a spikemoss and a
-  quillwort, which use the same references and edit heavily elsewhere,
-  do not (42%, 38%, 32%, 26%, 25%) and are annotated at the one cost.
+  `lineage.follows_sites`). Of 89 angiosperms 85 do (median 95% of calls
+  at known columns; four sedges, with 58 to 62%, keep the one cost).
+  Ginkgo, a yew, a hornwort, a spikemoss and a quillwort, which use the
+  same references and edit heavily elsewhere, do not (42%, 38%, 32%,
+  25%, 25%) and are annotated at the one cost.
   `lineage.tsv` has the counts and an `edit_sites` column.
-  On 107 DToL angiosperms with RNA-seq, each annotated without its own
+  On 109 DToL angiosperms with RNA-seq, each annotated without its own
   genus in the references, from the first step (the 14 RefSeq genomes)
-  to now: mito single-exon C-to-U sites found 50% -> 77% with 90% -> 97%
+  to now: mito single-exon C-to-U sites found 56% -> 77% with 94% -> 97%
   of calls in the RNA; spliced 69% -> 80%, 95% -> 98%; plastid
-  single-exon genes aligned end to end 3,316 -> 4,145 of 4,412, with 8%
-  -> 94% of edit calls in the RNA (251 -> 1,494 right calls), spliced 12%
-  -> 94%. On 19 RefSeq mitogenomes, genus held out, from poa as it was:
-  coding sequences with every exon placed 424 -> 481 of 655, annotated
+  single-exon genes aligned end to end 3,426 -> 4,044 of 4,561, with 8%
+  -> 93% of edit calls in the RNA (259 -> 1,520 right calls), spliced 12%
+  -> 95%. On 19 RefSeq mitogenomes, genus held out, from poa as it was:
+  coding sequences with every exon placed 424 -> 536 of 655, annotated
   edits found 6% -> 89% with 56% -> 87% of calls right. On 64 DToL
   angiosperms as built: mito single-exon genes aligned end to end 1,196
-  -> 1,323, mito edits called 3,271 -> 24,998, plastid single-exon genes
-  aligned 2,304 -> 3,137 of 3,577, plastid edits called 3,305 -> 2,411.
+  -> 1,182, mito edits called 3,271 -> 24,936, plastid single-exon genes
+  aligned 2,304 -> 3,016 of 3,577, plastid edits called 3,305 -> 2,263.
+  (All with the gene starts and ends of the entries above; a gene now
+  started at a start codon gives up the profile columns before it, so
+  fewer are aligned end to end than with those alone.)
 - Profile scores: pseudocounts are shared out in proportion to the
   background (`pssm.PSEUDOCOUNT_MASS`), not one flat count per residue. A
   residue a protein hardly uses (Cys, Trp in a small ribosomal protein)

@@ -230,29 +230,79 @@ sites, how many of the C-to-U edits called are at known columns
 65% of its mito calls there (10% of its plastid ones, with fewer than 20
 mito calls) is corrected again at the two costs
 (`lineage.follows_sites`); `lineage.tsv` records the counts and
-`edit_sites`. Of 89 angiosperms 83 are (median 95% of mito calls at
-known columns; five sedges and *Plantago coronopus*, at 57 to 64%, are
-not). The rest - gymnosperms, hornworts, quillworts and spikemosses,
+`edit_sites`. Of 89 angiosperms 85 are (median 95% of mito calls at
+known columns; four sedges, at 58 to 62%, are not). The rest - gymnosperms, hornworts, quillworts and spikemosses,
 which edit heavily where no angiosperm does (25 to 42% at known columns)
 - keep the one cost: at the two, Ginkgo's plastid calls went from 299 to
 23.
 
-Held out by genus on 107 DToL angiosperms with RNA-seq, calls at 2.5
+Held out by genus on 109 DToL angiosperms with RNA-seq, calls at 2.5
 everywhere against calls at 1.5 and 10: mito single-exon C-to-U sites
-found 71% -> 77%, calls in the RNA 93% -> 97%; plastid single-exon calls
-3,630 (1,444 in the RNA) -> 1,586 (1,494). Checked site by site against
+found 71% -> 77%, calls in the RNA 94% -> 97%; plastid single-exon calls
+3,726 (1,474 in the RNA) -> 1,632 (1,520). Checked site by site against
 the reads (`dev/rna_editome/call_frac.py`), of the plastid calls with at
-least 10 reads 39% were edited before and 91% are now, 94% counting
+least 10 reads 39% were edited before and 90% are now, 94% counting
 sites edited in under a fifth of the reads.
 
 The RNA-derived proteins come from calls made on the profiles before
 them, so they are only as long as those calls. A protein is taken when
 its call aligned to 95% of its profile, or when it runs from a Met to a
 stop codon (the old profile was the longer one: psbJ, psaI, matK). That
-leaves out rbcL, whose HMM hit covers half the gene so that the call
-stops at codon 341 of 476, and psbF and psaJ, whose calls begin a few
-codons before the Met; rbcL and psbF keep their old profiles. rps19,
-rpl22 and rpl32 are as short as their old profiles were.
+leaves out psbF and psaJ, whose calls begin a few codons before the Met;
+psbF keeps its old profile. (rbcL was left out too until calls stopped
+being cut off at codon 341 - see below - and now has a profile of its
+own, 475 columns.)
+
+### Gene starts, gene ends and internal stops
+
+orfedit aligns a gene's whole profile, and used to treat a stop codon as
+one more codon the alignment could leave out. Wherever a gene ended a few
+residues before its profile, the alignment stepped over the stop to match
+the profile's last columns, and the gene was reported running on past
+its end; a pseudogene's stop vanished the same way. `scan` now passes
+orfedit three settings (constants at the top of `scan.py`, with the
+figures behind them):
+
+- `DEFAULT_STOP_SEARCH = 50`: with no stop right after the aligned
+  protein, the first one within 50 codons, in frame, ends the gene.
+- `DEFAULT_INTERNAL_STOP_PENALTY = 20`: a stop the protein goes on
+  matching beyond is aligned to a profile column at this cost and shows
+  as `*` in the protein; `n_internal_stops` counts them, and the GFF
+  mRNA carries the count. In a seed plant that is a pseudogene or an
+  error; in a hornwort or quillwort on the default references it is
+  mostly a stop the plant edits away (their lineage has no stop
+  read-through, which ferns get from `lineage.stop_edit_penalty`).
+- `DEFAULT_END_MARGIN = 25`: the gene is not read through an internal
+  stop or a frame change with fewer than 25 profile columns before or
+  after it; it starts after it or ends before it at its own stop.
+  Arabidopsis atp4 was the case in point: a frame change eight columns
+  from the end, in a run of eleven Gs, to match the other angiosperms'
+  tail, where the gene is annotated to the stop two codons on. The
+  frame change is still a row of `frameshifts.tsv`, with `near_end`
+  true (and `near_end=true` on its GFF feature); `n_frameshifts` in
+  `edited_gene_calls.tsv` counts only the ones the gene is read
+  through. transsplice is given no such margin (it cost recall there).
+
+- `DEFAULT_START_SEARCH = 10`: a gene whose first aligned codon is not
+  ATG (or ACG, an edit away from AUG) starts at the nearest ATG within
+  10 codons - upstream in an open frame, or downstream at a column
+  whose references can start with Met - else the nearest ACG. The
+  alignment itself starts a gene wherever the profile's first columns
+  match, which is not always a start codon.
+
+orfedit also looks again in a longer window when a gene runs out of the
+one it has (the hit and 300 bp each side): oatkDB's rbcL model is the
+gene's first half, and every rbcL call stopped at codon 341. Profiles
+built from such calls were cut off too (rbcL in fern, horsetail and
+clubmoss; fern matK), and a lineage's own short profile gives short
+calls again, so those were rebuilt from genes called on the default
+profiles.
+
+A gene that ends before its profile's tail has those columns unaligned,
+where it used to have them aligned across its stop, so fewer genes are
+aligned over 99% of their profile than before (ccmC in every moss; sdh4,
+rps19, rps14, ccmC in angiosperms): that is the gene's real extent, not
+a loss.
 
 ### Split ccmFn
 
