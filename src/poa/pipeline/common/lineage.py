@@ -117,10 +117,10 @@ SITE_LINEAGES = (DEFAULT_LINEAGE,)
 # edited in its references, and at any other. A profile without sites
 # takes the ordinary cost (editing/scan.DEFAULT_EDIT_PENALTY, or
 # EDIT_PENALTY) at every column.
-# Held out by genus on 107 DToL angiosperms with RNA-seq, at the ordinary
+# Held out by genus on 109 DToL angiosperms with RNA-seq, at the ordinary
 # cost of 2.5 everywhere 40% of the edits called in single-exon plastid
-# genes were in the RNA, and 93% of the mitochondrial ones; at 10 away
-# from the known columns, 94% and 97%. A known column can then cost less
+# genes were in the RNA, and 94% of the mitochondrial ones; at 10 away
+# from the known columns, 93% and 97%. A known column can then cost less
 # than 2.5: at 1.5 the mitochondrial sites found go from 71% to 77%, and
 # the edits annotated in 14 RefSeq mitogenomes from 84% to 89%.
 KNOWN_EDIT_PENALTY = 1.5
@@ -134,14 +134,14 @@ NOVEL_EDIT_PENALTY = 10.0
 # fall at known columns: SITE_MIN_SHARE of its mitochondrial ones, given
 # SITE_MIN_CALLS of them, or else of its plastid ones (a plastid alone has
 # many more calls away from the known columns). Of 89 angiosperms (70
-# DToL assemblies and 19 RefSeq mitogenomes; references from 108 species)
-# 83 take the two costs, with
-# 73 to 99% of their mitochondrial calls at known columns (median 95%);
-# five sedges and Plantago coronopus, whose mitochondrial genes have
-# drifted furthest, have 57 to 64% and keep the one cost. Ginkgo has 42%,
-# a yew 38%, a hornwort 32%, a spikemoss 26%, a quillwort 25%; ferns,
-# mosses and liverworts 14 to 43%. Plastid: angiosperms 12 to 56%
-# (median 37%; one rock-rose 4%), the others 5% or less.
+# DToL assemblies and 19 RefSeq mitogenomes; references from 111 species)
+# 85 take the two costs, with
+# 67 to 99% of their mitochondrial calls at known columns (median 95%);
+# four sedges, whose mitochondrial genes have drifted furthest, have 58
+# to 62% and keep the one cost. Ginkgo has 42%, a yew 38%, a hornwort
+# 32%, a spikemoss 25%, a quillwort 25%; ferns, mosses and liverworts 14
+# to 41%. Plastid: angiosperms 14 to 59% (median 36%; one rock-rose 4%),
+# the others 5% or less.
 SITE_MIN_SHARE = {"mito": 0.65, "pltd": 0.10}
 SITE_MIN_CALLS = {"mito": 20, "pltd": 10}
 # Bases transsplice may slide an exon junction either way (its
