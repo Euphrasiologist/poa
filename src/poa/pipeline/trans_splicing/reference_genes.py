@@ -25,11 +25,21 @@ GENES = TRANS_SPLICED_MITO + CIS_SPLICED_MITO
 # with RNA-seq. Horsetail: cox1 has three (Equisetum, same evidence).
 # Lycophyte (Lycopodiaceae): atp6 and cob have two introns, atp9 and cox1
 # three, cox3, nad3 and rps14 one, in all four RefSeq mitogenomes.
+# Liverwort: atp9, nad3 and rps14 have one intron, atp1, cox3 and nad4L
+# two, cob three and cox1 up to nine, in most of the RefSeq mitogenomes
+# (atp1 has none in a third of them, nad4L one in a few).
 LINEAGE_EXTRA_SPLICED = {
+    "liverwort": ["atp1", "atp9", "cob", "cox1", "cox3", "nad3", "nad4L", "rps14"],
     "fern": ["atp1", "cox1", "rps14"],
     "horsetail": ["cox1"],
     "lycophyte": ["atp6", "atp9", "cob", "cox1", "cox3", "nad3", "rps14"],
 }
+
+
+# Genes of GENES a lineage is not given a template for. Liverwort nad7 is a
+# pseudogene in every liverwort but Haplomitrium and Treubia: a template of
+# those two drew 187 frameshift calls in 55 of 64 DToL liverworts.
+LINEAGE_NOT_RECONSTRUCTED = {"liverwort": ["nad7"]}
 
 
 def mito_spliced(lineage: str | None = None) -> list[str]:
@@ -38,7 +48,8 @@ def mito_spliced(lineage: str | None = None) -> list[str]:
         extra = sorted({g for genes in LINEAGE_EXTRA_SPLICED.values() for g in genes})
     else:
         extra = LINEAGE_EXTRA_SPLICED.get(lineage, [])
-    return GENES + [g for g in extra if g not in GENES]
+    left_out = LINEAGE_NOT_RECONSTRUCTED.get(lineage, [])
+    return [g for g in GENES + [g for g in extra if g not in GENES] if g not in left_out]
 
 
 # plastid genes with introns (rps12: exon 1 trans-spliced to exons 2-3).
@@ -75,7 +86,79 @@ PLASTOMES = {
 # editing/reference/lineages/<x>/pltd/. Fern: plastid genes carry 300-900
 # C-to-U and 30-80 U-to-C edits; against the land-plant references 59% of
 # the edits poa called in 11 DToL ferns' plastid genes were in their RNA.
-LINEAGE_PLASTID = ("fern",)
+# Horsetail, lycophyte, moss and liverwort: the land-plant profiles are
+# mostly angiosperm, whose proteins poa "corrected" their plastid genes
+# towards - 713 edits called in 431 genes of 8 horsetails where the RNA
+# shows 50, six of them among the calls. Horsetail and lycophyte
+# references are RNA-edited genes of DToL assemblies, as for fern; moss
+# and liverwort ones are RefSeq plastomes (LINEAGE_PLASTOMES).
+LINEAGE_PLASTID = ("fern", "horsetail", "lycophyte", "moss", "liverwort")
+# RefSeq plastomes, one per genus, for the lineages whose plastid
+# references come from GenBank annotation: mosses and liverworts edit
+# their plastid transcripts little or not at all, so the annotated
+# proteins are the ones to align to. Not Takakia or Haplomitrium, which
+# edit hundreds of sites and are annotated unedited.
+MOSS_PLASTOMES = {
+    "NC_060705.1": "Sphagnum multifibrosum",
+    "NC_070057.1": "Andreaea regularis",
+    "NC_060348.1": "Polytrichum commune",
+    "NC_058541.1": "Atrichum angustatum",
+    "NC_024291.1": "Tetraphis pellucida",
+    "NC_046056.1": "Buxbaumia aphylla",
+    "NC_046057.1": "Diphyscium foliosum",
+    "NC_058544.1": "Funaria hygrometrica",
+    "NC_037465.1": "Physcomitrium patens",
+    "NC_081863.1": "Encalypta ciliata",
+    "NC_044155.1": "Fissidens nobilis",
+    "NC_080897.1": "Dicranum hengduanensis",
+    "NC_050352.1": "Syntrichia filaris",
+    "NC_069304.1": "Didymodon constrictus",
+    "NC_085544.1": "Niphotrichum japonicum",
+    "NC_050047.1": "Bartramia pomiformis",
+    "NC_058542.1": "Bryum argenteum",
+    "NC_056136.1": "Pohlia cruda",
+    "NC_054293.1": "Mnium marginatum",
+    "NC_058546.1": "Orthotrichum stellatum",
+    "NC_058548.1": "Ulota hutchinsiae",
+    "NC_058547.1": "Ptychomnion cygnisetum",
+    "NC_051864.1": "Climacium dendroides",
+    "NC_069303.1": "Anomodon rugelii",
+    "NC_025668.1": "Sanionia uncinata",
+    "NC_049070.1": "Calliergonella cuspidata",
+}
+LIVERWORT_PLASTOMES = {
+    "NC_042505.1": "Marchantia polymorpha",
+    "NC_042887.1": "Riccia fluitans",
+    "NC_039590.1": "Dumortiera hirsuta",
+    "NC_050394.1": "Wiesnerella denudata",
+    "NC_088074.1": "Cyathodium cavernarum",
+    "NC_042418.1": "Reboulia hemisphaerica",
+    "NC_080368.1": "Pellia neesiana",
+    "NC_019628.1": "Apopellia endiviifolia",
+    "NC_058632.1": "Pallavicinia lyellii",
+    "NC_080366.1": "Moerckia flotoviana",
+    "NC_080365.1": "Fossombronia foveolata",
+    "NC_082503.1": "Aneura maxima",
+    "NC_082060.1": "Pleurozia gigantea",
+    "NC_082430.1": "Porella gracillima",
+    "NC_015402.1": "Ptilidium pulcherrimum",
+    "NC_043781.1": "Radula japonica",
+    "NC_079849.1": "Frullania muscicola",
+    "NC_043782.1": "Jubula hutchinsiae",
+    "NC_043777.1": "Cheilolejeunea xanthocarpa",
+    "NC_043778.1": "Cololejeunea lanciloba",
+    "NC_051002.1": "Scapania ampliata",
+    "NC_053890.1": "Diplophyllum taxifolium",
+    "NC_051003.1": "Douinia plicata",
+    "NC_071973.1": "Calypogeia suecica",
+    "NC_063926.1": "Nowellia curvifolia",
+    "NC_040133.1": "Gymnomitrion concinnatum",
+    "NC_043788.1": "Heteroscyphus argutus",
+    "NC_043784.1": "Plagiochila chinensis",
+    "NC_043785.1": "Bazzania praerupta",
+    "NC_043779.1": "Schistochila macrodonta",
+}
+LINEAGE_PLASTOMES = {"moss": MOSS_PLASTOMES, "liverwort": LIVERWORT_PLASTOMES}
 
 
 def reference_dir(code_dir, organelle: str = "mito", lineage: str | None = None):
@@ -95,8 +178,38 @@ def reference_dir(code_dir, organelle: str = "mito", lineage: str | None = None)
 # GenBank gene-name spellings -> ours (compared lower-cased)
 GENE_SYNONYMS = {"ccmfc": "ccmFc", "ccmf-c": "ccmFc", "yejv": "ccmFc", "coxii": "cox2", "cox-2": "cox2"}
 
-# angiosperm RefSeq mitogenomes: the original five (nad1/2/5/rps3 templates)
-# plus six more spread across the tree for the cis-spliced genes
+# RefSeq angiosperm mitogenomes annotated with the RNA-edited proteins:
+# every record of the 451 RefSeq angiosperm mitogenomes (2026-11) in which
+# at least 25 coding sequences carry an RNA-editing exception, 240 to 650
+# edited residues each. One Beta of three; Asclepias is the one asterid
+# and rice the one monocot. A few of their genes are annotated unedited
+# all the same (beet ccmB, rice nad4 and cox2): those loci are left out
+# gene by gene (common/refseq_mito.unedited).
+ANGIOSPERM_EDITED_MITOGENOMES = {
+    "NC_037304.1": "Arabidopsis thaliana",
+    "NC_008285.1": "Brassica napus",
+    "NC_002511.2": "Beta vulgaris",
+    "NC_015994.1": "Beta macrocarpa",
+    "NC_014487.1": "Silene latifolia",
+    "NC_022796.1": "Asclepias syriaca",
+    "NC_014043.1": "Citrullus lanatus",
+    "NC_014050.1": "Cucurbita pepo",
+    "NC_016743.2": "Lotus japonicus",
+    "NC_016742.1": "Pongamia pinnata",
+    "NC_069572.1": "Sedum plumbizincicola",
+    "NC_030753.1": "Nelumbo nucifera",
+    "NC_037468.1": "Nymphaea colorata",
+    "NC_011033.1": "Oryza sativa",
+}
+# angiosperm RefSeq mitogenomes: the original five (nad1/2/5/rps3
+# templates), six more spread across the tree for the cis-spliced genes,
+# and the rest of the edited ones above. The records whose proteins are
+# the genome's own translation (maize, grape, tobacco, soybean, carrot,
+# Liriodendron, date palm) stay as a record of the exon structures; the
+# templates and editing profiles are built from the edited ones alone
+# (LINEAGE_UNEDITED_MITOGENOMES, LINEAGE_EDITED_MITOGENOMES): from the
+# eleven together poa had the edited residue at 32 of 547 edited positions
+# of five RefSeq genomes.
 REFERENCE_MITOGENOMES = {
     "NC_037304.1": "Arabidopsis thaliana",
     "NC_002511.2": "Beta vulgaris",
@@ -109,6 +222,7 @@ REFERENCE_MITOGENOMES = {
     "NC_021152.1": "Liriodendron tulipifera",
     "NC_016740.1": "Phoenix dactylifera",
     "NC_014487.1": "Silene latifolia",
+    **{acc: name for acc, name in ANGIOSPERM_EDITED_MITOGENOMES.items()},
 }
 
 # moss (Bryophyta) RefSeq mitogenomes, spread across the phylum: Sphagnum,
@@ -138,6 +252,43 @@ MOSS_MITOGENOMES = {
     "NC_016121.1": "Anomodon rugelii",
     "NC_024515.1": "Climacium americanum",
     "NC_031212.1": "Brachythecium rivulare",
+}
+
+# Liverwort (Marchantiophyta) RefSeq mitogenomes, one per genus across the
+# three classes: Haplomitriopsida (Haplomitrium, Treubia), Marchantiopsida
+# (complex thalloids) and Jungermanniopsida (simple thalloids and leafy
+# liverworts). Liverwort genes keep an intron set of their own
+# (LINEAGE_EXTRA_SPLICED; cox2 3 exons, nad2, nad4, nad5 and rpl2 2, nad1,
+# rps3, rps10 and ccmFc 1), none of it trans-spliced; nad7 is a pseudogene
+# in all but Haplomitrium and Treubia.
+LIVERWORT_MITOGENOMES = {
+    "NC_043889.1": "Haplomitrium hookeri",
+    "NC_016122.1": "Treubia lacunosa",
+    "NC_037508.1": "Marchantia polymorpha subsp. ruderalis",
+    "NC_001660.1": "Marchantia paleacea",
+    "NC_043906.1": "Riccia fluitans",
+    "NC_042873.1": "Dumortiera hirsuta",
+    "NC_053538.1": "Wiesnerella denudata",
+    "NC_088073.1": "Cyathodium cavernarum",
+    "NC_035978.1": "Asperifolia arguta",
+    "NC_080363.1": "Pellia epiphylla",
+    "NC_080360.1": "Apopellia endiviifolia",
+    "NC_080362.1": "Pallavicinia lyellii",
+    "NC_080361.1": "Moerckia flotoviana",
+    "NC_043887.1": "Fossombronia foveolata",
+    "NC_026901.1": "Aneura pinguis",
+    "NC_043888.1": "Metzgeria furcata",
+    "NC_013444.1": "Pleurozia purpurea",
+    "NC_043908.1": "Porella platyphylla",
+    "NC_043907.1": "Ptilidium ciliare",
+    "NC_082157.1": "Scapania undulata",
+    "NC_035979.1": "Calypogeia suecica",
+    "NC_063925.1": "Nowellia curvifolia",
+    "NC_054215.1": "Diplophyllum taxifolium",
+    "NC_054214.1": "Douinia plicata",
+    "NC_043909.1": "Solenostoma sphaerocarpum",
+    "NC_040132.1": "Gymnomitrion concinnatum",
+    "NC_037041.1": "Trilophozia quinquedentata",
 }
 
 # Leptosporangiate fern mitogenomes with annotation. None is RefSeq: five
@@ -186,7 +337,10 @@ FERN_EDITED_MITOGENOMES = {
 # and the unedited residue, and transsplice found 9% of the C-to-U edits
 # RNA-seq shows in 11 DToL ferns' spliced genes, against 83% without.
 FERN_UNEDITED_MITOGENOMES = tuple(acc for acc, name in FERN_MITOGENOMES.items() if name != "Haplopteris ensiformis")
-LINEAGE_UNEDITED_MITOGENOMES = {"fern": FERN_UNEDITED_MITOGENOMES}
+LINEAGE_UNEDITED_MITOGENOMES = {
+    "fern": FERN_UNEDITED_MITOGENOMES,
+    "angiosperm": tuple(acc for acc in REFERENCE_MITOGENOMES if acc not in ANGIOSPERM_EDITED_MITOGENOMES),
+}
 # Horsetails (Equisetum, the one living genus) have no annotated
 # mitogenome in GenBank: their references are all RNA-derived
 # (reference/lineages/horsetail/raw_rna/README.md).
@@ -209,6 +363,7 @@ LINEAGE_UNEDITED_MITOGENOMES["lycophyte"] = tuple(LYCOPHYTE_MITOGENOMES)
 LINEAGE_MITOGENOMES = {
     "angiosperm": REFERENCE_MITOGENOMES,
     "moss": MOSS_MITOGENOMES,
+    "liverwort": LIVERWORT_MITOGENOMES,
     "fern": FERN_MITOGENOMES,
     "horsetail": HORSETAIL_MITOGENOMES,
     "lycophyte": LYCOPHYTE_MITOGENOMES,
@@ -216,7 +371,11 @@ LINEAGE_MITOGENOMES = {
 # Lineages whose reference proteins are the RNA-edited ones throughout, so
 # exon-slot profiles are cut from the protein, not translated from the
 # genome (exon_profiles.py).
-LINEAGE_EDITED_PROTEINS = ("fern", "horsetail", "lycophyte")
+LINEAGE_EDITED_PROTEINS = ("angiosperm", "fern", "horsetail", "lycophyte")
 # the genomes a lineage's editing profiles come from, where they are not
 # all of LINEAGE_MITOGENOMES
-LINEAGE_EDITED_MITOGENOMES = {"fern": FERN_EDITED_MITOGENOMES, "lycophyte": {}}
+LINEAGE_EDITED_MITOGENOMES = {
+    "angiosperm": ANGIOSPERM_EDITED_MITOGENOMES,
+    "fern": FERN_EDITED_MITOGENOMES,
+    "lycophyte": {},
+}

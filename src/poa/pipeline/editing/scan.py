@@ -14,7 +14,10 @@ scaling pain `orf_scan/README.md` already documents for its own heavy step.
 Mito genes are also scanned against each other lineage's bundled profiles
 (00b_build_lineage_profiles.py - moss), and each species keeps the run of
 the lineage its genes fit best (common/lineage.py; --lineage to force
-one). A species' genes with no profile in its lineage (moss nad5/nad9,
+one). Species left on the default profiles are then tried against the own
+profiles of the lineages that sit on those (fern, horsetail, lycophyte;
+own_profile_margins), and one found to be such a lineage is corrected
+again as it. A species' genes with no profile in its lineage (moss nad5/nad9,
 multi-exon there) are left uncorrected.
 
 Every substantial mito copy of a gene is corrected, not just the
@@ -79,8 +82,9 @@ import pandas as pd
 from poa import PIPELINE_DIR
 from poa.pipeline.common import io_utils
 from poa.pipeline.common import lineage as lin
+from poa.pipeline.common import pssm
 from poa.pipeline.editing.lineage_profiles import refseq_profiles_dir
-from poa.pipeline.trans_splicing.reference_genes import LINEAGE_EXTRA_SPLICED
+from poa.pipeline.trans_splicing.reference_genes import LINEAGE_EXTRA_SPLICED, LINEAGE_PLASTID
 from poa.pipeline.common import species_discovery as sd
 from poa.pipeline.common.errors import StageError
 from poa.pipeline.common.tools import cargo_tool
@@ -327,11 +331,16 @@ def run_orfedit(
     frameshift_penalty: float,
     stop_edit_penalty: float | None = None,
     reverse_edit_penalty: float | None = None,
+    known_edit_penalty: float | None = None,
+    novel_edit_penalty: float | None = None,
 ) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     """One orfedit scan-batch over `rows`; (gene calls, edits, frameshifts)
     as all-string frames. stop_edit_penalty: read in-frame stop codons
     through as U-to-C edits at this cost (common/lineage.py, fern);
-    reverse_edit_penalty: any other U-to-C edit at this cost."""
+    reverse_edit_penalty: any other U-to-C edit at this cost;
+    known_edit_penalty, novel_edit_penalty: for profiles with editing sites
+    (pssm.EDIT_COLUMN), a C-to-U edit at a column edited in the references
+    and at any other, in place of edit_penalty."""
     manifest_path = work_dir / f"manifest.{tag}.tsv"
     write_manifest(rows, manifest_path)
     log.info(f"scan_editing: {tag} manifest has {len(rows)} rows -> {manifest_path}")
@@ -361,6 +370,10 @@ def run_orfedit(
         cmd += ["--stop-edit-penalty", str(stop_edit_penalty)]
     if reverse_edit_penalty is not None:
         cmd += ["--reverse-edit-penalty", str(reverse_edit_penalty)]
+    if known_edit_penalty is not None:
+        cmd += ["--known-edit-penalty", str(known_edit_penalty)]
+    if novel_edit_penalty is not None:
+        cmd += ["--novel-edit-penalty", str(novel_edit_penalty)]
     proc = subprocess.run(cmd)
     if proc.returncode != 0:
         raise StageError(f"orfedit scan-batch failed (exit {proc.returncode})")
@@ -383,6 +396,71 @@ def drop_weak_copies(calls: pd.DataFrame, *per_gene: pd.DataFrame) -> tuple[pd.D
     return (kept, *(t.merge(kept_keys, on=key, how="inner") if not t.empty else t for t in per_gene))
 
 
+def own_profile_margins(
+    root: Path,
+    calls: pd.DataFrame,
+    species: set[str],
+    default_calls: pd.DataFrame,
+    orfedit: str,
+    work_dir: Path,
+    opts: dict,
+) -> dict[str, dict[str, tuple[float, int]]]:
+    """{species: {lineage: (margin, n genes)}} for each lineage that borrows
+    the default references and has mito profiles of its own
+    (lineage.DETECTED): how much better `species`' mito genes score against
+    those than against the default profiles (default_calls, this run's), as
+    the mean over the genes scored both ways, each by its best copy. Plain
+    C-to-U editing on both sides - not the lineage's own editing model,
+    which would favour whichever profiles allow more."""
+    def best(df: pd.DataFrame) -> pd.Series:
+        mito = df[df["organelle"] == "mito"]
+        return mito["score"].astype(float).groupby([mito["species"], mito["gene"]]).max()
+
+    base = best(default_calls)
+    out: dict[str, dict[str, tuple[float, int]]] = {}
+    for name in lin.DETECTED:
+        rows = without_genes(
+            build_manifest(root, calls, ["mito"], species, lin.editing_profiles(PIPELINE_DIR, name)),
+            lineage_spliced(name),
+        )
+        if not rows:
+            continue
+        own = best(run_orfedit(orfedit, rows, f"detect.{name}", work_dir, **opts)[0])
+        diff = (own - base).dropna()
+        for sp, d in diff.groupby(level=0):
+            out.setdefault(sp, {})[name] = (float(d.mean()), len(d))
+    return out
+
+
+def site_columns(profile: Path) -> list[bool] | None:
+    """Per column of a profile, whether its reference proteins are edited
+    there (pssm.EDIT_COLUMN above 0), or None for a profile that does not
+    say."""
+    lines = Path(profile).read_text().splitlines()
+    if not lines or lines[0].split("\t")[-1] != pssm.EDIT_COLUMN:
+        return None
+    return [float(line.split("\t")[-1]) > 0 for line in lines[1:] if line.strip()]
+
+
+def known_site_calls(edits: pd.DataFrame, rows: list[dict]) -> dict[str, dict[str, tuple[int, int]]]:
+    """Per species and organelle, the C-to-U edits orfedit called in genes
+    whose profile has editing sites: (at known columns, all of them). An
+    edit that makes the stop codon is at no column and is not counted.
+    rows: the manifest the edits came from, for each gene's profile."""
+    profile_of = {(r["organelle"], Path(r["profile"]).stem): Path(r["profile"]) for r in rows}
+    sites = {key: site_columns(path) for key, path in profile_of.items()}
+    out: dict[str, dict[str, tuple[int, int]]] = {}
+    if edits.empty:
+        return out
+    for r in edits[edits["edit"] == "C>U"].itertuples():
+        columns, column = sites.get((r.organelle, r.gene)), int(r.profile_column)
+        if columns is None or column >= len(columns):
+            continue
+        known, n = out.setdefault(r.species, {}).get(r.organelle, (0, 0))
+        out[r.species][r.organelle] = (known + columns[column], n + 1)
+    return out
+
+
 def assign_lineages(runs: dict[str, pd.DataFrame], forced: str | None) -> pd.DataFrame:
     """One row per species with mito calls: the lineage it takes and why."""
     scores: dict[str, dict[str, dict[str, float]]] = {}
@@ -394,14 +472,18 @@ def assign_lineages(runs: dict[str, pd.DataFrame], forced: str | None) -> pd.Dat
             genes[row.gene] = max(genes.get(row.gene, float("-inf")), float(row.score))
     out = []
     for species in sorted(scores):
-        chosen, n, totals = lin.choose(scores[species])
+        margins = lin.margins(scores[species])
+        chosen = lin.choose(margins, lin.LINEAGES)
+        # genes compared: for the lineage taken, or the most for any
+        n = margins[chosen][1] if chosen in margins else max((n for _, n in margins.values()), default=0)
         out.append(
             {
                 "species": species,
                 "lineage": forced or chosen,
                 "decided_by": "forced" if forced else "auto",
                 "n_genes": n,
-                **{f"{x}_score": f"{totals[x]:.3f}" if x in totals else "" for x in lin.LINEAGES},
+                **{column: "" for column in lin.COLUMNS[4:]},
+                **{f"{x}_margin": f"{m:.3f}" for x, (m, _) in margins.items()},
             }
         )
     return pd.DataFrame(out, columns=lin.COLUMNS)
@@ -429,6 +511,8 @@ def scan(
     edit_penalty: float = DEFAULT_EDIT_PENALTY,
     frameshift_penalty: float = DEFAULT_FRAMESHIFT_PENALTY,
     lineage: str = "auto",
+    known_edit_penalty: float = lin.KNOWN_EDIT_PENALTY,
+    novel_edit_penalty: float = lin.NOVEL_EDIT_PENALTY,
 ) -> ScanResult:
     """Correct the gene calls under data root `root` for RNA editing.
 
@@ -466,84 +550,204 @@ def scan(
         log.info(f"scan_editing: no dataset-built profiles, using bundled {profiles_dir}")
 
     refseq_dir = refseq_profiles_dir(PIPELINE_DIR)
-    rows = build_manifest(root, calls, organelles, species, [profiles_dir, refseq_dir])
-    # genes with introns in the forced lineage (fern atp1, cox1, rps14):
-    # trans_splicing reconstructs them from the lineage's exon templates
-    spliced_here = lineage_spliced(lineage)
-    rows = without_genes(rows, spliced_here)
-    if not rows:
-        raise StageError("empty manifest - nothing to scan")
-
     work_dir = analysis_dir / "editing" / "work"
     work_dir.mkdir(parents=True, exist_ok=True)
     results_dir = analysis_dir / "editing" / "results"
     results_dir.mkdir(parents=True, exist_ok=True)
-    # orfedit writes its output paths itself (truncating), so a
-    # species-scoped run must not point it straight at results_dir - it'd
-    # truncate the shared table down to just the scoped species. It writes
-    # to work_dir instead, then merge_species_scoped_tsv decides how that
-    # relates to what's already in results_dir (see its docstring).
-    stop = lin.stop_edit_penalty(lineage)
-    if stop is not None and not supports_option(orfedit, "--stop-edit-penalty"):
-        raise StageError(f"--lineage {lineage} needs an orfedit with --stop-edit-penalty; {orfedit} has none")
-    opts = dict(threads=threads, flank=flank, edit_penalty=edit_penalty, frameshift_penalty=frameshift_penalty)
-    runs = {
-        lin.DEFAULT_LINEAGE: run_orfedit(orfedit, rows, lin.DEFAULT_LINEAGE, work_dir, stop_edit_penalty=stop, **opts)
-    }
-    # a forced lineage that borrows the default references (fern) has no
-    # other lineage's profiles to try
-    if "mito" in organelles and lin.reference(lineage) != lin.DEFAULT_LINEAGE:
-        for name in lin.LINEAGES[1:]:
-            lrows = build_manifest(root, calls, ["mito"], species, lin.editing_profiles(PIPELINE_DIR, name))
-            if lrows:
-                runs[name] = run_orfedit(orfedit, lrows, name, work_dir, **opts)
+    # the bundled angiosperm profiles carry their editing sites in a 21st
+    # column, which an orfedit without --novel-edit-penalty cannot read
+    if not supports_option(orfedit, "--novel-edit-penalty"):
+        raise StageError(f"{orfedit} is too old for the bundled profiles (no --novel-edit-penalty): orfedit 0.2.0 is needed")
+    opts = dict(
+        threads=threads,
+        flank=flank,
+        edit_penalty=edit_penalty,
+        frameshift_penalty=frameshift_penalty,
+        known_edit_penalty=known_edit_penalty,
+        novel_edit_penalty=novel_edit_penalty,
+    )
+    # the same without the editing-site costs: the ordinary cost at every column
+    flat = {**opts, "known_edit_penalty": None, "novel_edit_penalty": None}
 
-    # A forced lineage that borrows the default references but has some
-    # editing profiles of its own (fern): its genes with such a profile are
-    # corrected against it, the rest against the default ones as above.
-    own_run = None
-    own_dir = lin.editing_profiles(PIPELINE_DIR, lineage)
-    # mito, and plastid where the lineage has plastid profiles too (fern)
-    own_orgs = [o for o in organelles if lineage in lin.BORROWS and any((own_dir / o).glob("*.pssm"))]
-    own_parts = []
-    for o in own_orgs:
-        lrows = without_genes(build_manifest(root, calls, [o], species, own_dir), spliced_here)
-        if not lrows:
-            continue
-        # other U-to-C edits too, on the lineage's own mito profiles only:
-        # in plastid genes most such calls are not in the RNA (see
-        # trans_splicing/reconstruct.py)
-        rev = lin.reverse_edit_penalty(lineage) if o == "mito" else None
-        if rev is not None and not supports_option(orfedit, "--reverse-edit-penalty"):
-            raise StageError(f"--lineage {lineage} needs an orfedit with --reverse-edit-penalty; {orfedit} has none")
-        tag = lineage if o == "mito" else f"{lineage}.{o}"
-        part = run_orfedit(orfedit, lrows, tag, work_dir, stop_edit_penalty=stop, reverse_edit_penalty=rev, **opts)
-        own_parts.append(part)
-        log.info(f"scan_editing: {part[0]['gene'].nunique()} {o} genes use {lineage} profiles")
-    if own_parts:
-        own_run = tuple(pd.concat([part[i] for part in own_parts], ignore_index=True) for i in range(3))
+    def correct(lineage: str, species: set[str] | None) -> tuple[list[pd.DataFrame], pd.DataFrame, pd.DataFrame]:
+        """`species` corrected under `lineage`: [gene calls, edits,
+        frameshifts], the lineage table, and the default profiles' calls."""
+        # mito genes: the RefSeq profiles first, built from RNA-edited
+        # proteins; plastid genes: the profiles built from RNA-edited
+        # proteins of DToL angiosperms. The dataset-built ones, from
+        # genomes' own translations, for a gene those lack.
+        edited_dir = lin.editing_profiles(PIPELINE_DIR, lin.DEFAULT_LINEAGE)
+        rows = build_manifest(root, calls, organelles, species, [refseq_dir, edited_dir, profiles_dir])
+        # genes with introns in the lineage (fern atp1, cox1, rps14):
+        # trans_splicing reconstructs them from the lineage's exon templates
+        spliced_here = lineage_spliced(lineage)
+        rows = without_genes(rows, spliced_here)
+        if not rows:
+            raise StageError("empty manifest - nothing to scan")
+        # orfedit writes its output paths itself (truncating), so a
+        # species-scoped run must not point it straight at results_dir - it'd
+        # truncate the shared table down to just the scoped species. It writes
+        # to work_dir instead, then merge_species_scoped_tsv decides how that
+        # relates to what's already in results_dir (see its docstring).
+        stop = lin.stop_edit_penalty(lineage)
+        if stop is not None and not supports_option(orfedit, "--stop-edit-penalty"):
+            raise StageError(f"--lineage {lineage} needs an orfedit with --stop-edit-penalty; {orfedit} has none")
+        # First at the ordinary edit cost at every column. The lineages are
+        # chosen from these scores, and so are the species that edit where
+        # the default references do, which are then corrected again at the
+        # editing-site costs (lin.follows_sites).
+        runs = {
+            lin.DEFAULT_LINEAGE: run_orfedit(
+                orfedit, rows, lin.DEFAULT_LINEAGE, work_dir, stop_edit_penalty=stop, **flat
+            )
+        }
+        default_flat = runs[lin.DEFAULT_LINEAGE]
+        # a lineage that borrows the default references (fern) has no
+        # other lineage's profiles to try
+        if "mito" in organelles and lin.reference(lineage) != lin.DEFAULT_LINEAGE:
+            for name in lin.LINEAGES[1:]:
+                lrows = build_manifest(root, calls, ["mito"], species, lin.editing_profiles(PIPELINE_DIR, name))
+                if lrows:
+                    # at the lineage's own edit cost, if it has one (moss)
+                    own_opts = {**flat, "edit_penalty": lin.edit_penalty(name) or edit_penalty}
+                    runs[name] = run_orfedit(orfedit, lrows, name, work_dir, **own_opts)
 
-    forced = None if lineage == "auto" else lineage
-    lineage_table = assign_lineages({k: run[0] for k, run in runs.items()}, forced)
+        # A lineage that borrows the default references but has some
+        # editing profiles of its own (fern): its genes with such a profile are
+        # corrected against it, the rest against the default ones as above.
+        own_run = None
+        own_dir = lin.editing_profiles(PIPELINE_DIR, lineage)
+        # mito, and plastid where the lineage has plastid profiles too (fern)
+        own_orgs = [o for o in organelles if lineage in lin.BORROWS and any((own_dir / o).glob("*.pssm"))]
+        own_parts = []
+        for o in own_orgs:
+            lrows = without_genes(build_manifest(root, calls, [o], species, own_dir), spliced_here)
+            if not lrows:
+                continue
+            # other U-to-C edits too, on the lineage's own mito profiles only:
+            # in plastid genes most such calls are not in the RNA (see
+            # trans_splicing/reconstruct.py)
+            rev = lin.reverse_edit_penalty(lineage) if o == "mito" else None
+            if rev is not None and not supports_option(orfedit, "--reverse-edit-penalty"):
+                raise StageError(
+                    f"--lineage {lineage} needs an orfedit with --reverse-edit-penalty; {orfedit} has none"
+                )
+            tag = lineage if o == "mito" else f"{lineage}.{o}"
+            own_opts = {**flat, "edit_penalty": lin.edit_penalty(lineage) or edit_penalty}
+            part = run_orfedit(
+                orfedit, lrows, tag, work_dir, stop_edit_penalty=stop, reverse_edit_penalty=rev, **own_opts
+            )
+            own_parts.append(part)
+            log.info(f"scan_editing: {part[0]['gene'].nunique()} {o} genes use {lineage} profiles")
+        if own_parts:
+            own_run = tuple(pd.concat([part[i] for part in own_parts], ignore_index=True) for i in range(3))
+
+        forced = None if lineage == "auto" else lineage
+        lineage_table = assign_lineages({k: run[0] for k, run in runs.items()}, forced)
+        lineages = dict(zip(lineage_table["species"], lineage_table["lineage"]))
+        # The species on the default references that edit where those do:
+        # their genes again, at the editing-site costs. A species without
+        # mito calls has no row yet and gets one.
+        counts = known_site_calls(default_flat[1], rows)
+        missing = sorted(set(counts) - set(lineages))
+        if missing:
+            blank = {
+                **dict.fromkeys(lin.COLUMNS, ""),
+                "lineage": forced or lin.DEFAULT_LINEAGE,
+                "decided_by": "forced" if forced else "auto",
+                "n_genes": 0,
+            }
+            extra = pd.DataFrame([{**blank, "species": sp} for sp in missing], columns=lin.COLUMNS)
+            lineage_table = pd.concat([lineage_table, extra], ignore_index=True)
+            lineages = dict(zip(lineage_table["species"], lineage_table["lineage"]))
+        site_species = {
+            sp for sp, by_org in counts.items() if lineages[sp] == lin.DEFAULT_LINEAGE and lin.follows_sites(by_org)
+        }
+        at = lineage_table["species"]
+        for sp, by_org in counts.items():
+            for o, (known, n) in by_org.items():
+                lineage_table.loc[at == sp, [f"{o}_site_calls", f"{o}_known_site_calls"]] = [n, known]
+        lineage_table.loc[at.isin(set(counts)), "edit_sites"] = "no"
+        lineage_table.loc[at.isin(site_species), "edit_sites"] = "yes"
+        if site_species:
+            srows = [r for r in rows if r["species"] in site_species]
+            again = run_orfedit(orfedit, srows, f"{lin.DEFAULT_LINEAGE}.sites", work_dir, stop_edit_penalty=stop, **opts)
+            runs[lin.DEFAULT_LINEAGE] = tuple(
+                pd.concat([old[~old["species"].isin(site_species)], new], ignore_index=True)
+                for old, new in zip(default_flat, again)
+            )
+            log.info(f"scan_editing: {len(site_species)} species corrected at the editing-site costs")
+        # Plastid genes of a lineage with plastid profiles of its own that
+        # does not borrow the default references (moss, liverwort): corrected
+        # against those, for the species that take the lineage - every
+        # species when it is forced, mito calls or not.
+        if "pltd" in organelles:
+            for name in lin.LINEAGES[1:]:
+                pdir = lin.editing_profiles(PIPELINE_DIR, name)
+                if name not in LINEAGE_PLASTID or not any((pdir / "pltd").glob("*.pssm")):
+                    continue
+                takes = species if forced == name else {s for s, x in lineages.items() if x == name}
+                if forced != name and not takes:
+                    continue
+                lrows = build_manifest(root, calls, ["pltd"], takes, pdir)
+                if not lrows:
+                    continue
+                # at the lineage's own edit cost, if it has one (moss)
+                own_opts = {**flat, "edit_penalty": lin.edit_penalty(name) or edit_penalty}
+                part = run_orfedit(orfedit, lrows, f"{name}.pltd", work_dir, **own_opts)
+                log.info(f"scan_editing: {part[0]['gene'].nunique()} pltd genes use {name} profiles")
+                own_run = part if own_run is None else tuple(
+                    pd.concat([a, b], ignore_index=True) for a, b in zip(own_run, part)
+                )
+        tables = []
+        for i in range(3):
+            parts = [keep_lineage(run[i], lineages, name) for name, run in runs.items()]
+            if own_run is not None:
+                covered = set(zip(own_run[0]["species"], own_run[0]["organelle"], own_run[0]["gene"]))
+                parts = [
+                    p[[key not in covered for key in zip(p["species"], p["organelle"], p["gene"])]] for p in parts
+                ]
+            table = pd.concat(parts, ignore_index=True)
+            if i == 2:
+                table = add_recurrence(table, lineages)
+            if own_run is not None:
+                # (no DToL recurrence for these: the reference counts frameshifts
+                # by the default profiles' columns)
+                own = own_run[i].assign(dtol_assemblies="") if i == 2 else own_run[i]
+                table = pd.concat([table, own], ignore_index=True)
+            tables.append(table)
+        return tables, lineage_table, default_flat[0]
+
+    tables, lineage_table, default_calls = correct(lineage, species)
+    if lineage == "auto" and "mito" in organelles:
+        # the lineages that sit on the default references (fern, horsetail,
+        # lycophyte), looked for among the species the call above left on
+        # them; a species found to be one is corrected again as that lineage
+        left = set(lineage_table.loc[lineage_table["lineage"] == lin.DEFAULT_LINEAGE, "species"])
+        margins = own_profile_margins(root, calls, left, default_calls, orfedit, work_dir, flat)
+        found: dict[str, set[str]] = {}
+        for sp, by_lineage in margins.items():
+            for name, (margin, _) in by_lineage.items():
+                lineage_table.loc[lineage_table["species"] == sp, f"{name}_margin"] = f"{margin:.3f}"
+            if (name := lin.choose(by_lineage, lin.DETECTED)) != lin.DEFAULT_LINEAGE:
+                found.setdefault(name, set()).add(sp)
+                lineage_table.loc[lineage_table["species"] == sp, "n_genes"] = by_lineage[name][1]
+        for name in sorted(found):
+            again, _, _ = correct(name, found[name])
+            tables = [
+                pd.concat([t[~t["species"].isin(found[name])], u], ignore_index=True) for t, u in zip(tables, again)
+            ]
+            lineage_table.loc[lineage_table["species"].isin(found[name]), "lineage"] = name
+            # (corrected again as that lineage, at the ordinary cost on the default profiles)
+            lineage_table.loc[lineage_table["species"].isin(found[name]), "edit_sites"] = "no"
+    lineage_table = lineage_table.fillna("")
     lineages = dict(zip(lineage_table["species"], lineage_table["lineage"]))
     for name, n in lineage_table["lineage"].value_counts().items():
         log.info(f"scan_editing: {n} species use {name} mito profiles")
     work_gene_calls_out = work_dir / "edited_gene_calls.new.tsv"
     work_edits_out = work_dir / "predicted_edits.new.tsv"
     work_shifts_out = work_dir / "frameshifts.new.tsv"
-    for i, out in enumerate((work_gene_calls_out, work_edits_out, work_shifts_out)):
-        parts = [keep_lineage(run[i], lineages, name) for name, run in runs.items()]
-        if own_run is not None:
-            covered = set(zip(own_run[0]["organelle"], own_run[0]["gene"]))
-            parts = [p[[pair not in covered for pair in zip(p["organelle"], p["gene"])]] for p in parts]
-        table = pd.concat(parts, ignore_index=True)
-        if out == work_shifts_out:
-            table = add_recurrence(table, lineages)
-        if own_run is not None:
-            # (no DToL recurrence for these: the reference counts frameshifts
-            # by the default profiles' columns)
-            own = own_run[i].assign(dtol_assemblies="") if out == work_shifts_out else own_run[i]
-            table = pd.concat([table, own], ignore_index=True)
+    for table, out in zip(tables, (work_gene_calls_out, work_edits_out, work_shifts_out)):
         table.to_csv(out, sep="\t", index=False)
     work_lineage_out = work_dir / "lineage.new.tsv"
     lineage_table.to_csv(work_lineage_out, sep="\t", index=False)
@@ -571,6 +775,19 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--threads", type=int, default=DEFAULT_THREADS)
     ap.add_argument("--flank", type=int, default=DEFAULT_FLANK)
     ap.add_argument("--edit-penalty", type=float, default=DEFAULT_EDIT_PENALTY)
+    ap.add_argument(
+        "--known-edit-penalty",
+        type=float,
+        default=lin.KNOWN_EDIT_PENALTY,
+        help="for the profiles that record their references' editing sites: cost of a C-to-U edit at a "
+        "column edited in them (default: %(default)s)",
+    )
+    ap.add_argument(
+        "--novel-edit-penalty",
+        type=float,
+        default=lin.NOVEL_EDIT_PENALTY,
+        help="...and at a column that is not (default: %(default)s)",
+    )
     ap.add_argument(
         "--frameshift-penalty",
         type=float,
@@ -606,6 +823,8 @@ def main(argv: list[str] | None = None) -> int:
             threads=args.threads,
             flank=args.flank,
             edit_penalty=args.edit_penalty,
+            known_edit_penalty=args.known_edit_penalty,
+            novel_edit_penalty=args.novel_edit_penalty,
             frameshift_penalty=args.frameshift_penalty,
             lineage=args.lineage,
         )

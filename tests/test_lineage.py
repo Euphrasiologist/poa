@@ -28,32 +28,136 @@ def scores(angio: float, moss: float, genes=GENES) -> dict:
 
 
 class Choose(unittest.TestCase):
+    def pick(self, s):
+        return lin.choose(lin.margins(s), lin.LINEAGES)
+
     def test_clear_moss(self):
-        lineage, n, totals = lin.choose(scores(300, 600))
-        self.assertEqual((lineage, n), ("moss", 5))
-        self.assertEqual(totals, {"angiosperm": 1500, "moss": 3000})
+        m = lin.margins(scores(300, 600))
+        self.assertEqual(m, {"moss": (300.0, 5)})
+        self.assertEqual(lin.choose(m), "moss")
 
     def test_clear_angiosperm(self):
-        self.assertEqual(lin.choose(scores(600, 300))[0], "angiosperm")
+        self.assertEqual(self.pick(scores(600, 300)), "angiosperm")
 
     def test_narrow_win_stays_angiosperm(self):
-        self.assertEqual(lin.choose(scores(500, 500 + lin.MIN_MARGIN - 1))[0], "angiosperm")
-        self.assertEqual(lin.choose(scores(500, 500 + lin.MIN_MARGIN))[0], "moss")
+        self.assertEqual(self.pick(scores(500, 500 + lin.MIN_MARGIN["moss"] - 1)), "angiosperm")
+        self.assertEqual(self.pick(scores(500, 500 + lin.MIN_MARGIN["moss"])), "moss")
 
     def test_too_few_shared_genes(self):
         few = GENES[: lin.MIN_SHARED_GENES - 1]
-        self.assertEqual(
-            lin.choose(scores(100, 900, few)),
-            ("angiosperm", len(few), {"angiosperm": 100 * len(few), "moss": 900 * len(few)}),
-        )
+        s = scores(100, 900, few)
+        self.assertEqual(lin.margins(s), {"moss": (800.0, len(few))})
+        self.assertEqual(self.pick(s), "angiosperm")
 
     def test_only_shared_genes_count(self):
         s = scores(300, 600)
         s["angiosperm"]["nad5"] = 10_000  # no moss profile for nad5: ignored
-        self.assertEqual(lin.choose(s)[:2], ("moss", 5))
+        self.assertEqual(lin.margins(s), {"moss": (300.0, 5)})
+        self.assertEqual(self.pick(s), "moss")
 
     def test_no_moss_run(self):
-        self.assertEqual(lin.choose({"angiosperm": {g: 1 for g in GENES}})[0], "angiosperm")
+        s = {"angiosperm": {g: 1 for g in GENES}}
+        self.assertEqual(lin.margins(s), {})
+        self.assertEqual(self.pick(s), "angiosperm")
+
+    def test_no_default_run(self):
+        self.assertEqual(lin.margins({"moss": {g: 1 for g in GENES}}), {})
+
+    def test_each_lineage_over_its_own_genes(self):
+        # liverwort profiles cover more genes than the moss ones; each is compared with the default over its own
+        s = scores(300, 600)
+        s["liverwort"] = {"atp4": 700, "atp6": 700, "atp8": 700, "nad6": 700}
+        s["angiosperm"].update(atp6=300, atp8=300, nad6=300)
+        self.assertEqual(lin.margins(s), {"moss": (300.0, 5), "liverwort": (400.0, 4)})
+
+
+class ChooseAmongLineages(unittest.TestCase):
+    """A margin per lineage: profiles from a few edited proteins are sharper, and bryophytes fit each other's."""
+
+    def test_takes_the_best_lineage_over_its_margin(self):
+        # a horsetail also fits the fern profiles, less well
+        self.assertEqual(lin.choose({"fern": (85.0, 17), "horsetail": (499.0, 23), "lycophyte": (52.0, 14)}), "horsetail")
+        self.assertEqual(lin.choose({"fern": (271.0, 16), "horsetail": (11.0, 18), "lycophyte": (25.0, 12)}), "fern")
+        self.assertEqual(lin.choose({"fern": (8.0, 17), "horsetail": (-47.0, 19), "lycophyte": (429.0, 14)}), "lycophyte")
+
+    def test_moss_and_liverwort(self):
+        # a moss fits the liverwort profiles too, and a liverwort the moss ones: each short of the other's margin
+        self.assertEqual(lin.choose({"moss": (310.0, 5), "liverwort": (210.0, 20)}), "moss")
+        self.assertEqual(lin.choose({"moss": (169.0, 5), "liverwort": (361.0, 20)}), "liverwort")
+        # a clubmoss on the liverwort profiles, a hornwort
+        self.assertEqual(lin.choose({"liverwort": (151.0, 18)}), "angiosperm")
+        self.assertEqual(lin.choose({"liverwort": (157.0, 18)}), "angiosperm")
+
+    def test_leaves_the_rest_on_the_default(self):
+        # a liverwort on the lycophyte profiles, an angiosperm, a hornwort
+        self.assertEqual(lin.choose({"fern": (18.0, 18), "horsetail": (-43.0, 23), "lycophyte": (144.0, 14)}), "angiosperm")
+        self.assertEqual(lin.choose({"fern": (-275.0, 18), "horsetail": (-417.0, 23), "lycophyte": (-380.0, 14)}), "angiosperm")
+        self.assertEqual(lin.choose({"fern": (13.0, 15), "horsetail": (-24.0, 15), "lycophyte": (100.0, 15)}), "angiosperm")
+        self.assertEqual(lin.choose({}), "angiosperm")
+        # the ferns furthest from the fern references (Ophioglossum, Cryptogramma) are still ferns
+        self.assertEqual(lin.choose({"fern": (85.0, 20), "horsetail": (41.0, 20)}), "fern")
+        self.assertEqual(lin.choose({"fern": (139.0, 11)}), "fern")
+
+    def test_needs_enough_genes_and_the_margin(self):
+        few = lin.MIN_SHARED_GENES - 1
+        self.assertEqual(lin.choose({"horsetail": (600.0, few)}), "angiosperm")
+        for name, margin in lin.MIN_MARGIN.items():
+            self.assertEqual(lin.choose({name: (margin - 1, 10)}), "angiosperm")
+            self.assertEqual(lin.choose({name: (margin, 10)}), name)
+
+    def test_among(self):
+        m = {"moss": (900.0, 10), "fern": (300.0, 10)}
+        self.assertEqual(lin.choose(m, lin.DETECTED), "fern")
+        self.assertEqual(lin.choose(m, lin.LINEAGES), "moss")
+        self.assertEqual(set(lin.DETECTED), set(lin.BORROWS))
+        self.assertEqual(lin.MARGIN_COLUMNS, [f"{x}_margin" for x in ("moss", "liverwort", *lin.DETECTED)])
+        self.assertEqual(lin.COLUMNS[4:], [*lin.MARGIN_COLUMNS, *lin.SITE_COLUMNS])
+        self.assertEqual(set(lin.MIN_MARGIN), set(lin.LINEAGES[1:]) | set(lin.DETECTED))
+
+
+class EditingSites(unittest.TestCase):
+    def test_follows_sites(self):
+        # judged on the mitochondrial calls when there are enough of them
+        self.assertTrue(lin.follows_sites({"mito": (190, 200), "pltd": (5, 60)}))
+        self.assertFalse(lin.follows_sites({"mito": (300, 700), "pltd": (25, 300)}))  # Ginkgo
+        self.assertEqual(lin.follows_sites({"mito": (13, 20)}), 13 / 20 >= lin.SITE_MIN_SHARE["mito"])
+        # else on the plastid ones, which have many more calls away from the known columns
+        self.assertTrue(lin.follows_sites({"mito": (2, 5), "pltd": (15, 40)}))
+        self.assertFalse(lin.follows_sites({"pltd": (22, 600)}))  # a hornwort's plastid
+        # and with too few of either the species keeps the ordinary cost
+        self.assertFalse(lin.follows_sites({"mito": (5, 5), "pltd": (3, 3)}))
+        self.assertFalse(lin.follows_sites({}))
+
+    def test_known_site_calls(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            header = "\t".join("ARNDCQEGHILKMFPSTWYV")
+            row = "\t".join(["0.0"] * 20)
+            sites, plain = Path(tmp) / "mito" / "nad3.pssm", Path(tmp) / "mito" / "rps2.pssm"
+            sites.parent.mkdir()
+            sites.write_text(f"{header}\tedit\n" + "".join(f"{row}\t{e}\n" for e in ("0", "0.5", "0", "1")))
+            plain.write_text(f"{header}\n{row}\n{row}\n")
+            self.assertEqual(scan_editing.site_columns(sites), [False, True, False, True])
+            self.assertIsNone(scan_editing.site_columns(plain))
+            rows = [dict(organelle="mito", profile=str(p)) for p in (sites, plain)]
+            edits = pd.DataFrame(
+                [
+                    ("Rose", "mito", "nad3", "1", "C>U"),
+                    ("Rose", "mito", "nad3", "2", "C>U"),
+                    ("Rose", "mito", "nad3", "3", "U>C"),  # not a C-to-U edit
+                    ("Rose", "mito", "nad3", "4", "C>U"),  # an edit-made stop, past the last column
+                    ("Rose", "mito", "rps2", "1", "C>U"),  # a profile without sites
+                ],
+                columns=["species", "organelle", "gene", "profile_column", "edit"],
+            )
+            self.assertEqual(scan_editing.known_site_calls(edits, rows), {"Rose": {"mito": (1, 2)}})
+
+    def test_load_site_species(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            self.assertEqual(lin.load_site_species(Path(tmp)), set())
+            path = lin.table_path(Path(tmp))
+            path.parent.mkdir(parents=True)
+            path.write_text("species\tlineage\tedit_sites\nRose\tangiosperm\tyes\nGinkgo\tangiosperm\tno\nMoss\tmoss\t\n")
+            self.assertEqual(lin.load_site_species(Path(tmp)), {"Rose"})
 
 
 class SplitRuns(unittest.TestCase):
@@ -97,7 +201,7 @@ class SplitRuns(unittest.TestCase):
         self.assertIsNone(lin.junction_slide("angiosperm"))
         self.assertIsNone(lin.stop_edit_penalty("angiosperm"))
         self.assertIsNone(lin.stop_edit_penalty("moss"))
-        self.assertEqual(lin.choose(scores(100, 900))[0], "moss")  # auto never says fern
+        self.assertEqual(lin.choose(lin.margins(scores(100, 900)), lin.LINEAGES), "moss")  # fern is not looked for here
 
     def test_forced_fern_keeps_the_default_run(self):
         # a species forced to fern takes its mito rows from the default
@@ -328,22 +432,78 @@ class HorsetailAndLycophyte(unittest.TestCase):
         self.assertLess(columns[0]["K"], 0)
 
 
+class Liverwort(unittest.TestCase):
+    """Liverwort: a lineage with references of its own, like moss, from RefSeq mitogenomes."""
+
+    def test_is_a_full_lineage(self):
+        self.assertIn("liverwort", lin.LINEAGES)
+        self.assertNotIn("liverwort", lin.BORROWS)
+        self.assertEqual(lin.reference("liverwort"), "liverwort")
+        self.assertIn("liverwort", lin.CHOICES)
+        self.assertIsNone(lin.stop_edit_penalty("liverwort"))
+        self.assertIsNone(lin.edit_penalty("liverwort"))
+
+    def test_spliced_genes(self):
+        from poa.pipeline.trans_splicing import reference_genes as rg
+
+        genes = rg.mito_spliced("liverwort")
+        self.assertTrue({"atp1", "atp9", "cob", "cox1", "cox3", "nad3", "nad4L", "rps14"} <= set(genes))
+        # a pseudogene in nearly every liverwort: no template
+        self.assertNotIn("nad7", genes)
+        self.assertIn("nad7", rg.mito_spliced("angiosperm"))
+        self.assertIn("nad7", rg.mito_spliced())
+        templates = lin.trans_splicing_reference(PIPELINE, "liverwort") / "profiles"
+        for gene in genes:
+            self.assertTrue((templates / gene / "whole_gene.pssm").exists(), gene)
+        self.assertFalse((templates / "nad7").exists())
+        # cox1 has ten exons in most liverworts; the others have lost introns and are not in the slots
+        self.assertTrue((templates / "cox1" / "exon10.pssm").exists())
+        self.assertEqual(scan_editing.lineage_spliced("liverwort"), set(rg.LINEAGE_EXTRA_SPLICED["liverwort"]))
+
+    def test_profiles(self):
+        from poa.pipeline.editing import lineage_profiles as lp
+        from poa.pipeline.trans_splicing import reference_genes as rg
+
+        have = {p.stem for p in (lin.editing_profiles(PIPELINE, "liverwort") / "mito").glob("*.pssm")}
+        self.assertTrue({"atp4", "atp6", "ccmB", "nad6", "rps2", "sdh3", "sdh4"} <= have)
+        # the genes liverworts splice are templates, not profiles; matR is not a liverwort gene
+        self.assertFalse(have & set(rg.LINEAGE_EXTRA_SPLICED["liverwort"]))
+        self.assertNotIn("matR", have)
+        self.assertEqual(set(have) - set(lp.LIVERWORT_GENES), set())
+        self.assertEqual(len(rg.LIVERWORT_MITOGENOMES), 27)
+
+
+class EditCost(unittest.TestCase):
+    """A lineage's own cost of a C-to-U edit (moss)."""
+
+    def test_moss_only(self):
+        self.assertEqual(lin.edit_penalty("moss"), 6.0)
+        for name in ("angiosperm", "liverwort", "fern", "horsetail", "lycophyte", "auto"):
+            self.assertIsNone(lin.edit_penalty(name))
+        self.assertGreater(lin.edit_penalty("moss"), scan_editing.DEFAULT_EDIT_PENALTY)
+
+
 class LineagePlastid(unittest.TestCase):
-    """A lineage's own plastid references (fern), used with --lineage on
-    top of the land-plant plastid set."""
+    """A lineage's own plastid references, used for its species on top of
+    the land-plant plastid set: RNA-edited genes of DToL assemblies (fern,
+    horsetail, lycophyte) or RefSeq plastomes (moss, liverwort)."""
 
     def test_where_they_live(self):
         from poa.pipeline.trans_splicing import reference_genes as rg
 
-        self.assertEqual(rg.LINEAGE_PLASTID, ("fern",))
+        self.assertEqual(set(rg.LINEAGE_PLASTID), {"fern", "horsetail", "lycophyte", "moss", "liverwort"})
+        self.assertEqual(set(rg.LINEAGE_PLASTOMES), {"moss", "liverwort"})
         shared = PIPELINE / "trans_splicing" / "reference" / "plastid"
         self.assertEqual(rg.reference_dir(PIPELINE, "pltd"), shared)
-        self.assertEqual(rg.reference_dir(PIPELINE, "pltd", "moss"), shared)
         self.assertEqual(rg.reference_dir(PIPELINE, "pltd", "angiosperm"), shared)
-        own = rg.reference_dir(PIPELINE, "pltd", "fern")
-        self.assertEqual(own, lin.trans_splicing_reference(PIPELINE, "fern") / "plastid")
-        self.assertTrue((own / "profiles" / "ndhB" / "exon2.pssm").exists())
-        self.assertTrue((own / "raw_rna" / "junctions.tsv").exists())
+        for name in rg.LINEAGE_PLASTID:
+            own = rg.reference_dir(PIPELINE, "pltd", name)
+            self.assertEqual(own, lin.trans_splicing_reference(PIPELINE, name) / "plastid")
+            self.assertTrue((own / "profiles" / "rpl2" / "whole_gene.pssm").exists(), name)
+            # RefSeq loci in raw/, RNA-edited ones in raw_rna/
+            source = "raw" if name in rg.LINEAGE_PLASTOMES else "raw_rna"
+            self.assertTrue((own / source / "junctions.tsv").exists(), name)
+            self.assertFalse((own / "genbank").exists() and name not in rg.LINEAGE_PLASTOMES)
 
     def test_profiles_and_proteins(self):
         from poa.pipeline.editing import lineage_profiles as lp
@@ -355,7 +515,22 @@ class LineagePlastid(unittest.TestCase):
         self.assertNotIn("rbcL", lp.rna_proteins("fern"))  # the mito set is a separate file
         self.assertEqual(lp.rna_proteins("moss", organelle="pltd"), {})
         with self.assertRaises(ValueError):
-            lp.build_plastid_profiles("moss", Path("."))
+            lp.build_plastid_profiles("auto", Path("."))
+
+    def test_refseq_plastid_proteins(self):
+        from poa.pipeline.editing import lineage_profiles as lp
+        from poa.pipeline.trans_splicing import reference_genes as rg
+
+        self.assertEqual(lp.refseq_plastid_proteins("fern"), {})
+        for name, plastomes in rg.LINEAGE_PLASTOMES.items():
+            proteins = lp.refseq_plastid_proteins(name)
+            self.assertTrue(set(proteins) <= set(lp.plastid_profile_genes()))
+            self.assertTrue(set(proteins["rbcL"]) <= set(plastomes))
+            self.assertGreater(len(proteins["rbcL"]), len(plastomes) // 2)
+            acc = next(iter(proteins["rbcL"]))
+            self.assertNotIn(acc, lp.refseq_plastid_proteins(name, (acc,))["rbcL"])
+            have = {p.stem for p in (lin.editing_profiles(PIPELINE, name) / "pltd").glob("*.pssm")}
+            self.assertTrue({"rbcL", "atpA", "psbB"} <= have, name)
 
     def test_reconstruct_uses_them_for_that_lineage_only(self):
         from poa.pipeline.trans_splicing import reconstruct

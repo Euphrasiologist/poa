@@ -215,6 +215,8 @@ def reconstruct(
     lineage: str = "auto",
     organelles: list[str] | tuple[str, ...] = ORGANELLES,
     frameshift_penalty: float = DEFAULT_FRAMESHIFT_PENALTY,
+    known_edit_penalty: float = lin.KNOWN_EDIT_PENALTY,
+    novel_edit_penalty: float = lin.NOVEL_EDIT_PENALTY,
 ) -> ReconstructResult:
     """Reconstruct the spliced genes under data root `root` (mito GENES,
     plastid PLASTID_SPLICED, for `organelles`).
@@ -240,6 +242,8 @@ def reconstruct(
     calls = pd.read_csv(gene_calls_path, sep="\t")
 
     lineage_of = lin.load(analysis_dir) if lineage == "auto" else {}
+    # the species editing corrected at the editing-site costs (lin.follows_sites)
+    site_species = lin.load_site_species(analysis_dir)
     if lineage_of is None:
         log.warning(
             f"no {lin.table_path(analysis_dir)} (run editing/src/01_scan_editing.py first) - "
@@ -274,7 +278,15 @@ def reconstruct(
     # The same goes for the junction slide (lin.junction_slide), which an
     # older transsplice simply lacks.
     can_slide = supports_option(transsplice, "--junction-slide")
-    groups: dict[tuple[float | None, float | None, int | None], list[dict]] = {}
+    # the bundled angiosperm templates carry their editing sites in a 21st
+    # column, which a transsplice without --novel-edit-penalty cannot read
+    if not supports_option(transsplice, "--novel-edit-penalty"):
+        raise StageError(f"{transsplice} is too old for the bundled templates (no --novel-edit-penalty): transsplice 0.3.0 is needed")
+    # And a lineage's own cost of a C-to-U edit (lin.edit_penalty), for its
+    # genes on its own templates, mito or plastid (moss).
+    # And the editing-site costs, for the species editing found to edit
+    # where the default references do (templates without sites ignore them).
+    groups: dict[tuple[float | None, float | None, int | None, float | None, bool], list[dict]] = {}
     for row in rows:
         name = lineage_of.get(row["species"], default_lineage)
         own = row["organelle"] == "mito" and template_lineage(name) == name
@@ -286,6 +298,12 @@ def reconstruct(
             lin.stop_edit_penalty(name),
             lin.reverse_edit_penalty(name) if own else None,
             lin.junction_slide(name) if own and can_slide else None,
+            (
+                lin.edit_penalty(name)
+                if (template_lineage(name) == name if row["organelle"] == "mito" else on_lineage_plastid_templates(row, name))
+                else None
+            ),
+            row["species"] in site_species and template_lineage(name) == lin.DEFAULT_LINEAGE,
         )
         groups.setdefault(key, []).append(row)
     if not can_slide and any(lin.junction_slide(lineage_of.get(r["species"], default_lineage)) for r in rows):
@@ -295,7 +313,7 @@ def reconstruct(
             raise StageError(f"the fern lineage needs a transsplice with {option}; {transsplice} has none")
     parts: dict[str, list[pd.DataFrame]] = {name: [] for name in OUT_NAMES}
     order = sorted(groups.items(), key=lambda g: tuple((v is not None, v or 0) for v in g[0]))
-    for n, ((stop, reverse, slide), group_rows) in enumerate(order):
+    for n, ((stop, reverse, slide, edit, sites), group_rows) in enumerate(order):
         tag = "" if len(groups) == 1 else f".{n}"
         manifest_path = work_dir / f"manifest{tag}.tsv"
         write_manifest(group_rows, manifest_path)
@@ -304,6 +322,8 @@ def reconstruct(
             + (f" (stop read-through at {stop})" if stop is not None else "")
             + (f" (other U-to-C edits at {reverse})" if reverse is not None else "")
             + (f" (junction slide {slide})" if slide is not None else "")
+            + (f" (C-to-U edits at {edit})" if edit is not None else "")
+            + (f" (editing sites: {known_edit_penalty} at a known column, {novel_edit_penalty} elsewhere)" if sites else "")
         )
         outs = {name: work_dir / f"{name}.new{tag}.tsv" for name in OUT_NAMES}
         cmd = [
@@ -343,6 +363,10 @@ def reconstruct(
             cmd += ["--reverse-edit-penalty", str(reverse)]
         if slide is not None:
             cmd += ["--junction-slide", str(slide)]
+        if edit is not None:
+            cmd += ["--edit-penalty", str(edit)]
+        if sites:
+            cmd += ["--known-edit-penalty", str(known_edit_penalty), "--novel-edit-penalty", str(novel_edit_penalty)]
         proc = subprocess.run(cmd)
         if proc.returncode != 0:
             raise StageError(f"transsplice scan-batch failed (exit {proc.returncode})")

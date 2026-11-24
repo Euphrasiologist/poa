@@ -28,7 +28,7 @@ where = ["src"]
 "*" = ["**/*"]
 
 [tool.setuptools.exclude-package-data]
-"*" = ["**/__pycache__/*", "**/*.pyc"]
+"*" = ["**/__pycache__/*", "**/*.pyc", "**/lineages/*/plastid/genbank/*"]
 
 [tool.black]
 line-length = 120

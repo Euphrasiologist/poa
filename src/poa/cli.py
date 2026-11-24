@@ -58,6 +58,20 @@ def tool_version(cmd: str, flag: str | None) -> str:
     return out[0][:60] if out else ""
 
 
+# An option each of these must have: the bundled profiles record editing
+# sites in a column only a version with it can read (orfedit 0.2.0,
+# transsplice 0.3.0).
+NEEDS_OPTION = {"orfedit": "--novel-edit-penalty", "transsplice": "--novel-edit-penalty"}
+
+
+def has_option(cmd: str, option: str) -> bool:
+    try:
+        proc = subprocess.run([cmd, "scan-batch", "--help"], capture_output=True, text=True, timeout=30)
+    except (OSError, subprocess.TimeoutExpired):
+        return False
+    return option in proc.stdout
+
+
 def check_tools() -> int:
     ok = True
     print(f"poa {__version__}")
@@ -66,6 +80,9 @@ def check_tools() -> int:
         if shutil.which(cmd) is None:
             ok = False
             print(f"  MISSING  {cmd:13} ({why})")
+        elif cmd in NEEDS_OPTION and not has_option(cmd, NEEDS_OPTION[cmd]):
+            ok = False
+            print(f"  TOO OLD  {cmd:13} {tool_version(cmd, flag)} (no {NEEDS_OPTION[cmd]})")
         else:
             print(f"  ok       {cmd:13} {tool_version(cmd, flag)}")
     print("tools for the dataset-scale stages (optional):")
@@ -113,16 +130,17 @@ def check() -> None:
 )
 @click.option(
     "--lineage",
-    type=click.Choice(["auto", "angiosperm", "moss", "fern", "horsetail", "lycophyte"]),
+    type=click.Choice(["auto", "angiosperm", "moss", "liverwort", "fern", "horsetail", "lycophyte"]),
     default="auto",
     show_default=True,
     help="reference lineage for mito editing profiles and spliced-gene templates: "
-    "auto picks angiosperm or moss, whichever the sample's genes fit best. fern (never "
-    "picked automatically; for ferns, quillworts and hornworts) uses the angiosperm "
-    "references and reads in-frame stop codons through as U-to-C RNA edits. horsetail "
-    "(never picked automatically; Equisetum) has exon templates and editing profiles "
-    "from Equisetum RNA-seq. lycophyte (never picked automatically; clubmosses, "
-    "Lycopodiaceae) has them from RNA-edited clubmoss genes and reads stops through",
+    "auto picks the one the sample's mito genes fit best. moss and liverwort have "
+    "references of their own, from RefSeq genomes. fern (ferns; forced, also "
+    "quillworts and hornworts) uses the angiosperm references with fern templates and "
+    "profiles, and reads in-frame stop codons through as U-to-C RNA edits. horsetail "
+    "(Equisetum) has exon templates and editing profiles from Equisetum RNA-seq. "
+    "lycophyte (clubmosses, Lycopodiaceae) has them from RNA-edited clubmoss genes and "
+    "reads stops through",
 )
 @click.option(
     "--genus",

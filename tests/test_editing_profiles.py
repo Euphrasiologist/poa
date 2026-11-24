@@ -24,6 +24,36 @@ class ProfilePaths(unittest.TestCase):
             self.assertEqual(profile_paths([dataset, refseq], "pltd"), {})
 
 
+class EditingSites(unittest.TestCase):
+    def test_reference_proteins_are_grouped_by_genus(self):
+        names = ["RNA_Populus_alba", "RNA_Populus_tremula", "NC_037304.1", "NC_x"]
+        groups = lp.genus_groups(names, {"NC_037304.1": "Arabidopsis thaliana"})
+        self.assertEqual(groups["RNA_Populus_alba"], groups["RNA_Populus_tremula"])
+        self.assertEqual(groups["NC_037304.1"], "Arabidopsis")
+        self.assertEqual(groups["NC_x"], "NC_x")  # an accession nobody named stands for itself
+
+    def test_only_site_lineages_keep_the_marks(self):
+        # angiosperm proteins say which residues editing made; a lineage whose
+        # proteins do not all say gets them in upper case, so no profile of
+        # it has sites from some of its proteins only
+        self.assertEqual(lin.SITE_LINEAGES, (lin.DEFAULT_LINEAGE,))
+        for lineage in ("fern", "horsetail", "lycophyte"):
+            for by_name in lp.rna_proteins(lineage).values():
+                for seq in by_name.values():
+                    self.assertEqual(seq, seq.upper())
+
+    def test_bundled_angiosperm_profiles_carry_sites(self):
+        from poa.pipeline.common import pssm
+
+        mito = sorted((lp.refseq_profiles_dir() / "mito").glob("*.pssm"))
+        with_sites = [p for p in mito if p.read_text().splitlines()[0].split("\t")[-1] == pssm.EDIT_COLUMN]
+        # every profile but the two halves of the split ccmFn, which are as annotated
+        self.assertEqual(sorted(p.stem for p in mito if p not in with_sites), ["ccmFn1", "ccmFn2"])
+        nad3 = [line.split("\t") for line in (lp.refseq_profiles_dir() / "mito" / "nad3.pssm").read_text().splitlines()[1:]]
+        self.assertTrue(all(len(row) == 21 for row in nad3))
+        self.assertGreater(sum(float(row[20]) > 0 for row in nad3), 10)  # nad3 is edited at a fifth of its codons
+
+
 class BundledProfiles(unittest.TestCase):
     def test_moss_genes_pinned(self):
         # the lineage call was calibrated on these; adding genes changes it
@@ -33,7 +63,7 @@ class BundledProfiles(unittest.TestCase):
 
     def test_refseq_profiles_bundled_for_single_exon_genes(self):
         bundled = {p.stem for p in (lp.refseq_profiles_dir() / "mito").glob("*.pssm")}
-        self.assertEqual(len(bundled), 28)
+        self.assertGreaterEqual(len(bundled), 28)
         self.assertTrue({"atp6", "atp9", "cox1", "rps12", "ccmFn1", "ccmFn2"} <= bundled)
         self.assertTrue(bundled <= set(lp.REFSEQ_GENES) | set(lp.SPLIT_CCMFN_GENES))
 

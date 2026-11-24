@@ -55,7 +55,8 @@ from pathlib import Path
 
 from poa import PIPELINE_DIR
 from poa.pipeline.common import lineage as lin
-from poa.pipeline.common.pssm import align_and_build, composition, translate, read_fasta, write_profile
+from poa.pipeline.common.pssm import align_and_build, composition, mark_edited, run_mafft, translate, read_fasta, write_profile
+from poa.pipeline.common.refseq_mito import n_edited, unedited
 from poa.pipeline.common.tools import cargo_tool
 from poa.pipeline.trans_splicing.reference_genes import (
     GENES,
@@ -63,8 +64,10 @@ from poa.pipeline.trans_splicing.reference_genes import (
     LINEAGE_PLASTID,
     mito_spliced,
     LINEAGE_MITOGENOMES,
+    LINEAGE_PLASTOMES,
     LINEAGE_UNEDITED_MITOGENOMES,
     PLASTID_SPLICED,
+    PLASTOMES,
     reference_dir,
 )
 from poa.pipeline.common.log import setup_logging
@@ -163,8 +166,101 @@ def load_junctions(*raw_dirs: Path) -> dict[tuple[str, str, str], dict]:
                 if key in out:
                     continue
                 excluded = "UNRESOLVED" in row["notes"]
-                out[key] = {"n_exons": int(row["n_exons"]), "excluded": excluded}
+                # an RNA-derived locus whose reads are not the assembly's plant (rna_refs.py): its
+                # protein is used, its differences from the genome are not taken for editing sites
+                out[key] = {"n_exons": int(row["n_exons"]), "excluded": excluded, "sites": NO_SITES_NOTE not in row["notes"]}
     return out
+
+
+# Lineages whose templates take a gene's full intron set, from loci that
+# do not all have it (union_exons). Angiosperm cox2 has two intron
+# positions: the Nymphaea, Nelumbo and Sedum genes have both, beet's has
+# the first only, Arabidopsis' and the cucurbits' the second only, the
+# legumes' neither. Slots from the loci of the commonest exon count mixed
+# the two two-exon forms, and cox2 was placed in none of 18 RefSeq genomes.
+LINEAGE_UNION_INTRONS = ("angiosperm",)
+NO_SITES_NOTE = "sites not used"
+# junctions of two loci are the same intron when they fall within this
+# many columns of the proteins' alignment
+JUNCTION_COLUMNS = 4
+
+
+def union_exons(
+    gene: str, included: list, raw: dict, junctions: dict, work_dir: Path, min_loci: int
+) -> tuple[dict, dict] | None:
+    """A gene's loci recut to its full intron set, or None when every
+    locus already has it.
+
+    Each locus' introns are placed on an alignment of the loci's proteins;
+    positions shared by at least min_loci loci make the set. A locus
+    without one of them is cut at the homologous codon, in the phase most
+    loci have there, so every locus gives every exon slot; an intron only
+    one locus has is ignored (its two exons stay joined). Returns ({locus:
+    {exon number: DNA, "refseq": protein}}, {locus: {"n_exons": K,
+    "excluded": False}}) for the loci with exons and a protein."""
+    loci = [k for k in included if "refseq" in raw[k] and k in junctions]
+    exons = {k: [raw[k][n] for n in sorted(n for n in raw[k] if isinstance(n, int))] for k in loci}
+    loci = [k for k in loci if exons[k]]
+    if len(loci) < 2:
+        return None
+    fasta, aligned = work_dir / f"{gene}.union.protein.fasta", work_dir / f"{gene}.union.aligned.fasta"
+    fasta.write_text("".join(f">{i}\n{raw[k]['refseq']}\n" for i, k in enumerate(loci)))
+    if not run_mafft(fasta, aligned):
+        return None
+    rows = read_fasta(aligned)
+    # per locus: residue index -> alignment column, and back
+    columns = {}
+    for i, k in enumerate(loci):
+        columns[k] = [c for c, ch in enumerate(rows[str(i)]) if ch != "-"]
+    cuts = []  # (column, locus, nt position in the joined CDS)
+    for k in loci:
+        cum = 0
+        for seq in exons[k][:-1]:
+            cum += len(seq)
+            residue = min(cum // 3, len(columns[k]) - 1)
+            cuts.append((columns[k][residue], k, cum))
+    cuts.sort(key=lambda c: c[0])
+    clusters: list[list] = []
+    for cut in cuts:
+        if clusters and cut[0] - clusters[-1][-1][0] <= JUNCTION_COLUMNS:
+            clusters[-1].append(cut)
+        else:
+            clusters.append([cut])
+    shared = [c for c in clusters if len({k for _, k, _ in c}) >= min_loci]
+    counts = Counter(len(exons[k]) for k in loci)
+    modal = counts.most_common(1)[0][0]
+    has = {k: {i for i, c in enumerate(shared) if any(k2 == k for _, k2, _ in c)} for k in loci}
+    if all(len(has[k]) == len(shared) for k in loci) and modal == len(shared) + 1:
+        return None
+    if len(shared) + 1 < modal:
+        # the alignment did not bring the loci's introns together: leave the gene as it is
+        log.warning(f"{gene}: {modal - 1} intron(s) in most loci but {len(shared)} shared position(s) - not recut")
+        return None
+    new_raw, new_junctions = {}, {}
+    for k in loci:
+        cds = "".join(exons[k])
+        points = []
+        for c in shared:
+            own = [nt for _, k2, nt in c if k2 == k]
+            if own:
+                points.append(own[0])
+                continue
+            column = sorted(col for col, _, _ in c)[len(c) // 2]
+            phase = Counter(nt % 3 for _, _, nt in c).most_common(1)[0][0]
+            residue = sum(1 for col in columns[k] if col < column)
+            points.append(min(3 * residue + phase, len(cds)))
+        points = sorted(set(points))
+        if len(points) != len(shared) or points[0] <= 0 or points[-1] >= len(cds):
+            continue  # the locus lacks the stretch an intron sits in
+        bounds = [0, *points, len(cds)]
+        new_raw[k] = {n + 1: cds[a:b] for n, (a, b) in enumerate(zip(bounds, bounds[1:]))}
+        new_raw[k]["refseq"] = raw[k]["refseq"]
+        new_junctions[k] = {"n_exons": len(shared) + 1, "excluded": False}
+    log.info(
+        f"{gene}: full intron set of {len(shared)} from loci with {dict(counts)} exons "
+        f"({len(new_raw)} loci recut, {len(loci) - len(new_raw)} left out)"
+    )
+    return new_raw, new_junctions
 
 
 def build_and_write_profile(
@@ -177,7 +273,9 @@ def build_and_write_profile(
     trim_ends: tuple[bool, bool] = (False, False),
     gap_threshold: float | None = None,
     min_sequences: int = 2,
+    groups: dict[str, str] | None = None,
 ) -> bool:
+    # groups: the proteins mark their edited residues (lower case), counted by these (pssm.align_and_build)
     if len(protein_seqs) < min_sequences:
         log.warning(f"{label}: only {len(protein_seqs)} sequences, need >= {min_sequences} - skipping")
         return False
@@ -189,6 +287,8 @@ def build_and_write_profile(
         background=background,
         pseudocount_mass=pseudocount_mass,
         trim_ends=trim_ends,
+        groups=groups,
+        sites=groups is not None,
     )
     if columns is None:
         log.warning(f"{label}: no usable alignment - skipping")
@@ -304,6 +404,14 @@ def build_exon_profiles(
     # references whose proteins are not the edited ones (fern)
     if organelle == "mito":
         exclude = tuple(exclude) + tuple(LINEAGE_UNEDITED_MITOGENOMES.get(lineage, ()))
+    # The shared plastid set, once it has RNA-edited loci (raw_rna/, genes
+    # of DToL angiosperms): built from those alone, slots cut from their
+    # proteins. The RefSeq plastomes' proteins are the genomes' own
+    # translations, and against templates of them 2 of 17 edits called in
+    # six angiosperms' spliced plastid genes were in their RNA.
+    if organelle == "pltd" and not own_plastid and (ref_dir / RNA_RAW_NAME).is_dir():
+        exclude = tuple(exclude) + tuple(PLASTOMES)
+        edited_proteins = True
     profiles_dir = Path(out_dir) if out_dir else ref_dir / "profiles"
     work_dir = Path(work_root or os.getcwd()) / "analysis" / "trans_splicing" / "work"
     if organelle == "pltd":
@@ -315,10 +423,11 @@ def build_exon_profiles(
 
     raw = load_all_raw_data(*sources)
     junctions = load_junctions(*sources)
+    organisms = {**PLASTOMES, **LINEAGE_PLASTOMES.get(lineage, {})} if organelle == "pltd" else LINEAGE_MITOGENOMES[lineage]
     mask = column_mask.load_mask(lineage) if use_mask and organelle == "mito" else {}
     gap_threshold = LINEAGE_GAP_THRESHOLD.get(lineage) if organelle == "mito" or own_plastid else None
-    min_loci = LINEAGE_MIN_LOCI.get(lineage, 2) if organelle == "mito" else 2
-    sharp = LINEAGE_PSEUDOCOUNT.get(lineage) if organelle == "mito" else None
+    min_loci = LINEAGE_MIN_LOCI.get(lineage, 2) if organelle == "mito" or own_plastid else 2
+    sharp = LINEAGE_PSEUDOCOUNT.get(lineage) if organelle == "mito" or own_plastid else None
     if sharp is not None and slot_pseudocount is not None:
         slot_pseudocount = sharp
 
@@ -328,6 +437,20 @@ def build_exon_profiles(
         excluded = [key for key in loci if key not in included]
         if excluded:
             log.info(f"{gene}: excluding {[k[2] for k in excluded]} (flagged in junctions.tsv)")
+        # angiosperm: a record annotated with edited proteins can still give
+        # a gene or two unedited (beet ccmFc, rice nad4): those loci out too
+        if lineage == lin.DEFAULT_LINEAGE and organelle == "mito":
+            counts = {
+                key: n_edited("".join(raw[key][n] for n in sorted(k for k in raw[key] if isinstance(k, int))), raw[key]["refseq"])
+                for key in included
+                if "refseq" in raw[key]
+            }
+            # (not a locus whose protein is from RNA-seq: few edits there is
+            # what its reads show)
+            plain = {key for key in unedited(counts) if not key[0].startswith("RNA_")}
+            if plain:
+                log.info(f"{gene}: excluding {sorted(k[0] for k in plain)} (annotated unedited: {sorted(counts.values())})")
+                included = [key for key in included if key not in plain]
 
         gene_dir = profiles_dir / gene
 
@@ -338,14 +461,29 @@ def build_exon_profiles(
             acc, _, locus = key
             if "refseq" in raw[key]:
                 whole_seqs[f"{acc}_{locus}"] = raw[key]["refseq"]
+        # ... with the residues editing made marked, where the proteins are the
+        # edited ones (lin.SITE_LINEAGES): the editing sites of the whole-gene
+        # profile and, cut from the same proteins, of the exon slots'
+        marked, groups = whole_seqs, None
+        if lineage in lin.SITE_LINEAGES and edited_proteins:
+            marked, groups = {}, {}
+            for key in included:
+                acc, _, locus = key
+                if "refseq" not in raw[key]:
+                    continue
+                name, protein = f"{acc}_{locus}", raw[key]["refseq"]
+                dna = "".join(raw[key][n] for n in sorted(k for k in raw[key] if isinstance(k, int)))
+                marked[name] = mark_edited(dna, protein) if junctions.get(key, {}).get("sites", True) else protein.upper()
+                groups[name] = acc.split("_")[1] if acc.startswith("RNA_") else organisms.get(acc, acc).split()[0]
         if not (slots_only and (gene_dir / "whole_gene.pssm").exists()):
             built = build_and_write_profile(
-                whole_seqs,
+                marked,
                 gene_dir / "whole_gene.pssm",
                 f"{gene}.whole_gene",
                 work_dir,
                 gap_threshold=gap_threshold,
                 min_sequences=min_loci,
+                groups=groups,
                 **({} if sharp is None else dict(background=composition(whole_seqs.values()), pseudocount_mass=sharp)),
             )
             # columns the lineage's own species don't have (column_mask.py)
@@ -355,6 +493,15 @@ def build_exon_profiles(
         # exon slots score against the whole protein's composition, not
         # their own few residues' (see pssm.build_profile)
         slot_background = composition(whole_seqs.values()) if slot_pseudocount is not None else None
+
+        # A gene whose loci differ in which introns they have: slots for the
+        # full set, every locus recut to it (union_exons)
+        if lineage in LINEAGE_UNION_INTRONS and organelle == "mito":
+            recut = union_exons(gene, included, raw, junctions, work_dir, min_loci)
+            if recut is not None:
+                raw = {**raw, **recut[0]}
+                junctions = {**junctions, **recut[1]}
+                included = [key for key in included if key in recut[0]]
 
         # Per-exon-slot profiles: only loci with the canonical (modal) exon
         # count contribute a given slot - naturally excludes Beta vulgaris'
@@ -386,7 +533,8 @@ def build_exon_profiles(
         if edited_proteins:
             for key, per in frames.items():
                 acc, _, locus = key
-                protein, cum = raw[key].get("refseq", ""), 0
+                # (with its editing sites marked, where it has them)
+                protein, cum = marked.get(f"{acc}_{locus}", raw[key].get("refseq", "")), 0
                 for n in range(1, k + 1):
                     lead, trail = per[n]
                     first, n_codons = (cum + lead) // 3, (len(raw[key][n]) - lead - trail) // 3
@@ -433,6 +581,7 @@ def build_exon_profiles(
                 trim,
                 gap_threshold,
                 min_loci,
+                groups,
             ):
                 continue
             min_score = compute_min_self_score(gene, slot, dna_seqs, profile_path, work_dir, orfedit, stop_edit)

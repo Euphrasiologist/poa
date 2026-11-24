@@ -56,7 +56,7 @@ from Bio import SeqIO
 from poa import PIPELINE_DIR
 from poa.pipeline.common import lineage as lin
 from poa.pipeline.common.errors import StageError
-from poa.pipeline.common.refseq_mito import cds_exons, fetch, verify
+from poa.pipeline.common.refseq_mito import cds_exons, fetch, n_edited, unedited, verify
 from poa.pipeline.common import pssm
 from poa.pipeline.editing import profiles
 from poa.pipeline.trans_splicing import column_mask
@@ -98,9 +98,15 @@ HORSETAIL_GENES = [g for g in REFSEQ_GENES if g not in rg.LINEAGE_EXTRA_SPLICED[
 # lycophyte: every single-exon gene of clubmosses (rg.LINEAGE_EXTRA_SPLICED
 # lists the ones with introns there), from RNA-edited proteins only.
 LYCOPHYTE_GENES = [g for g in REFSEQ_GENES if g not in rg.LINEAGE_EXTRA_SPLICED["lycophyte"]]
+# liverwort: every single-exon gene of liverworts (rg.LINEAGE_EXTRA_SPLICED
+# lists the ones with introns there; nad1, rps3, rps10 and ccmFc, single-exon
+# in liverworts, are one-slot exon templates). Not matR, which liverworts
+# lack. rpl6 and rps8, which they keep, have no gene model to call them.
+LIVERWORT_GENES = [g for g in REFSEQ_GENES if g not in ("matR", *rg.LINEAGE_EXTRA_SPLICED["liverwort"])]
 LINEAGE_GENES = {
     lin.DEFAULT_LINEAGE: REFSEQ_GENES,
     "moss": MOSS_GENES,
+    "liverwort": LIVERWORT_GENES,
     "fern": FERN_GENES,
     "horsetail": HORSETAIL_GENES,
     "lycophyte": LYCOPHYTE_GENES,
@@ -109,7 +115,9 @@ LINEAGE_GENES = {
 # five species with fully edited proteins (rg.FERN_EDITED_MITOGENOMES).
 # Horsetail is one genus (Equisetum), and lycophyte has one deeply
 # sequenced transcriptome (Phylloglossum): see exon_profiles.LINEAGE_MIN_LOCI.
-LINEAGE_MIN_SEQUENCES = {"fern": 4, "horsetail": 1, "lycophyte": 1}
+# Angiosperm: 14 RefSeq mitogenomes are annotated with edited proteins, and
+# rps19 and sdh3 are single-exon and edited in four of them.
+LINEAGE_MIN_SEQUENCES = {"angiosperm": 4, "fern": 4, "horsetail": 1, "lycophyte": 1}
 # ccmFn is two genes in Brassicaceae and Allium (denovo_annotation's
 # gene_calls renames the pieces ccmFn1/ccmFn2), so each piece gets its own
 # profile, from these RefSeq mitogenomes: a spread of Brassicaceae, not
@@ -140,6 +148,7 @@ SPLIT_CCMFN_SYNONYMS = {"ccmfn": "ccmFn1", "ccmfn1": "ccmFn1", "ccmfn2": "ccmFn2
 LINEAGE_GAP_THRESHOLD = {
     lin.DEFAULT_LINEAGE: 0.5,
     "moss": pssm.GAP_COLUMN_THRESHOLD,
+    "liverwort": 0.5,
     "fern": 0.5,
     "horsetail": 0.5,
     "lycophyte": 0.5,
@@ -162,6 +171,7 @@ LINEAGE_SYNONYMS = {
     "moss": SYNONYMS,
 }
 LINEAGE_SYNONYMS["fern"] = {**LINEAGE_SYNONYMS[lin.DEFAULT_LINEAGE], "mat-lepto": "matR"}
+LINEAGE_SYNONYMS["liverwort"] = LINEAGE_SYNONYMS[lin.DEFAULT_LINEAGE]
 LINEAGE_SYNONYMS["horsetail"] = LINEAGE_SYNONYMS[lin.DEFAULT_LINEAGE]
 LINEAGE_SYNONYMS["lycophyte"] = LINEAGE_SYNONYMS[lin.DEFAULT_LINEAGE]
 
@@ -183,13 +193,17 @@ def collect_proteins(
     synonyms: dict[str, str],
     exclude: tuple[str, ...],
     reverse: bool = False,
+    edited_only: bool = False,
 ) -> tuple[dict[str, dict[str, str]], dict[str, Counter]]:
     """Per gene, {accession: verified single-exon RefSeq protein}, and the
     gene's exon counts across the mitogenomes. reverse: the lineage edits U
-    to C too, which verification then allows for."""
+    to C too, which verification then allows for. edited_only: leave out a
+    protein annotated unedited where the other records' are edited
+    (refseq_mito.unedited)."""
     wanted = {g.lower(): g for g in genes}
     proteins: dict[str, dict[str, str]] = {g: {} for g in genes}
     n_exons: dict[str, Counter] = {g: Counter() for g in genes}
+    edits: dict[str, dict[str, int]] = {g: {} for g in genes}
     for acc, organism in mitogenomes.items():
         if acc in exclude:
             continue
@@ -210,6 +224,14 @@ def collect_proteins(
                 log.warning(f"{acc} {organism} {gene}: {note} - not used")
                 continue
             proteins[gene][acc] = f.qualifiers["translation"][0]
+            edits[gene][acc] = n_edited(exons[0], f.qualifiers["translation"][0])
+            if edited_only:  # annotated edited proteins (lin.SITE_LINEAGES): which residues editing made
+                proteins[gene][acc] = pssm.mark_edited(exons[0], proteins[gene][acc])
+    if edited_only:
+        for gene in genes:
+            for acc in sorted(unedited(edits[gene])):
+                log.info(f"{acc} {gene}: annotated unedited ({edits[gene][acc]} edits; others {sorted(edits[gene].values())}) - not used")
+                del proteins[gene][acc]
     return proteins, n_exons
 
 
@@ -231,9 +253,87 @@ LINEAGE_PSEUDOCOUNT: dict[str, float] = {"fern": 2.0, "horsetail": 0.25, "lycoph
 RNA_PLASTID_PROTEINS_NAME = "rna_proteins.pltd.fasta"
 
 
+# Plastid proteins from GenBank, for a lineage whose plastid references are
+# RefSeq plastomes (rg.LINEAGE_PLASTOMES: moss, liverwort): the single-exon
+# genes the bundled land-plant plastid profiles cover, as annotated,
+# headers `accession|gene`. Written by fetch_plastid_proteins and shipped,
+# so building the profiles needs no GenBank record.
+REFSEQ_PLASTID_PROTEINS_NAME = "refseq_proteins.pltd.fasta"
+PLASTID_SYNONYMS = {"pafii": "ycf4", "pbf1": "psbN", "lhba": "psbZ", "ycf9": "psbZ", "ycf10": "cemA"}
+
+
+# Plastid genes with a first exon of 6 to 9 bases. The gene call and the
+# default profiles cover the second exon, so a RefSeq protein gives that
+# part: without it moss and liverwort had no profile of their own for these
+# three, and every moss took an Ala-to-Val "edit" in petD from the
+# angiosperm profile.
+SHORT_FIRST_EXON = ("petB", "petD", "rpl16")
+
+
+def plastid_profile_genes() -> list[str]:
+    """The plastid genes with a bundled land-plant editing profile."""
+    return sorted(p.stem for p in (PIPELINE_DIR / "editing" / "reference" / "profiles" / "pltd").glob("*.pssm"))
+
+
+def fetch_plastid_proteins(lineage: str) -> Path:
+    """Write `lineage`'s REFSEQ_PLASTID_PROTEINS_NAME from its RefSeq
+    plastomes: every single-exon CDS of a profiled gene whose genomic
+    translation is the annotated protein, bar C-to-U edits, and the second
+    exon's part of the SHORT_FIRST_EXON genes. GenBank records are cached
+    beside the lineage's plastid exon sets."""
+    if lineage not in rg.LINEAGE_PLASTOMES:
+        raise ValueError(f"lineage must be one of {sorted(rg.LINEAGE_PLASTOMES)}, not {lineage!r}")
+    gb_dir = rg.reference_dir(PIPELINE_DIR, "pltd", lineage) / "genbank"
+    wanted = {g.lower(): g for g in plastid_profile_genes()}
+    lines, n_bad = [], 0
+    for acc, organism in rg.LINEAGE_PLASTOMES[lineage].items():
+        rec = SeqIO.read(fetch(acc, gb_dir), "genbank")
+        seen = set()
+        for f in rec.features:
+            if f.type != "CDS" or "gene" not in f.qualifiers or "translation" not in f.qualifiers:
+                continue
+            name = f.qualifiers["gene"][0].lower()
+            gene = wanted.get(PLASTID_SYNONYMS.get(name, name).lower())
+            if gene is None or gene in seen:
+                continue
+            parts, exons = cds_exons(rec, f)
+            dna, protein = exons[0], f.qualifiers["translation"][0]
+            if len(parts) == 2 and gene in SHORT_FIRST_EXON and len(exons[0]) <= 9:
+                # the second exon from its first whole codon, and the residues of those codons
+                dna, protein = exons[1][-len(exons[0]) % 3 :], protein[-(-len(exons[0]) // 3) :]
+            elif len(parts) != 1:
+                continue
+            ok, note = verify(dna, protein)
+            if not ok:
+                n_bad += 1
+                log.warning(f"{acc} {organism} {gene}: {note} - not used")
+                continue
+            seen.add(gene)
+            lines.append(f">{acc}|{gene}\n{protein}\n")
+    path = lin.editing_profiles(PIPELINE_DIR, lineage) / REFSEQ_PLASTID_PROTEINS_NAME
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text("".join(lines))
+    log.info(f"{lineage}: {len(lines)} plastid proteins from {len(rg.LINEAGE_PLASTOMES[lineage])} plastomes, {n_bad} not verified -> {path}")
+    return path
+
+
+def refseq_plastid_proteins(lineage: str, exclude: tuple[str, ...] = ()) -> dict[str, dict[str, str]]:
+    """{gene: {accession: protein}} from the lineage's bundled RefSeq
+    plastid proteins, without the accessions in `exclude`."""
+    path = lin.editing_profiles(PIPELINE_DIR, lineage) / REFSEQ_PLASTID_PROTEINS_NAME
+    out: dict[str, dict[str, str]] = {}
+    if path.exists():
+        for header, seq in pssm.read_fasta(path).items():
+            acc, gene = header.split("|")[:2]
+            if acc not in exclude:
+                out.setdefault(gene, {})[acc] = seq
+    return out
+
+
 def rna_proteins(lineage: str, exclude: tuple[str, ...] = (), organelle: str = "mito") -> dict[str, dict[str, str]]:
     """{gene: {"RNA_<species>": protein}} from the lineage's bundled
-    RNA-edited proteins; `exclude` holds such RNA_<species> names."""
+    RNA-edited proteins; `exclude` holds such RNA_<species> names. For a
+    lineage in lin.SITE_LINEAGES the residues editing made stay in lower case."""
     name = RNA_PROTEINS_NAME if organelle == "mito" else RNA_PLASTID_PROTEINS_NAME
     path = lin.editing_profiles(PIPELINE_DIR, lineage) / name
     out: dict[str, dict[str, str]] = {}
@@ -241,8 +341,15 @@ def rna_proteins(lineage: str, exclude: tuple[str, ...] = (), organelle: str = "
         for header, seq in pssm.read_fasta(path).items():
             species, gene = header.split("|")[:2]
             if f"RNA_{species}" not in exclude:
-                out.setdefault(gene, {})[f"RNA_{species}"] = seq
+                out.setdefault(gene, {})[f"RNA_{species}"] = seq if lineage in lin.SITE_LINEAGES else seq.upper()
     return out
+
+
+def genus_groups(names, organisms: dict[str, str]) -> dict[str, str]:
+    """Reference protein name -> genus, for counting editing sites
+    (pssm.build_profile): RNA_<Genus>_<species>, or an accession of
+    `organisms` ({accession: "Genus species"})."""
+    return {n: n.split("_")[1] if n.startswith("RNA_") else organisms.get(n, n).split()[0] for n in names}
 
 
 def one_per_species(proteins: dict[str, dict[str, str]], mitogenomes: dict[str, str]) -> dict[str, dict[str, str]]:
@@ -266,13 +373,23 @@ def build_plastid_profiles(
     lineage: str, work_root: Path, *, exclude: tuple[str, ...] = (), out_dir: Path | None = None
 ) -> Path:
     """(Re)build `lineage`'s bundled plastid editing profiles
-    (<lineage>/pltd/<gene>.pssm) from its RNA-edited plastid proteins, one
-    per gene with enough of them, leaving out the RNA_<species> in
-    `exclude`. Returns the profiles directory."""
-    if lineage not in rg.LINEAGE_PLASTID:
-        raise ValueError(f"lineage must be one of {sorted(rg.LINEAGE_PLASTID)}, not {lineage!r}")
+    (<lineage>/pltd/<gene>.pssm) from its RNA-edited plastid proteins and
+    its RefSeq ones (moss, liverwort), one per gene with enough of them,
+    leaving out the RNA_<species> and accessions in `exclude`. Returns the
+    profiles directory."""
+    # (angiosperm: the default plastid profiles, from RNA-edited proteins of
+    # DToL angiosperms, in the same place as a lineage's)
+    if lineage not in rg.LINEAGE_PLASTID and lineage != lin.DEFAULT_LINEAGE:
+        raise ValueError(f"lineage must be one of {sorted((lin.DEFAULT_LINEAGE, *rg.LINEAGE_PLASTID))}, not {lineage!r}")
     proteins = rna_proteins(lineage, tuple(exclude), "pltd")
+    for gene, by_acc in refseq_plastid_proteins(lineage, tuple(exclude)).items():
+        proteins.setdefault(gene, {}).update(by_acc)
+    # RefSeq plastomes: a column must be in half of them (as for the RefSeq
+    # mito profiles, LINEAGE_GAP_THRESHOLD)
+    gap_threshold = 0.5 if lineage in rg.LINEAGE_PLASTOMES else LINEAGE_GAP_THRESHOLD[lineage]
     min_sequences = LINEAGE_MIN_SEQUENCES.get(lineage, profiles.MIN_SEQUENCES)
+    if lineage == lin.DEFAULT_LINEAGE:
+        min_sequences = profiles.MIN_SEQUENCES
     work_dir = Path(work_root) / "analysis" / "editing" / "work" / f"{lineage}_pltd"
     work_dir.mkdir(parents=True, exist_ok=True)
     out_dir = Path(out_dir) if out_dir else lin.editing_profiles(PIPELINE_DIR, lineage) / "pltd"
@@ -286,7 +403,9 @@ def build_plastid_profiles(
         sharp = {}
         if lineage in LINEAGE_PSEUDOCOUNT:
             sharp = dict(background=pssm.composition(by_name.values()), pseudocount_mass=LINEAGE_PSEUDOCOUNT[lineage])
-        columns = pssm.align_and_build(by_name, work_dir, gene, LINEAGE_GAP_THRESHOLD[lineage], **sharp)
+        columns = pssm.align_and_build(
+            by_name, work_dir, gene, gap_threshold, groups=genus_groups(by_name, {}), sites=lineage in lin.SITE_LINEAGES, **sharp
+        )
         if columns is None:
             raise StageError(f"{gene}: no profile from {work_dir / gene}.protein.fasta (mafft failed or no columns)")
         pssm.write_profile(columns, out_dir / f"{gene}.pssm")
@@ -322,6 +441,7 @@ def build_lineage_profiles(
         LINEAGE_SYNONYMS[lineage],
         exclude,
         reverse=lin.stop_edit_penalty(lineage) is not None,
+        edited_only=lineage == lin.DEFAULT_LINEAGE,
     )
     proteins = one_per_species(proteins, mitogenomes)
     for gene, by_name in rna_proteins(lineage, tuple(exclude)).items():
@@ -356,7 +476,16 @@ def build_lineage_profiles(
             sharp = dict(
                 background=pssm.composition(proteins[gene].values()), pseudocount_mass=LINEAGE_PSEUDOCOUNT[lineage]
             )
-        columns = pssm.align_and_build(proteins[gene], work_dir, gene, LINEAGE_GAP_THRESHOLD[lineage], **sharp)
+        columns = pssm.align_and_build(
+            proteins[gene],
+            work_dir,
+            gene,
+            LINEAGE_GAP_THRESHOLD[lineage],
+            groups=genus_groups(proteins[gene], {**mitogenomes, **SPLIT_CCMFN_MITOGENOMES}),
+            # (not the split ccmFn halves, whose proteins are as annotated, unmarked)
+            sites=lineage in lin.SITE_LINEAGES and gene not in SPLIT_CCMFN_GENES,
+            **sharp,
+        )
         if columns is None:
             raise StageError(f"{gene}: no profile from {work_dir / gene}.protein.fasta (mafft failed or no columns)")
         pssm.write_profile(columns, out_dir / f"{gene}.pssm")
@@ -379,7 +508,12 @@ def main(argv: list[str] | None = None) -> int:
         "--organelle",
         default="mito",
         choices=["mito", "pltd"],
-        help="pltd: the lineage's plastid profiles, from its RNA-edited plastid proteins (fern)",
+        help="pltd: the lineage's plastid profiles, from its RNA-edited or RefSeq plastid proteins",
+    )
+    ap.add_argument(
+        "--fetch",
+        action="store_true",
+        help="with --organelle pltd: first rewrite the lineage's RefSeq plastid proteins from GenBank (moss, liverwort)",
     )
     ap.add_argument("--exclude", nargs="+", default=[], metavar="ACC", help="leave these RefSeq mitogenomes out")
     ap.add_argument("--out-dir", type=Path, help="write the profiles here instead of the bundled location")
@@ -391,6 +525,8 @@ def main(argv: list[str] | None = None) -> int:
     args = ap.parse_args(argv)
     work_root = Path(os.environ.get("PLANT_ORGANELLE_DATA_ROOT") or os.getcwd())
     if args.organelle == "pltd":
+        if args.fetch:
+            fetch_plastid_proteins(args.lineage)
         build_plastid_profiles(args.lineage, work_root, exclude=tuple(args.exclude), out_dir=args.out_dir)
         return 0
     try:

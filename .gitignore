@@ -6,3 +6,6 @@ __pycache__/
 build/
 dist/
 *.egg-info/
+
+# GenBank records cached when a lineage's plastid references are fetched
+src/poa/pipeline/trans_splicing/reference/lineages/*/plastid/genbank/

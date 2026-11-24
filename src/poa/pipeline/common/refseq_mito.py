@@ -48,6 +48,30 @@ def editing_explains(genomic_codon: str, edited_aa: str, reverse: bool = False) 
     return False
 
 
+def n_edited(dna: str, protein: str) -> int:
+    """How many residues of an annotated `protein` differ from the genome's
+    own translation of its coding sequence `dna`: the RNA edits the
+    annotation has applied. None at all, in a gene other records edit ten
+    times, means the record gives the unedited protein."""
+    dna = dna.upper()
+    naive = str(Seq(dna[: len(dna) - len(dna) % 3]).translate())
+    return sum(a != b for a, b in zip(naive, protein))
+
+
+def unedited(counts: dict, min_median: float = 4.0, fraction: float = 0.25) -> set:
+    """The keys of `counts` ({locus: n_edited}) whose annotation is the
+    unedited protein: far fewer edits than the gene has in the other
+    records (under `fraction` of the median, for a gene whose median is at
+    least `min_median`)."""
+    if not counts:
+        return set()
+    ordered = sorted(counts.values())
+    median = ordered[len(ordered) // 2]
+    if median < min_median:
+        return set()
+    return {k for k, n in counts.items() if n < fraction * median}
+
+
 def verify(dna: str, refseq_protein: str, reverse: bool = False) -> tuple[bool, str]:
     """reverse: U-to-C edits may explain a difference too (see editing_explains)."""
     dna = dna.upper()

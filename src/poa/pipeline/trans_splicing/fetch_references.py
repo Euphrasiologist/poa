@@ -38,6 +38,7 @@ from poa.pipeline.trans_splicing.reference_genes import (
     GENES,
     mito_spliced,
     LINEAGE_MITOGENOMES,
+    LINEAGE_PLASTOMES,
     PLASTID_SPLICED,
     PLASTID_SYNONYMS,
     PLASTOMES,
@@ -68,15 +69,23 @@ def fetch_references(lineage: str = lin.DEFAULT_LINEAGE, force: bool = False, or
     """Write `lineage`'s verified exon sets into the package's reference
     raw/ directory (returned). force: rewrite accession+gene files that
     already exist. organelle "pltd": the plastid set (PLASTOMES,
-    PLASTID_SPLICED) into reference/plastid/raw/, lineage ignored."""
+    PLASTID_SPLICED) into reference/plastid/raw/, or, for a lineage with
+    RefSeq plastomes of its own (LINEAGE_PLASTOMES: moss, liverwort), those
+    into reference/lineages/<lineage>/plastid/raw/. Their GenBank records
+    are cached beside raw/ and not shipped."""
     if lineage not in LINEAGE_MITOGENOMES:
         raise ValueError(f"lineage must be one of {sorted(LINEAGE_MITOGENOMES)}, not {lineage!r}")
-    raw_dir = reference_dir(PIPELINE_DIR, organelle, lineage) / "raw"
+    own_plastomes = organelle == "pltd" and lineage in LINEAGE_PLASTOMES
+    raw_dir = reference_dir(PIPELINE_DIR, organelle, lineage if organelle == "mito" or own_plastomes else None) / "raw"
     raw_dir.mkdir(parents=True, exist_ok=True)
     if organelle == "pltd":
-        genes, accessions, synonyms, gb_dir = PLASTID_SPLICED, PLASTOMES, PLASTID_SYNONYMS, raw_dir.parent / "genbank"
+        accessions = LINEAGE_PLASTOMES[lineage] if own_plastomes else PLASTOMES
+        genes, synonyms, gb_dir = PLASTID_SPLICED, PLASTID_SYNONYMS, raw_dir.parent / "genbank"
     else:
-        genes = CIS_SPLICED_MITO if lineage == lin.DEFAULT_LINEAGE else mito_spliced(lineage)
+        # (for angiosperm, the nad1/nad2/nad5/rps3 files of the first five
+        # genomes were fetched by hand and, like any file already there,
+        # are skipped unless --force)
+        genes = mito_spliced(lineage)
         accessions, synonyms, gb_dir = LINEAGE_MITOGENOMES[lineage], GENE_SYNONYMS, GB_DIR
     junctions_path = raw_dir / "junctions.tsv"
     existing_rows = []
