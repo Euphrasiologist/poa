@@ -100,6 +100,29 @@ reads instead of correcting a call:
   edits and frameshift calls.
 - `detect_cal_sum2.py` - `detect_cal.py`'s scores as per-gene margins by
   taxonomic group (the 2026-11-24 calibration of `lineage.MIN_MARGIN`).
+- `ends/` - gene ends against GenBank on 19 RefSeq mitogenomes and 13
+  RefSeq plastomes (`genomes.tsv`): `prep_arr.sh` runs poa on each and
+  keeps orfedit's manifests, `manifests.py` pools them, `run.sh TAG
+  BINDIR [orfedit options]` runs one orfedit build over them, `score.py
+  BASE TAG...` counts starts and stops within 3 bp and what each TAG
+  gained or lost against BASE; `starts.py TAG` where each call starts
+  against the annotation and what start rules would do. This is where
+  the stop search, the internal-stop cost, the end margin and the start
+  search were chosen (2026-11-24).
+- `gene_ends.py`, `gene_ends_sim.py` - the start and stop of every
+  single-exon call against the annotation, by gene, and what simple
+  start-codon and first-stop rules would do to them.
+- `stop_census.py` - literal stop codons inside called genes and frame
+  changes near a profile's ends, over sets of poa runs; `ab_calls.py` -
+  two sets of runs of the same assemblies, call by call.
+- `tree_refseq.sh`, `tree_seedp.sh` - copies of the package for seed
+  runs: one with the edited RefSeq mitogenomes as the only angiosperm
+  references (the gene models `rna_refs.py` reads the angiosperm
+  references from, and the first column of the held-out table), one in
+  which fern, horsetail and clubmoss have no plastid references of
+  their own (a lineage's own profile cannot be the seed for its
+  replacement where it is too short). `final_angio.sh SEED SUFFIX` and
+  `pltd_others.sh SEED` then read and build the references.
 - `angio_readme.py` - writes
   `editing/reference/lineages/angiosperm/README.md` (species, runs, and
   whose reads count as evidence of editing sites) from `rna_refs.py`'s

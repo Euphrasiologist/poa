@@ -3,7 +3,7 @@
 # organelles, and every predicted edit against the reads; gb: the 19 RefSeq genomes against their annotation
 set -uo pipefail
 R=/lustre/scratch122/tol/teams/blaxter/users/mb39/plant_organelle_annotator; H=$R/build/rnaedit; cd $H/pilot
-E="env -i HOME=$HOME PYTHONNOUSERSITE=1 TMPDIR=/tmp PYTHONPATH=$R/src PATH=$H/final3/bin:$R/build/pkgenv/bin:/usr/bin:/bin USE_DATASET=1"
+E="env -i HOME=$HOME PYTHONNOUSERSITE=1 TMPDIR=/tmp PYTHONPATH=$R/src PATH=$H/final10/bin:$R/build/pkgenv/bin:/usr/bin:/bin USE_DATASET=1"
 K=$1; shift; SP=$(cat ${LIST:-ang_rna_p.list} | tr "\n" " ")
 for T in "$@"; do
   if [ "$K" == "ds" ]; then

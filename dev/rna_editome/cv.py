@@ -35,7 +35,7 @@ orfedit, transsplice = cargo_tool("orfedit"), cargo_tool("transsplice")
 ACC = dict(l.split() for l in open(H / "extra_genomes" / "accessions.tsv")) if (H / "extra_genomes" / "accessions.tsv").exists() else {}
 groups = {}
 for sp in species: groups.setdefault(sp if by == "species" else sp.split("_")[0], []).append(sp)
-TS = lin.trans_splicing_reference(R / "src/poa/pipeline", lineage)
+TS = lin.trans_splicing_reference(Path(os.environ.get("CV_SRC", R / "src")) / "poa/pipeline", lineage)  # CV_SRC: another copy of the package (with PYTHONPATH)
 mito_names = set(n for by_name in lp.rna_proteins(lineage).values() for n in by_name)
 have = {p.stem for d in (TS / "raw_rna", TS / "plastid" / "raw_rna") for p in d.glob("RNA_*.fasta")} | mito_names | set(
     n for by_name in lp.rna_proteins(lineage, organelle="pltd").values() for n in by_name)
@@ -71,7 +71,8 @@ for grp, sps in groups.items():
         cmd = [transsplice, "scan-batch", "--manifest", str(W / f"{sp}.ts.tsv"), "--genes-out", str(outs["reconstructed_genes"]), "--exons-out", str(outs["reconstructed_exons"]),
                "--junctions-out", str(outs["reconstructed_junctions"]), "--edits-out", str(outs["reconstructed_edits"]), "--threads", "2",
                "--merge-distance", str(rc.DEFAULT_MERGE_DISTANCE), "--junction-distance-threshold", str(rc.DEFAULT_JUNCTION_DISTANCE_THRESHOLD), "--exon-flank", str(rc.DEFAULT_EXON_FLANK),
-               "--frameshift-penalty", str(rc.DEFAULT_FRAMESHIFT_PENALTY), "--frameshifts-out", str(outs["reconstructed_frameshifts"]), "--edit-penalty", str(EDITP)]
+               "--frameshift-penalty", str(rc.DEFAULT_FRAMESHIFT_PENALTY), "--frameshifts-out", str(outs["reconstructed_frameshifts"]), "--edit-penalty", str(EDITP),
+               "--internal-stop-penalty", str(scan.DEFAULT_INTERNAL_STOP_PENALTY)]
         for opt, v in (("--stop-edit-penalty", lin.stop_edit_penalty(lineage)), ("--reverse-edit-penalty", lin.reverse_edit_penalty(lineage)), ("--junction-slide", lin.junction_slide(lineage))):
             if v is not None: cmd += [opt, str(v)]
         if NOVEL: cmd += ["--novel-edit-penalty", str(NOVEL)]
@@ -86,7 +87,8 @@ for grp, sps in groups.items():
             pcmd = [transsplice, "scan-batch", "--manifest", str(W / f"{sp}.pts.tsv"), "--genes-out", str(pouts["reconstructed_genes"]), "--exons-out", str(pouts["reconstructed_exons"]),
                     "--junctions-out", str(pouts["reconstructed_junctions"]), "--edits-out", str(pouts["reconstructed_edits"]), "--threads", "2",
                     "--merge-distance", str(rc.DEFAULT_MERGE_DISTANCE), "--junction-distance-threshold", str(rc.DEFAULT_JUNCTION_DISTANCE_THRESHOLD), "--exon-flank", str(rc.DEFAULT_EXON_FLANK),
-                    "--frameshift-penalty", str(rc.DEFAULT_FRAMESHIFT_PENALTY), "--frameshifts-out", str(pouts["reconstructed_frameshifts"]), "--edit-penalty", str(PEDITP or EDITP)]
+                    "--frameshift-penalty", str(rc.DEFAULT_FRAMESHIFT_PENALTY), "--frameshifts-out", str(pouts["reconstructed_frameshifts"]), "--edit-penalty", str(PEDITP or EDITP),
+                    "--internal-stop-penalty", str(scan.DEFAULT_INTERNAL_STOP_PENALTY)]
             for opt, v in (("--stop-edit-penalty", lin.stop_edit_penalty(lineage)), ("--reverse-edit-penalty", None if NOREV else lin.reverse_edit_penalty(lineage))):
                 if v is not None: pcmd += [opt, str(v)]
             if PNOVEL: pcmd += ["--novel-edit-penalty", str(PNOVEL)]
