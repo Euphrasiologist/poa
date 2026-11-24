@@ -1,0 +1,4 @@
+tool	annotated CDS	protein identical	same-length proteins	edited residues in those	edited residues present	other residues wrong
+PMGA	153	7	92	797	0	0
+poa, references as shipped	153	6	66	547	32	26
+poa, genus held out	153	5	65	656	23	30

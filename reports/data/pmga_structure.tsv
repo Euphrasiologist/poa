@@ -1,0 +1,8 @@
+tool	exons placed (of 566)	spliced genes placed (of 88)	single-exon genes placed (of 245)	all CDS placed (of 333)	allowing start/stop choice	exact to the base	not called
+PMGA	497	69	200	269	292	258	3
+poa before	445	68	149	217	268	194	12
+poa before, genus held out	440	66	146	212	264	190	18
+poa, edited RefSeq references	469	72	166	238	284	213	5
+poa, edited RefSeq references, genus held out	463	69	163	232	278	207	6
+poa now	467	73	164	237	282	211	5
+poa now, genus held out	467	73	164	237	282	211	5

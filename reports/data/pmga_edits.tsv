@@ -1,0 +1,7 @@
+tool	edited codons	found	found %	calls in annotated CDS	calls right	right %
+PMGA with Deepred-mt	1483	1379	93	1612	1422	88
+poa before	1483	93	6	150	93	62
+poa, edited RefSeq references	1483	946	64	1073	947	88
+poa, edited RefSeq references, genus held out	1483	910	61	1077	911	85
+poa now	1483	1311	88	1487	1324	89
+poa now, genus held out	1483	1309	88	1486	1321	89

@@ -1,0 +1,5 @@
+tool	genes with RNA over 90% of the CDS	CDS reads cleanly once edited	introns the RNA shows	of them predicted	edits in the RNA	edits called	calls in the RNA	found %	right %
+PMGA with Deepred-mt	56	54	64	36	492	445	412	84	93
+poa before	53	48	64	32	460	47	10	2	21
+poa, edited RefSeq references	55	54	64	34	467	342	301	64	88
+poa now, genus held out	54	52	64	34	466	386	378	81	98

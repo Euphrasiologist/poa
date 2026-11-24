@@ -1,0 +1,20 @@
+	edited RefSeq references	RNA-derived references	with editing sites
+mitochondrial single-exon genes: aligned end to end (of 1,408)	1,272	1,221	1,222
+... C-to-U sites in the RNA found	50% (of 15,154)	71% (of 15,050)	77% (of 15,051)
+... the same, 67 species whose reads are the assembly's own	50% (of 12,708)	71% (of 12,626)	78% (of 12,627)
+... edit calls in the RNA	90% (7,609 of 8,459)	93% (10,655 of 11,427)	97% (11,634 of 11,977)
+mitochondrial spliced genes: aligned end to end (of 432)	427	427	427
+... C-to-U sites in the RNA found	69% (of 8,933)	78% (of 8,935)	80% (of 8,935)
+... the same, 57 species whose reads are the assembly's own	69% (of 7,755)	78% (of 7,757)	80% (of 7,757)
+... edit calls in the RNA	95% (6,145 of 6,466)	96% (6,963 of 7,284)	98% (7,140 of 7,274)
+plastid single-exon genes: aligned end to end (of 4,412)	3,316	4,146	4,145
+... C-to-U sites in the RNA found	7% (of 3,422)	42% (of 3,424)	44% (of 3,424)
+... the same, 32 species whose reads are the assembly's own	14% (of 806)	72% (of 808)	76% (of 808)
+... edit calls in the RNA	8% (251 of 3,071)	40% (1,444 of 3,630)	94% (1,494 of 1,586)
+plastid spliced genes: aligned end to end (of 647)	643	644	643
+... C-to-U sites in the RNA found	5% (of 1,289)	56% (of 1,285)	64% (of 1,285)
+... the same, 32 species whose reads are the assembly's own	6% (of 496)	69% (of 494)	75% (of 494)
+... edit calls in the RNA	12% (63 of 535)	59% (721 of 1,219)	94% (822 of 872)
+RefSeq coding sequences with every exon placed (of 655)	455	479	481
+RefSeq annotated edits found	64%	84%	89%
+... edit calls that are annotated	85%	85%	87%
