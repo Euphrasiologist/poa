@@ -14,6 +14,6 @@ fi
 echo "[info] installing gfatk, orfedit, transsplice via cargo..."
 cargo install --locked gfatk@0.6.2
 cargo install --locked orfedit@0.2.0
-cargo install --locked transsplice@0.3.0
+cargo install --locked transsplice@0.3.1
 
 echo "[info] done. 'poa check' (after 'pip install .') confirms every tool is found."

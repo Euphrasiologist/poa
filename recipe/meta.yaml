@@ -33,7 +33,7 @@ requirements:
     - hmmer >=3.4
     - trnascan-se >=2.0.12
     - orfedit >=0.2.0
-    - transsplice >=0.3.0
+    - transsplice >=0.3.1
     # dataset-scale stages (QC, linearize); mafft and graphaligner are left
     # out because bioconda lacks builds for some platforms - poa check
     # lists them as optional
