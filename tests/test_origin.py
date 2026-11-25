@@ -68,6 +68,30 @@ class Origin(unittest.TestCase):
             self.assertEqual(got["ID=gene-b"], (41, 50))
             self.assertIn("Is_circular=true", rows[0][8])
 
+    def test_a_trans_spliced_gene_keeps_its_parts_where_they_are(self):
+        # rps12 of a plastome annotated with the origin moved by 30 on a
+        # 100 bp contig: exon 1 far from exons 2 and 3. Exon 1 must not be
+        # moved on a lap to sit "inside" a gene that is not one stretch.
+        gff = "\n".join(
+            [
+                "##gff-version 3",
+                "##sequence-region c 1 100",
+                "c\tx\tregion\t1\t100\t.\t+\t.\tID=region-c",
+                "c\tx\tgene\t11\t60\t1\t.\t.\tID=gene-r;Name=rps12;exception=trans-splicing",
+                "c\tx\tmRNA\t11\t60\t1\t.\t.\tID=mRNA-r;Parent=gene-r;exception=trans-splicing",
+                "c\tx\tCDS\t11\t20\t1\t+\t0\tID=cds-r;Parent=mRNA-r",
+                "c\tx\tCDS\t51\t60\t1\t-\t0\tID=cds-r;Parent=mRNA-r",
+            ]
+        )
+        with tempfile.TemporaryDirectory() as tmp:
+            p = Path(tmp) / "x.gff"
+            p.write_text(gff + "\n")
+            origin.unrotate_gff(p, {"c": 50}, {"c": 100})
+            rows = [l.split("\t") for l in p.read_text().splitlines() if not l.startswith("#")]
+            got = sorted((r[2], int(r[3]), int(r[4])) for r in rows if r[2] != "region")
+            # parts at 61-70 and 1-10 on the input; the gene spans them
+            self.assertEqual(got, [("CDS", 1, 10), ("CDS", 61, 70), ("gene", 1, 70), ("mRNA", 1, 70)])
+
     def test_table_rows_of_the_other_organelle_untouched(self):
         with tempfile.TemporaryDirectory() as tmp:
             p = Path(tmp) / "gene_calls.tsv"

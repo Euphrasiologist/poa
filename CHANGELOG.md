@@ -2,6 +2,27 @@
 
 ## Unreleased
 
+- Spliced genes no longer joined from two copies of a repeat
+  (transsplice 0.3.1), and the GFF says which junctions are
+  trans-spliced. transsplice took either of two identical copies of an
+  exon, so in hundreds of plastomes ndhB and rpl2 were joined across the
+  two copies of the inverted repeat: exons 60-90 kb apart on opposite
+  strands, which a reader of the GFF could only take for trans-splicing.
+  Now an exon on a junction that is not cis is looked for next to its
+  neighbours, and round the origin of a circular contig, and taken from
+  there if the gene scores no lower. Over the dataset's 22,160
+  reconstructed genes: ndhB with a trans junction in 426 species -> 8,
+  plastid rpl2 329 -> 0, rps12's exon 2 to 3 cis in 386 -> 1,238 of
+  1,326, cox2 142 -> 20, nad7 63 -> 21; 125 proteins changed, each to a
+  higher score; no gene scores lower; planted indels found as before.
+  In the GFF a reconstructed gene's mRNA lists its junctions
+  (`junctions=cis,trans,...`, or `other_contig`), and a gene with any
+  that is not cis has `exception=trans-splicing`; a cis gene across a
+  circular contig's origin is written with its end past the length, and
+  its unitig coordinates come from the placements one lap on. A
+  trans-spliced gene `poa run` annotated with the origin moved keeps its
+  exons where they are (rps12's first exon was written past the contig's
+  end in 19 of 153 runs).
 - Where a single-exon gene starts (orfedit 0.2.0, `--start-search`).
   The alignment starts a gene wherever the profile's first columns
   match, not always at a start codon. A gene whose first aligned codon

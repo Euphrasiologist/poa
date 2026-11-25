@@ -15,7 +15,9 @@ Back on the input, a feature that crosses the origin keeps start <= end
 with end past the contig's length, GFF3's convention for circular
 sequences (the contig's region feature gets Is_circular=true); its child
 features (CDS, edits, frameshifts) are placed the same way, so they stay
-inside their gene. In the tables an interval crossing the origin likewise
+inside their gene. A trans-spliced gene (exception=trans-splicing) is not
+one stretch of the contig: its features keep their own places, 0 to the
+length, and its gene and mRNA rows span them on each contig. In the tables an interval crossing the origin likewise
 ends past the length, while a single position (an edit's genomic_pos) is
 always on the contig, 0 to length-1. Offsets are 0-based:
 rotated[i] = original[(i + offset) % length].
@@ -158,6 +160,14 @@ def unrotate_gff(path: Path, offsets: dict[str, int], lengths: dict[str, int]) -
             s = interval(int(f[3]) - 1, int(f[4]), offsets[f[0]], lengths[f[0]])[0]
             root_start[key] = min(root_start.get(key, s), s)
 
+    # trans-spliced genes: their parts are not one stretch to keep together
+    trans = {
+        dict(ATTR_RE.findall(f[8])).get("ID")
+        for f in (line.split("\t") for line in lines)
+        if len(f) >= 9 and not f[0].startswith("#") and "exception=trans-splicing" in f[8]
+        and "Parent" not in dict(ATTR_RE.findall(f[8]))
+    }
+
     head, body = [], []
     for line in lines:
         f = line.split("\t")
@@ -174,10 +184,27 @@ def unrotate_gff(path: Path, offsets: dict[str, int], lengths: dict[str, int]) -
                 attrs = dict(ATTR_RE.findall(f[8]))
                 rid = root(attrs.get("Parent", "").split(",")[0] or attrs.get("ID", ""))
                 rs = root_start.get((f[0], rid))
-                if rs is not None and s < rs:
+                if rid not in trans and rs is not None and s < rs:
                     s, e = s + n, e + n  # past the origin, inside its gene
                 f[3], f[4] = str(s + 1), str(e)
         body.append(f)
+    # a trans-spliced gene's gene and mRNA rows span its parts on each contig
+    if trans:
+        span: dict[tuple[str, str], list[int]] = {}
+        for f in body:
+            attrs = dict(ATTR_RE.findall(f[8]))
+            if f[2] in ("gene", "mRNA", "region") or "Parent" not in attrs:
+                continue
+            rid = root(attrs["Parent"].split(",")[0])
+            if rid in trans:
+                lo, hi = span.get((f[0], rid), [int(f[3]), int(f[4])])
+                span[(f[0], rid)] = [min(lo, int(f[3])), max(hi, int(f[4]))]
+        for f in body:
+            if f[2] in ("gene", "mRNA") and f[0] in offsets:
+                attrs = dict(ATTR_RE.findall(f[8]))
+                rid = root(attrs.get("ID", ""))
+                if (f[0], rid) in span:
+                    f[3], f[4] = (str(v) for v in span[(f[0], rid)])
     order = {"region": 0}
     body.sort(key=lambda f: (f[0], int(f[3]), order.get(f[2], 1)))
     Path(path).write_text("\n".join(head + ["\t".join(f) for f in body]) + "\n")

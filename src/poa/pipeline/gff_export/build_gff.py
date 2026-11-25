@@ -50,6 +50,18 @@ GFF3 mechanics used here (see `../README.md` for the full explanation):
   stretch both frames read about as well). `near_end=true` marks one within
   a few codons of the gene's start or end, which the CDS is not read
   through: it ends in its own frame at its own stop.
+- A reconstructed gene's mRNA lists its exon junctions in exon order,
+  `junctions=cis,trans,...`, as transsplice classified them: `cis` (next
+  exon on the same strand within the junction distance, measured round the
+  origin of a circular contig), `trans` (far away on the same contig, or on
+  the other strand) or `other_contig` (on another contig: the assembly
+  cannot tell). A gene with any junction that is not cis has
+  `exception=trans-splicing` on its gene and mRNA (the INSDC usage). A cis
+  gene whose exons lie either side of a circular contig's origin is written
+  as GFF3 has it for circular sequences: start <= end, the end past the
+  contig's length, the exons after the origin (and their edits and
+  frameshifts) moved on by that length, as `poa run` writes a gene it
+  annotated with the origin moved (common/origin.py).
 - A stop codon inside an edited gene whose protein goes on matching beyond
   it (a pseudogene, a stop the lineage edits away, an error) leaves the CDS
   one row over the whole gene, and the mRNA carries `n_internal_stops`;
@@ -201,6 +213,18 @@ def load_seq_context(ctg_fasta: Path, map_path: Path) -> SeqContext:
                 tiles.append(Segment(s.unitig, s.unitig_length, s.strand, lo, s.ctg_hi, s.unitig_off + (lo - s.ctg_lo)))
                 covered_to = s.ctg_hi
         ctx.tiles[ctg] = tiles
+    # A feature across a circular contig's origin ends past its length
+    # (GFF3), and the exons after the origin lie wholly past it: a second
+    # lap of the placements, one length on, places them.
+    for ctg in list(ctx.segments):
+        n = ctx.lengths[ctg]
+        if ctx.circular.get(ctg):
+
+            def lap(g: Segment) -> Segment:
+                return Segment(g.unitig, g.unitig_length, g.strand, g.ctg_lo + n, g.ctg_hi + n, g.unitig_off)
+
+            ctx.segments[ctg] = ctx.segments[ctg] + [lap(g) for g in ctx.segments[ctg]]
+            ctx.tiles[ctg] = ctx.tiles[ctg] + [lap(g) for g in ctx.tiles[ctg]]
     return ctx
 
 
@@ -658,6 +682,8 @@ def emit_protein_coding_gene(
     codon-aligned by construction, so 0 is exact there."""
     strands = {p["strand"] for p in parts}
     gene_strand = strands.pop() if len(strands) == 1 else "."  # mixed-strand for real trans-spliced genes
+    junctions = copy.get("junctions") or []
+    exception = "trans-splicing" if any(j != "cis" for j in junctions) else None
     gid, mid, cid = f"gene-{gene}{suffix}", f"mRNA-{gene}{suffix}", f"cds-{gene}{suffix}"
     approximate = phase_from_lengths and len(parts) > 1
 
@@ -676,7 +702,9 @@ def emit_protein_coding_gene(
                     f"{gene_score:.3f}",
                     gene_strand,
                     ".",
-                    gff_attrs({"ID": gid, "Name": gene, "annotation_tier": tier, **copy_attrs(copy)}),
+                    gff_attrs(
+                        {"ID": gid, "Name": gene, "annotation_tier": tier, "exception": exception, **copy_attrs(copy)}
+                    ),
                 ]
             )
         )
@@ -700,6 +728,8 @@ def emit_protein_coding_gene(
                             "n_frameshifts": len(frameshifts) or None,
                             "n_internal_stops": copy.get("internal_stops") or None,
                             "exon_boundaries": "approximate" if approximate else None,
+                            "junctions": ",".join(junctions) or None,
+                            "exception": exception,
                         }
                     ),
                 ]
@@ -822,6 +852,40 @@ def edited_copies(calls: pd.DataFrame, edits: pd.DataFrame, gene_hits: pd.DataFr
         yield erow, same(edits), same(shifts)
 
 
+def junction_labels(junctions: pd.DataFrame) -> list[str]:
+    """One gene's transsplice junctions in exon order: cis, trans, or
+    other_contig (transsplice calls a junction between contigs trans, with
+    gap_bp -1)."""
+    if junctions.empty:
+        return []
+    labels = []
+    for j in junctions.sort_values("from_slot").itertuples():
+        if j.kind == "trans" and int(j.gap_bp) < 0:
+            labels.append("other_contig")
+        else:
+            labels.append(str(j.kind))
+    return labels
+
+
+def across_origin(parts: list[dict], length: int) -> tuple[list[dict], set[int]]:
+    """A gene's exons on one circular contig of `length`, either side of its
+    origin: the ones after the origin moved on by `length`, so the gene
+    reads start <= end with its end past the length (GFF3's convention for
+    circular sequences). Returns (parts, the exon numbers moved). Exons
+    whose widest gap is not the one round the origin stay as they are."""
+    order = sorted(parts, key=lambda p: p["start"])
+    if len(order) < 2:
+        return parts, set()
+    widest, i = max((order[k + 1]["start"] - order[k]["end"], k) for k in range(len(order) - 1))
+    if widest <= length - order[-1]["end"] + order[0]["start"]:
+        return parts, set()
+    moved = {p["exon_number"] for p in order[: i + 1]}
+    return [
+        {**p, "start": p["start"] + length, "end": p["end"] + length} if p["exon_number"] in moved else p
+        for p in parts
+    ], moved
+
+
 def overlaps(a_contig, a_start, a_end, b_contig, b_start, b_end) -> bool:
     return a_contig == b_contig and a_start < b_end and b_start < a_end
 
@@ -836,8 +900,10 @@ def build_species_gff(
     ts_edits: pd.DataFrame,
     shifts: pd.DataFrame,
     ts_shifts: pd.DataFrame,
+    ts_junctions: pd.DataFrame,
     stats: Counter,
     expected: dict,
+    circular: dict[str, int] | None = None,
 ) -> list[str]:
     """Every table must already be restricted to one species AND one
     organelle - genes like atpA/rpl16/rps3 exist in both genomes, and
@@ -847,8 +913,11 @@ def build_species_gff(
     Every hit is used, not just the best per gene: overlapping hits
     collapse to one locus, protein-coding loci chain into cis-spliced
     genes, and every resulting locus/chain is emitted as its own copy
-    (`gene-X`, `gene-X-2`, ...; strongest first)."""
+    (`gene-X`, `gene-X-2`, ...; strongest first). circular: the lengths
+    of the circular contigs (a cis gene across one's origin is written
+    with its end past the length)."""
     lines: list[str] = []
+    circular = circular or {}
     is_trna = hits.gene.str.startswith("trn")
     hits = pd.concat([hits[~is_trna], resolve_trna_identity(hits[is_trna])])
 
@@ -930,14 +999,32 @@ def build_species_gff(
                 else:
                     copies = [c for c in copies if c not in claimed]
             if not g.empty and int(g.iloc[0].n_filled) >= 1 and parts is not None:
+                junctions = junction_labels(ts_junctions[ts_junctions.gene == gene]) if not ts_junctions.empty else []
+                gene_edits = ts_edits[ts_edits.gene == gene].to_dict("records")
+                gene_shifts = (ts_shifts[ts_shifts.gene == gene] if not ts_shifts.empty else ts_shifts).to_dict("records")
+                contigs = {p["contig"] for p in parts}
+                if len(parts) > 1 and len(contigs) == 1 and junctions and all(j == "cis" for j in junctions):
+                    length = circular.get(next(iter(contigs)))
+                    if length:
+                        parts, moved = across_origin(parts, length)
+                        if moved:
+                            stats["reconstruction_across_origin"] += 1
+                            on = lambda r: pd.notna(r.get("slot")) and int(r["slot"]) in moved  # noqa: E731
+                            gene_edits = [{**e, "genomic_pos": int(e["genomic_pos"]) + length} if on(e) else e for e in gene_edits]
+                            gene_shifts = [
+                                {**f, **{k: int(f[k]) + length for k in ("start", "end", "window_start", "window_end") if k in f and pd.notna(f[k])}}
+                                if on(f)
+                                else f
+                                for f in gene_shifts
+                            ]
+                stats["reconstruction_not_cis"] += any(j != "cis" for j in junctions)
                 corrected.append(
                     {
                         "tier": "reconstructed",
                         "parts": parts,
-                        "edits": ts_edits[ts_edits.gene == gene].to_dict("records"),
-                        "frameshifts": (ts_shifts[ts_shifts.gene == gene] if not ts_shifts.empty else ts_shifts).to_dict(
-                            "records"
-                        ),
+                        "junctions": junctions,
+                        "edits": gene_edits,
+                        "frameshifts": gene_shifts,
                         "score": float(g.iloc[0].whole_gene_score),
                         "n_edits": int(g.iloc[0].whole_gene_n_edits),
                         "coverage": None,
@@ -1123,7 +1210,12 @@ def build_gff(
         ["species", "organelle", "gene", "slot", "contig", "start", "end", "n_bases"],
     )
 
-    tables = [editing_calls, editing_edits, ts_genes, ts_exons, ts_edits, shifts, ts_shifts]
+    ts_junctions = load(
+        analysis_dir / "trans_splicing" / "results" / "reconstructed_junctions.tsv",
+        ["species", "organelle", "gene", "from_slot", "to_slot", "kind", "gap_bp"],
+    )
+
+    tables = [editing_calls, editing_edits, ts_genes, ts_exons, ts_edits, shifts, ts_shifts, ts_junctions]
     empty = [t.iloc[0:0] for t in tables]
     split = [{k: g for k, g in t.groupby(["species", "organelle"])} if not t.empty else {} for t in tables]
     raw_split = {k: g for k, g in raw.groupby(["species", "organelle"])}
@@ -1148,24 +1240,29 @@ def build_gff(
         }
         for species in species_here:
             key = (species, organelle)
+            ctx = (
+                load_seq_context(Path(ctg_fastas[species]), unitig_map_dir / f"{species}.{organelle}.tsv")
+                if species in ctg_fastas
+                else None
+            )
             lines = build_species_gff(
                 raw_split[key],
                 organelle,
                 *[s.get(key, e) for s, e in zip(split, empty)],
                 stats=stats,
                 expected=expected,
+                circular={c: n for c, n in ctx.lengths.items() if ctx.circular.get(c)} if ctx else None,
             )
             if not lines:
                 continue
             out_path = out_dir / f"{species}.{organelle}.gff"
-            if species not in ctg_fastas:
+            if ctx is None:
                 n_no_fasta += 1
                 out_path.write_text("##gff-version 3\n" + "\n".join(lines) + "\n")
                 written.add(out_path)
                 n_written += 1
                 continue
 
-            ctx = load_seq_context(Path(ctg_fastas[species]), unitig_map_dir / f"{species}.{organelle}.tsv")
             ctg_lines, unitig_lines = add_unitig_layer(lines, ctx)
             low_frac = linearisation_notes.get(species) if organelle == "mito" else None
             n_noted += low_frac is not None

@@ -140,6 +140,20 @@ unrelated intervening sequence - inherent to representing trans-splicing
 in GFF3 at all, and its strand is written as `.` (mixed/not applicable)
 rather than a misleading single value.
 
+**Which junctions are trans-spliced** is written, not left to be inferred
+from how far apart the exons are. A reconstructed gene's mRNA carries
+`junctions=` with one label per junction in exon order, as transsplice
+classified it: `cis` (the next exon on the same strand within
+`--junction-distance-threshold`, 10 kb, measured round the origin of a
+circular contig), `trans` (further on the same contig, or on the other
+strand) or `other_contig` (on another contig, where the assembly cannot
+say). A gene with any junction that is not `cis` has
+`exception=trans-splicing` on its `gene` and `mRNA`, the term INSDC uses.
+A `cis` gene whose exons lie either side of a circular contig's origin is
+one feature with its end past the contig's length, its exons after the
+origin moved on by that length, as for a gene `poa run` annotated with the
+origin moved; its `unitig_loc` is read from the placements one lap on.
+
 **RNA editing sites**: no single certain, widely-adopted SO term was
 available with full confidence, so this uses `sequence_alteration` (a
 real, general term - "this position differs from a reference") as a
