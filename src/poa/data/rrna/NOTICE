@@ -1,7 +1,7 @@
 Plant rRNA HMMs (plant.hmm)
 ===========================
 
-Used by poa's rRNA calling (pipeline/denovo_annotation/src/rrna_nhmmer.py,
+Used by poa's rRNA calling (pipeline/denovo_annotation/rrna_nhmmer.py,
 a port of barrnap 0.9's `--kingdom plant` mode). Four nhmmer models:
 
   16S_rRNA, 23S_rRNA, 5S_rRNA   identical to db/bac.hmm of barrnap 0.9

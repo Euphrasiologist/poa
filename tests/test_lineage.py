@@ -536,8 +536,10 @@ class LineagePlastid(unittest.TestCase):
         from poa.pipeline.trans_splicing import reconstruct
         from poa.pipeline.trans_splicing import reference_genes as rg
 
-        own = rg.reference_dir(PIPELINE, "pltd", "fern") / "profiles" / "ndhB"
-        shared = rg.reference_dir(PIPELINE, "pltd") / "profiles" / "ndhB"
+        # reconstruct's own pipeline dir: with poa installed, another test
+        # module may have imported it from site-packages rather than src/
+        own = rg.reference_dir(reconstruct.PIPELINE_DIR, "pltd", "fern") / "profiles" / "ndhB"
+        shared = rg.reference_dir(reconstruct.PIPELINE_DIR, "pltd") / "profiles" / "ndhB"
         self.assertTrue(reconstruct.on_lineage_plastid_templates({"template_dir": str(own)}, "fern"))
         self.assertFalse(reconstruct.on_lineage_plastid_templates({"template_dir": str(shared)}, "fern"))
         self.assertFalse(reconstruct.on_lineage_plastid_templates({"template_dir": str(own)}, "angiosperm"))

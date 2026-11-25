@@ -1,6 +1,30 @@
 # Changelog
 
-## Unreleased
+## 0.3.0
+
+Annotations change throughout. This release adds the liverwort, fern,
+horsetail and lycophyte lineages, which `--lineage auto` finds. It reads
+the angiosperm references from the RNA-edited proteins of 111 species, and
+records editing sites per profile column. Genes now start and end at
+codons, and exons are no longer joined across two copies of a repeat. It
+needs orfedit 0.2.0 and transsplice 0.3.0, and `poa check` says when they
+are older; use transsplice 0.3.1, the version that stops the joins across
+repeat copies. On the ten RefSeq mitogenomes of the PMGA comparison
+(`reports/pmga_comparison.pdf`), poa places both ends of 273 of 333 coding
+sequences within 3 bp of the annotation (PMGA 269), and of 200 of the 245
+single-exon ones (PMGA 200). Known gaps are listed in
+https://github.com/Euphrasiologist/poa/issues/1.
+
+- The bioconda recipe is named `plant-organelle-annotator`, because the
+  name `poa` there belongs to the POA v2 aligner. The command is still `poa`.
+- gfatk 0.6.3 (environment.yml, install.sh, recipe). `poa run` only uses
+  `gfatk stats`, which is unchanged. In `linearize`, `gfatk resolve` no
+  longer writes each link's overlap twice, gives the same circuit every
+  time it is run, and follows the reads through repeats. install.sh builds
+  it from the GitHub tag because crates.io does not have 0.6.3 yet.
+- Licence declared as `MIT AND GPL-3.0-only` (pyproject, recipe). The code
+  is MIT; three of the four rRNA models in `data/rrna/plant.hmm` are
+  barrnap's, which is GPL-3.0 (see `data/rrna/NOTICE`).
 
 - Spliced genes no longer joined from two copies of a repeat
   (transsplice 0.3.1), and the GFF says which junctions are

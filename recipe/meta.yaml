@@ -1,5 +1,7 @@
-{% set name = "poa" %}
-{% set version = "0.2.0" %}
+# On bioconda this is plant-organelle-annotator: the name `poa` there is
+# the POA v2 aligner. The command it installs is still `poa`.
+{% set name = "plant-organelle-annotator" %}
+{% set version = "0.3.0" %}
 
 package:
   name: {{ name }}
@@ -7,7 +9,7 @@ package:
 
 source:
   url: https://github.com/Euphrasiologist/poa/archive/refs/tags/{{ version }}.tar.gz
-  sha256: 860ae168a972d710b91ae1e204ef7de56b28909a6961dd254b0b846db925c4aa
+  sha256: 0000000000000000000000000000000000000000000000000000000000000000  # fill in once the tag is pushed
 
 build:
   number: 0
@@ -37,7 +39,7 @@ requirements:
     # dataset-scale stages (QC, linearize); mafft and graphaligner are left
     # out because bioconda lacks builds for some platforms - poa check
     # lists them as optional
-    - gfatk >=0.6.2
+    - gfatk >=0.6.3
     - gfatools >=0.5
     - seqkit >=2.10
     - minimap2 >=2.28
@@ -53,8 +55,7 @@ test:
 
 about:
   home: https://github.com/Euphrasiologist/poa
-  license: MIT
-  license_family: MIT
+  license: MIT AND GPL-3.0-only
   license_file:
     - LICENSE
     - src/poa/data/oatkdb/NOTICE

@@ -12,7 +12,8 @@ if ! command -v cargo >/dev/null 2>&1; then
 fi
 
 echo "[info] installing gfatk, orfedit, transsplice via cargo..."
-cargo install --locked gfatk@0.6.2
+# gfatk 0.6.3 is on GitHub and bioconda but not yet on crates.io
+cargo install --locked --git https://github.com/tolkit/gfatk --tag 0.6.3 gfatk
 cargo install --locked orfedit@0.2.0
 cargo install --locked transsplice@0.3.1
 
