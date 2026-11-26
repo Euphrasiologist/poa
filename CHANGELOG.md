@@ -1,5 +1,35 @@
 # Changelog
 
+## Unreleased
+
+- Spliced genes no longer joined across loci where the references join
+  them cis (transsplice 0.3.2, `--trans-junction-penalty`). Each template
+  now has a `junctions.tsv` giving, per junction, in how many RefSeq
+  references it is cis and in how many trans (`write_junction_counts`;
+  `00_build_exon_profiles.py --junctions-only` rewrites them), and poa
+  passes `--trans-junction-penalty 60`
+  (`reconstruct.DEFAULT_TRANS_JUNCTION_PENALTY`): a junction that comes
+  out trans costs 60 times its share of references cis, weighed only when
+  transsplice looks beside a neighbour for an exon apart, or leaves one
+  out. Two causes are fixed: a gene in diverged copies joined from two or
+  three of them (plastid clpP without introns in Cyperaceae and
+  *Aquilegia*, two intronless copies 16 kb apart), and a short exon taken
+  from a chance match far away (the 8-codon exon 3 of plastid rps12 in 87
+  species, most of which have lost its intron: IRLC legumes, *Hypericum*,
+  horsetails, liverworts). Over the dataset's 22,160 reconstructed genes:
+  junctions the references have cis that came out trans within one contig
+  332 -> 162 (plastid rps12 exon 2 to 3: 87 -> 0, clpP 52 -> 8; mito rps3
+  24 -> 6); junctions the references have trans unchanged (5,034); no gene
+  has more junctions apart; 195 proteins changed, 194 to a lower
+  whole-gene score (median 15.6 lower, at most 61), one higher; 6 genes
+  fewer complete, where a far exon was left out. Exon placement held out
+  on 24 RefSeq genomes unchanged (523 of 578 exons); planted 1-bp indels
+  in spliced genes found 691 -> 707 of 894 (plastid), 692 -> 697 of 768
+  (mito). Needs transsplice 0.3.2; with an older one poa warns and runs
+  without the penalty. Still apart: mostly
+  mito nad4, nad2, nad7, ccmFc and rpl2, with strong exons both sides
+  (issue #1).
+
 ## 0.3.0
 
 Annotations change throughout. This release adds the liverwort, fern,

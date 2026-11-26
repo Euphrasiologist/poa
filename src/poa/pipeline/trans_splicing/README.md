@@ -105,6 +105,12 @@ structural. Cis vs trans is a per-species, per-junction *output label*
    apart from the rest for the species editing marked as editing where
    the references do (`--known-edit-penalty`, `--novel-edit-penalty`;
    see `editing/README.md`, Editing sites).
+   Each template also gets `junctions.tsv`: for each junction (exon N to
+   N+1), in how many references with the template's exon count it is cis
+   and in how many trans, from the RefSeq annotations in `raw/` (not
+   `raw_rna/`, whose junctions are earlier transsplice calls and carried
+   the very joins below); a lineage without its own `raw/` takes the
+   organelle's shared one. `--junctions-only` rewrites just these files.
 2. **`01_reconstruct.py`** builds one manifest row per raw `.ctg.bed`
    fragment (not best-hit-only, unlike `editing`) and calls
    `transsplice scan-batch` - with `--internal-stop-penalty` as in
@@ -133,6 +139,21 @@ structural. Cis vs trans is a per-species, per-junction *output label*
      strand-corrected, classifies each junction cis/trans for *this*
      species, and runs one final whole-gene alignment pass for an
      aggregate score/protein.
+   - **Exons apart.** For an exon on a junction that is not cis, looks
+     next to its neighbours for a copy that would join it cis, and failing
+     that weighs leaving the exon out. A junction that comes out apart costs
+     `--trans-junction-penalty` (60, `reconstruct.DEFAULT_TRANS_JUNCTION_PENALTY`)
+     times its share of references cis (`junctions.tsv`), so a diverged
+     copy beside its neighbour wins when it scores within that, and a
+     chance match far away is dropped where it adds less. A junction the
+     references have trans (nad1, nad2, nad5, plastid rps12 exon 1) costs
+     nearly nothing. Without it, plastid clpP was joined from two or three
+     intronless copies in Cyperaceae and *Aquilegia*, and the 8-codon exon 3
+     of plastid rps12 came from a chance match tens of kb away in 87
+     species, most of which have lost rps12's second intron: exon 3 now
+     follows exon 2 in 56 angiosperms (IRLC legumes such as *Trifolium*,
+     *Vicia* and *Lathyrus*; *Hypericum*), 6 horsetails and 4 liverworts,
+     where tblastn of the Arabidopsis protein runs on unbroken to its end.
 3. **`02_bootstrap_refine.py`** - once `01_reconstruct.py` has produced
    real output, rebuilds each gene's whole-gene profile from this
    dataset's own `complete=True, whole_gene_score>0` reconstructions

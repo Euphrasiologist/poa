@@ -82,6 +82,14 @@ OUT_NAMES = [
 ORGANELLES = ("mito", "pltd")
 # transsplice's cost of a frame change inside a gene (as editing's orfedit)
 DEFAULT_FRAMESHIFT_PENALTY = 20.0
+# transsplice's cost of a junction that comes out trans - exons far apart
+# or on opposite strands of one contig - times the share of the template's
+# RefSeq references in which it is cis (the template's junctions.tsv,
+# exon_profiles.write_junction_counts). Without it a gene was joined from
+# diverged copies of itself (plastid clpP in Aquilegia, two intronless
+# copies 16 kb apart) or took a chance match of a short exon tens of kb
+# away (plastid rps12 exon 3). transsplice >= 0.3.2; 0 for none.
+DEFAULT_TRANS_JUNCTION_PENALTY = 60.0
 FRAMESHIFT_COLUMNS = [
     "species", "organelle", "gene", "slot", "contig", "start", "end", "n_bases", "profile_column", "window_start", "window_end"
 ]  # fmt: skip
@@ -217,6 +225,7 @@ def reconstruct(
     frameshift_penalty: float = DEFAULT_FRAMESHIFT_PENALTY,
     known_edit_penalty: float = lin.KNOWN_EDIT_PENALTY,
     novel_edit_penalty: float = lin.NOVEL_EDIT_PENALTY,
+    trans_junction_penalty: float = DEFAULT_TRANS_JUNCTION_PENALTY,
 ) -> ReconstructResult:
     """Reconstruct the spliced genes under data root `root` (mito GENES,
     plastid PLASTID_SPLICED, for `organelles`).
@@ -278,6 +287,9 @@ def reconstruct(
     # The same goes for the junction slide (lin.junction_slide), which an
     # older transsplice simply lacks.
     can_slide = supports_option(transsplice, "--junction-slide")
+    if trans_junction_penalty > 0 and not supports_option(transsplice, "--trans-junction-penalty"):
+        log.warning(f"reconstruct: {transsplice} has no --trans-junction-penalty (0.3.2) - cis junctions not preferred")
+        trans_junction_penalty = 0.0
     # the bundled angiosperm templates carry their editing sites in a 21st
     # column, which a transsplice without --novel-edit-penalty cannot read
     # and a stop inside a gene is aligned at a cost and shown, as in editing
@@ -372,6 +384,8 @@ def reconstruct(
         if sites:
             cmd += ["--known-edit-penalty", str(known_edit_penalty), "--novel-edit-penalty", str(novel_edit_penalty)]
         cmd += ["--internal-stop-penalty", str(DEFAULT_INTERNAL_STOP_PENALTY)]
+        if trans_junction_penalty > 0:
+            cmd += ["--trans-junction-penalty", str(trans_junction_penalty)]
         proc = subprocess.run(cmd)
         if proc.returncode != 0:
             raise StageError(f"transsplice scan-batch failed (exit {proc.returncode})")
@@ -422,6 +436,13 @@ def main(argv: list[str] | None = None) -> int:
         "or force one for all",
     )
     ap.add_argument(
+        "--trans-junction-penalty",
+        type=float,
+        default=DEFAULT_TRANS_JUNCTION_PENALTY,
+        help="cost of a junction that comes out trans, times the share of the references with it cis "
+        "(default: %(default)s; 0: none)",
+    )
+    ap.add_argument(
         "--force",
         action="store_true",
         help="accepted for CLI consistency; transsplice "
@@ -439,6 +460,7 @@ def main(argv: list[str] | None = None) -> int:
             junction_distance_threshold=args.junction_distance_threshold,
             exon_flank=args.exon_flank,
             lineage=args.lineage,
+            trans_junction_penalty=args.trans_junction_penalty,
         )
     except StageError as e:
         log.error(e)

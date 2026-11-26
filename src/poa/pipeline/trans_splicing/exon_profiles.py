@@ -28,6 +28,13 @@ Two kinds of profile per gene, both written under `../reference/profiles/
   (nad1 exons 2/5, nad2 exons 3-5, nad5 exons 2/4, rps3 exon 2), and
   joining exons on codon boundaries then dropped the split codon's bases,
   frame-shifting the rest of the gene - transsplice adds lead/trail back.
+- `junctions.tsv`: per junction (`exon` N to N+1), in how many
+  references with the template's exon count it is cis (`n_cis`) and in
+  how many trans (`n_trans`), from the curated RefSeq annotations in
+  raw/junctions.tsv - not raw_rna/, whose junctions are transsplice's own
+  calls - or, for a lineage without them, the organelle's shared ones.
+  transsplice's --trans-junction-penalty charges a junction that comes out
+  trans in proportion to its share cis (write_junction_counts).
 - `whole_gene.pssm`: one full-length profile per gene, from every
   included locus's curated RefSeq protein (regardless of its own exon
   count - Beta vulgaris' intron-less `rps3` protein is still a real,
@@ -180,6 +187,50 @@ def load_junctions(*raw_dirs: Path) -> dict[tuple[str, str, str], dict]:
 # the two two-exon forms, and cox2 was placed in none of 18 RefSeq genomes.
 LINEAGE_UNION_INTRONS = ("angiosperm",)
 NO_SITES_NOTE = "sites not used"
+JUNCTIONS_NAME = "junctions.tsv"
+
+
+def junction_counts(
+    gene: str, k: int, junctions_tsv: Path, exclude: tuple[str, ...] = ()
+) -> dict[int, tuple[int, int]]:
+    """{exon N: (n_cis, n_trans)} for each junction N -> N+1 of `gene`,
+    over the references in `junctions_tsv` with `k` exons (others number
+    their exons differently), leaving out UNRESOLVED loci and `exclude`."""
+    loci: dict[tuple[str, str], dict[int, str]] = defaultdict(dict)
+    with open(junctions_tsv) as fh:
+        for row in csv.DictReader(fh, delimiter="\t"):
+            if row["gene"] != gene or row["accession"] in exclude or "UNRESOLVED" in row["notes"]:
+                continue
+            if int(row["n_exons"]) == k:
+                loci[(row["accession"], row["locus_tag"])][int(row["exon_num"])] = row["junction_to_next"]
+    kinds = list(loci.values())
+    return {n: (sum(x.get(n) == "cis" for x in kinds), sum(x.get(n) == "trans" for x in kinds)) for n in range(1, k)}
+
+
+def write_junction_counts(
+    gene_dir: Path,
+    gene: str,
+    organelle: str = "mito",
+    lineage: str = lin.DEFAULT_LINEAGE,
+    exclude: tuple[str, ...] = (),
+) -> Path | None:
+    """Write gene_dir/junctions.tsv from the RefSeq references' junctions
+    (the lineage's own raw/, else the organelle's shared one); the
+    template's exon count is its highest exonN.pssm. None (and no file)
+    for a one-exon template or one no reference of that count speaks for."""
+    out = gene_dir / JUNCTIONS_NAME
+    numbers = [int(f.stem[len("exon") :]) for f in gene_dir.glob("exon*.pssm") if f.stem[len("exon") :].isdigit()]
+    k = max(numbers, default=0)
+    own = reference_dir(PIPELINE_DIR, organelle, lineage) / "raw" / "junctions.tsv"
+    source = own if own.exists() else reference_dir(PIPELINE_DIR, organelle) / "raw" / "junctions.tsv"
+    counts = junction_counts(gene, k, source, exclude) if k > 1 and source.exists() else {}
+    if not any(sum(c) for c in counts.values()):
+        out.unlink(missing_ok=True)
+        return None
+    out.write_text("exon\tn_cis\tn_trans\n" + "".join(f"{n}\t{c}\t{t}\n" for n, (c, t) in sorted(counts.items())))
+    return out
+
+
 # junctions of two loci are the same intron when they fall within this
 # many columns of the proteins' alignment
 JUNCTION_COLUMNS = 4
@@ -596,6 +647,7 @@ def build_exon_profiles(
                 f"{gene} exon{slot}: {len(dna_seqs)} training seqs, "
                 f"min_self_score={min_score:.3f} -> {profile_path.name}"
             )
+        write_junction_counts(gene_dir, gene, organelle, lineage, tuple(exclude))
 
     return profiles_dir
 
@@ -639,7 +691,20 @@ def main(argv: list[str] | None = None) -> int:
         help="rebuild the exon-slot profiles and floors only, keeping each gene's whole_gene.pssm "
         "(one 02_bootstrap_refine.py refined, say)",
     )
+    ap.add_argument(
+        "--junctions-only",
+        action="store_true",
+        help=f"only (re)write each existing template's {JUNCTIONS_NAME} (the references' cis and trans junctions)",
+    )
     args = ap.parse_args(argv)
+    if args.junctions_only:
+        profiles_dir = args.out_dir or reference_dir(PIPELINE_DIR, args.organelle, args.lineage) / "profiles"
+        for gene_dir in sorted(d for d in profiles_dir.iterdir() if d.is_dir()):
+            if args.genes and gene_dir.name not in args.genes:
+                continue
+            out = write_junction_counts(gene_dir, gene_dir.name, args.organelle, args.lineage, tuple(args.exclude))
+            log.info(f"{gene_dir.name}: {out.read_text().count(chr(10)) - 1 if out else 0} junctions -> {out or '-'}")
+        return 0
     build_exon_profiles(
         args.lineage,
         args.genes,
