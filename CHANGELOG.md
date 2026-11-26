@@ -1,6 +1,12 @@
 # Changelog
 
-## Unreleased
+## 0.3.2
+
+atp6 starts at the first ATG of its open reading frame, and spliced genes
+are read round a circular contig's origin and whole from one copy of a
+repeat. Needs orfedit 0.2.1 and transsplice 0.3.3 (`environment.yml`,
+`install.sh`): with orfedit 0.2.0 poa warns and starts atp6 where its
+profile aligns, and with transsplice 0.3.2 spliced genes are as in 0.3.1.
 
 - atp6 starts at the first ATG of its open reading frame (orfedit 0.2.1,
   `--upstream-start atp6`, on the default angiosperm references; with an
