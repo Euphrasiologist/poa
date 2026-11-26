@@ -9,7 +9,7 @@ package:
 
 source:
   url: https://github.com/Euphrasiologist/poa/archive/refs/tags/{{ version }}.tar.gz
-  sha256: d87aaffd82d6a1328eeed70b7e09cf0a527661189df9d5ee5947eb0c79022a92
+  sha256: 1b3dd0d7a7430a43f5825156dc724465a4462bf4e0b35145cca59f9216ed68be
 
 build:
   number: 0
