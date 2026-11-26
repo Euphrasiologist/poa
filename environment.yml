@@ -43,6 +43,6 @@ dependencies:
   # this project's own tools
   - gfatk=0.6.3
   - orfedit=0.2.0
-  - transsplice=0.3.1
+  - transsplice=0.3.2
 
   - pip
