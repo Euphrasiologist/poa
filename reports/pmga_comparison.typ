@@ -162,12 +162,12 @@ one more codon it could leave out, so a gene that ended a few residues before it
 profile was read on over its stop. Genes now end at their first stop; a stop the protein
 goes on matching beyond (a pseudogene, mostly) is kept in the gene and reported; and a frame
 change in the last few codons, which cannot be told from a gene that simply ends differently,
-is reported but no longer followed. On 19 RefSeq mitogenomes and 13 plastomes, with the same
+is reported but no longer followed. On 19 RefSeq mitogenomes and 12 plastomes, with the same
 references, genes ending within 3 bp of the annotated stop went from 397 to 443 of 457 and
 from 558 to 621 of 626, and rbcL, which a short search window had been cutting at codon 341,
 is whole. A gene whose alignment began at a codon other than ATG or ACG (an edit away from
 AUG) now starts at the nearest ATG within ten codons: starts within 3 bp of the annotation
-went from 384 to 401 of 457 and from 528 to 574 of 626, with one made wrong. Neither change
+went from 384 to 401 of 457 and, on 13 plastomes, from 564 to 613 of 671, with one made wrong. Neither change
 costs frameshift detection: of 1-bp indels planted in real genes as many are found as
 before.
 

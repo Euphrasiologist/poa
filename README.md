@@ -21,11 +21,11 @@ poa check           # every tool found, oatkDB databases ready
 ```
 
 `environment.yml` pins every external tool from bioconda/conda-forge,
-including this project's own `gfatk` 0.6.3, `orfedit` 0.2.0 and
-`transsplice` 0.3.2, built for linux-64, linux-aarch64 and macOS (Intel and
+including this project's own `gfatk` 0.6.3, `orfedit` 0.2.1 and
+`transsplice` 0.3.3, built for linux-64, linux-aarch64 and macOS (Intel and
 Apple silicon). To build those three from source instead, remove them from
 `environment.yml` and run `./install.sh` (cargo); do that too if bioconda
-does not have orfedit 0.2.0 and transsplice 0.3.2 yet (both were still
+does not have orfedit 0.2.1 and transsplice 0.3.3 yet (both were still
 awaiting review on 2026-11-26). On bioconda poa is called
 `plant-organelle-annotator`, because `poa` there is the POA v2 aligner. Its
 recipe is in `recipe/`; once it is merged, poa (and with it
@@ -234,7 +234,7 @@ AUG) now starts at the nearest ATG within 10 codons: upstream, in an
 open frame, or downstream at a column whose references can start with
 Met; failing that, the nearest ACG. On 19 RefSeq angiosperm mitogenomes
 and 13 RefSeq plastomes, starts within 3 bp of the annotation went from
-384 to 401 of 457 (mito) and from 528 to 574 of 626 (plastid), with one
+384 to 401 of 457 (mito) and from 564 to 613 of 671 (plastid), with one
 made wrong.
 
 Where a single-exon gene ends. A reading frame ends at its first stop
@@ -259,12 +259,14 @@ looked for in (the hit plus 300 bp each side) is looked for again in a
 longer one: rbcL, whose HMM is the gene's first half, used to stop at
 codon 341.
 
-On 19 RefSeq angiosperm mitogenomes and 13 RefSeq plastomes, with the
+On 19 RefSeq angiosperm mitogenomes and 12 RefSeq plastomes, with the
 same profiles before and after (`build/rnaedit/ends`), single-exon
 genes ending within 3 bp of the annotated stop went from 397 to 443 of
 457 (mito) and from 558 to 621 of 626 (plastid), and the frame changes
 called in those mito genes from 23 to 3; one end that was right is now
-wrong (an edit-made stop a codon past the profile's end). On 153 DToL
+wrong (Liriodendron sdh4, an edit-made stop a codon past the profile's
+end; with the references rebuilt since, its profile ends at that stop
+and the end is right again). On 153 DToL
 assemblies, single-exon genes ending at a stop went from 10,728 to
 11,479 of 11,608 and the frame changes their genes are read through
 from 234 to 184 (105 more, near a gene's end, are reported and not
@@ -401,15 +403,24 @@ without such differences (over all 109, the same calls are 42% of the
 with at least 10 reads are edited there and another 3% in under a fifth
 of the reads; of the plastid ones, 90% and 4%.
 
-Still open: starts far from the conserved part of a gene, and starts
-RefSeq's own records disagree on. Of the single-exon genes of ten
-RefSeq mitogenomes, 200 of 245 have both ends within 3 bp of the
-annotation (164 before the start and stop rules above); most of the
-rest are atp6, whose annotated starts lie 18 to 146 codons before the
-conserved part, and rps4, mttB, rpl16 and matR, whose annotated starts
-differ from record to record. A stop made by an edit a codon or
-more beyond the profile's end is missed for a literal one further on
-(Liriodendron sdh4); psbF keeps the profile it had; and a
+atp6. Its annotated starts lie 18 to 146 codons before the conserved
+part, which its profile begins at: a presequence too variable to align,
+annotated from the first ATG of the open reading frame. With orfedit
+0.2.1 poa starts angiosperm-reference atp6 there (`--upstream-start
+atp6`, scan.UPSTREAM_START_GENES), unless the gene starts at an ACG an
+edit makes into AUG. On 19 RefSeq angiosperm mitogenomes atp6 starts
+within 3 bp of the annotation went from 8 to 14 of 19, single-exon mito
+starts from 401 to 407 of 457, none made wrong; four of the five atp6
+still wrong now start further upstream than RefSeq does. Over 1,785 atp6
+copies in 836 DToL angiosperm mitogenomes 861 start further upstream
+(median 87 codons); their alignment, edits, frame changes and ends are
+as before.
+
+Still open: starts RefSeq's own records disagree on. Of the single-exon
+genes of ten RefSeq mitogenomes, 200 of 245 had both ends within 3 bp of
+the annotation (164 before the start and stop rules above; the atp6 rule
+adds 3 in the gene-end harness); most of the rest are rps4, mttB, rpl16
+and matR, whose annotated starts differ from record to record. psbF keeps the profile it had; and a
 plastid-derived rpl2 in a mitogenome is reported as an incomplete mito
 rpl2 where it used to pass for a complete one.
 

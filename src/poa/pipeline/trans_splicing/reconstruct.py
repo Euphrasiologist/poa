@@ -90,8 +90,11 @@ DEFAULT_FRAMESHIFT_PENALTY = 20.0
 # copies 16 kb apart) or took a chance match of a short exon tens of kb
 # away (plastid rps12 exon 3). transsplice >= 0.3.2; 0 for none.
 DEFAULT_TRANS_JUNCTION_PENALTY = 60.0
+# (near_end: transsplice >= 0.3.3; always false here, since poa gives it no
+# end margin - see scan.DEFAULT_END_MARGIN)
 FRAMESHIFT_COLUMNS = [
-    "species", "organelle", "gene", "slot", "contig", "start", "end", "n_bases", "profile_column", "window_start", "window_end"
+    "species", "organelle", "gene", "slot", "contig", "start", "end", "n_bases", "profile_column", "window_start", "window_end",
+    "near_end",
 ]  # fmt: skip
 
 

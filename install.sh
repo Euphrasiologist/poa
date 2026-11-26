@@ -14,7 +14,7 @@ fi
 echo "[info] installing gfatk, orfedit, transsplice via cargo..."
 # gfatk 0.6.3 is on GitHub and bioconda but not yet on crates.io
 cargo install --locked --git https://github.com/tolkit/gfatk --tag 0.6.3 gfatk
-cargo install --locked orfedit@0.2.0
-cargo install --locked transsplice@0.3.2
+cargo install --locked orfedit@0.2.1
+cargo install --locked transsplice@0.3.3
 
 echo "[info] done. 'poa check' (after 'pip install .') confirms every tool is found."

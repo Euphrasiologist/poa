@@ -117,7 +117,11 @@ DEFAULT_FRAMESHIFT_PENALTY = 20.0
 # leaving them out cost 12 points of the planted indels found (95% -> 83%
 # of 1,500; build/recall/results_ends.txt). transsplice is given no margin:
 # for spliced genes it found fewer planted indels (mito 90% -> 83%,
-# plastid 77% -> 64%) and called more elsewhere.
+# plastid 77% -> 64%) and called more elsewhere. transsplice 0.3.3 applies
+# the margin to the gene it has chosen only, and reports what it drops as
+# near_end, but a margin of 25 still finds 691 of the 894 planted in
+# plastid genes against 707 without (build/recall/results_w5m25.pltd.txt),
+# for the 3 of 171 spliced coding sequences whose ends it would put right.
 # On 19 RefSeq mitogenomes and 13 RefSeq plastomes (build/rnaedit/ends), the
 # single-exon genes ending within 3 bp of the annotated stop went from 397 to
 # 443 of 457 (mito) and from 558 to 621 of 626 (plastid), with one that was
@@ -129,6 +133,15 @@ DEFAULT_FRAMESHIFT_PENALTY = 20.0
 DEFAULT_STOP_SEARCH = 50
 DEFAULT_INTERNAL_STOP_PENALTY = 20.0
 DEFAULT_END_MARGIN = 25
+# Genes with an N-terminal extension too variable to align, started at the
+# most upstream ATG of their open reading frame unless they start at an ACG
+# (orfedit >= 0.2.1, --upstream-start), on the default (angiosperm)
+# references only. atp6's presequence runs 18 to 146 codons before the
+# conserved part; of its 19 annotated starts in 19 RefSeq angiosperm
+# mitogenomes (build/rnaedit/ends), 8 were within 3 bp before and 14 after,
+# none made wrong; of the five still wrong, four now start further upstream
+# than RefSeq does, and one (Sedum) at an ACG RefSeq starts after.
+UPSTREAM_START_GENES = ("atp6",)
 # Where a gene starts: the alignment starts a gene wherever the profile's
 # first columns match, not always at a start codon. With START_SEARCH, a
 # gene whose first aligned codon is not ATG (or ACG, which an edit makes
@@ -375,9 +388,11 @@ def run_orfedit(
     reverse_edit_penalty: float | None = None,
     known_edit_penalty: float | None = None,
     novel_edit_penalty: float | None = None,
+    upstream_start: tuple[str, ...] = (),
 ) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     """One orfedit scan-batch over `rows`; (gene calls, edits, frameshifts)
-    as all-string frames. stop_edit_penalty: read in-frame stop codons
+    as all-string frames. upstream_start: genes started at the most
+    upstream ATG of their open frame (UPSTREAM_START_GENES). stop_edit_penalty: read in-frame stop codons
     through as U-to-C edits at this cost (common/lineage.py, fern);
     reverse_edit_penalty: any other U-to-C edit at this cost;
     known_edit_penalty, novel_edit_penalty: for profiles with editing sites
@@ -416,6 +431,8 @@ def run_orfedit(
         cmd += ["--frameshifts-out", str(shifts_out), "--frameshift-penalty", str(frameshift_penalty)]
     else:
         pd.DataFrame(columns=FRAMESHIFT_COLUMNS).to_csv(shifts_out, sep="\t", index=False)
+    if upstream_start:
+        cmd += ["--upstream-start", ",".join(upstream_start)]
     if stop_edit_penalty is not None:
         cmd += ["--stop-edit-penalty", str(stop_edit_penalty)]
     if reverse_edit_penalty is not None:
@@ -620,6 +637,12 @@ def scan(
     )
     # the same without the editing-site costs: the ordinary cost at every column
     flat = {**opts, "known_edit_penalty": None, "novel_edit_penalty": None}
+    # atp6 from its frame's first ATG, on the default references only (the
+    # lineages with profiles of their own were not measured); an older
+    # orfedit starts it where the alignment does, as before
+    upstream = UPSTREAM_START_GENES if supports_option(orfedit, "--upstream-start") else ()
+    if not upstream:
+        log.warning(f"scan_editing: {orfedit} has no --upstream-start (0.2.1) - atp6 starts where its profile aligns")
 
     def correct(lineage: str, species: set[str] | None) -> tuple[list[pd.DataFrame], pd.DataFrame, pd.DataFrame]:
         """`species` corrected under `lineage`: [gene calls, edits,
@@ -650,7 +673,7 @@ def scan(
         # editing-site costs (lin.follows_sites).
         runs = {
             lin.DEFAULT_LINEAGE: run_orfedit(
-                orfedit, rows, lin.DEFAULT_LINEAGE, work_dir, stop_edit_penalty=stop, **flat
+                orfedit, rows, lin.DEFAULT_LINEAGE, work_dir, stop_edit_penalty=stop, upstream_start=upstream, **flat
             )
         }
         default_flat = runs[lin.DEFAULT_LINEAGE]
@@ -723,7 +746,9 @@ def scan(
         lineage_table.loc[at.isin(site_species), "edit_sites"] = "yes"
         if site_species:
             srows = [r for r in rows if r["species"] in site_species]
-            again = run_orfedit(orfedit, srows, f"{lin.DEFAULT_LINEAGE}.sites", work_dir, stop_edit_penalty=stop, **opts)
+            again = run_orfedit(
+                orfedit, srows, f"{lin.DEFAULT_LINEAGE}.sites", work_dir, stop_edit_penalty=stop, upstream_start=upstream, **opts
+            )
             runs[lin.DEFAULT_LINEAGE] = tuple(
                 pd.concat([old[~old["species"].isin(site_species)], new], ignore_index=True)
                 for old, new in zip(default_flat, again)

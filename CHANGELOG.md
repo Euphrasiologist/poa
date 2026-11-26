@@ -1,5 +1,51 @@
 # Changelog
 
+## Unreleased
+
+- atp6 starts at the first ATG of its open reading frame (orfedit 0.2.1,
+  `--upstream-start atp6`, on the default angiosperm references; with an
+  older orfedit poa warns and starts it where its profile aligns, as
+  before). Its presequence, 18 to 146 codons before the conserved part,
+  is too variable to align; RefSeq annotates it from the frame's first
+  ATG. A gene starting at an ACG (an edit away from AUG) keeps that
+  start. On 19 RefSeq angiosperm mitogenomes: atp6 starts within 3 bp 8
+  -> 14 of 19, single-exon mito starts 401 -> 407 of 457, none made
+  wrong (both ends 390 -> 393; on PMGA's ten genomes, starts 200 -> 206).
+  Over 1,785 atp6 copies in 836 DToL angiosperm mitogenomes, 861 start
+  further upstream, median 87 codons; nothing else about them changes.
+  The rule applies in the runs on the default references only: ferns,
+  horsetails and liverworts, which correct atp6 on profiles of their own,
+  do not get it.
+- Spliced genes round a circular contig's origin, and genes taken whole
+  from one copy of a repeat (transsplice 0.3.3). An exon can now cross
+  the origin itself: fern plastid ndhB, whose exon 2 beside exon 1 does,
+  came from the other copy of the inverted repeat, trans, in 6 species;
+  now cis in all. An exon that had been cut off at the origin is read
+  whole (54 proteins score higher, median by 149: mito ccmFc, nad1, nad2
+  and nad4 of mosses and liverworts among them). And where exons came
+  from two copies of a mitochondrial repeat and one copy holds the whole
+  gene, the gene is now taken from that copy (Dryopteris nad2 and nad7,
+  Huperzia nad5, Equisetum cox1). Over the dataset: junctions the
+  references have cis that came out trans within one contig 162 -> 133;
+  complete genes unchanged (21,616 of 22,160); planted-indel recall and
+  held-out exon placement unchanged. Of the 139 genes with such a
+  junction under 0.3.2, 98 have no whole cis copy in their assembly at
+  all: what remains (mito nad4, nad2, nad7, ccmFc, rpl2) is mostly the
+  assembly's own arrangement. A gene across the origin is written with
+  its end past the contig's length, as before. The frameshift table has
+  transsplice's new `near_end` column (always false: poa gives
+  transsplice no end margin, which still costs plastid recall, 707 ->
+  691 of 894, applied to the chosen gene only).
+- The plastid gene-end figures (README, `reports/pmga_comparison`) now
+  count *Pinus thunbergii*, which the harness had scored as having no
+  calls: poa had moved its plastome's origin, and the harness read the
+  calls on poa's rotated working copy. poa's own GFF was right. Starts
+  within 3 bp on 13 RefSeq plastomes: 564 -> 613 of 671 (was 528 -> 574
+  of 626 without it); the stop figures were measured on the other 12.
+- *Liriodendron* sdh4, whose edit-made stop the 0.3.0 stop rule missed,
+  ends right with the references rebuilt from 111 species (the profile
+  now ends at that stop): the README no longer lists it as open.
+
 ## 0.3.1
 
 Spliced-gene calls change where a gene was joined across loci that the
