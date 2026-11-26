@@ -1,6 +1,10 @@
 # Changelog
 
-## Unreleased
+## 0.3.1
+
+Spliced-gene calls change where a gene was joined across loci that the
+references join cis. Needs transsplice 0.3.2 (`environment.yml`,
+`install.sh`).
 
 - Spliced genes no longer joined across loci where the references join
   them cis (transsplice 0.3.2, `--trans-junction-penalty`). Each template
