@@ -32,6 +32,8 @@ OPTIONAL = [
     ("gfatools", "version", "dataset QC"),
     ("seqkit", "version", "dataset QC, linearize"),
     ("minimap2", "--version", "QC cross-organelle check (poa run with both organelles), linearize"),
+    ("blastn", "-version", "poa run --cross-align"),
+    ("makeblastdb", "-version", "poa run --cross-align"),
     ("samtools", "--version", "linearize"),
     ("GraphAligner", "--version", "linearize"),
     ("mafft", "--version", "rebuilding reference profiles"),
@@ -145,6 +147,20 @@ def check() -> None:
 @click.option(
     "--genus",
     help="genus for the QC genome-size check (default: the first word of --name, e.g. Arabidopsis_thaliana)",
+)
+@click.option(
+    "--cross-search",
+    is_flag=True,
+    help="also search each organelle's contigs with the other organelle's gene models, and mark the "
+    "other organelle's genes found there (plastid genes in the mitogenome, mito genes in the plastome) "
+    "plastid_derived / mito_derived in the GFF and tables/organelle_transfers.tsv (off by default; one "
+    "more nhmmscan per organelle)",
+)
+@click.option(
+    "--cross-align",
+    is_flag=True,
+    help="with --mito and --pltd: align the plastid contigs to the mito contigs (BLAST+ dc-megablast) and "
+    "mark the stretches they share in both GFFs, with where each lies in the other (off by default)",
 )
 @click.option("-t", "--threads", type=click.IntRange(min=1), default=4, show_default=True, help="threads")
 @click.option("--force", is_flag=True, help="replace an existing OUTDIR/work")

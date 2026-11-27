@@ -34,6 +34,7 @@ requirements:
     # poa run
     - hmmer >=3.4
     - trnascan-se >=2.0.12
+    - blast >=2.15   # poa run --cross-align
     - orfedit >=0.2.1
     - transsplice >=0.3.3
     # dataset-scale stages (QC, linearize); mafft and graphaligner are left

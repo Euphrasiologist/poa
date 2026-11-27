@@ -46,7 +46,10 @@ TABLE_COORDS: dict[str, tuple[str, list[tuple[str, str]], list[str]]] = {
     "frameshifts.tsv": ("contig", [("hit_start", "hit_end"), ("start", "end"), ("window_start", "window_end")], []),
     "reconstructed_exons.tsv": ("contig", [("start", "end")], []),
     "reconstructed_frameshifts.tsv": ("contig", [("start", "end"), ("window_start", "window_end")], []),
+    # its other_* columns point into the other organelle (unrotate_table)
+    "organelle_transfers.tsv": ("contig", [("start", "end")], []),
 }
+OTHER_REGION_RE = re.compile(r"(other_region=)([^;:]+):(\d+)-(\d+)")
 
 
 def read_fasta(path: Path) -> list[tuple[str, str]]:
@@ -253,5 +256,32 @@ def unrotate_table(
         for p_col in points:
             if pd.notna(row[p_col]):
                 df.at[i, p_col] = point(int(row[p_col]), k, n)
+    if path.name == "organelle_transfers.tsv" and "other_organelle" in df.columns:
+        # where a shared stretch lies in the other organelle, when that is `organelle`
+        for i, row in df.iterrows():
+            c = row["other_contig"]
+            if row["other_organelle"] != organelle or c not in offsets or pd.isna(row["other_start"]):
+                continue
+            df.at[i, "other_start"], df.at[i, "other_end"] = interval(
+                int(row["other_start"]), int(row["other_end"]), offsets[c], lengths[c]
+            )
+        for col in ("other_start", "other_end", "aligned_bp"):
+            df[col] = df[col].astype("Int64")
     df = df.drop(columns=[c for c in ("_contig",) if c in df.columns])
     df.to_csv(path, sep="\t", index=False)
+
+
+def unrotate_other_regions(path: Path, offsets: dict[str, int], lengths: dict[str, int]) -> None:
+    """Map `other_region=contig:start-end` attributes (poa run
+    --cross-align) in a GFF3 that point into contigs of the OTHER organelle,
+    whose origins `offsets` moved, back onto that organelle's input."""
+    path = Path(path)
+
+    def back(m: re.Match) -> str:
+        c = m.group(2)
+        if c not in offsets:
+            return m.group(0)
+        s, e = interval(int(m.group(3)) - 1, int(m.group(4)), offsets[c], lengths[c])
+        return f"{m.group(1)}{c}:{s + 1}-{e}"
+
+    path.write_text(OTHER_REGION_RE.sub(back, path.read_text()))

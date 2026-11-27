@@ -5,7 +5,8 @@ assembler), optionally with its assembly graph (GFA), and runs the
 annotation pipeline on it:
 
   denovo_annotation 00-04 -> editing 01 -> trans_splicing 01
-  -> unitig_coords 00-01 + qc_basic_stats 06 (with a GFA) -> gff_export 01
+  -> unitig_coords 00-01 + qc_basic_stats 06 (with a GFA)
+  -> denovo_annotation 05 (with --cross-search / --cross-align) -> gff_export 01
   -> qc (pass/flag/fail per organelle)
 
 Each stage is a library call, run in this process against a data root
@@ -21,11 +22,20 @@ writes a pass/flag/fail line per organelle to OUTDIR/<name>.qc.tsv. Graph
 checks need the GFA, and the cross-organelle check both organelles; a
 check that can't run is listed under not_assessed.
 
+Off unless asked for, the other organelle's DNA in each genome
+(denovo_annotation/transfers.py): --cross-search searches each organelle's
+contigs with the other organelle's gene models too, and marks the other
+organelle's genes found (plastid genes in the mitogenome, mito genes in the
+plastome) plastid_derived / mito_derived; --cross-align (both organelles,
+BLAST+) aligns the plastid to the mitogenome and marks the stretches they
+share in both. Both go into the GFFs as biological_region features and
+into tables/organelle_transfers.tsv.
+
 Output:
   OUTDIR/<name>.<organelle>.gff          contig-level GFF3
   OUTDIR/<name>.<organelle>.unitig.gff   unitig-level GFF3 (with a GFA)
   OUTDIR/<name>.qc.tsv                   pass/flag/fail and reasons, per organelle
-  OUTDIR/tables/                         gene calls, edits, spliced genes, QC
+  OUTDIR/tables/                         gene calls, edits, spliced genes, QC, transfers
   OUTDIR/logs/<stage>.log                each stage's stderr
   OUTDIR/work/                           the data root (intermediate files)
 """
@@ -53,6 +63,7 @@ from .pipeline.denovo_annotation.combined_gff import build_combined_gff
 from .pipeline.denovo_annotation.gene_calls import build_gene_calls
 from .pipeline.denovo_annotation.nhmmscan import run_nhmmscan
 from .pipeline.denovo_annotation.rrna import run_rrna
+from .pipeline.denovo_annotation.transfers import blast_exe, find_transfers
 from .pipeline.denovo_annotation.trnascan import run_trnascan
 from .pipeline.editing.scan import scan as scan_editing
 from .pipeline.gff_export.build_gff import build_gff
@@ -72,6 +83,7 @@ NAME_RE = re.compile(r"^[A-Za-z0-9_-]+$")
 # per-stage result tables copied to OUTDIR/tables/
 TABLES = [
     "denovo_annotation/results/gene_calls.tsv",
+    "denovo_annotation/results/organelle_transfers.tsv",
     "editing/results/edited_gene_calls.tsv",
     "editing/results/predicted_edits.tsv",
     "editing/results/frameshifts.tsv",
@@ -199,6 +211,10 @@ def unrotate_outputs(out: Path, work: Path, name: str, moved: dict[str, dict[str
         fasta = work / "data" / ORGANELLES[o] / name / f"{name}.{o}.ctg.fasta"
         lengths = {c: n for c, (n, _) in origin.contigs(fasta).items()}
         origin.unrotate_gff(out / f"{name}.{o}.gff", offsets, lengths)
+        # --cross-align: the other organelle's GFF says where its shared stretches lie in this one
+        other_gff = out / f"{name}.{'pltd' if o == 'mito' else 'mito'}.gff"
+        if other_gff.exists():
+            origin.unrotate_other_regions(other_gff, offsets, lengths)
         # reconstructed_edits finds its contigs in reconstructed_exons, so first
         for t in ["reconstructed_edits.tsv", *(t for t in origin.TABLE_COORDS)]:
             if (tables / t).exists():
@@ -217,6 +233,8 @@ def run(
     genus: str | None = None,
     threads: int = 4,
     force: bool = False,
+    cross_search: bool = False,
+    cross_align: bool = False,
 ) -> int:
     """Annotate one sample (see the module docstring); returns an exit status.
     Bad input exits via SystemExit with an [err] message."""
@@ -237,6 +255,10 @@ def run(
 
     for path in (*fastas.values(), *gfas.values()):
         check_input(path)
+    if cross_align and len(fastas) < 2:
+        sys.exit("[err] --cross-align aligns the plastid to the mitogenome: give both --mito and --pltd")
+    if cross_align and (blast_exe("blastn") is None or blast_exe("makeblastdb") is None):
+        sys.exit("[err] --cross-align needs BLAST+ (blastn and makeblastdb) on PATH")
 
     out = Path(outdir).resolve()
     work, logs = out / "work", out / "logs"
@@ -294,6 +316,15 @@ def run(
         ]
     if "mito" in gfas:
         stages.append(("low_depth_paths", lambda: low_depth_paths(work)))
+    if cross_search or cross_align:
+        stages.append(
+            (
+                "transfers",
+                lambda: find_transfers(
+                    work, orgs, cross_search=cross_search, cross_align=cross_align, cpu=per_job, **scan
+                ),
+            )
+        )
     stages.append(("gff_export", lambda: build_gff(work, orgs, gene_calls=gene_calls)))
     stages.append(("qc", lambda: sample_qc(work, orgs, gene_calls=gene_calls, genus=genus)))
 

@@ -69,6 +69,9 @@ class Refusals(unittest.TestCase):
         self.assertIn("empty input", self.refuses(mito=str(self.tmp / "e.fasta.gz")))
         self.assertFalse((self.tmp / "out" / "work").exists())
 
+    def test_cross_align_needs_both_organelles(self):
+        self.assertIn("both --mito and --pltd", self.refuses(mito=str(self.fa), cross_align=True))
+
     def test_existing_work_needs_force(self):
         (self.tmp / "out" / "work").mkdir(parents=True)
         self.assertIn("--force", self.refuses(mito=str(self.fa)))
@@ -120,6 +123,8 @@ class Cli(unittest.TestCase):
                     genus="Silene",
                     threads=8,
                     force=False,
+                    cross_search=False,
+                    cross_align=False,
                 )
             ],
         )

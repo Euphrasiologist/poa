@@ -50,6 +50,15 @@ GFF3 mechanics used here (see `../README.md` for the full explanation):
   stretch both frames read about as well). `near_end=true` marks one within
   a few codons of the gene's start or end, which the CDS is not read
   through: it ends in its own frame at its own stop.
+- A gene both organelles have (rpl2, rpl16, rps3, rps4, rps12, rps14,
+  rps19) whose protein fits the other organelle's references at least
+  twice as well as its own (common.organelle_origin) is that organelle's
+  DNA: `plastid_derived=true` on a mito gene (grass and Apiaceae rpl2,
+  some rps14, rpl16 and rps12), `mito_derived=true` on a plastid one.
+- With poa run --cross-search / --cross-align, the other organelle's DNA
+  in this one is a `biological_region` (transfer_lines): the other
+  organelle's genes found here (`plastid_derived` / `mito_derived`), and
+  stretches the two genomes share (`shared_with`, `other_region`).
 - A reconstructed gene's mRNA lists its exon junctions in exon order,
   `junctions=cis,trans,...`, as transsplice classified them: `cis` (next
   exon on the same strand within the junction distance, measured round the
@@ -116,6 +125,7 @@ from typing import Iterable
 import numpy as np
 import pandas as pd
 
+from poa.pipeline.common import organelle_origin
 from poa.pipeline.common import species_discovery as sd
 from poa.pipeline.common.errors import StageError
 from poa.pipeline.trans_splicing.reference_genes import CIS_SPLICED_MITO, PLASTID_SPLICED, mito_spliced
@@ -596,7 +606,62 @@ def copy_attrs(copy: dict) -> dict:
         "copy_number": copy.get("copy_number"),
         "model_coverage": f"{cov:.2f}" if cov is not None else None,
         "partial": "true" if copy.get("partial") else None,
+        # the other organelle's DNA (common.organelle_origin): plastid_derived
+        # on a mito gene, mito_derived on a plastid one
+        **({copy["derived"]: "true"} if copy.get("derived") else {}),
     }
+
+
+def transfer_lines(rows: pd.DataFrame) -> list[str]:
+    """One `biological_region` per row of organelle_transfers.tsv for one
+    species' organelle (denovo_annotation/transfers.py, poa run
+    --cross-search / --cross-align). A cross_search hit is the other
+    organelle's gene, or a piece of it: `plastid_derived=true` (in a
+    mitogenome) or `mito_derived=true` (in a plastome), with the model's
+    name, its share of the model, E-value and the best score any of this
+    organelle's own models has there. A cross_align stretch is shared with
+    the other organelle (`shared_with`), at `other_region`; the alignment
+    does not say which way the DNA moved."""
+    out = []
+    if rows is None or rows.empty:
+        return out
+    for i, r in enumerate(rows.sort_values(["contig", "start", "method"], kind="stable").itertuples(), start=1):
+        other = "plastid" if r.other_organelle == "pltd" else "mito"
+        attrs: dict = {"ID": f"transfer-{i}"}
+        if r.method == "cross_search":
+            attrs.update(
+                {
+                    "Name": f"{other} {r.name}",
+                    f"{other}_derived": "true",
+                    "method": r.method,
+                    "target_name": r.name,
+                    "model_coverage": f"{r.coverage:.2f}" if pd.notna(r.coverage) else None,
+                    "e_value": f"{r.e_value:.2e}",
+                    "own_best_score": f"{r.own_best_score:.1f}",
+                }
+            )
+            score, strand = f"{r.score:.1f}", r.strand
+        else:
+            attrs.update(
+                {
+                    "Name": r.name,
+                    "shared_with": r.other_organelle,
+                    "method": r.method,
+                    "other_region": f"{r.other_contig}:{int(r.other_start) + 1}-{int(r.other_end)}",
+                    "orientation": "same" if r.strand == "+" else "reverse",
+                    "identity": f"{r.identity:.3f}",
+                    "aligned_bp": int(r.aligned_bp),
+                }
+            )
+            score, strand = ".", "."
+        out.append(
+            "\t".join(
+                [r.contig, "gff_export", "biological_region", str(int(r.start) + 1), str(int(r.end)), score, strand, ".", gff_attrs(attrs)]
+            )
+        )
+    return out
+
+
 
 
 def emit_rna_gene(lines: list[str], gene: str, suffix: str, chain: list[Locus], feature: str, copy: dict) -> None:
@@ -904,8 +969,13 @@ def build_species_gff(
     stats: Counter,
     expected: dict,
     circular: dict[str, int] | None = None,
+    foreign: frozenset[str] = frozenset(),
 ) -> list[str]:
-    """Every table must already be restricted to one species AND one
+    """`foreign`: genes (reconstructed) or copies (edited) that are the
+    other organelle's DNA, by organelle_origin.call_key
+    (common.organelle_origin), marked plastid_derived (mito) or mito_derived
+    (plastid).
+    Every table must already be restricted to one species AND one
     organelle - genes like atpA/rpl16/rps3 exist in both genomes, and
     matching on species+gene alone let one organelle's editing call or
     reconstruction leak into the other's GFF.
@@ -1029,6 +1099,7 @@ def build_species_gff(
                         "n_edits": int(g.iloc[0].whole_gene_n_edits),
                         "coverage": None,
                         "partial": False,
+                        "derived": ("plastid_derived" if organelle == "mito" else "mito_derived") if gene in foreign else None,
                     }
                 )
         e = editing_calls[editing_calls.gene == gene]
@@ -1069,6 +1140,7 @@ def build_species_gff(
                             "internal_stops": int(getattr(erow, "n_internal_stops", 0) or 0),
                             "coverage": target["coverage"],
                             "partial": target["partial"],
+                            "derived": ("plastid_derived" if organelle == "mito" else "mito_derived") if organelle_origin.call_key(erow.gene, erow.contig, erow.corrected_start, erow.corrected_end) in foreign else None,
                         }
                     )
                     copies.remove(target)
@@ -1215,6 +1287,10 @@ def build_gff(
         ["species", "organelle", "gene", "from_slot", "to_slot", "kind", "gap_bp"],
     )
 
+    # poa run --cross-search / --cross-align (denovo_annotation/transfers.py)
+    transfers = load(analysis_dir / "denovo_annotation" / "results" / "organelle_transfers.tsv", ["species", "organelle"])
+    transfer_split = {k: g for k, g in transfers.groupby(["species", "organelle"])} if not transfers.empty else {}
+
     tables = [editing_calls, editing_edits, ts_genes, ts_exons, ts_edits, shifts, ts_shifts, ts_junctions]
     empty = [t.iloc[0:0] for t in tables]
     split = [{k: g for k, g in t.groupby(["species", "organelle"])} if not t.empty else {} for t in tables]
@@ -1226,6 +1302,18 @@ def build_gff(
         else {}
     )
     stats: Counter = Counter()
+    # calls that are the other organelle's DNA (common.organelle_origin)
+    foreign = organelle_origin.foreign_calls(
+        pd.concat(
+            [
+                t[[c for c in ("species", "organelle", "gene", "protein", "contig", "corrected_start", "corrected_end") if c in t.columns]]
+                for t in (editing_calls, ts_genes)
+            ],
+            ignore_index=True,
+        )
+    )
+    for (_, organelle, _), origin in foreign.items():
+        stats[f"{organelle}_calls_{'plastid' if origin == 'pltd' else 'mito'}_derived"] += 1
 
     n_written = n_unitig = n_no_fasta = n_noted = 0
     written: set[Path] = set()
@@ -1252,7 +1340,12 @@ def build_gff(
                 stats=stats,
                 expected=expected,
                 circular={c: n for c, n in ctx.lengths.items() if ctx.circular.get(c)} if ctx else None,
+                foreign=frozenset(g for (sp, org, g) in foreign if sp == species and org == organelle),
             )
+            if lines and key in transfer_split:
+                extra = transfer_lines(transfer_split[key])
+                stats["transfer_regions"] += len(extra)
+                lines = sorted(lines + extra, key=lambda line: (line.split("\t")[0], int(line.split("\t")[3])))
             if not lines:
                 continue
             out_path = out_dir / f"{species}.{organelle}.gff"

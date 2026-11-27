@@ -27,6 +27,8 @@ dependencies:
   # models (and prepares them), tRNAscan-SE the tRNAs
   - hmmer=3.4
   - trnascan-se=2.0.12
+  # poa run --cross-align (plastid stretches in the mitogenome)
+  - blast=2.15.0
 
   # reference-profile building (editing, trans_splicing)
   - mafft=7.525

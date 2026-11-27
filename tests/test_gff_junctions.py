@@ -68,3 +68,52 @@ class AcrossOrigin(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+
+class OrganelleOrigin(unittest.TestCase):
+    """common.organelle_origin on consensus proteins of the bundled profiles."""
+
+    @staticmethod
+    def consensus(organelle, gene):
+        from poa.pipeline.common import organelle_origin as oo
+
+        index, scores = oo.load_profile(organelle, gene)
+        residues = {i: a for a, i in index.items()}
+        return "".join(residues[int(k)] for k in scores.argmax(axis=1))
+
+    def test_each_organelles_own_rpl2_stays_and_the_others_is_flagged(self):
+        from poa.pipeline.common import organelle_origin as oo
+
+        mito, pltd = self.consensus("mito", "rpl2"), self.consensus("pltd", "rpl2")
+        calls = pd.DataFrame([
+            dict(species="a", organelle="mito", gene="rpl2", protein=mito),
+            dict(species="a", organelle="pltd", gene="rpl2", protein=pltd),
+            dict(species="b", organelle="mito", gene="rpl2", protein=pltd),  # plastid DNA in the mitogenome
+            dict(species="c", organelle="pltd", gene="rps14", protein=self.consensus("mito", "rps14")),
+        ])
+        self.assertEqual(oo.foreign_calls(calls), {("b", "mito", "rpl2"): "pltd", ("c", "pltd", "rps14"): "mito"})
+
+    def test_edited_copies_sharing_a_name_are_told_apart_by_location(self):
+        from poa.pipeline.common import organelle_origin as oo
+
+        calls = pd.DataFrame([
+            dict(species="a", organelle="mito", gene="rps14", contig="c1", corrected_start=100, corrected_end=400, protein=self.consensus("mito", "rps14")),
+            dict(species="a", organelle="mito", gene="rps14", contig="c1", corrected_start=900, corrected_end=1200, protein=self.consensus("pltd", "rps14")),
+        ])
+        self.assertEqual(oo.foreign_calls(calls), {("a", "mito", "rps14@c1:900-1200"): "pltd"})
+
+    def test_genes_one_organelle_has_and_short_or_failed_calls_are_left_alone(self):
+        from poa.pipeline.common import organelle_origin as oo
+
+        calls = pd.DataFrame([
+            dict(species="a", organelle="mito", gene="cox1", protein=self.consensus("pltd", "rpl2")),
+            dict(species="a", organelle="mito", gene="rps14", protein="MKRLAQ"),
+        ])
+        self.assertEqual(oo.foreign_calls(calls), {})
+        self.assertEqual(oo.foreign_calls(pd.DataFrame()), {})
+
+    def test_the_flag_is_a_gene_attribute_named_for_the_other_organelle(self):
+        self.assertEqual(bg.copy_attrs({"derived": "plastid_derived"})["plastid_derived"], "true")
+        self.assertEqual(bg.copy_attrs({"derived": "mito_derived"})["mito_derived"], "true")
+        self.assertNotIn("plastid_derived", bg.copy_attrs({"derived": None}))

@@ -1,5 +1,62 @@
 # Changelog
 
+## Unreleased
+
+- GFF: a gene both organelles have (rpl2, rpl16, rps3, rps4, rps12, rps14,
+  rps19) whose protein fits the other organelle's references at least
+  twice as well as its own is marked as that organelle's DNA:
+  `plastid_derived=true` on a mito gene, `mito_derived=true` on a plastid
+  one (`common/organelle_origin.py`: a local alignment of the protein to
+  both organelles' profiles of the gene). A native copy scores 0.02 to
+  0.37 as well against the other organelle's profile, at the median per
+  gene. Over the DToL dataset: 148 mito calls in 131 species are plastid
+  DNA in the mitogenome - rpl2 84 (mostly grasses and Apiaceae, each
+  reported as an incomplete mito rpl2), rps14 25, rpl16 18, rps12 12,
+  rps19 5, rps4 4 - and no plastid call is mito DNA. Without the options
+  below, only these seven genes can show it: gene calling searches each
+  organelle's contigs with its own organelle's gene models.
+- `poa run --cross-search` and `--cross-align`, both off by default, look
+  for the other organelle's DNA in each genome
+  (`denovo_annotation/transfers.py`, also `05_organelle_transfers.py` for
+  a whole dataset). The findings go into `tables/organelle_transfers.tsv`
+  and into the GFFs as `biological_region` features.
+  - `--cross-search` searches each organelle's contigs with the other
+    organelle's oatkDB models too, and keeps a hit that beats every own
+    model on its stretch by 10 bits or more: `plastid_derived=true` in a
+    mitogenome, `mito_derived=true` in a plastome.
+  - `--cross-align` (both organelles; needs BLAST+, now in the recipe and
+    `environment.yml`) aligns the plastid to the mitogenome
+    (`blastn -task dc-megablast`; at least 100 bp at 80% identity or more)
+    and marks the stretches they share in both GFFs (`shared_with`,
+    `other_region`). It doesn't say which way the DNA moved. minimap2
+    (asm20) held 81 of the 143 plastid genes `--cross-search` found in
+    five mitogenomes; BLAST held 132.
+  - Results: *Vitis vinifera*'s mitogenome has 82 plastid genes or pieces
+    and 60.5 kb shared with its plastome, *Daucus carota*'s 39 and 47.9 kb,
+    and carrot's plastome has a cox1 piece in both inverted-repeat copies.
+    The searches take 15 to 31 seconds of a run.
+  - If poa moves an origin, both sides are mapped back. Everything else in
+    the GFFs is unchanged by the options.
+- psbF has an angiosperm profile of its own, from RNA-edited proteins of 86
+  DToL angiosperms started at the Met (39 columns). The old one (56
+  columns, 12 before the Met and a 7-residue insertion) started psbF 11
+  codons early in grasses and sedges: of 1,064 DToL angiosperm psbF, 203
+  now start 11 codons later and 1,061 align end to end (none did); on 13
+  RefSeq plastomes psbF starts within 3 bp 11 -> 13, plastid starts 613
+  -> 615 of 671, none lost. The fern, horsetail and clubmoss psbF
+  profiles had the same fault in small (three columns before the Met,
+  from calls that began early): their references now start at the Met
+  too (42 -> 39 columns; the other plastid profiles are unchanged).
+- The fern, horsetail and clubmoss plastid held-out figures, measured
+  again with orfedit 0.2.1, transsplice 0.3.3 and the trimmed psbF
+  profiles (README). Fern: aligned to 99% or more 589 of 614 (596 as
+  first built; 578 before the psbF trim), horsetail 455 of 500 (446),
+  clubmoss 80 of 87 (78). Fern RNA edits found / calls
+  right 81% / 81% single-exon and 77% / 83% spliced, 49 genes reading
+  through a stop the RNA never edits (36): since the stop rules more fern
+  plastid genes read a stop through by the U-to-C edit ferns make at
+  stops (issue #1).
+
 ## 0.3.2
 
 atp6 starts at the first ATG of its open reading frame, and spliced genes

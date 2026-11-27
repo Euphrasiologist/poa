@@ -108,7 +108,8 @@ Output in `out/`:
 - `<name>.qc.tsv` - `pass`/`flag`/`fail` per organelle, with the reasons
   and the measurements behind them (see "QC" below)
 - `tables/` - gene calls, predicted RNA edits, frameshifts, reconstructed spliced
-  genes, linearisation QC
+  genes, linearisation QC, and with `--cross-search` / `--cross-align` the
+  other organelle's DNA (see "DNA from the other organelle" below)
 - `logs/` - one log per stage; `work/` - intermediate files
 
 `<name>` defaults to the first input's file name up to its first `.`
@@ -303,6 +304,54 @@ across the origin of an `Is_circular=true` sequence). With a GFA it
 leaves the contig as it is and warns, since the unitig coordinates
 depend on the assembler's origin.
 
+### DNA from the other organelle
+
+Seed-plant mitogenomes carry plastid DNA, from a few hundred bases to tens
+of kilobases, and a plastome now and then carries mitochondrial DNA.
+Gene calling searches each organelle only with its own gene models, so
+`poa run` finds none of this unless asked. Two options, both off by
+default, look for it, and their findings go into the GFFs as
+`biological_region` features and into `tables/organelle_transfers.tsv`.
+
+`--cross-search` searches each organelle's contigs with the other
+organelle's oatkDB models as well (one more nhmmscan). A hit counts only
+when it beats every one of the organelle's own models on the same stretch
+by at least 10 bits. A plastid psbA in a mitogenome is reported, but the
+mitogenome's own rrn18 hit by the plastid rrn16 model, or its rpl2 by the
+plastid rpl2 model, is not, because its own models fit it better. Each
+feature found this way is the other organelle's gene, or a piece of it:
+`plastid_derived=true` in a mitogenome and `mito_derived=true` in a
+plastome, with the model's name, its share of the model
+(`model_coverage`), the E-value and the best score the organelle's own
+models reach there (`own_best_score`). It needs only one organelle.
+
+`--cross-align` needs both organelles and BLAST+. It aligns the plastid
+contigs to the mito contigs (`blastn -task dc-megablast`, E-value below
+1e-10) and reports every alignment of at least 100 bp at 80% identity or
+more, in both GFFs, as a stretch `shared_with` the other organelle, with
+where it lies there (`other_region`, `orientation`, `identity`). Below 80%
+identity the alignments are almost all between the two organelles' rRNA
+genes, which are related from long before any transfer. An alignment does
+not say which way the DNA moved, so these stretches are not marked
+derived. A `--cross-search` gene inside one says which way that part went.
+On five test samples the alignments held 132 of the 143 plastid genes
+(150 bp or longer) that `--cross-search` found in the mitogenomes;
+minimap2 held 81 of them, which is why this step uses BLAST.
+
+| sample | plastid genes or pieces in the mitogenome | shared stretches (mito bp) | mito genes in the plastome |
+| --- | --- | --- | --- |
+| *Arabidopsis thaliana* | 15 | 13 (5,178) | none |
+| *Daucus carota* | 39 | 21 (47,858) | a cox1 piece in both inverted-repeat copies |
+| *Vitis vinifera* | 82 | 25 (60,549) | none |
+
+The carrot cox1 piece is consistent with the mitochondrial DNA known to
+sit in carrot's plastid inverted repeat. The searches took 15 to 31 seconds
+of these runs' 6 to 19 minutes (2 cores). The genes both organelles
+have (rpl2, rpl16, rps3, rps4, rps12, rps14, rps19) are checked whatever
+the options: a call whose protein fits the other organelle's references at
+least twice as well as its own has `plastid_derived=true` or
+`mito_derived=true` on its gene.
+
 ### Reference lineage
 
 poa's first references were angiosperm ones, and other land plants differ
@@ -420,7 +469,7 @@ Still open: starts RefSeq's own records disagree on. Of the single-exon
 genes of ten RefSeq mitogenomes, 200 of 245 had both ends within 3 bp of
 the annotation (164 before the start and stop rules above; the atp6 rule
 adds 3 in the gene-end harness); most of the rest are rps4, mttB, rpl16
-and matR, whose annotated starts differ from record to record. psbF keeps the profile it had; and a
+and matR, whose annotated starts differ from record to record. A
 plastid-derived rpl2 in a mitogenome is reported as an incomplete mito
 rpl2 where it used to pass for a complete one.
 
@@ -569,6 +618,18 @@ first built, before rbcL and matK were read whole):
 | RNA edits found / calls right, spliced | 65% / 50% | 81% / 83% |
 | genes running past a stop codon the RNA never edits | 81 | 36 |
 
+Measured again the same way with poa 0.3.2's tools (orfedit 0.2.1,
+transsplice 0.3.3) and the psbF profiles trimmed to their Met
+(`build/rnaedit/pilot/remeasure033nb.sh`): single-exon genes aligned to
+99% or more 589 of 614, RNA edits found / calls right 81% / 81%
+(single-exon) and 77% / 83% (spliced), and 49 genes running past a stop
+codon the RNA never edits. Genes ending at their first stop more often
+read through one by the U-to-C edit ferns make at stops (ndhG, atpF,
+matK, rpl32, ndhK, 2 to 28 codons). Held out the same way, horsetail
+plastid genes align to 99% or more in 455 of 500 (9 species; the RNA
+shows almost no plastid editing) and clubmoss ones in 80 of 87 (2
+species, RNA edits found / calls right 79% / 60%).
+
 Plastid calls are less often right than mitochondrial ones: about one in
 seven is a C that other fern genera edit, or have as T, and this species
 leaves alone. Other U-to-C edits are not called in plastid genes: they
@@ -655,6 +716,10 @@ inside it. In order (`tests/smoke/run_smoke.sh` has the exact commands):
 qc_basic_stats 01-05 -> denovo_annotation 00-04 -> editing 01 ->
 trans_splicing 01 -> unitig_coords 00-01 -> qc_basic_stats 06 -> gff_export 01
 ```
+
+`denovo_annotation 05` (`05_organelle_transfers.py`, what `poa run
+--cross-search` and `--cross-align` run) is optional, after
+`denovo_annotation 00` and before `gff_export 01`.
 
 ## Tests
 

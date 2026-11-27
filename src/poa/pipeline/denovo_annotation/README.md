@@ -33,6 +33,7 @@ derived convenience for those two consumers, not a second source of truth.
 | `02_run_barrnap.py` | `work/barrnap/<species>.<organelle>.gff` | `nhmmer` against poa's bundled `plant.hmm` (byte-identical port of `barrnap --kingdom plant`) |
 | `03_build_combined_gff.py` | `results/gff/<species>.<organelle>.gff` | **the primary output** - all three sources combined into one sorted GFF3, tagged by source, not deduplicated |
 | `04_build_gene_calls.py` | `results/gene_calls.tsv` | reshapes the combined GFF into one `annotation/results/gene_calls.tsv`-shaped table |
+| `05_organelle_transfers.py` | `results/organelle_transfers.tsv`, `work/nhmmscan/<species>.<organelle>.cross.tblout` | optional (`poa run --cross-search` / `--cross-align`): the other organelle's genes found with its oatkDB models where no own model fits as well, and the stretches the plastid shares with the mitogenome (`blastn -task dc-megablast`); after 00 (it compares with 00's tblout). gff_export writes them as `biological_region` features |
 
 Each script in `src/` is a command-line wrapper around a module of the
 `poa.pipeline.denovo_annotation` package, which is also the library API -
@@ -47,6 +48,7 @@ counted as `failed`, not raised):
 | `02_run_barrnap.py` | `rrna.run_rrna(root, organelles, species=, evalue=, threads=, jobs=, qc_status=, force=)` |
 | `03_build_combined_gff.py` | `combined_gff.build_combined_gff(root, organelles, species=, force=)` |
 | `04_build_gene_calls.py` | `gene_calls.build_gene_calls(root, organelles, species=)` |
+| `05_organelle_transfers.py` | `transfers.find_transfers(root, organelles, cross_search=, cross_align=, species=, cpu=, jobs=, qc_status=, force=)` |
 
 `targets.py` holds what the three scans share (the QC gate, which
 assemblies to scan, the thread pool).
