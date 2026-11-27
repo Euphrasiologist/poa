@@ -248,8 +248,14 @@ The RNA-derived proteins come from calls made on the profiles before
 them, so they are only as long as those calls. A protein is taken when
 its call aligned to 95% of its profile, or when it runs from a Met to a
 stop codon (the old profile was the longer one: psbJ, psaI, matK). That
-leaves out psbF and psaJ, whose calls begin a few codons before the Met;
-psbF keeps its old profile. (rbcL was left out too until calls stopped
+leaves out psbF and psaJ, whose calls begin a few codons before the Met.
+psbF's proteins were made apart from the rest (`build/rnaedit/psbf_refs.py`):
+each species' call started at the Met of psbF's conserved M-[TS]-x-D, then
+the RNA edits applied the same way - 86 of the 111 species. Its old profile
+(56 columns, 12 of them before the Met and a 7-residue insertion, for a
+39-residue protein) started grass and sedge psbF 11 codons early; with the
+new one (39 columns) 1,061 of 1,064 DToL angiosperm psbF align end to end
+(none did), and the two RefSeq grasses' starts are right. (rbcL was left out too until calls stopped
 being cut off at codon 341 - see below - and now has a profile of its
 own, 475 columns.)
 

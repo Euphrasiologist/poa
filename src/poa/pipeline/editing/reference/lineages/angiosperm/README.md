@@ -2,8 +2,8 @@
 
 `rna_proteins.fasta` and `rna_proteins.pltd.fasta` (headers `species|gene`) are single-exon mitochondrial and plastid
 protein genes of Darwin Tree of Life angiosperm assemblies, each the gene poa called with the C-to-U editing the
-species' own RNA-seq shows applied: 1349 mitochondrial proteins of 31 genes from 104 species, and 4198 plastid proteins of
-56 genes from 106. The spliced genes of the same species (403 mitochondrial and 597 plastid loci) are in
+species' own RNA-seq shows applied: 1349 mitochondrial proteins of 31 genes from 104 species, and 4283 plastid proteins of
+56 genes from 106 (psbF's 86 made separately, started at its Met: `editing/README.md`). The spliced genes of the same species (403 mitochondrial and 597 plastid loci) are in
 `trans_splicing/reference/raw_rna/` and `trans_splicing/reference/plastid/raw_rna/`. With the RefSeq mitogenomes
 annotated with edited proteins (`reference_genes.ANGIOSPERM_EDITED_MITOGENOMES`) they are what
 `00b_build_lineage_profiles.py --lineage angiosperm` builds `profiles_refseq/mito/` from, and alone what
