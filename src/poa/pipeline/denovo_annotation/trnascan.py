@@ -5,6 +5,18 @@ already proven in `mito_structural_variation/annotation/src/5_get_rna_genes.bash
 Several tRNAscan-SE processes run concurrently (`jobs`), each with
 `threads` threads - see targets.py.
 
+The search uses Infernal behind tRNAscan-SE's mid-strictness HMM filter
+(`--mid`), unless `full`. The full search (`-O -I` alone) took 85-325 s
+per genome on one thread (Arabidopsis plastid and mito, Vitis mito) and
+was most of a poa run; with --mid it takes 1-2 s. Of those three genomes'
+tRNAs, --mid missed only hits of 25 bits or less (a weak trnT-UGU that
+RefSeq's Arabidopsis mitogenome does not have, two 'Undet' in Vitis, and
+the plastid trnA-UGC's partial 16.3-bit hit) and ended one trnM-CAU 4 bp
+shorter at each end. In poa's GFFs the Daucus and Vitis mitogenomes came
+out identical; plastid trnA-UGC keeps its oatkDB model, now without
+tRNAscan-SE's partial hit stretching exon 1 to 105 bp (58; the exon is
+about 38).
+
 Output: analysis/denovo_annotation/work/trnascan/<species>.<organelle>.gff
 
 src/01_run_trnascan.py is the command-line wrapper (main() here).
@@ -37,7 +49,9 @@ def trnascan_conf() -> str:
     return os.environ.get("TRNASCAN_CONF", "/software/team301/tRNAscan-SE/tRNAscan-SE.conf")
 
 
-def scan_one(species: str, organelle: str, ctg_fasta: str, threads: int | str, work_dir: Path, force: bool) -> str:
+def scan_one(
+    species: str, organelle: str, ctg_fasta: str, threads: int | str, work_dir: Path, force: bool, full: bool = False
+) -> str:
     out_gff = work_dir / f"{species}.{organelle}.gff"
     if not force and out_gff.exists() and out_gff.stat().st_size > 0:
         return "skipped"
@@ -55,6 +69,7 @@ def scan_one(species: str, organelle: str, ctg_fasta: str, threads: int | str, w
             *(["-c", conf] if Path(conf).exists() else []),
             "-O",
             "-I",
+            *([] if full else ["--mid"]),
             "-Q",
             "--thread",
             str(threads),
@@ -81,8 +96,10 @@ def run_trnascan(
     jobs: int = 1,
     qc_status: Iterable[str] = ("pass",),
     force: bool = False,
+    full: bool = False,
 ) -> dict[str, dict[str, int]]:
-    """tRNAscan-SE every assembly under data root `root`. Returns
+    """tRNAscan-SE every assembly under data root `root` (`full`: without
+    the --mid filter, see the module docstring). Returns
     {organelle: {"scanned"|"skipped"|"failed": count}}."""
     root = Path(root)
     organelles = targets.check_organelles(organelles)
@@ -94,7 +111,7 @@ def run_trnascan(
     for organelle in organelles:
         tasks = targets.assemblies(root, organelle, species, qc_eligible)
         out[organelle] = counts = targets.scan_all(
-            tasks, lambda r: scan_one(r.species, organelle, r.ctg_fasta, threads, work_dir, force), jobs
+            tasks, lambda r: scan_one(r.species, organelle, r.ctg_fasta, threads, work_dir, force, full), jobs
         )
         targets.report("run_trnascan", organelle, counts, work_dir)
     return out
@@ -111,6 +128,7 @@ def main(argv: list[str] | None = None) -> int:
     )
     ap.add_argument("--qc-status", default="pass", help="comma-separated subset of pass,flag,fail (default: pass)")
     ap.add_argument("--force", action="store_true")
+    ap.add_argument("--full", action="store_true", help="without tRNAscan-SE's --mid filter (minutes per genome, not seconds)")
     args = ap.parse_args(argv)
     root = Path(os.environ.get("PLANT_ORGANELLE_DATA_ROOT") or os.getcwd())
     try:
@@ -122,6 +140,7 @@ def main(argv: list[str] | None = None) -> int:
             jobs=args.jobs,
             qc_status=args.qc_status.split(","),
             force=args.force,
+            full=args.full,
         )
     except StageError as e:
         log.error(e)

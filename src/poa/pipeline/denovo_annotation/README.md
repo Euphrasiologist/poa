@@ -29,7 +29,7 @@ derived convenience for those two consumers, not a second source of truth.
 | script | output | what |
 |---|---|---|
 | `00_run_nhmmscan.py` | `work/nhmmscan/<species>.<organelle>.{filtered.tblout,gff}` | `nhmmscan` against oatkDB's own gene-family `.fam` database, E-value filtered, converted to GFF via `hmm_to_gff` |
-| `01_run_trnascan.py` | `work/trnascan/<species>.<organelle>.gff` | `tRNAscan-SE -O` |
+| `01_run_trnascan.py` | `work/trnascan/<species>.<organelle>.gff` | `tRNAscan-SE -O -I --mid` (seconds per genome; `--full` drops `--mid`: minutes, for a few hits of 25 bits or less - see trnascan.py) |
 | `02_run_barrnap.py` | `work/barrnap/<species>.<organelle>.gff` | `nhmmer` against poa's bundled `plant.hmm` (byte-identical port of `barrnap --kingdom plant`) |
 | `03_build_combined_gff.py` | `results/gff/<species>.<organelle>.gff` | **the primary output** - all three sources combined into one sorted GFF3, tagged by source, not deduplicated |
 | `04_build_gene_calls.py` | `results/gene_calls.tsv` | reshapes the combined GFF into one `annotation/results/gene_calls.tsv`-shaped table |
@@ -44,7 +44,7 @@ counted as `failed`, not raised):
 | script | function |
 |---|---|
 | `00_run_nhmmscan.py` | `nhmmscan.run_nhmmscan(root, organelles, species=, evalue=, cpu=, jobs=, qc_status=, force=)` |
-| `01_run_trnascan.py` | `trnascan.run_trnascan(root, organelles, species=, threads=, jobs=, qc_status=, force=)` |
+| `01_run_trnascan.py` | `trnascan.run_trnascan(root, organelles, species=, threads=, jobs=, qc_status=, force=, full=)` |
 | `02_run_barrnap.py` | `rrna.run_rrna(root, organelles, species=, evalue=, threads=, jobs=, qc_status=, force=)` |
 | `03_build_combined_gff.py` | `combined_gff.build_combined_gff(root, organelles, species=, force=)` |
 | `04_build_gene_calls.py` | `gene_calls.build_gene_calls(root, organelles, species=)` |

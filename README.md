@@ -113,8 +113,12 @@ Output in `out/`:
 - `logs/` - one log per stage; `work/` - intermediate files
 
 `<name>` defaults to the first input's file name up to its first `.`
-(`-n` to set it). About 5 minutes for Arabidopsis mito + plastid on 4
-cores, most of it tRNAscan-SE.
+(`-n` to set it). About a minute for Arabidopsis mito + plastid on 2
+cores, most of it nhmmscan and the spliced-gene reconstruction; Vitis'
+773 kb mitogenome with its plastome takes under 2 minutes. tRNAscan-SE
+runs behind its `--mid` filter, which takes seconds instead of minutes
+and misses only very weak hits (25 bits or less); `--trnascan-full`
+runs the full search (about 5 more minutes for Arabidopsis).
 
 ### QC
 
@@ -298,7 +302,10 @@ and a gene through that base would be called as two partial genes, one
 at each end. When `poa run` finds the same gene at both ends of a contig
 (one not marked `circular=false` by oatk), it moves that contig's origin
 into its longest gene-free stretch, annotates it again, and maps
-everything back onto the sequence you gave it: the gene is one feature
+everything back onto the sequence you gave it. It looks for such genes in
+the nhmmscan and rRNA calls, before tRNAscan-SE runs (oatkDB has tRNA
+models too), so only that organelle's nhmmscan is run again; a tRNA only
+tRNAscan-SE calls across an origin moves it a second time. In the output the gene is one feature
 with its end past the contig's length (GFF3's convention for features
 across the origin of an `Is_circular=true` sequence). With a GFA it
 leaves the contig as it is and warns, since the unitig coordinates

@@ -77,6 +77,28 @@ class Refusals(unittest.TestCase):
         self.assertIn("--force", self.refuses(mito=str(self.fa)))
 
 
+class ComposeOffsets(unittest.TestCase):
+    """Two origin moves (before tRNAscan-SE, then for a tRNA only it
+    calls) are one offset from the input."""
+
+    def test_two_moves_are_one_rotation_of_the_input(self):
+        from poa.pipeline.common import origin
+
+        tmp = Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, tmp)
+        d = tmp / "data" / "plastid" / "s"
+        d.mkdir(parents=True)
+        seq = "".join("ACGT"[(i * 7) % 4 if i % 3 else (i // 3) % 4] for i in range(100))
+        fa = d / "s.pltd.ctg.fasta"
+        fa.write_text(f">c circular=true\n{seq}\n")
+        origin.rotate_fasta(fa, {"c": 70})
+        origin.rotate_fasta(fa, {"c": 50})
+        total = run.compose_offsets(tmp, "s", {"pltd": {"c": 70}}, {"pltd": {"c": 50}})
+        self.assertEqual(total, {"pltd": {"c": 20}})
+        self.assertEqual("".join(origin.read_fasta(fa)[0][1].split()), seq[20:] + seq[:20])
+        self.assertEqual(run.compose_offsets(tmp, "s", {}, {"pltd": {"c": 5}}), {"pltd": {"c": 5}})
+
+
 class Cli(unittest.TestCase):
     """The click layer: options reach run.run as keywords, and bad
     options are usage errors (exit 2) before anything runs."""
@@ -125,6 +147,7 @@ class Cli(unittest.TestCase):
                     force=False,
                     cross_search=False,
                     cross_align=False,
+                    trnascan_full=False,
                 )
             ],
         )

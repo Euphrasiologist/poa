@@ -2,6 +2,26 @@
 
 ## Unreleased
 
+- `poa run` is 4 to 10 times faster: Arabidopsis 6 minutes -> 1, Daucus
+  11 -> 1.5, Vitis 19 -> 2 (2 cores, with `--cross-search
+  --cross-align`). The GFFs are identical apart from tRNAscan-SE's weakest
+  hits, below.
+  - tRNAscan-SE runs behind its `--mid` filter: 1-2 s per genome instead
+    of 85-325 s, which was most of a run. It missed only hits of 25 bits
+    or less on three test genomes. In the GFFs, the Daucus and Vitis
+    mitogenomes come out identical, and Arabidopsis' mitogenome loses a
+    trnT-UGU only tRNAscan-SE called (15.4 bits; RefSeq's Arabidopsis
+    mitogenome has no trnT). Plastid trnA-UGC keeps its oatkDB model,
+    without tRNAscan-SE's partial hit stretching exon 1 to 105 bp (now 58;
+    the exon is about 38). `--trnascan-full` (and `01_run_trnascan.py
+    --full`) runs the full search.
+  - A gene across a circular contig's origin is looked for in the nhmmscan
+    and rRNA calls, before tRNAscan-SE, so tRNAscan-SE runs once, and only
+    the organelle whose origin moved is scanned again (before, both
+    organelles' whole gene calling ran twice: Vitis' tRNAscan-SE alone took
+    518 + 501 s). A tRNA only tRNAscan-SE calls across an origin still
+    moves it, as before. The origins chosen and the GFFs are the same as
+    with the old order.
 - GFF: a gene both organelles have (rpl2, rpl16, rps3, rps4, rps12, rps14,
   rps19) whose protein fits the other organelle's references at least
   twice as well as its own is marked as that organelle's DNA:

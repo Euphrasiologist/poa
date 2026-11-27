@@ -168,10 +168,15 @@ def run_stage(label: str, stage: Callable[[], object], logs: Path) -> None:
     print(f" done ({time.time() - t0:.0f}s)", file=sys.stderr)
 
 
-def move_origins(work: Path, orgs: list[str], name: str, gene_calls: Path, gfas: dict) -> dict[str, dict[str, int]]:
+def move_origins(
+    work: Path, orgs: list[str], name: str, gene_calls: Path, gfas: dict, prior: dict[str, dict[str, int]] | None = None
+) -> dict[str, dict[str, int]]:
     """Find genes called at both ends of a circular contig and move that
     contig's origin into its longest gene-free stretch (common/origin.py).
-    Returns {organelle: {contig: offset}} for the contigs moved."""
+    Returns {organelle: {contig: offset}} for the contigs moved, offsets on
+    the contigs as they were; `prior`: offsets already applied, so the new
+    origin is reported on the input."""
+    prior = prior or {}
     calls = pd.read_csv(gene_calls, sep="\t")
     moved: dict[str, dict[str, int]] = {}
     for o in orgs:
@@ -192,13 +197,24 @@ def move_origins(work: Path, orgs: list[str], name: str, gene_calls: Path, gfas:
         offsets = {c: origin.new_origin(sub[sub.contig_id == c], info[c][0]) for c in split}
         origin.rotate_fasta(fasta, offsets)
         moved[o] = offsets
-        to = ", ".join(f"{c} position {k + 1}" for c, k in offsets.items())
+        to = ", ".join(f"{c} position {(prior.get(o, {}).get(c, 0) + k) % info[c][0] + 1}" for c, k in offsets.items())
         print(
             f"[poa] {o}: {where} run(s) across the contig's origin; annotating with the origin "
             f"moved to {to}, output mapped back to the input",
             file=sys.stderr,
         )
     return moved
+
+
+def compose_offsets(work: Path, name: str, moved: dict, again: dict) -> dict[str, dict[str, int]]:
+    """`moved` followed by `again` (offsets on the contigs `moved` left) as
+    one offset per contig from the input."""
+    out = {o: dict(offsets) for o, offsets in moved.items()}
+    for o, offsets in again.items():
+        lengths = origin.contigs(work / "data" / ORGANELLES[o] / name / f"{name}.{o}.ctg.fasta")
+        for c, k in offsets.items():
+            out.setdefault(o, {})[c] = (out.get(o, {}).get(c, 0) + k) % lengths[c][0]
+    return out
 
 
 def unrotate_outputs(out: Path, work: Path, name: str, moved: dict[str, dict[str, int]]) -> None:
@@ -235,6 +251,7 @@ def run(
     force: bool = False,
     cross_search: bool = False,
     cross_align: bool = False,
+    trnascan_full: bool = False,
 ) -> int:
     """Annotate one sample (see the module docstring); returns an exit status.
     Bad input exits via SystemExit with an [err] message."""
@@ -286,18 +303,22 @@ def run(
     every_qc = ("pass", "flag", "fail")
     gene_calls = work / "analysis/denovo_annotation/results/gene_calls.tsv"
     scan = dict(jobs=jobs, qc_status=every_qc)
-    def gene_calling(force: bool) -> list:
+    def scans(names: tuple[str, ...], of: list[str], force: bool) -> list:
+        """The gene-calling scans `names` of organelles `of`, then the
+        combined GFFs of `of` and the gene calls of every organelle."""
+        cpu = max(1, threads // len(of))
+        step = {
+            "nhmmscan": lambda: run_nhmmscan(work, of, cpu=cpu, force=force, **scan),
+            "trnascan": lambda: run_trnascan(work, of, threads=cpu, force=force, full=trnascan_full, **scan),
+            "rrna": lambda: run_rrna(work, of, threads=cpu, force=force, **scan),
+        }
         return [
-            ("nhmmscan", lambda: run_nhmmscan(work, orgs, cpu=per_job, force=force, **scan)),
-            ("trnascan", lambda: run_trnascan(work, orgs, threads=per_job, force=force, **scan)),
-            ("rrna", lambda: run_rrna(work, orgs, threads=per_job, force=force, **scan)),
-            ("combined_gff", lambda: build_combined_gff(work, orgs, force=force)),
+            *((n, step[n]) for n in names),
+            ("combined_gff", lambda: build_combined_gff(work, of, force=force)),
             ("gene_calls", lambda: build_gene_calls(work, orgs)),
         ]
 
     stages = [
-        *gene_calling(False),
-        ("origin", None),  # see move_origins
         (
             "editing",
             lambda: scan_editing(work, orgs, gene_calls=gene_calls, threads=threads, lineage=lineage),
@@ -334,13 +355,27 @@ def run(
     )
     moved: dict[str, dict[str, int]] = {}
     try:
+        # Gene calling. A gene across a circular contig's origin is looked
+        # for first in the nhmmscan and rRNA calls (oatkDB has tRNA models
+        # too), so tRNAscan-SE runs once, on the contigs as they will be
+        # annotated; only an organelle whose origin moved is scanned again.
+        movable = [o for o in orgs if o not in gfas]
+        for label, call in scans(("nhmmscan", "rrna"), orgs, False):
+            run_stage(label, call, logs)
+        moved = move_origins(work, movable, name, gene_calls, gfas) if movable else {}
+        if moved:
+            for label, call in scans(("nhmmscan", "rrna"), list(moved), True):
+                run_stage(label, call, logs)
+        for label, call in scans(("trnascan",), orgs, True):
+            run_stage(label, call, logs)
+        # a tRNA only tRNAscan-SE calls can still run across an origin, the
+        # input's or the new one: move that origin, and scan that organelle again
+        again = move_origins(work, orgs, name, gene_calls, gfas, prior=moved)
+        if again:
+            moved = compose_offsets(work, name, moved, again)
+            for label, call in scans(("nhmmscan", "trnascan", "rrna"), list(again), True):
+                run_stage(label, call, logs)
         for label, stage in stages:
-            if label == "origin":
-                moved = move_origins(work, orgs, name, gene_calls, gfas)
-                if moved:
-                    for again, call in gene_calling(True):
-                        run_stage(again, call, logs)
-                continue
             run_stage(label, stage, logs)
     except StageFailed as e:
         log.error(e)

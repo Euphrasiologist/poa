@@ -162,6 +162,12 @@ def check() -> None:
     help="with --mito and --pltd: align the plastid contigs to the mito contigs (BLAST+ dc-megablast) and "
     "mark the stretches they share in both GFFs, with where each lies in the other (off by default)",
 )
+@click.option(
+    "--trnascan-full",
+    is_flag=True,
+    help="run tRNAscan-SE without its --mid filter: minutes per genome rather than seconds, for the few "
+    "weak tRNA hits (25 bits or less) the filter misses",
+)
 @click.option("-t", "--threads", type=click.IntRange(min=1), default=4, show_default=True, help="threads")
 @click.option("--force", is_flag=True, help="replace an existing OUTDIR/work")
 def run_command(**kwargs) -> None:
