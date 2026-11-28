@@ -55,6 +55,12 @@ GFF3 mechanics used here (see `../README.md` for the full explanation):
   twice as well as its own (common.organelle_origin) is that organelle's
   DNA: `plastid_derived=true` on a mito gene (grass and Apiaceae rpl2,
   some rps14, rpl16 and rps12), `mito_derived=true` on a plastid one.
+- transsplice reconstructs one gene per name. Where a raw copy of the gene
+  lies on an exact duplicate of a block of its cis-joined exons (the
+  second inverted-repeat copy of plastid ndhB and rpl2, rps12's second set
+  of exons 2-3; in a mitogenome, only a duplicate of the whole gene), the
+  reconstruction is written there too, with its edits mapped across and
+  `repeat_of=gene-X` (repeat_copies).
 - With poa run --cross-search / --cross-align, the other organelle's DNA
   in this one is a `biological_region` (transfer_lines): the other
   organelle's genes found here (`plastid_derived` / `mito_derived`), and
@@ -128,6 +134,7 @@ import numpy as np
 import pandas as pd
 
 from poa.pipeline.common import organelle_origin
+from poa.pipeline.common.origin import read_fasta as read_contigs
 from poa.pipeline.common import species_discovery as sd
 from poa.pipeline.common.errors import StageError
 from poa.pipeline.trans_splicing.reference_genes import CIS_SPLICED_MITO, PLASTID_SPLICED, mito_spliced
@@ -613,6 +620,8 @@ def copy_attrs(copy: dict) -> dict:
         "copy_number": copy.get("copy_number"),
         "model_coverage": f"{cov:.2f}" if cov is not None else None,
         "partial": "true" if copy.get("partial") else None,
+        # a reconstruction written again on an exact repeat copy (repeat_copies)
+        "repeat_of": copy.get("repeat_of"),
         # the other organelle's DNA (common.organelle_origin): plastid_derived
         # on a mito gene, mito_derived on a plastid one
         **({copy["derived"]: "true"} if copy.get("derived") else {}),
@@ -962,6 +971,111 @@ def overlaps(a_contig, a_start, a_end, b_contig, b_start, b_end) -> bool:
     return a_contig == b_contig and a_start < b_end and b_start < a_end
 
 
+COMPLEMENT = str.maketrans("ACGTN", "TGCAN")
+
+
+def occurrences(seq: str, sub: str) -> list[int]:
+    """0-based starts of every (possibly overlapping) occurrence of sub in seq."""
+    out, i = [], seq.find(sub)
+    while i >= 0:
+        out.append(i)
+        i = seq.find(sub, i + 1)
+    return out
+
+
+def repeat_copies(
+    rec: dict, raw_copies: list[dict], seqs: dict[str, str], share_blocks: bool = True
+) -> list[tuple[dict, dict]]:
+    """A reconstructed gene written again where a raw copy of it was called
+    on an exact duplicate of its sequence: the second inverted-repeat copy of
+    plastid ndhB and rpl2, the second set of rps12's exons 2-3, or a gene in an
+    exact mitochondrial repeat. transsplice reconstructs one gene per name;
+    without this the other copy stayed raw, its exon ends a few to 30 bp off.
+
+    Each block of the reconstruction's cis-joined exons (one contig, one
+    strand) that has an exact duplicate, forward or reverse-complemented,
+    overlapping the raw copy is mapped there with its edits and frameshifts;
+    a block with none (rps12 exon 1) is shared, if `share_blocks` (plastids;
+    in a mitogenome the whole gene must be duplicated). A gene across a
+    circular contig's origin (its exons past the length) is read round it.
+    Returns [(raw copy, the reconstruction at it)]."""
+    parts, junctions = rec["parts"], rec.get("junctions") or []
+    if not seqs or any(p["contig"] not in seqs for p in parts):
+        return []
+    # past the end of a circular contig the sequence goes on from its start
+    reach = {c: max(p["end"] for p in parts if p["contig"] == c) for c in {p["contig"] for p in parts}}
+    seqs = {c: q + q[: max(0, reach.get(c, 0) - len(q))] for c, q in seqs.items()}
+    order = sorted(range(len(parts)), key=lambda i: parts[i]["exon_number"])
+    blocks: list[list[int]] = []
+    for k, i in enumerate(order):
+        joined = k > 0 and k - 1 < len(junctions) and junctions[k - 1] == "cis"
+        if blocks and joined and parts[i]["contig"] == parts[blocks[-1][0]]["contig"]:
+            blocks[-1].append(i)
+        else:
+            blocks.append([i])
+    out = []
+    for c in raw_copies:
+        maps: dict[int, tuple] = {}  # part index -> (contig, lo, hi, q, reverse)
+        for block in blocks:
+            contig = parts[block[0]]["contig"]
+            lo, hi = min(parts[i]["start"] for i in block), max(parts[i]["end"] for i in block)
+            span = seqs[contig][lo:hi]
+            if hi - lo < 50 or "N" in span:
+                continue
+            for target in {l.contig for l in c["loci"]} & set(seqs):
+                hits = [(q, False) for q in occurrences(seqs[target], span) if not (target == contig and q == lo)]
+                hits += [(q, True) for q in occurrences(seqs[target], span.translate(COMPLEMENT)[::-1])]
+                for q, reverse in hits:
+                    if any(l.contig == target and l.start < q + (hi - lo) and q < l.end for l in c["loci"]):
+                        for i in block:
+                            maps[i] = (target, lo, hi, q, reverse)
+                        break
+                if any(i in maps for i in block):
+                    break
+        if not maps or (not share_blocks and len(maps) < len(parts)):
+            continue
+
+        def interval(i: int, s: int, e: int) -> tuple[str, int, int]:
+            target, lo, hi, q, reverse = maps[i]
+            return (target, q + hi - e, q + hi - s) if reverse else (target, q + s - lo, q + e - lo)
+
+        def point(i: int, x: int) -> int:
+            target, lo, hi, q, reverse = maps[i]
+            return q + hi - 1 - x if reverse else q + x - lo
+
+        slot_of = {parts[i]["exon_number"]: i for i in range(len(parts))}
+        new_parts = []
+        for i, part in enumerate(parts):
+            if i not in maps:
+                new_parts.append(dict(part))
+                continue
+            target, a, b = interval(i, part["start"], part["end"])
+            flip = {"+": "-", "-": "+"}.get(part["strand"], part["strand"]) if maps[i][4] else part["strand"]
+            new_parts.append({**part, "contig": target, "start": a, "end": b, "strand": flip})
+
+        def moved(r: dict) -> int | None:
+            i = slot_of.get(int(r["slot"])) if pd.notna(r.get("slot")) else None
+            return i if i is not None and i in maps else None
+
+        edits = []
+        for e in rec["edits"]:
+            i = moved(e)
+            edits.append(e if i is None else {**e, "genomic_pos": point(i, int(e["genomic_pos"]))})
+        shifts = []
+        for f in rec["frameshifts"]:
+            i = moved(f)
+            if i is None:
+                shifts.append(f)
+                continue
+            target, a, b = interval(i, int(f["start"]), int(f["end"]))
+            g = {**f, "contig": target, "start": a, "end": b}
+            if pd.notna(f.get("window_start")) and pd.notna(f.get("window_end")):
+                _, g["window_start"], g["window_end"] = interval(i, int(f["window_start"]), int(f["window_end"]))
+            shifts.append(g)
+        out.append((c, {**rec, "parts": new_parts, "edits": edits, "frameshifts": shifts, "repeat_copy_of": rec}))
+    return out
+
+
 def build_species_gff(
     hits: pd.DataFrame,
     organelle: str,
@@ -977,6 +1091,7 @@ def build_species_gff(
     expected: dict,
     circular: dict[str, int] | None = None,
     foreign: frozenset[str] = frozenset(),
+    seqs: dict[str, str] | None = None,
 ) -> list[str]:
     """`foreign`: genes (reconstructed) or copies (edited) that are the
     other organelle's DNA, by organelle_origin.call_key
@@ -992,7 +1107,8 @@ def build_species_gff(
     genes, and every resulting locus/chain is emitted as its own copy
     (`gene-X`, `gene-X-2`, ...; strongest first). circular: the lengths
     of the circular contigs (a cis gene across one's origin is written
-    with its end past the length)."""
+    with its end past the length). seqs: the contigs' sequences, for a
+    reconstruction's exact repeat copies (repeat_copies)."""
     lines: list[str] = []
     circular = circular or {}
     is_trna = hits.gene.str.startswith("trn")
@@ -1109,6 +1225,10 @@ def build_species_gff(
                         "derived": ("plastid_derived" if organelle == "mito" else "mito_derived") if gene in foreign else None,
                     }
                 )
+                for raw_copy, again in repeat_copies(corrected[-1], copies, seqs or {}, share_blocks=organelle == "pltd"):
+                    copies.remove(raw_copy)
+                    corrected.append(again)
+                    stats["reconstruction_written_on_repeat_copy"] += 1
         e = editing_calls[editing_calls.gene == gene]
         if not corrected and not e.empty:
             gene_shifts = shifts[shifts.gene == gene] if not shifts.empty else shifts
@@ -1159,9 +1279,12 @@ def build_species_gff(
 
         ordered = corrected + sorted(copies, key=lambda c: -c["score"])
         n_full = sum(1 for c in ordered if not c["partial"])
+        suffixes = {id(c): "" if i == 1 else f"-{i}" for i, c in enumerate(ordered, start=1)}
         for i, c in enumerate(ordered, start=1):
             c["copy_number"] = n_full
             suffix = "" if i == 1 else f"-{i}"
+            if "repeat_copy_of" in c:
+                c["repeat_of"] = f"gene-{gene}{suffixes[id(c['repeat_copy_of'])]}"
             stats["copies"] += 1
             stats["partial_copies"] += c["partial"]
             if is_rna:
@@ -1348,6 +1471,11 @@ def build_gff(
                 expected=expected,
                 circular={c: n for c, n in ctx.lengths.items() if ctx.circular.get(c)} if ctx else None,
                 foreign=frozenset(g for (sp, org, g) in foreign if sp == species and org == organelle),
+                seqs=(
+                    {h.split()[0]: seq.upper() for h, seq in read_contigs(Path(ctg_fastas[species]))}
+                    if species in ctg_fastas
+                    else None
+                ),
             )
             if lines and key in transfer_split:
                 extra = transfer_lines(transfer_split[key])

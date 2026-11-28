@@ -736,6 +736,10 @@ python3 -m unittest discover tests            # unit tests
 tests/smoke/run_smoke.sh [DATA_ROOT] [THREADS] # end to end, installed poa
 ```
 
+GitHub Actions runs the unit tests on Python 3.10 and 3.12 on every push
+(`.github/workflows/tests.yml`); they need only poa's Python dependencies,
+and the few that call an external tool skip themselves without it.
+
 The smoke test builds a fresh data root from `tests/data/` (Arabidopsis
 thaliana mito and plastid oatk assemblies, DToL ddAraThal4), runs the
 pipeline above on it, and checks the mito GFF against RefSeq NC_037304.1
@@ -743,6 +747,11 @@ with `tests/smoke/check_arabidopsis.py`: gene content, exon structure and
 editing-aware protein identity, with thresholds set just below the
 dataset repo's own results so regressions fail. It then runs `poa run` on
 the same inputs and requires identical GFFs. About 12 minutes on 8 cores.
+
+## Citing
+
+If you use poa, cite it as `CITATION.cff` gives (GitHub's "Cite this
+repository" button reads it).
 
 ## Modules
 

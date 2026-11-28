@@ -111,6 +111,15 @@ Corrections claim the loci they were computed on:
    or the raw chain is kept (Brassicaceae rpl2 is truncated, and a
    full-length template aligned 573 bp past its end). Either fallback
    leaves the gene `raw`: no edit sites, approximate boundaries.
+   transsplice reconstructs one gene per name. A raw copy of the gene on
+   an exact duplicate of the reconstruction gets the same corrected model,
+   with its edit sites mapped across, and `repeat_of=gene-X`. In a plastome
+   that is the second inverted-repeat copy of ndhB and rpl2, and rps12's
+   second set of exons 2-3, which shares exon 1 with the first (as RefSeq
+   annotates rps12 twice). In a mitogenome the whole gene must be
+   duplicated (Daucus ccmFc and nad4 on a second contig). Before this the
+   second copy stayed `raw`, with exon ends a few to 30 bp off, and which
+   copy was which depended on where the contig started.
 2. **`editing`** - on the single-exon copy holding the hit it corrected.
    An ORF search over one exon of a cis-spliced gene can't correct that
    gene's boundaries, so multi-exon copies stay raw (716 cases).

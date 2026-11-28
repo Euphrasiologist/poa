@@ -1,5 +1,22 @@
 # Changelog
 
+## Unreleased
+
+- Both inverted-repeat copies of a spliced plastid gene get the corrected
+  model. transsplice reconstructs one gene per name, and the second copy
+  of ndhB and rpl2, and rps12's second set of exons 2-3, stayed `raw`, with
+  exon ends a few to 30 bp off and no edit sites. In Arabidopsis, Daucus
+  and Vitis, one copy of each was raw. Which copy got corrected swapped
+  with where the contig started: between Arabidopsis' plastome and the
+  same plastome started inside rbcL, 46 feature rows differed, and now 6,
+  all the raw rps19 fragment at the repeat's edge. A raw copy on an exact duplicate of
+  the reconstruction, forward or reverse-complemented, now gets the same
+  model with its edits mapped across and `repeat_of=gene-X`. rps12's copy
+  shares exon 1, as RefSeq annotates it. In a mitogenome only a duplicate
+  of the whole gene counts (Daucus ccmFc and nad4 on its second contig).
+- Unit tests run on GitHub Actions (Python 3.10 and 3.12) on every push.
+- `CITATION.cff`.
+
 ## 0.3.3
 
 `poa run` is 4 to 10 times faster (tRNAscan-SE with `--mid`, and origins

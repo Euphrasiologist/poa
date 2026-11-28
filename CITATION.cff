@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+message: "If you use poa, please cite it as below."
+title: "poa: plant organelle annotator"
+abstract: >-
+  Gene annotation of plant mitochondrial and plastid genomes, with
+  RNA-editing-aware gene models, spliced and trans-spliced genes, and GFF3
+  output on contigs and assembly-graph unitigs.
+type: software
+authors:
+  - family-names: Brown
+    given-names: Max
+version: 0.3.3
+date-released: 2026-11-28
+repository-code: "https://github.com/Euphrasiologist/poa"
+license:
+  - MIT
+  - GPL-3.0-only
+keywords:
+  - mitochondrial genome
+  - plastid genome
+  - genome annotation
+  - RNA editing
+  - trans-splicing
