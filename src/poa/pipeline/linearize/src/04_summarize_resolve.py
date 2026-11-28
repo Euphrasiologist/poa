@@ -37,7 +37,9 @@ CODE_DIR = Path(__file__).resolve().parents[2]
 ROOT_DIR = Path(os.environ.get("PLANT_ORGANELLE_DATA_ROOT") or os.getcwd())
 ANALYSIS_DIR = ROOT_DIR / "analysis"
 
-# gfatk >= 0.6 appends :circular=true:path=<walk> (oatk-style); older releases end at :bp=
+# gfatk >= 0.6 appends :circular=true:path=<walk> (oatk-style); older releases end at :bp=.
+# gfatk 0.7 adds :repeat_runs=N:unspanned_repeat_runs=N:unspanned_at=<positions|none> before
+# :path= (tests/test_linearize_headers.py), which the lazy circular= group takes in.
 CIRCUIT_RE = re.compile(
     r"^.+_circuit(?P<circuit>\d+):n_segments=(?P<n_segments>\d+):bp=(?P<bp>\d+)" r"(?::circular=\S+?)?(?::path=\S+)?$"
 )

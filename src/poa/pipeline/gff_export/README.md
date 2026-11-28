@@ -227,7 +227,11 @@ Every ctg gets a `##sequence-region` pragma and a `region` feature
 recording which linearisation produced it - `resolver=oatk_pathfinder`
 or `resolver=gfatk_resolve` (the `linearize` fallback promoted into
 `data/` by `05_promote_resolve.py`; read straight from the ctg.fasta
-header) - plus GFF3's own `Is_circular=true` where applicable.
+header) - with, for a gfatk_resolve contig, the gfatk version that made it
+(`resolver_version=0.7.0`; `_resolve_one.sh` records it beside the circuits
+and the promoted header carries it as `gfatk_version=`; contigs promoted
+before that have none) - plus GFF3's own `Is_circular=true` where
+applicable.
 
 Using `unitig_coords`' placement map, every feature also records where it
 sits on the raw assembly-graph unitigs:

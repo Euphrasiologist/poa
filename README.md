@@ -21,12 +21,13 @@ poa check           # every tool found, oatkDB databases ready
 ```
 
 `environment.yml` pins every external tool from bioconda/conda-forge,
-including this project's own `gfatk` 0.6.3, `orfedit` 0.2.1 and
+including this project's own `gfatk` 0.7.0, `orfedit` 0.2.1 and
 `transsplice` 0.3.3, built for linux-64, linux-aarch64 and macOS (Intel and
 Apple silicon). To build those three from source instead, remove them from
-`environment.yml` and run `./install.sh` (cargo); do that too if bioconda
-does not have orfedit 0.2.1 and transsplice 0.3.3 yet (both were still
-awaiting review on 2026-11-26). On bioconda poa is called
+`environment.yml` and run `./install.sh` (cargo); do that too while
+bioconda does not have them (on 2026-11-27 it had gfatk 0.6.3, orfedit
+0.1.0 and transsplice 0.2.1, with updates awaiting review). gfatk 0.7.0's
+GitHub release also has a Linux binary. On bioconda poa is called
 `plant-organelle-annotator`, because `poa` there is the POA v2 aligner. Its
 recipe is in `recipe/`; once it is merged, poa (and with it
 Docker/Singularity images) will install with

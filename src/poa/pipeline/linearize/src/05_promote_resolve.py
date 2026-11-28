@@ -90,7 +90,9 @@ SUFFIXES_TO_ARCHIVE = {
 GFA_SUFFIX = {"mito": ".mito.gfa", "pltd": ".pltd.gfa"}
 DATA_DIRNAME = {"mito": "mito", "pltd": "plastid"}
 
-# gfatk >= 0.6 appends :circular=true:path=<walk> (oatk-style); older releases end at :bp=
+# gfatk >= 0.6 appends :circular=true:path=<walk> (oatk-style); older releases end at :bp=.
+# gfatk 0.7 adds :repeat_runs=N:unspanned_repeat_runs=N:unspanned_at=<positions|none> before
+# :path= (tests/test_linearize_headers.py), which the lazy circular= group takes in.
 CIRCUIT_RE = re.compile(
     r"^.+_circuit(?P<circuit>\d+):n_segments=(?P<n_segments>\d+):bp=(?P<bp>\d+)" r"(?::circular=\S+?)?(?::path=\S+)?$"
 )
@@ -121,7 +123,14 @@ def parse_circuits(fasta_path: Path) -> list[dict]:
     return circuits
 
 
-def write_promoted_fasta(path: Path, circuits: list[dict]) -> None:
+def resolve_version(fasta_path: Path) -> str | None:
+    """The gfatk version _resolve_one.sh recorded beside a resolve FASTA
+    (<species>.resolve.version), if it did."""
+    v = fasta_path.with_name(fasta_path.name[: -len(".fasta")] + ".version")
+    return v.read_text().strip() or None if v.exists() else None
+
+
+def write_promoted_fasta(path: Path, circuits: list[dict], gfatk_version: str | None = None) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     tmp = path.with_suffix(path.suffix + ".tmp")
     with open(tmp, "w") as fh:
@@ -129,6 +138,7 @@ def write_promoted_fasta(path: Path, circuits: list[dict]) -> None:
             header = (
                 f"ctg{i:06d}c length={c['bp']} nv={c['n_segments']} circular=true "
                 f"resolver=gfatk_resolve source_header={c['header']}"
+                + (f" gfatk_version={gfatk_version}" if gfatk_version else "")
             )
             fh.write(f">{header}\n")
             seq = c["seq"]
@@ -257,7 +267,7 @@ def main():
             if not args.dry_run:
                 archived = archive_old_files(species_dir, prefix, organelle)
                 new_ctg_fasta = species_dir / f"{prefix}{SUFFIXES_TO_ARCHIVE[organelle]['ctg_fasta']}"
-                write_promoted_fasta(new_ctg_fasta, circuits)
+                write_promoted_fasta(new_ctg_fasta, circuits, resolve_version(fasta_path))
             else:
                 archived = None
 

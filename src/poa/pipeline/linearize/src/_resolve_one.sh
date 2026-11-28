@@ -71,5 +71,7 @@ echo "[info] ${SPECIES} (${ORGANELLE}): ${N_ALIGNED} read alignments in GAF"
 echo "[info] ${SPECIES} (${ORGANELLE}): running gfatk resolve"
 "${GFATK}" resolve --gaf "${PREFIX}.gaf" "${GFA}" \
   > "${RESULTS_DIR}/${ORGANELLE}/${SPECIES}.resolve.fasta" 2> "${PREFIX}.resolve.log"
+# which gfatk made the circuits: 05_promote_resolve.py writes it into the promoted header
+"${GFATK}" --version | awk '{print $NF}' > "${RESULTS_DIR}/${ORGANELLE}/${SPECIES}.resolve.version"
 
 echo "[ok] ${SPECIES} (${ORGANELLE}): done -> ${RESULTS_DIR}/${ORGANELLE}/${SPECIES}.resolve.fasta"

@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+- gfatk 0.7.0 (`environment.yml`, the recipe, `install.sh`; on GitHub,
+  with a Linux release binary, but not yet on crates.io or bioconda). Its
+  `resolve` reads depth from trimmed path coordinates and all well-aligned
+  reads. On the 54 dataset graphs that went through linearize's resolve
+  tier, 43 circuits pass the promotion gate against 25 with 0.6.3; the
+  released binary gives byte-identical output to the build that was
+  measured on. Circuit headers gain `repeat_runs=`,
+  `unspanned_repeat_runs=` and `unspanned_at=` before `path=`; every
+  linearize step parses them (tests/test_linearize_headers.py).
+  `_resolve_one.sh` now records the gfatk version beside each resolve
+  FASTA, `05_promote_resolve.py` writes it into the promoted contig's
+  header (`gfatk_version=`), and the GFF's region feature carries it
+  (`resolver_version=`).
 - `poa run` is 4 to 10 times faster: Arabidopsis 6 minutes -> 1, Daucus
   11 -> 1.5, Vitis 19 -> 2 (2 cores, with `--cross-search
   --cross-align`). The GFFs are identical apart from tRNAscan-SE's weakest

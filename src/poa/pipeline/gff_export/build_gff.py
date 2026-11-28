@@ -84,7 +84,9 @@ GFF3 mechanics used here (see `../README.md` for the full explanation):
 Assembly provenance and unitig coordinates (see README):
 - Each ctg gets a `##sequence-region` pragma and a `region` feature
   carrying `resolver=oatk_pathfinder|gfatk_resolve` (which linearisation
-  produced it - read from the ctg.fasta header) and GFF3's `Is_circular`.
+  produced it - read from the ctg.fasta header), for a gfatk_resolve contig
+  the gfatk version that made it (`resolver_version`, when recorded), and
+  GFF3's `Is_circular`.
 - Every feature gets `unitig_loc=<unitig>:<start>-<end>:<strand>` (1-based
   inclusive, on the raw unitig from `unitig_coords`) when it lies inside
   one unitig placement, or `unitig_span=<u>,<u>,...` when it crosses a
@@ -145,6 +147,7 @@ ORGANELLES = ("mito", "pltd")
 # otherwise aligns on into downstream sequence: 573 bp in Arabidopsis)
 CIS_MAX_EXTENSION = 100
 RESOLVER_RE = re.compile(r"\bresolver=(\S+)")
+GFATK_VERSION_RE = re.compile(r"\bgfatk_version=(\S+)")
 CIRCULAR_RE = re.compile(r"\bcircular=(true|false)")
 FLIP_STRAND = {"+": "-", "-": "+", ".": "."}
 
@@ -166,6 +169,7 @@ class Segment:
 class SeqContext:
     lengths: dict[str, int] = field(default_factory=dict)
     resolver: dict[str, str] = field(default_factory=dict)
+    resolver_version: dict[str, str] = field(default_factory=dict)
     circular: dict[str, bool] = field(default_factory=dict)
     segments: dict[str, list[Segment]] = field(default_factory=dict)  # by ctg, sorted
     tiles: dict[str, list[Segment]] = field(default_factory=dict)  # disjoint partition
@@ -184,6 +188,8 @@ def load_seq_context(ctg_fasta: Path, map_path: Path) -> SeqContext:
                 ctx.lengths[name] = 0
                 m = RESOLVER_RE.search(header)
                 ctx.resolver[name] = m.group(1) if m else ("oatk_pathfinder" if "path=" in header else "unknown")
+                if v := GFATK_VERSION_RE.search(header):
+                    ctx.resolver_version[name] = v.group(1)
                 c = CIRCULAR_RE.search(header)
                 ctx.circular[name] = c is not None and c.group(1) == "true"
             elif name is not None:
@@ -359,6 +365,7 @@ def ctg_header(ctx: SeqContext, seqids: list[str], low_depth_frac: float | None 
                     {
                         "ID": f"region-{c}",
                         "resolver": ctx.resolver[c],
+                        "resolver_version": ctx.resolver_version.get(c),
                         "Is_circular": "true" if ctx.circular[c] else None,
                         **note,
                     }
