@@ -6,6 +6,6 @@ from pathlib import Path
 try:
     __version__ = version("poa")
 except PackageNotFoundError:  # running from a source checkout
-    __version__ = "0.3.2"
+    __version__ = "0.3.3"
 
 PIPELINE_DIR = Path(__file__).resolve().parent / "pipeline"

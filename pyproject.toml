@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "poa"
-version = "0.3.2"
+version = "0.3.3"
 description = "Plant organelle annotator: gene calling, RNA-editing-aware ORFs, spliced-gene reconstruction and contig/unitig GFF3 for plant mitochondrial and plastid genomes"
 readme = "README.md"
 license = "MIT AND GPL-3.0-only"

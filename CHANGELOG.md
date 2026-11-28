@@ -1,6 +1,16 @@
 # Changelog
 
-## Unreleased
+## 0.3.3
+
+`poa run` is 4 to 10 times faster (tRNAscan-SE with `--mid`, and origins
+moved before tRNAscan-SE runs). Genes both organelles have are checked
+for the other organelle's DNA, and two new options, off by default, look
+for the rest of it: `--cross-search` (the other organelle's gene models)
+and `--cross-align` (BLAST+, plastid against mitogenome). psbF's profiles
+start at its Met in every lineage. gfatk 0.7.0 for linearize's resolve
+tier, with its version recorded on the contigs it promotes; it is on
+GitHub but not yet on bioconda or crates.io, so until then install it with
+`./install.sh` or its release binary.
 
 - gfatk 0.7.0 (`environment.yml`, the recipe, `install.sh`; on GitHub,
   with a Linux release binary, but not yet on crates.io or bioconda). Its
